@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{:config('lake.name')}</title>
+    <meta name="author" content="lake">
+	<base href="__STATIC__/" />
+    <link rel="stylesheet" href="admin/libs/layui/css/layui.css">
+    <link rel="stylesheet" href="admin/admin/css/index.css">
+    <link rel="stylesheet" href="admin/common/font/iconfont.css">
+</head>
+
+<body class="layui-layout-body lake-admin">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <span href="javascript:void(0);" class="lake-admin-logo">
+				<a href="javascript:void(0);" title="{:config('lake.name')}" class="lake-admin-logo-name">
+					<span>{:config('lake.name')}</span>
+				</a>
+				<a href="javascript:void(0);" title="{:config('lake.name')}" class="lake-admin-logo-name-mini">
+					<span>{:config('lake.name_mini')}</span>
+				</a>
+			</span>
+            <a href="javascript:;" class="admin-menu-toggle icon iconfont icon-other lake-admin-winner-hide" title="隐藏侧边"></a>
+            <a href="javascript:;" class="admin-side-full icon iconfont icon-fullscreen lake-admin-winner-hide" title="全屏显示"></a>
+			<ul class="layui-nav lake-admin-menus-winner lake-admin-top-level-menus" id="top_nav_menus">
+                <!--AJAX数据-->
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item lake-admin-winner-hide">
+					<a href="/" target="_blank">
+						<i class="iconfont icon-homepage"></i>
+						<span>&nbsp;站点主页</span>
+					</a>
+				</li>
+                <li class="layui-nav-item">
+					<a href="javascript:;">
+						<i class="iconfont icon-richangqingli"></i>
+						<span class="lake-admin-winner-hide">&nbsp;清理缓存</span>
+					</a>
+                    <dl class="layui-nav-child" id="deletecache">
+                        <dd><a href="javascript:;" data-type="all">一键清理缓存<span class="layui-badge-dot"></span></a></dd>
+                        <dd><a href="javascript:;" data-type="data">清理数据缓存</a></dd>
+                        <dd><a href="javascript:;" data-type="template">清理模板缓存</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item lake-admin-skin">
+                    <a class="name" href="javascript:;">
+						<i class="iconfont icon-clothes"></i>
+						<span class="lake-admin-winner-hide">&nbsp;主题</span>
+					</a>
+                    <dl class="layui-nav-child">
+                        <dd data-skin="black"><a href="javascript:;">默认</a></dd>
+                        <dd data-skin="white"><a href="javascript:;">纯白</a></dd>
+                        <dd data-skin="blue"><a href="javascript:;">蓝白</a></dd>
+                    </dl>
+                </li>				
+                <li class="layui-nav-item">
+					<a href="javascript:;">
+						<img src="{:get_file_path($user_info['avatar'])}" class="layui-nav-img userAvatar" width="35" height="35">
+						<span class="lake-admin-winner-hide">{$user_info.nickname}</span>
+					</a>
+                    <dl class="layui-nav-child">
+                        <dd class="js-menu-nav">
+							<a href="{:url('profile/index')}" 
+								lay-id="0213cb7994fca486bd1da1cf4c380450"
+								lay-icon="iconfont icon-people" 
+								lay-title="更改密码"
+								>
+								<i class="iconfont icon-people"></i>&nbsp;账号信息
+							</a>
+						</dd>
+                        <dd class="js-menu-nav">
+							<a href="{:url('profile/password')}" 
+								lay-id="f17009e4b79e7afde46161d511dd74d9"
+								lay-icon="iconfont icon-guanliyuan" 
+								lay-title="更改密码"
+								>
+								<i class="iconfont icon-guanliyuan"></i>&nbsp;更改密码
+							</a>
+						</dd>
+                        <dd>
+							<a href="{:url('passport/logout')}">
+								<i class="iconfont icon-tuichu"></i>&nbsp;安全退出
+							</a>
+						</dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+        <div class="layui-side layui-bg-black">
+            <div class="navBar layui-side-scroll" id="navBar">
+                <ul class="layui-nav layui-nav-tree" id="side_menus_bar">
+                    <!--AJAX数据-->
+                </ul>
+            </div>
+        </div>
+        <div class="lake-admin-site-tree-mobile layui-hide">
+            <i class="layui-icon">&#xe602;</i>
+        </div>
+        <div class="lake-admin-site-mobile-shade"></div>
+        <div class="layui-body layui-layout-admin-frame" id="body_frame">
+            <div class="layui-tab mag0 lake-admin-top-tabs-box" id="top_tabs_box" lay-filter="Tab">
+                <div class="tab-go-refresh lake-admin-refresh-page" id="layui_iframe_refresh" title="刷新本页">
+					<i class="iconfont icon-shuaxin"></i>
+				</div>
+                <div class="tab-go-left" id="page-prev" title="上一页">
+					<i class="layui-icon layui-icon-left"></i>
+				</div>
+                <ul class="layui-tab-title lake-admin-top-tab" id="body_history">
+                    <li class="layui-this" lay-id="default">
+						<i class="iconfont icon-homepage"></i>&nbsp;后台首页
+                    </li>
+                </ul>
+                <div class="tab-right">
+                    <div class="tab-go-right" id="page-next" title="下一页">
+						<i class="layui-icon layui-icon-right"></i>
+					</div>
+                    <ul class="layui-nav lake-admin-close-box">
+                        <li class="layui-nav-item">
+                            <a href="javascript:;" title="页面操作">
+								<i class="layui-icon layui-icon-radio"></i>&nbsp;页面操作
+							</a>
+                            <dl class="layui-nav-child">
+                                <dd><a href="javascript:;" class="lake-admin-refresh-page" title="刷新当前选项卡"><i class="iconfont icon-shuaxin"></i> 刷新本页</a></dd>
+                                <dd><a href="javascript:;" class="lake-admin-close-current-page" title="关闭当前选项卡"><i class="layui-icon layui-icon-close"></i> 关闭当前</a></dd>
+                                <dd><a href="javascript:;" class="lake-admin-close-other-page" title="关闭其他选项卡"><i class="layui-icon layui-icon-radio"></i> 关闭其他</a></dd>
+                                <dd><a href="javascript:;" class="lake-admin-close-all-page" title="关闭全部选项卡"><i class="iconfont icon-richangqingli"></i>&nbsp;关闭全部</a></dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="layui-tab-content lake-clild-frame">
+                <div class="lake-admin-iframe-box">
+                    <iframe id="iframe_default" src="{$main_url}" style="height: 100%; width: 100%;display:none;" lay-id="default" frameborder="0" scrolling="auto"></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="layui-footer">
+            © {:config('lake.name')} v{:config('lake.version')}
+        </div>
+    </div>
+    <script src="admin/libs/layui/layui.js"></script>
+    <script type="text/javascript">
+	var SUBMENU_CONFIG = <?php echo json_encode($menus); ?>;
+	var clear_cache_url = '{:url("index/cache")}';
+	
+	layui.config({
+        version: '1557143998899',
+        base: 'admin/libs/layui/extend/'
+    }).extend({
+        jquery_cookie: 'jquery.cookie',
+        index: '{/}admin/admin/js/index'
+    }).use('index');
+	</script>
+</body>
+
+</html>

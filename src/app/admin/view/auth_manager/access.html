@@ -1,0 +1,164 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">编辑访问权限</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="{:url('writeGroup')}" method="post">
+            <input type="hidden" name="rules" value="" />
+            <input type="hidden" name="id" value="{$group_id}" />
+            <input type="hidden" name="parentid" value="{$auth_group.parentid}" />
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" value="{$auth_group.title}" disabled>
+				</div>
+            </div>
+			
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限</label>
+                <div class="layui-input-block">
+					<div class="lake-admin-auth-manager-access left">
+						<ul class="ztree" style="margin-left: 5px;margin-top:5px; padding: 0;">
+							<li><a title="全部展开、折叠 "><span class="button ico_open"></span><span id="ztree_expandAll" data-open="false">全部展开、折叠 </span></a> </li>
+						</ul>
+						<ul id="treeDemo" class="ztree"></ul>
+					</div>		
+                </div>
+            </div>
+			
+			<div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
+                    <button class="layui-btn layui-btn-normal layui-close" type="button" onclick="javascript:history.back(-1);">返回</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="layui"}{/block}
+
+{block name="script"}
+<link rel="stylesheet" href="admin/libs/zTree/metroStyle.css">
+<script>
+layui.config({
+    base: "admin/libs/layui/extend/"
+}).use(['jquery', 'ztree'], function() {
+    var $ = layui.$;
+    //配置
+    var setting = {
+        //设置 zTree 的节点上是否显示 checkbox / radio
+        check: {
+            enable: true,
+            chkboxType: { "Y": "ps", "N": "ps" }
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                idKey: "nid",
+                pIdKey: "parentid",
+            }
+        },
+        callback: {
+            beforeClick: function(treeId, treeNode) {
+                if (treeNode.isParent) {
+                    zTree.expandNode(treeNode);
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            onClick: function(event, treeId, treeNode) {
+                //栏目ID
+                var catid = treeNode.catid;
+            }
+        }
+    };
+    //节点数据
+    var zNodes = {$json|raw};
+    //zTree对象
+    var zTree = null;
+    $(document).ready(function() {
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.expandAll(true);
+        $("#ztree_expandAll").click(function() {
+            if ($(this).data("open")) {
+                zTree.expandAll(false);
+                $(this).data("open", false);
+            } else {
+                zTree.expandAll(true);
+                $(this).data("open", true);
+            }
+        });
+    });
+
+    layui.use(['layer', 'form', 'notice'], function() {
+        var layer = layui.layer,
+			notice = layui.notice,
+            form = layui.form;
+			
+        //通用表单post提交
+        $('.ajax-post').on('click', function(e) {
+            var target, query, _form;
+            var target_form = $(this).attr('target-form');
+            var that = this;
+            var nead_confirm = false;
+
+            _form = $('.' + target_form);
+            //处理被选中的数据
+            _form.find('input[name="rules"]').val("");
+            var nodes = zTree.getCheckedNodes(true);
+            var str = "";
+            $.each(nodes, function(i, value) {
+                if (str != "") {
+                    str += ",";
+                }
+                str += value.id;
+            });
+            _form.find('input[name="rules"]').val(str);
+
+            if ($(this).hasClass('confirm')) {
+                if (!confirm('确认要执行该操作吗?')) {
+                    return false;
+                }
+            }
+            if ($(this).attr('url') !== undefined) {
+                target = $(this).attr('url');
+            } else {
+                target = _form.attr("action");
+            }
+            query = _form.serialize();
+
+            $.post(target, query).success(function(data) {
+                if (data.code == 1) {
+                    if (data.url) {
+						notice.success(data.msg)
+                    } else {
+						notice.error(data.msg);
+                    }
+                    setTimeout(function() {
+                        if (data.url) {
+                            location.href = data.url;
+                        } else {
+                            location.reload();
+                        }
+                    }, 1500);
+                } else {
+                    notice.error(data.msg);
+                    setTimeout(function() {
+                        if (data.url) {
+                            location.href = data.url;
+                        }
+                    }, 1500);
+                }
+            });
+            return false;
+        });
+    });
+});
+</script>
+{/block}
