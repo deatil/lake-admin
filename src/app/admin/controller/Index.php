@@ -123,7 +123,7 @@ class Index extends Base
             case 'data' || 'all':
                 File::delDir(env('root_path') . 'runtime' . DIRECTORY_SEPARATOR . 'cache');
                 Cache::clear();
-                if ($type == 'content') {
+                if ($type == 'data') {
                     break;
                 }
 
