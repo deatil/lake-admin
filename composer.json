@@ -2,7 +2,7 @@
     "name": "lake/lake-admin",
     "description": "The lake-admin is admin package",
     "license": "Apache-2.0",
-    "type": "project",
+    "type": "library",
     "keywords": [
         "lake",
         "lake-admin"
