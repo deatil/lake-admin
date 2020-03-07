@@ -12,17 +12,17 @@ use app\admin\model\AdminLog as AdminLogModel;
  */
 class AdminLog
 {
-	
+    
     /**
-	 * 行为扩展的执行入口必须是run
-	 *
-	 * @create 2019-7-15
-	 * @author deatil
-	 */
+     * 行为扩展的执行入口必须是run
+     *
+     * @create 2019-7-15
+     * @author deatil
+     */
     public function run($params)
     {
-		$msg = request()->param(true);
-		(new AdminLogModel())->record(json_encode($msg), 1);
+        $msg = request()->param(true);
+        (new AdminLogModel())->record(json_encode($msg), 1);
     }
-	
+    
 }

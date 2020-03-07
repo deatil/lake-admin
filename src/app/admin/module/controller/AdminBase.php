@@ -12,8 +12,8 @@ use app\admin\controller\Base;
  */
 class AdminBase extends Base
 {
-	use \app\admin\module\traits\controller\Admin;
-	
+    use \app\admin\module\traits\controller\Admin;
+    
     protected function initialize()
     {
         parent::initialize();

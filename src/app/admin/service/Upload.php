@@ -11,17 +11,17 @@ use app\admin\model\Attachment as AttachmentModel;
  * @author deatil
  */
 class Upload
-{		
+{        
     // 上传模块
     public $module = 'admin';
     public $request = null;
-	
+    
     public $type = '';
     public $type_id = 0;
-	
+    
     private $uploadUrl = '';
     private $uploadPath = '';
-	
+    
     //编辑器初始配置
     private $confing = [
         /* 上传图片配置项 */
@@ -84,38 +84,38 @@ class Upload
     ];
 
     public function __construct()
-    {		
+    {        
         $this->request = request();
         
-		$this->uploadUrl = config('public_url') . 'uploads/';
+        $this->uploadUrl = config('public_url') . 'uploads/';
         $this->uploadPath = config('upload_path');
     }
-	
-	/**
-	 * 设置类型数据
-	 *
-	 * @create 2019-7-18
-	 * @author deatil
-	 */
-	public function setTypeInfo($type, $type_id)
-	{
-		$this->type = $type;
-		$this->type_id = $type_id;
-		
-		return $this;
-	}
+    
+    /**
+     * 设置类型数据
+     *
+     * @create 2019-7-18
+     * @author deatil
+     */
+    public function setTypeInfo($type, $type_id)
+    {
+        $this->type = $type;
+        $this->type_id = $type_id;
+        
+        return $this;
+    }
 
     public function save(
-		$dir = '', 
-		$from = '', 
-		$module = '', 
-		$thumb = 0, 
-		$thumbsize = '', 
-		$thumbtype = '', 
-		$watermark = 1, 
-		$sizelimit = -1, 
-		$extlimit = ''
-	) {
+        $dir = '', 
+        $from = '', 
+        $module = '', 
+        $thumb = 0, 
+        $thumbsize = '', 
+        $thumbtype = '', 
+        $watermark = 1, 
+        $sizelimit = -1, 
+        $extlimit = ''
+    ) {
         //验证是否可以上传
         $status = $this->isUpload($module);
         if (true !== $status) {
@@ -149,16 +149,16 @@ class Upload
      * @return string|\think\response\Json
      */
     protected function saveFile(
-		$dir = '', 
-		$from = '', 
-		$module = '', 
-		$thumb = 0, 
-		$thumbsize = '', 
-		$thumbtype = '', 
-		$watermark = 1, 
-		$sizelimit = -1, 
-		$extlimit = ''
-	) {
+        $dir = '', 
+        $from = '', 
+        $module = '', 
+        $thumb = 0, 
+        $thumbsize = '', 
+        $thumbtype = '', 
+        $watermark = 1, 
+        $sizelimit = -1, 
+        $extlimit = ''
+    ) {
         if (!function_exists("finfo_open")) {
             switch ($from) {
                 case 'ueditor':
@@ -213,13 +213,13 @@ class Upload
             } else {
                 $file_path = $file_exists['path'];
             }
-			
-			AttachmentModel::where([
-				'md5' => $file->hash('md5'),
-			])->update([
-				'update_time' => time(),
-			]);
-			
+            
+            AttachmentModel::where([
+                'md5' => $file->hash('md5'),
+            ])->update([
+                'update_time' => time(),
+            ]);
+            
             switch ($from) {
                 case 'ueditor':
                     return json([
@@ -289,7 +289,7 @@ class Upload
                     ]);
             }
         }
-		
+        
         // 移动到框架应用根目录指定目录下
         $info = $file->move($this->uploadPath . DIRECTORY_SEPARATOR . $dir);
         if ($info) {

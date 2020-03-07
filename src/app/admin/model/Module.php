@@ -14,19 +14,19 @@ class Module extends Model
 {
     // 自动完成
     protected $auto = [];
-	
-	// 添加时候
+    
+    // 添加时候
     protected $insert = [
-		'installtime', 
-		'updatetime', 
-		'status' => 1,
-	];
-	
+        'installtime', 
+        'updatetime', 
+        'status' => 1,
+    ];
+    
     protected function setInstalltimeAttr($value)
     {
         return time();
     }
-	
+    
     protected function setUpdatetimeAttr($value)
     {
         return time();
@@ -38,23 +38,23 @@ class Module extends Model
      */
     public function getModuleList()
     {
-		$module = cache('lake_admin_module');
-		if (!$module) {
-			$module = [];
-			
-			$data = $this->column(true, 'module');
-			if (!empty($data)) {
-				foreach ($data as &$v) {
-					to_time($v, 'installtime');
-					$module[$v['module']] = $v;
-				}
-				
-				unset($v);				
-			}
-			
-			cache('lake_admin_module', $module);
-		}
-		
+        $module = cache('lake_admin_module');
+        if (!$module) {
+            $module = [];
+            
+            $data = $this->column(true, 'module');
+            if (!empty($data)) {
+                foreach ($data as &$v) {
+                    to_time($v, 'installtime');
+                    $module[$v['module']] = $v;
+                }
+                
+                unset($v);                
+            }
+            
+            cache('lake_admin_module', $module);
+        }
+        
         return $module;
     }
 

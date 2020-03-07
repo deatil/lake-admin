@@ -18,15 +18,15 @@ class Config extends Model
     /**
      * 获取配置信息
      * @return mixed
-	 *
-	 * @create 2019-8-4
-	 * @author deatil
+     *
+     * @create 2019-8-4
+     * @author deatil
      */
     public static function getConfig(
-		$where = "status='1'", 
-		$fields = 'name,value,type,options', 
-		$order = 'listorder,id desc'
-	) {
+        $where = "status='1'", 
+        $fields = 'name,value,type,options', 
+        $order = 'listorder,id desc'
+    ) {
         $configs = self::where($where)->order($order)->column($fields);
         $newConfigs = [];
         foreach ($configs as $key => $value) {
@@ -61,14 +61,14 @@ class Config extends Model
                     $newConfigs[$key] = empty($value['value']) ? '' : get_file_path($value['value']);
                     break;
                 case 'images':
-					if (!empty($value['value'])) {
-						$images_values = explode(',', $value['value']);
-						foreach ($value['value'] as $val) {
-							$newConfigs[$key][] = get_file_path($val);
-						}
-					} else {
-						$newConfigs[$key] = [];
-					}
+                    if (!empty($value['value'])) {
+                        $images_values = explode(',', $value['value']);
+                        foreach ($value['value'] as $val) {
+                            $newConfigs[$key][] = get_file_path($val);
+                        }
+                    } else {
+                        $newConfigs[$key] = [];
+                    }
                     break;
                 case 'Ueditor':
                     $newConfigs[$key] = htmlspecialchars_decode($value['value']);
@@ -80,22 +80,22 @@ class Config extends Model
         }
         return $newConfigs;
     }
-	
+    
     /**
      * 获取配置列表
      * @return array
-	 *
-	 * @create 2019-8-4
-	 * @author deatil
+     *
+     * @create 2019-8-4
+     * @author deatil
      */
     public function getConfigList()
     {
-		$data = cache('lake_admin_config');
-		if (!$data) {
-			$data = $this->getConfig();
-			cache("lake_admin_config", $data);
-		}
-		
+        $data = cache('lake_admin_config');
+        if (!$data) {
+            $data = $this->getConfig();
+            cache("lake_admin_config", $data);
+        }
+        
         return $data;
     }
 

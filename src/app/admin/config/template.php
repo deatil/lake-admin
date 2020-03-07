@@ -26,6 +26,6 @@ return [
     'taglib_begin' => '{',
     // 标签库标签结束标记
     'taglib_end' => '}',
-	// 标签库
+    // 标签库
     'taglib_build_in' => 'cx',
 ];

@@ -21,55 +21,55 @@ class InitConfig
      * @access public
      * @param mixed $params  行为参数
      * @return void
-	 *
-	 * @create 2019-7-6
-	 * @author deatil
+     *
+     * @create 2019-7-6
+     * @author deatil
      */
     public function run($params)
     {
-		// 定义系统配置信息
-		$this->setAppConfig($params);
-		
-		// 定义系统相关信息
-		$this->setAppEnv($params);
+        // 定义系统配置信息
+        $this->setAppConfig($params);
+        
+        // 定义系统相关信息
+        $this->setAppEnv($params);
     }
-	
-	/**
-	 * 定义系统配置信息
-	 *
-	 * @create 2019-7-6
-	 * @author deatil
-	 */
+    
+    /**
+     * 定义系统配置信息
+     *
+     * @create 2019-7-6
+     * @author deatil
+     */
     private function setAppConfig(& $params)
     {
         // 读取系统配置
         $system_config = model('admin/Config')->getConfigList();
 
         if (!empty($system_config)) {
-			// 设置配置信息
-			if (!empty($system_config)) {
-				foreach ($system_config as $key => $value) {
-					Config::set($key, $value);
-				}
-			}
+            // 设置配置信息
+            if (!empty($system_config)) {
+                foreach ($system_config as $key => $value) {
+                    Config::set($key, $value);
+                }
+            }
         }
-	}
-	
-	/**
-	 * 定义系统相关信息
-	 *
-	 * @create 2019-7-6
-	 * @author deatil
-	 */
+    }
+    
+    /**
+     * 定义系统相关信息
+     *
+     * @create 2019-7-6
+     * @author deatil
+     */
     private function setAppEnv(& $params)
     {
-		$lake_module_path = env('root_path') . 'addons' . DIRECTORY_SEPARATOR;
-		$root_url = rtrim(dirname($_SERVER["SCRIPT_NAME"]), '\\/') . '/';
+        $lake_module_path = env('root_path') . 'addons' . DIRECTORY_SEPARATOR;
+        $root_url = rtrim(dirname($_SERVER["SCRIPT_NAME"]), '\\/') . '/';
     
         Env::set([
             'lake_module_path' => $lake_module_path,
             'root_url' => $root_url,
-        ]);	
-	}
+        ]);    
+    }
 
 }

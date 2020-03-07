@@ -18,7 +18,7 @@ class AuthRule extends Model
 {
     const RULE_URL = 1;
     const RULE_MAIN = 2; //主菜单
-	
+    
     /**
      * 获取菜单
      * @return type
@@ -26,15 +26,15 @@ class AuthRule extends Model
     public function getNoNeedAuthRuleList()
     {
         $data = $this->where([
-				'is_need_auth' => 1,
-				'status' => 1,
-			])
-			->order('listorder ASC,module ASC')
-			->cache(60)
-			->column('name');
+                'is_need_auth' => 1,
+                'status' => 1,
+            ])
+            ->order('listorder ASC,module ASC')
+            ->cache(60)
+            ->column('name');
         return $data;
     }
-	
+    
     /**
      * 获取菜单
      * @return type
@@ -94,14 +94,14 @@ class AuthRule extends Model
     final public function adminMenu($parentid, $withSelf = false)
     {
         $result = $this->where([
-				'parentid' => $parentid, 
-				'is_menu' => 1,
-				'status' => 1,
-			])
-			->order('listorder ASC, module ASC')
-			->cache(60)
-			->select()
-			->toArray();
+                'parentid' => $parentid, 
+                'is_menu' => 1,
+                'status' => 1,
+            ])
+            ->order('listorder ASC, module ASC')
+            ->cache(60)
+            ->select()
+            ->toArray();
         if (empty($result)) {
             $result = [];
         }
@@ -110,44 +110,44 @@ class AuthRule extends Model
             $result2[] = $parentInfo ? $parentInfo : array();
             $result = array_merge($result2, $result);
         }
-		
+        
         // 是否超级管理员
         if (AdminService::instance()->isAdministrator()) {
             return $result;
         }
-		
-		$authIdList = $this->getAuthIdList();
-		
+        
+        $authIdList = $this->getAuthIdList();
+        
         $array = [];
-		if (!empty($result)) {
-			foreach ($result as $v) {
-				if (in_array($v['id'], $authIdList)) {
-					$array[] = $v;
-				}
-			}
-		}
-		
+        if (!empty($result)) {
+            foreach ($result as $v) {
+                if (in_array($v['id'], $authIdList)) {
+                    $array[] = $v;
+                }
+            }
+        }
+        
         return $array;
     }
 
     /**
-	 * 获取权限ID列表
-	 *
-	 * @create 2019-7-30
-	 * @author deatil
-	 */	
-	protected function getAuthIdList()
-	{
-		static $authIdList = [];
-		if (!empty($authIdList)) {
-			return $authIdList;
-		}
-		
-		$Auth = new AuthService();
-		$authIdList = $Auth->getAuthIdList(env('admin_id'), [1, 2]);
-		
-		return $authIdList;
-	}
+     * 获取权限ID列表
+     *
+     * @create 2019-7-30
+     * @author deatil
+     */    
+    protected function getAuthIdList()
+    {
+        static $authIdList = [];
+        if (!empty($authIdList)) {
+            return $authIdList;
+        }
+        
+        $Auth = new AuthService();
+        $authIdList = $Auth->getAuthIdList(env('admin_id'), [1, 2]);
+        
+        return $authIdList;
+    }
 
     /**
      * 返回后台节点数据
@@ -198,17 +198,17 @@ class AuthRule extends Model
             $this->error = '菜单没有数据！';
             return false;
         }
-		
+        
         if (empty($config) || !is_array($data)) {
             $this->error = '模块配置信息为空！';
             return false;
         }
-		
+        
         // 父级ID
         $menuParentid = $this->where([
-			'name' => 'admin/modules/index', 
-		])->value('id');
-		
+            'name' => 'admin/modules/index', 
+        ])->value('id');
+        
         // 安装模块名称
         $moduleName = $config['module'];
         foreach ($data as $rs) {
@@ -216,14 +216,14 @@ class AuthRule extends Model
                 $this->error = '菜单信息配置有误，route 不能为空！';
                 return false;
             }
-			
+            
             $checkMenuRoute = $this->checkMenuRoute($rs['route']);
             if ($checkMenuRoute === false) {
                 $this->error = '菜单信息配置有误，route 格式错误！';
                 return false;
             }
            
-			$pid = $parentid ? $parentid : $menuParentid;
+            $pid = $parentid ? $parentid : $menuParentid;
             $newData = [
                 'module' => $moduleName,
                 'parentid' => $pid,
@@ -239,13 +239,13 @@ class AuthRule extends Model
                 'is_menu' => isset($rs['is_menu']) ? $rs['is_menu'] : 0,
                 'status' => 1,
             ];
-			$newData['id'] = md5(time().md5($newData['module']).md5($newData['title']).md5($newData['module']).get_random_string(12));
+            $newData['id'] = md5(time().md5($newData['module']).md5($newData['title']).md5($newData['module']).get_random_string(12));
 
             $result = self::create($newData);
             if (!$result) {
                 return false;
             }
-			
+            
             //是否有子菜单
             if (!empty($rs['child'])) {
                 if ($this->installModuleMenu($rs['child'], $config, $result['id']) !== true) {
@@ -253,13 +253,13 @@ class AuthRule extends Model
                 }
             }
         }
-		
+        
         //清除缓存
         cache('menu', null);
-		
+        
         return true;
     }
-	
+    
     /**
      * 删除对应模块菜单和权限
      * @param type $moduleName 模块名称
@@ -269,16 +269,16 @@ class AuthRule extends Model
     {
         if (empty($moduleName)) {
             return false;
-        }	
-		
+        }    
+        
         // 删除对应菜单
         self::where([
-			'module' => $moduleName,
-		])->delete();
+            'module' => $moduleName,
+        ])->delete();
         
         return true;
     }
-	
+    
     /**
      * 检测route是否正确
      * @param type $route route内容
@@ -301,21 +301,21 @@ class AuthRule extends Model
      */
     public function getMenusList()
     {
-		$menus = cache('menu');
-		if (!$menus) {
-			$menus = [];
-			
-			$data = $this->select()->toArray();
-			if (!empty($data)) {
-				foreach ($data as $rs) {
-					$menus[$rs['id']] = $rs;
-				}
-			}
-			
-			cache('menu', $menus);
-		}
-		
+        $menus = cache('menu');
+        if (!$menus) {
+            $menus = [];
+            
+            $data = $this->select()->toArray();
+            if (!empty($data)) {
+                foreach ($data as $rs) {
+                    $menus[$rs['id']] = $rs;
+                }
+            }
+            
+            cache('menu', $menus);
+        }
+        
         return $menus;
     }
-	
+    
 }

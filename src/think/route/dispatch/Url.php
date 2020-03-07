@@ -129,15 +129,15 @@ class Url extends Dispatch
      */
     protected function autoFindController($module, &$path)
     {
-		$module = ($module ? $module . '/' : '') . $this->rule->getConfig('url_controller_layer');
+        $module = ($module ? $module . '/' : '') . $this->rule->getConfig('url_controller_layer');
         $suffix = $this->app->getSuffix() || $this->rule->getConfig('controller_suffix') ? ucfirst($this->rule->getConfig('url_controller_layer')) : '';
         
-		$namespace = $this->app->getNamespace();
-		
+        $namespace = $this->app->getNamespace();
+        
         $item = [];
         $find = false;
 
-		$class = "\\" . $namespace . "\\" . str_replace('/', '\\', $module);
+        $class = "\\" . $namespace . "\\" . str_replace('/', '\\', $module);
         foreach ($path as $val) {
             $item[] = $val;
             $class   = $class . '\\' . str_replace('.', '\\', Loader::parseName($val, 1));

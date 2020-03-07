@@ -17,29 +17,29 @@ use app\admin\service\Admin as AdminService;
  */
 class AdminAuthCheck
 {
-	use Jump;
-	
-	protected $loginUrl = '';
-	
+    use Jump;
+    
+    protected $loginUrl = '';
+    
     /**
-	 * 行为扩展的执行入口必须是run
-	 *
-	 * @create 2019-7-15
-	 * @author deatil
-	 */
+     * 行为扩展的执行入口必须是run
+     *
+     * @create 2019-7-15
+     * @author deatil
+     */
     public function run($params)
     {
-		$this->loginUrl = url('passport/login');
-		
-		$this->checkAdminLogin();
+        $this->loginUrl = url('passport/login');
+        
+        $this->checkAdminLogin();
     }
-	
+    
     /**
-	 * 检测权限
-	 *
-	 * @create 2019-7-15
-	 * @author deatil
-	 */
+     * 检测权限
+     *
+     * @create 2019-7-15
+     * @author deatil
+     */
     protected function checkAdminLogin()
     {
         // 过滤不需要登陆的行为
@@ -56,17 +56,17 @@ class AdminAuthCheck
             if (Env::get('admin_id')) {
                 return;
             }
-			
+            
             $adminId = AdminService::instance()->isLogin();
-			
+            
             // 是否是超级管理员
             $isRoot = AdminService::instance()->isAdministrator();
         
-			Env::set([
-				'admin_id' => $adminId,
-				'is_root' => $isRoot,
-			]);
-		
+            Env::set([
+                'admin_id' => $adminId,
+                'is_root' => $isRoot,
+            ]);
+        
             if (!$isRoot && config('admin_allow_ip')) {
                 // 检查IP地址访问
                 $arr = explode(',', config('admin_allow_ip'));
@@ -85,56 +85,56 @@ class AdminAuthCheck
                     }
                 }
             }
-			
+            
             if (false == $this->competence()) {
                 // 跳转到登录界面
                 $this->error('请先登陆', $this->loginUrl);
             } else {
                 // 是否超级管理员
                 if (!$isRoot) {
-					$noNeedAuthRules = (new AuthRuleModel())->getNoNeedAuthRuleList();
-					if (!in_array($rule, $noNeedAuthRules)) {
-						// 检测访问权限
-						if (!$this->checkRule($rule, [1, 2])) {
-							$this->error('未授权访问!');
-						}
-					}
+                    $noNeedAuthRules = (new AuthRuleModel())->getNoNeedAuthRuleList();
+                    if (!in_array($rule, $noNeedAuthRules)) {
+                        // 检测访问权限
+                        if (!$this->checkRule($rule, [1, 2])) {
+                            $this->error('未授权访问!');
+                        }
+                    }
                 }
             }
         }
     }
-	
+    
     /**
      * 验证登录
      * @return boolean
-	 *
-	 * @create 2019-7-15
-	 * @author deatil
+     *
+     * @create 2019-7-15
+     * @author deatil
      */
     final private function competence()
     {
         // 检查是否登录
         $adminId = AdminService::instance()->isLogin();
         if (empty($adminId)) {
-			return false;
+            return false;
         }
-		
+        
         // 获取当前登录用户信息
         $userInfo = AdminService::instance()->getInfo();
         if (empty($userInfo)) {
             AdminService::instance()->logout();
             return false;
         }
-		
+        
         // 是否锁定
         if (!$userInfo['status']) {
             AdminService::instance()->logout();
             $this->error('您的帐号已经被锁定！', $this->loginUrl);
             return false;
         }
-		
-		Env::set('userinfo', $userInfo);
-		
+        
+        Env::set('userinfo', $userInfo);
+        
         return $userInfo;
     }
 
@@ -143,9 +143,9 @@ class AdminAuthCheck
      * @param string  $rule    检测的规则
      * @param string  $mode    check模式
      * @return boolean
-	 *
-	 * @create 2019-7-15
-	 * @author deatil
+     *
+     * @create 2019-7-15
+     * @author deatil
      */
     final private function checkRule($rule, $type = AuthRule::RULE_URL, $mode = 'url', $relation = 'or')
     {

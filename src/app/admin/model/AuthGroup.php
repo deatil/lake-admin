@@ -30,10 +30,10 @@ class AuthGroup extends Model
     public function getGroups($where = [])
     {
         $map = [
-			'status' => 1, 
-			'type' => self::TYPE_ADMIN, 
-			'module' => 'admin'
-		];
+            'status' => 1, 
+            'type' => self::TYPE_ADMIN, 
+            'module' => 'admin'
+        ];
         return $this->where($map)->where($where)->select();
     }
 
@@ -45,8 +45,8 @@ class AuthGroup extends Model
     public function getRoleIdName($Groupid)
     {
         return $this->where([
-			'id' => $Groupid,
-		])->value('title');
+            'id' => $Groupid,
+        ])->value('title');
     }
 
     /**
@@ -58,8 +58,8 @@ class AuthGroup extends Model
     {
         if (empty($this->roleList)) {
             $this->roleList = $this->order([
-				"id" => "desc",
-			])->column('*', 'id');
+                "id" => "desc",
+            ])->column('*', 'id');
         }
         $arrchildid = $id;
         if (is_array($this->roleList)) {
@@ -85,8 +85,8 @@ class AuthGroup extends Model
         }
         //角色信息
         $info = $this->where([
-			'id' => $Groupid,
-		])->find();
+            'id' => $Groupid,
+        ])->find();
         if (empty($info)) {
             $this->error = '该角色不存在！';
             return false;
@@ -97,15 +97,15 @@ class AuthGroup extends Model
             $this->error = '该角色下有子角色，请删除子角色才可以删除！';
             return false;
         }
-		
-		$status = $this->where(['id' => $Groupid])->delete();
-		if ($status !== false) {
-			Db::name('auth_rule_access')->where([
-				'module' => 'admin',
-				'group_id' => $Groupid,
-			])->delete();
-		}
-		
+        
+        $status = $this->where(['id' => $Groupid])->delete();
+        if ($status !== false) {
+            Db::name('auth_rule_access')->where([
+                'module' => 'admin',
+                'group_id' => $Groupid,
+            ])->delete();
+        }
+        
         return $status !== false ? true : false;
     }
 

@@ -10,12 +10,12 @@ namespace app\admin\controller;
  */
 class Error
 {
-	/**
-	 * 空操作
-	 *
-	 * @create 2019-10-10
-	 * @author deatil
-	 */
+    /**
+     * 空操作
+     *
+     * @create 2019-10-10
+     * @author deatil
+     */
     public function _empty()
     {
         abort(404, '控制器不存在~');

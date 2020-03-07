@@ -17,22 +17,22 @@ class Admin extends Model
     // 设置当前模型对应的完整数据表名称
     protected $name = 'admin';
     protected $insert = ['status' => 1];
-	
+    
     /**
      * 设置ID信息
-	 *
-	 * @create 2019-12-29
-	 * @author deatil
+     *
+     * @create 2019-12-29
+     * @author deatil
      */
-	protected function setIdAttr($value) {
-		return md5(microtime().mt_rand(100000, 999999));
-	}
-	
+    protected function setIdAttr($value) {
+        return md5(microtime().mt_rand(100000, 999999));
+    }
+    
     /**
      * 获取格式化时间
-	 *
-	 * @create 2019-12-29
-	 * @author deatil
+     *
+     * @create 2019-12-29
+     * @author deatil
      */
     public function getLastLoginTimeAttr($value)
     {
@@ -41,13 +41,13 @@ class Admin extends Model
 
     /**
      * 获取格式化IP
-	 *
-	 * @create 2019-12-29
-	 * @author deatil
+     *
+     * @create 2019-12-29
+     * @author deatil
      */
     public function getLastLoginIpAttr($value)
     {
-		$value = intval($value);
+        $value = intval($value);
         return long2ip($value);
     }
 
@@ -65,7 +65,7 @@ class Admin extends Model
         if (false == $userInfo) {
             return false;
         }
-		
+        
         $this->autoLogin($userInfo);
         return true;
     }
@@ -103,28 +103,28 @@ class Admin extends Model
             $this->error = '没有数据！';
             return false;
         }
-		
+        
         $data['id'] = md5(microtime().mt_rand(100000, 999999));
         $data['add_time'] = time();
         $data['add_ip'] = request()->ip(1);
-		
+        
         $id = $this->allowField(true)->save($data);
         if ($id !== false) {
-			if (isset($data['roleid']) && !empty($data['roleid'])) {
-				$roles = explode(',', $data['roleid']);
-				unset($data['roleid']);
-				
-				$group_access = [];
-				foreach ($roles as $role) {
-					$group_access[] = [
-						'module' => 'admin',
-						'admin_id' => $this->id,
-						'group_id' => $role,
-					];
-				}
-				Db::name('auth_group_access')->insertAll($group_access);
-			}			
-			
+            if (isset($data['roleid']) && !empty($data['roleid'])) {
+                $roles = explode(',', $data['roleid']);
+                unset($data['roleid']);
+                
+                $group_access = [];
+                foreach ($roles as $role) {
+                    $group_access[] = [
+                        'module' => 'admin',
+                        'admin_id' => $this->id,
+                        'group_id' => $role,
+                    ];
+                }
+                Db::name('auth_group_access')->insertAll($group_access);
+            }            
+            
             return $id;
         }
         $this->error = '入库失败！';
@@ -143,67 +143,67 @@ class Admin extends Model
             return false;
         }
         $info = $this->where([
-			'id' => $data['id']
-		])->find();
+            'id' => $data['id']
+        ])->find();
         if (empty($info)) {
             $this->error = '该管理员不存在！';
             return false;
         }
-		
+        
         // 密码为空，表示不修改密码
         if (!isset($data['password']) || empty($data['password'])) {
             unset($data['password']);
             unset($data['encrypt']);
         } else {
-			// 对密码进行处理
-			$data['password'] = md5(trim($data['password']));
+            // 对密码进行处理
+            $data['password'] = md5(trim($data['password']));
             $passwordinfo = $this->encryptPassword($data['password']); 
             $data['encrypt'] = $passwordinfo['encrypt'];
             $data['password'] = $passwordinfo['password'];
         }
-		
-		if (isset($data['roleid']) && !empty($data['roleid'])) {
-			$roleid = $data['roleid'];
-			unset($data['roleid']);
-		}
-		
-		/*
+        
+        if (isset($data['roleid']) && !empty($data['roleid'])) {
+            $roleid = $data['roleid'];
+            unset($data['roleid']);
+        }
+        
+        /*
         $status = $this->allowField(true)
-			->isUpdate(true)
-			->save($data, [
-				'id' => $data['id'],
-			]);
-		*/
-			
+            ->isUpdate(true)
+            ->save($data, [
+                'id' => $data['id'],
+            ]);
+        */
+            
         $status = $this
-			->where([
-				'id' => $data['id'],
-			])
-			->update($data);
+            ->where([
+                'id' => $data['id'],
+            ])
+            ->update($data);
         if ($status === false) {
             $this->error = '管理员信息更新失败！';
             return false;
         }
-		
-		if (isset($roleid) && !empty($roleid)) {
-			$roles = explode(',', $roleid);
-			
-			Db::name('auth_group_access')->where([
-				'module' => 'admin',
-				'admin_id' => $data['id'],
-			])->delete();
-			
-			$group_access = [];
-			foreach ($roles as $role) {
-				$group_access[] = [
-					'module' => 'admin',
-					'admin_id' => $data['id'],
-					'group_id' => $role,
-				];
-			}
-			Db::name('auth_group_access')->insertAll($group_access);
-		}
-		
+        
+        if (isset($roleid) && !empty($roleid)) {
+            $roles = explode(',', $roleid);
+            
+            Db::name('auth_group_access')->where([
+                'module' => 'admin',
+                'admin_id' => $data['id'],
+            ])->delete();
+            
+            $group_access = [];
+            foreach ($roles as $role) {
+                $group_access[] = [
+                    'module' => 'admin',
+                    'admin_id' => $data['id'],
+                    'group_id' => $role,
+                ];
+            }
+            Db::name('auth_group_access')->insertAll($group_access);
+        }
+        
         return true;
     }
 
@@ -223,18 +223,18 @@ class Admin extends Model
             $this->error = '禁止对超级管理员执行该操作！';
             return false;
         }
-		
-		$status = $this->where([
-			'id' => $id,
-		])->delete();
-		
+        
+        $status = $this->where([
+            'id' => $id,
+        ])->delete();
+        
         if (false !== $status) {
             Db::name('auth_group_access')->where([
-				'module' => 'admin',
-				'admin_id' => $id,
-			])->delete();
-			
-			return true;
+                'module' => 'admin',
+                'admin_id' => $id,
+            ])->delete();
+            
+            return true;
         } else {
             $this->error = '删除失败！';
             return false;
@@ -253,21 +253,21 @@ class Admin extends Model
         }
 
         $userInfo = $this->where([
-			'id' => $identifier,
-		])->whereOr([
-			'username' => $identifier,
-		])->find();
+            'id' => $identifier,
+        ])->whereOr([
+            'username' => $identifier,
+        ])->find();
         if (empty($userInfo)) {
             return false;
         }
-		
+        
         // 密码验证
         if (!empty($password) 
-			&& $this->encryptPassword($password, $userInfo['encrypt']) != $userInfo['password']
-		) {
+            && $this->encryptPassword($password, $userInfo['encrypt']) != $userInfo['password']
+        ) {
             return false;
         }
-		
+        
         return $userInfo;
     }
 
@@ -279,24 +279,24 @@ class Admin extends Model
     public function loginStatus($id)
     {
         $data = [
-			'last_login_time' => time(), 
-			'last_login_ip' => request()->ip(1)
-		];
+            'last_login_time' => time(), 
+            'last_login_ip' => request()->ip(1)
+        ];
         return $this->save($data, ['id' => $id]);
     }
 
-	/**
-	 * 管理员密码加密
-	 * @param $password
-	 * @param $encrypt //传入加密串，在修改密码时做认证
-	 * @return array/password
-	 */
-	protected function encryptPassword($password, $encrypt = '')
-	{
-		$pwd = [];
-		$pwd['encrypt'] = $encrypt ? $encrypt : get_random_string();
-		$pwd['password'] = md5(md5(trim($password) . $pwd['encrypt']) . config("admin_salt"));
-		return $encrypt ? $pwd['password'] : $pwd;
-	}
-	
+    /**
+     * 管理员密码加密
+     * @param $password
+     * @param $encrypt //传入加密串，在修改密码时做认证
+     * @return array/password
+     */
+    protected function encryptPassword($password, $encrypt = '')
+    {
+        $pwd = [];
+        $pwd['encrypt'] = $encrypt ? $encrypt : get_random_string();
+        $pwd['password'] = md5(md5(trim($password) . $pwd['encrypt']) . config("admin_salt"));
+        return $encrypt ? $pwd['password'] : $pwd;
+    }
+    
 }

@@ -100,7 +100,7 @@ return [
     'request_cache_expire' => null,
     // 全局请求缓存排除规则
     'request_cache_except' => [],
-	
+    
     // 默认跳转页面对应的模板文件
     'dispatch_success_tmpl' => env('lake_admin_module_path') . 'tpl' . DIRECTORY_SEPARATOR . 'dispatch_jump.tpl',
     'dispatch_error_tmpl' => env('lake_admin_module_path') . 'tpl' . DIRECTORY_SEPARATOR . 'dispatch_jump.tpl',
@@ -117,9 +117,9 @@ return [
 
     // +----------------------------------------------------------------------
     // | 系统设置
-    // +----------------------------------------------------------------------	
-	
+    // +----------------------------------------------------------------------    
+    
     // 管理员盐
     'admin_salt' => 'd,d7ja0db1a974;38cE84976abbac2cd',
-	
+    
 ];

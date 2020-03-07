@@ -83,46 +83,46 @@ class Attachment extends Model
     public function getFilePath($id = '', $type = 0)
     {
         $uploadPath = config('public_url') . 'uploads/';
-		
+        
         if ((strpos($id, ',') !== false) || is_array($id)) {
             if (!is_array($id)) {
-				$ids = explode(',', $id);
-			} else {
-				$ids = $id;
-			}
-			
+                $ids = explode(',', $id);
+            } else {
+                $ids = $id;
+            }
+            
             $data_list = $this->where([
-					['id', 'in', $ids],
-				])
-				->field('path,driver,thumb')
-				->select();
+                    ['id', 'in', $ids],
+                ])
+                ->field('path,driver,thumb')
+                ->select();
             $paths = [];
-			if (!empty($data_list)) {
-				foreach ($data_list as $key => $value) {
-					if ($value['driver'] == 'local') {
-						$paths[$key] = ($type == 0 ? $uploadPath : '') . $value['path'];
-					} else {
-						$paths[$key] = $value['path'];
-					}
-				}
-			}
-			
+            if (!empty($data_list)) {
+                foreach ($data_list as $key => $value) {
+                    if ($value['driver'] == 'local') {
+                        $paths[$key] = ($type == 0 ? $uploadPath : '') . $value['path'];
+                    } else {
+                        $paths[$key] = $value['path'];
+                    }
+                }
+            }
+            
             return $paths;
         } else {
             $data = $this->where([
-					['id', '=', $id],
-				])
-				->field('path,driver,thumb')
-				->find();
+                    ['id', '=', $id],
+                ])
+                ->field('path,driver,thumb')
+                ->find();
             if (empty($data)) {
                 return '';
             }
-			
-			if ($data['driver'] == 'local') {
-				return ($type == 0 ? $uploadPath : '') . $data['path'];
-			} else {
-				return $data['path'];
-			}
+            
+            if ($data['driver'] == 'local') {
+                return ($type == 0 ? $uploadPath : '') . $data['path'];
+            } else {
+                return $data['path'];
+            }
         }
     }
 
@@ -138,9 +138,9 @@ class Attachment extends Model
 
     /**
      * 根据附件id删除附件
-	 *
-	 * @create 2019-10-22
-	 * @author deatil
+     *
+     * @create 2019-10-22
+     * @author deatil
      */
     public function deleteFile($id)
     {
@@ -150,16 +150,16 @@ class Attachment extends Model
         if (!isset($file_path['path'])) {
             throw new \Exception("文件数据库记录已不存在~");
         }
-		
-		$real_path = realpath($path . '/' . $file_path['path']);
-		if (!is_file($real_path) || !unlink($real_path)) {
-			throw new \Exception("删除" . $real_path . "失败");
-		}
-		
-		$status = self::where('id', $id)->delete();
-		if ($status === false) {
-			throw new \Exception("删除" . $real_path . "失败");
-		}
+        
+        $real_path = realpath($path . '/' . $file_path['path']);
+        if (!is_file($real_path) || !unlink($real_path)) {
+            throw new \Exception("删除" . $real_path . "失败");
+        }
+        
+        $status = self::where('id', $id)->delete();
+        if ($status === false) {
+            throw new \Exception("删除" . $real_path . "失败");
+        }
     }
 
 }

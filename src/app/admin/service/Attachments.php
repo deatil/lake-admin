@@ -26,20 +26,20 @@ class Attachments
         $this->uploadUrl = config('public_url') . 'uploads/';
         $this->uploadPath = config('upload_path');
     }
-	
-	/**
-	 * 设置类型数据
-	 *
-	 * @create 2019-7-18
-	 * @author deatil
-	 */
-	public function setTypeInfo($type, $type_id)
-	{
-		$this->type = $type;
-		$this->type_id = $type_id;
-		
-		return $this;
-	}
+    
+    /**
+     * 设置类型数据
+     *
+     * @create 2019-7-18
+     * @author deatil
+     */
+    public function setTypeInfo($type, $type_id)
+    {
+        $this->type = $type;
+        $this->type_id = $type_id;
+        
+        return $this;
+    }
 
     /**
      * html代码远程图片本地化
@@ -56,8 +56,8 @@ class Attachments
 
         $file_info = [
             'module' => 'admin',
-			'type' => $this->type,
-			'type_id' => $this->type_id,
+            'type' => $this->type,
+            'type_id' => $this->type_id,
             'thumb' => '',
         ];
         foreach ($urls as $vo) {

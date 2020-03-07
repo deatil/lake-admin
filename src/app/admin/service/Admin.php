@@ -24,9 +24,9 @@ class Admin
      * 获取示例
      * @param array $options 实例配置
      * @return static
-	 *
-	 * @create 2019-7-9
-	 * @author deatil
+     *
+     * @create 2019-7-9
+     * @author deatil
      */
     public static function instance($options = [])
     {
@@ -41,9 +41,9 @@ class Admin
      * 魔术方法
      * @param type $name
      * @return null
-	 *
-	 * @create 2019-7-9
-	 * @author deatil
+     *
+     * @create 2019-7-9
+     * @author deatil
      */
     public function __get($name)
     {
@@ -62,9 +62,9 @@ class Admin
     /**
      * 获取当前登录用户资料
      * @return array
-	 *
-	 * @create 2019-7-9
-	 * @author deatil
+     *
+     * @create 2019-7-9
+     * @author deatil
      */
     public function getInfo()
     {
@@ -77,9 +77,9 @@ class Admin
     /**
      * 检验用户是否已经登陆
      * @return boolean 失败返回false，成功返回当前登陆用户基本信息
-	 *
-	 * @create 2019-7-9
-	 * @author deatil
+     *
+     * @create 2019-7-9
+     * @author deatil
      */
     public function isLogin()
     {
@@ -88,49 +88,49 @@ class Admin
             return 0;
         }
  
-		return Session::get('admin_user_auth_sign') == data_auth_sign($user) ? $user['uid'] : 0;
+        return Session::get('admin_user_auth_sign') == data_auth_sign($user) ? $user['uid'] : 0;
     }
 
     /**
      * 检查当前用户是否超级管理员
      * @return boolean
-	 *
-	 * @create 2019-7-9
-	 * @author deatil
+     *
+     * @create 2019-7-9
+     * @author deatil
      */
     public function isAdministrator($uid = null)
     {
-		if (empty($uid)) {
-			$userInfo = $this->getInfo();
-			
-			if (!empty($userInfo)) {
-				$uid = $userInfo['id'];
-			}
-		}
-		
-        if (!empty($uid)) {
-			$gids = Db::name('auth_group')
-				->alias('ag')
-				->join('__AUTH_GROUP_ACCESS__ aga', "aga.group_id = ag.id")
-				->where([
-					'aga.admin_id' => $uid,
-					'ag.is_root' => 1,
-				])
-				->column('ag.id');
-			if (!empty($gids)) {
-				return true;
-			}
+        if (empty($uid)) {
+            $userInfo = $this->getInfo();
+            
+            if (!empty($userInfo)) {
+                $uid = $userInfo['id'];
+            }
         }
-		
+        
+        if (!empty($uid)) {
+            $gids = Db::name('auth_group')
+                ->alias('ag')
+                ->join('__AUTH_GROUP_ACCESS__ aga', "aga.group_id = ag.id")
+                ->where([
+                    'aga.admin_id' => $uid,
+                    'ag.is_root' => 1,
+                ])
+                ->column('ag.id');
+            if (!empty($gids)) {
+                return true;
+            }
+        }
+        
         return false;
     }
 
     /**
      * 注销登录状态
      * @return boolean
-	 *
-	 * @create 2019-7-9
-	 * @author deatil
+     *
+     * @create 2019-7-9
+     * @author deatil
      */
     public function logout()
     {
@@ -142,9 +142,9 @@ class Admin
      * 获取用户信息
      * @param type $identifier 用户名或者用户ID
      * @return boolean|array
-	 *
-	 * @create 2019-7-9
-	 * @author deatil
+     *
+     * @create 2019-7-9
+     * @author deatil
      */
     private function getUserInfo($identifier, $password = null)
     {
@@ -158,9 +158,9 @@ class Admin
      * 获取错误信息
      * @access public
      * @return mixed
-	 *
-	 * @create 2019-7-9
-	 * @author deatil
+     *
+     * @create 2019-7-9
+     * @author deatil
      */
     public function getError()
     {

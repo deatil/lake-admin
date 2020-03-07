@@ -18,83 +18,83 @@ use app\admin\module\Module as ModuleService;
 class Module extends Base
 {
 
-	/**
-	 * 框架构造函数
-	 *
-	 * @create 2019-8-5
-	 * @author deatil
-	 */
+    /**
+     * 框架构造函数
+     *
+     * @create 2019-8-5
+     * @author deatil
+     */
     protected function initialize()
     {
         parent::initialize();
-		
+        
         $this->ModuleService = new ModuleService();
     }
 
-	/**
-	 * 已安装
-	 *
-	 * @create 2019-9-20
-	 * @author deatil
-	 */
+    /**
+     * 已安装
+     *
+     * @create 2019-9-20
+     * @author deatil
+     */
     public function index()
     {
         if ($this->request->isAjax()) {
             $limit = $this->request->param('limit/d', 10);
             $page = $this->request->param('page/d', 1);
-			
-			$list = Db::name('module')
-				->page($page, $limit)
-				->order('listorder asc')
-				->select();
-			
-			if (!empty($list)) {
-				foreach ($list as $k => $v) {
-					$list[$k]['icon'] = $this->ModuleService->getModuleIconData($v['module']);
-				}
-			}
-			
+            
+            $list = Db::name('module')
+                ->page($page, $limit)
+                ->order('listorder asc')
+                ->select();
+            
+            if (!empty($list)) {
+                foreach ($list as $k => $v) {
+                    $list[$k]['icon'] = $this->ModuleService->getModuleIconData($v['module']);
+                }
+            }
+            
             return json([
-				"code" => 0, 
-				"data" => $list,
-			]);
+                "code" => 0, 
+                "data" => $list,
+            ]);
         } else {
-			return $this->fetch();
-		}
+            return $this->fetch();
+        }
     }
 
-	/**
-	 * 本地全部模块列表
-	 *
-	 * @create 2019-9-20
-	 * @author deatil
-	 */
+    /**
+     * 本地全部模块列表
+     *
+     * @create 2019-9-20
+     * @author deatil
+     */
     public function all()
     {
         if ($this->request->isAjax()) {
             $list = $this->ModuleService->getAll();
-			
-			if (!empty($list)) {
-				foreach ($list as $k => $v) {
-					$list[$k]['icon'] = $this->ModuleService->getModuleIconData($v['module']);
-				}
-			}
+            
+            if (!empty($list)) {
+                foreach ($list as $k => $v) {
+                    $list[$k]['icon'] = $this->ModuleService->getModuleIconData($v['module']);
+                }
+            }
 
             return json([
-				"code" => 0, 
-				"data" => $list,
-			]);
+                "code" => 0, 
+                "data" => $list,
+            ]);
         } else {
-			return $this->fetch();
-		}
+            return $this->fetch();
+        }
     }
 
-	/**
-	 * 模块安装
-	 *
-	 * @create 2019-7-24
-	 * @author deatil
-	 */
+    /**
+     * 模块安装
+     *
+     * @create 2019-7-24
+     * @author deatil
+     */
     public function install()
     {
         if ($this->request->isPost()) {
@@ -113,11 +113,11 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要安装的模块！');
             }
-			
+            
             $config = $this->ModuleService->getInfoFromFile($module);
-			
+            
             // 版本检查
-			$version_check = '';
+            $version_check = '';
             if ($config['adaptation']) {
                 if (version_compare(config('lake.version'), $config['adaptation'], '>=') == false) {
                     $version_check = '<i class="iconfont icon-delete text-danger"></i>';
@@ -125,19 +125,19 @@ class Module extends Base
                     $version_check = '<i class="iconfont icon-success text-success"></i>';
                 }
             }
-			
+            
             $need_module = [];
             $table_check = [];
-			
+            
             // 检查模块依赖
             if (isset($config['need_module']) && !empty($config['need_module'])) {
                 $need_module = $this->checkDependence($config['need_module']);
             }
-			
+            
             // 检查数据表
             if (isset($config['tables']) && !empty($config['tables'])) {
-				foreach ($config['tables'] as $table) {
-					$table = config('database.prefix') . $table;
+                foreach ($config['tables'] as $table) {
+                    $table = config('database.prefix') . $table;
                     if (Db::query("SHOW TABLES LIKE '{$table}'")) {
                         $table_check[] = [
                             'table' => "{$table}",
@@ -152,23 +152,23 @@ class Module extends Base
                 }
 
             }
-			
+            
             $this->assign('need_module', $need_module);
             $this->assign('version_check', $version_check);
             $this->assign('table_check', $table_check);
             $this->assign('config', $config);
-			
+            
             return $this->fetch();
 
         }
     }
 
-	/**
-	 * 模块卸载
-	 *
-	 * @create 2019-7-24
-	 * @author deatil
-	 */
+    /**
+     * 模块卸载
+     *
+     * @create 2019-7-24
+     * @author deatil
+     */
     public function uninstall()
     {
         if ($this->request->isPost()) {
@@ -194,12 +194,12 @@ class Module extends Base
         }
     }
 
-	/**
-	 * 模块更新
-	 *
-	 * @create 2019-7-24
-	 * @author deatil
-	 */
+    /**
+     * 模块更新
+     *
+     * @create 2019-7-24
+     * @author deatil
+     */
     public function upgrade()
     {
         if ($this->request->isPost()) {
@@ -218,9 +218,9 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要安装的模块！');
             }
-			
+            
             $config = $this->ModuleService->getInfoFromFile($module);
-			
+            
             // 版本检查
             if ($config['adaptation']) {
                 if (version_compare(config('lake.version'), $config['adaptation'], '>=') == false) {
@@ -229,23 +229,23 @@ class Module extends Base
                     $version_check = '<i class="iconfont icon-success text-success"></i>';
                 }
             }
-			
+            
             $need_module = [];
             $table_check = [];
-			
+            
             // 检查模块依赖
             if (isset($config['need_module']) && !empty($config['need_module'])) {
                 $need_module = $this->checkDependence($config['need_module']);
             }
-			
+            
             // 检查数据表
             if (isset($config['tables']) && !empty($config['tables'])) {
-				foreach ($config['tables'] as $table) {
-					$table = str_replace([
-						'pre__'
-					], [
-						config('database.prefix')
-					], $table);
+                foreach ($config['tables'] as $table) {
+                    $table = str_replace([
+                        'pre__'
+                    ], [
+                        config('database.prefix')
+                    ], $table);
                     if (Db::query("SHOW TABLES LIKE '{$table}'")) {
                         $table_check[] = [
                             'table' => "{$table}",
@@ -260,12 +260,12 @@ class Module extends Base
                 }
 
             }
-			
+            
             $this->assign('need_module', $need_module);
             $this->assign('version_check', $version_check);
             $this->assign('table_check', $table_check);
             $this->assign('config', $config);
-			
+            
             return $this->fetch();
 
         }
@@ -284,7 +284,7 @@ class Module extends Base
             if (!isset($value[2])) {
                 $value[2] = '=';
             }
-			
+            
             // 当前版本
             $curr_version = Db::name('Module')->where('module', $value[0])->value('version');
 
@@ -300,212 +300,212 @@ class Module extends Base
         return $need;
     }
 
-	/**
-	 * 本地安装
-	 *
-	 * @create 2019-7-24
-	 * @author deatil
-	 */
+    /**
+     * 本地安装
+     *
+     * @create 2019-7-24
+     * @author deatil
+     */
     public function local()
     {
-		if (!$this->request->isPost()) {
+        if (!$this->request->isPost()) {
             $this->error('访问错误！');
-		}
-	
-		$files = $this->request->file('file');
-		if ($files == null) {
-			$this->error("请选择上传文件！");
-		}
-		
-		if (strtolower(substr($files->getInfo('name'), -3, 3)) != 'zip') {
-			$this->error("上传的文件格式有误！");
-		}
-		
-		// 插件名称
-		$moduleName = pathinfo($files->getInfo('name'));
-		$moduleName = $moduleName['filename'];
-		// 检查插件目录是否存在
-		if (!$this->ModuleService->isLocal($moduleName)) {
-			$this->error($this->ModuleService->getError());
-		}
+        }
+    
+        $files = $this->request->file('file');
+        if ($files == null) {
+            $this->error("请选择上传文件！");
+        }
+        
+        if (strtolower(substr($files->getInfo('name'), -3, 3)) != 'zip') {
+            $this->error("上传的文件格式有误！");
+        }
+        
+        // 插件名称
+        $moduleName = pathinfo($files->getInfo('name'));
+        $moduleName = $moduleName['filename'];
+        // 检查插件目录是否存在
+        if (!$this->ModuleService->isLocal($moduleName)) {
+            $this->error($this->ModuleService->getError());
+        }
 
-		// 上传临时文件地址
-		$filename = $files->getInfo('tmp_name');
-		$zip = new PclZip($filename);
-		$status = $zip->extract(PCLZIP_OPT_PATH, env('lake_module_path') . $moduleName);
-		if (!$status) {
-			$this->error('模块解压失败！');
-		}
-		
-		$this->success('模块上传成功，可以进入模块管理进行安装！', url('all'));
+        // 上传临时文件地址
+        $filename = $files->getInfo('tmp_name');
+        $zip = new PclZip($filename);
+        $status = $zip->extract(PCLZIP_OPT_PATH, env('lake_module_path') . $moduleName);
+        if (!$status) {
+            $this->error('模块解压失败！');
+        }
+        
+        $this->success('模块上传成功，可以进入模块管理进行安装！', url('all'));
     }
-	
-	/**
-	 * 设置插件页面
-	 *
-	 * @create 2019-7-24
-	 * @author deatil
-	 */
+    
+    /**
+     * 设置插件页面
+     *
+     * @create 2019-7-24
+     * @author deatil
+     */
     public function config()
     {
         if (!$this->request->isGet()) {
-			$this->error("请求错误！");
-		}
-		
+            $this->error("请求错误！");
+        }
+        
         $module_id = $this->request->param('module/s');
         if (empty($module_id)) {
             $this->error('请选择需要操作的模块！');
         }
-		
+        
         // 获取插件信息
         $module = Db::name('module')->where([
-			'module' => $module_id,
-			'status' => 1,
-		])->find();
+            'module' => $module_id,
+            'status' => 1,
+        ])->find();
         if (empty($module)) {
             $this->error('该模块没有安装或者被禁用！');
         }
         
-		$module['setting'] = json_decode($module['setting'], true);
-		$setting_data = $module['setting_data'];
-		
+        $module['setting'] = json_decode($module['setting'], true);
+        $setting_data = $module['setting_data'];
+        
         // 载入插件配置数组
         if (!empty($setting_data)) {
             $setting_data = json_decode($setting_data, true);
             if (!empty($setting_data)) {
-				foreach ($module['setting'] as $key => $value) {
-					if ($value['type'] != 'group') {
-						$module['setting'][$key]['value'] = isset($setting_data[$key]) ? $setting_data[$key] : '';
-					} else {
-						foreach ($value['options'] as $gourp => $options) {
-							foreach ($options['options'] as $gkey => $value) {
-								$module['setting'][$key]['options'][$gourp]['options'][$gkey]['value'] = $setting_data[$gkey];
-							}
-						}
-					}
-				}
+                foreach ($module['setting'] as $key => $value) {
+                    if ($value['type'] != 'group') {
+                        $module['setting'][$key]['value'] = isset($setting_data[$key]) ? $setting_data[$key] : '';
+                    } else {
+                        foreach ($value['options'] as $gourp => $options) {
+                            foreach ($options['options'] as $gkey => $value) {
+                                $module['setting'][$key]['options'][$gourp]['options'][$gkey]['value'] = $setting_data[$gkey];
+                            }
+                        }
+                    }
+                }
             }
         }
-		
+        
         $this->assign('data', $module);
-		
+        
         return $this->fetch();
     }
 
-	/**
-	 * 保存模块设置
-	 *
-	 * @create 2019-7-24
-	 * @author deatil
-	 */
+    /**
+     * 保存模块设置
+     *
+     * @create 2019-7-24
+     * @author deatil
+     */
     public function saveConfig()
     {
-		if (!$this->request->isPost()) {
+        if (!$this->request->isPost()) {
             $this->error('访问错误！');
-		}
-		
+        }
+        
         $module_id = $this->request->param('module/s');
         if (empty($module_id)) {
             $this->error('请选择需要操作的模块！');
         }
-		
+        
         //获取插件信息
         $module = Db::name('module')->where([
-			'module' => $module_id,
-			'status' => 1,
-		])->find();
+            'module' => $module_id,
+            'status' => 1,
+        ])->find();
         if (empty($module)) {
             $this->error('该模块没有安装或者被禁用！');
         }
-		
+        
         $config = $this->request->param('config/a');
         $flag = Db::name('module')->where([
-			'module' => $module_id,
-		])->setField('setting_data', json_encode($config));
-		
+            'module' => $module_id,
+        ])->setField('setting_data', json_encode($config));
+        
         if ($flag === false) {
             $this->error('保存失败');
         }
-		
-		$this->success('保存成功');
+        
+        $this->success('保存成功');
     }
 
     /**
      * 模块详情
-	 *
-	 * @create 2019-7-30
-	 * @author deatil
+     *
+     * @create 2019-7-30
+     * @author deatil
      */
     public function view()
     {
         if (!$this->request->isGet()) {
-			$this->error("请求错误！");
-		}
-		
-		$module = $this->request->param('module/s');
-		$data = Db::name('module')->where([
-			"module" => $module,
-		])->find();
-		if (empty($data)) {
-			$this->error('信息不存在！');
-		}
-		
-		$this->assign("data", $data);
-		return $this->fetch();
+            $this->error("请求错误！");
+        }
+        
+        $module = $this->request->param('module/s');
+        $data = Db::name('module')->where([
+            "module" => $module,
+        ])->find();
+        if (empty($data)) {
+            $this->error('信息不存在！');
+        }
+        
+        $this->assign("data", $data);
+        return $this->fetch();
     }
-	
+    
     /**
-	 * 启用
-	 *
-	 * @create 2019-7-14
-	 * @author deatil
-	 */
+     * 启用
+     *
+     * @create 2019-7-14
+     * @author deatil
+     */
     public function enable()
     {
-		if (!$this->request->isPost()) {
+        if (!$this->request->isPost()) {
             $this->error('访问错误！');
-		}
-		
+        }
+        
         $module = $this->request->param('module/s');
         if (empty($module)) {
             $this->error('模块ID错误！');
         }
-		
-		$status = $this->ModuleService->enable($module);
+        
+        $status = $this->ModuleService->enable($module);
 
         if ($status === false) {
-			$error = $this->ModuleService->getError();
+            $error = $this->ModuleService->getError();
             $this->error($error);
         }
-		
-		$this->success('启用成功！');
+        
+        $this->success('启用成功！');
     }
 
     /**
-	 * 禁用
-	 *
-	 * @create 2019-7-14
-	 * @author deatil
-	 */
+     * 禁用
+     *
+     * @create 2019-7-14
+     * @author deatil
+     */
     public function disable()
     {
-		if (!$this->request->isPost()) {
+        if (!$this->request->isPost()) {
             $this->error('访问错误！');
-		}
-		
+        }
+        
         $module = $this->request->param('module/s');
         if (empty($module)) {
             $this->error('模块ID错误！');
         }
-		
-		$status = $this->ModuleService->disable($module);
+        
+        $status = $this->ModuleService->disable($module);
 
         if ($status === false) {
-			$error = $this->ModuleService->getError();
+            $error = $this->ModuleService->getError();
             $this->error($error);
         }
-		
-		$this->success('禁用成功！');
+        
+        $this->success('禁用成功！');
     }
 
 }

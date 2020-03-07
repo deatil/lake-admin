@@ -15,32 +15,32 @@ class Profile extends Base
 
     /**
      * 管理员账号修改
-	 *
-	 * @create 2019-7-2
-	 * @author deatil
+     *
+     * @create 2019-7-2
+     * @author deatil
      */
     public function index()
     {
-		$AdminModel = new AdminModel;
+        $AdminModel = new AdminModel;
         if ($this->request->isPost()) {
             $post = $this->request->post();
-			
-			$data = [];
-			$data['id'] = $post['id'];
-			$data['avatar'] = $post['avatar'];
+            
+            $data = [];
+            $data['id'] = $post['id'];
+            $data['avatar'] = $post['avatar'];
 
-			$status = $AdminModel->allowField(true)->isUpdate(true)->save($data);
-			
+            $status = $AdminModel->allowField(true)->isUpdate(true)->save($data);
+            
             if ($status === false) {
                 $this->error('修改失败！');
             }
-			
-			$this->success("修改成功！");
+            
+            $this->success("修改成功！");
         } else {
             $id = $this->_userinfo['id'];
             $data = $AdminModel->where([
-				"id" => $id,
-			])->find();
+                "id" => $id,
+            ])->find();
             if (empty($data)) {
                 $this->error('该信息不存在！');
             }
@@ -51,16 +51,16 @@ class Profile extends Base
 
     /**
      * 管理员密码修改
-	 *
-	 * @create 2019-7-2
-	 * @author deatil
+     *
+     * @create 2019-7-2
+     * @author deatil
      */
     public function password()
     {
-		$AdminModel = new AdminModel;
+        $AdminModel = new AdminModel;
         if ($this->request->isPost()) {
             $post = $this->request->post();
-			
+            
             // 验证数据
             $rule = [
                 'password|旧密码' => 'require|length:3,20',
@@ -71,54 +71,54 @@ class Profile extends Base
             if (true !== $result) {
                 return $this->error($result);
             }
-			
-			if (empty($post) || !isset($post['id']) || !is_array($post)) {
-				$this->error('没有修改的数据！');
-			}
-			
-			if (!isset($post['password']) || empty($post['password'])) {
-				$this->error('请填写旧密码！');
-			}
+            
+            if (empty($post) || !isset($post['id']) || !is_array($post)) {
+                $this->error('没有修改的数据！');
+            }
+            
+            if (!isset($post['password']) || empty($post['password'])) {
+                $this->error('请填写旧密码！');
+            }
 
-			if (!isset($post['password2']) || empty($post['password2'])) {
-				$this->error('请填写新密码！');
-			}
+            if (!isset($post['password2']) || empty($post['password2'])) {
+                $this->error('请填写新密码！');
+            }
 
-			if (!isset($post['password2_confirm']) || empty($post['password2_confirm'])) {
-				$this->error('请填写确认密码！');
-			}
-			
-			if ($post['password2'] != $post['password2_confirm']) {
-				$this->error('确认密码错误！');
-			}
-			
-			if ($post['password2'] == $post['password']) {
-				$this->error('请确保新密码与旧密码不同');
-			}
-			
+            if (!isset($post['password2_confirm']) || empty($post['password2_confirm'])) {
+                $this->error('请填写确认密码！');
+            }
+            
+            if ($post['password2'] != $post['password2_confirm']) {
+                $this->error('确认密码错误！');
+            }
+            
+            if ($post['password2'] == $post['password']) {
+                $this->error('请确保新密码与旧密码不同');
+            }
+            
             if (!$AdminModel->login($this->_userinfo['username'], $post['password'])) {
-				$this->error('旧密码错误！');
-			}
+                $this->error('旧密码错误！');
+            }
 
-			$passwordinfo = encrypt_password($post['password2']); //对密码进行处理
-			
-			$data = [];
-			$data['id'] = $post['id'];
-			$data['encrypt'] = $passwordinfo['encrypt'];
-			$data['password'] = $passwordinfo['password'];
+            $passwordinfo = encrypt_password($post['password2']); //对密码进行处理
+            
+            $data = [];
+            $data['id'] = $post['id'];
+            $data['encrypt'] = $passwordinfo['encrypt'];
+            $data['password'] = $passwordinfo['password'];
 
-			$status = $AdminModel->allowField(true)->isUpdate(true)->save($data);
-			
+            $status = $AdminModel->allowField(true)->isUpdate(true)->save($data);
+            
             if ($status === false) {
                 $this->error('修改失败！');
             }
-			
-			$this->success("修改成功！");
+            
+            $this->success("修改成功！");
         } else {
             $id = $this->_userinfo['id'];
             $data = $AdminModel->where([
-				"id" => $id,
-			])->find();
+                "id" => $id,
+            ])->find();
             if (empty($data)) {
                 $this->error('该信息不存在！');
             }

@@ -22,61 +22,61 @@ class Index extends Base
 
     /**
      * 后台首页
-	 *
-	 * @create 2019-7-7
-	 * @author deatil
+     *
+     * @create 2019-7-7
+     * @author deatil
      */
     public function index()
     {
-		// 用户信息
+        // 用户信息
         $this->assign('user_info', $this->_userinfo);
 
-		// 左侧菜单
-		$menus = (new AuthRuleModel())->getMenuList();
+        // 左侧菜单
+        $menus = (new AuthRuleModel())->getMenuList();
         $this->assign("menus", $menus);
-		
-		// 默认后台首页
-		$default_main_url = url('index/main');
-		
-		// 兼容自定义后台首页
-		$main_url = Hook::listen('lake_admin_main_url', $default_main_url, true);
-		if (empty($main_url)) {
-			$main_url = $default_main_url;
-		}
-		
+        
+        // 默认后台首页
+        $default_main_url = url('index/main');
+        
+        // 兼容自定义后台首页
+        $main_url = Hook::listen('lake_admin_main_url', $default_main_url, true);
+        if (empty($main_url)) {
+            $main_url = $default_main_url;
+        }
+        
         $this->assign("main_url", $main_url);
-		
+        
         return $this->fetch();
     }
-	
+    
     /**
      * 欢迎首页
-	 *
-	 * @create 2019-8-14
-	 * @author deatil
+     *
+     * @create 2019-8-14
+     * @author deatil
      */
     public function main()
     {
         $this->assign('user_info', $this->_userinfo);
-		
-		// 模型数量
-		$module_count = Db::name('module')->count();
+        
+        // 模型数量
+        $module_count = Db::name('module')->count();
         $this->assign('module_count', $module_count);
-		
-		// 附件数量
-		$attachment_count = Db::name('attachment')->count();
+        
+        // 附件数量
+        $attachment_count = Db::name('attachment')->count();
         $this->assign('attachment_count', $attachment_count);
-		
+        
         $this->assign('sys_info', $this->getSysInfo());
-		
+        
         return $this->fetch();
     }
 
     /**
      * phpinfo信息 按需显示在前台
-	 *
-	 * @create 2019-8-14
-	 * @author deatil
+     *
+     * @create 2019-8-14
+     * @author deatil
      */
     protected function getSysInfo()
     {
@@ -112,9 +112,9 @@ class Index extends Base
 
     /**
      * 缓存更新
-	 *
-	 * @create 2019-7-7
-	 * @author deatil
+     *
+     * @create 2019-7-7
+     * @author deatil
      */
     public function cache()
     {
@@ -133,7 +133,7 @@ class Index extends Base
                     break;
                 }
         }
-		
+        
         $this->success('清理缓存成功');
     }
 

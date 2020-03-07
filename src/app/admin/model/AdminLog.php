@@ -29,15 +29,15 @@ class AdminLog extends Model
      */
     public function record($message, $status = 0)
     {
-		$admin_id = AdminUser::instance()->isLogin();
-		if ($admin_id > 0) {
-			$userInfo = env("userInfo");
-			$admin_username = $userInfo['username'];
-		} else {
-			$admin_id = 0;
-			$admin_username = '';
-		}
-	
+        $admin_id = AdminUser::instance()->isLogin();
+        if ($admin_id > 0) {
+            $userInfo = env("userInfo");
+            $admin_username = $userInfo['username'];
+        } else {
+            $admin_id = 0;
+            $admin_username = '';
+        }
+    
         $data = [
             'id' => md5(time().mt_rand(10000, 99999)),
             'admin_id' => $admin_id,
