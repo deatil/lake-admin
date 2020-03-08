@@ -28,10 +28,10 @@ class InitConfig
     public function run($params)
     {
         // 定义系统配置信息
-        $this->setAppConfig($params);
+        $this->setAppConfig();
         
         // 定义系统相关信息
-        $this->setAppEnv($params);
+        $this->setAppEnv();
     }
     
     /**
@@ -40,7 +40,7 @@ class InitConfig
      * @create 2019-7-6
      * @author deatil
      */
-    private function setAppConfig(& $params)
+    private function setAppConfig()
     {
         // 读取系统配置
         $system_config = model('admin/Config')->getConfigList();
@@ -61,7 +61,7 @@ class InitConfig
      * @create 2019-7-6
      * @author deatil
      */
-    private function setAppEnv(& $params)
+    private function setAppEnv()
     {
         $lake_module_path = env('root_path') . 'addons' . DIRECTORY_SEPARATOR;
         $root_url = rtrim(dirname($_SERVER["SCRIPT_NAME"]), '\\/') . '/';
