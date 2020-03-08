@@ -131,23 +131,21 @@ class InitHook
      */
     private function addModuleHooks()
     {
-        $data = Cache::get('lake_admin_hooks');
-        if (empty($data)) {
+        $hooks = Cache::get('lake_admin_hooks');
+        if (empty($hooks)) {
             // 所有模块钩子
             $hooks = Db::name('Hook')
                 ->field('name, class')
                 ->order('listorder ASC')
                 ->select();
-            if (!empty($hooks)) {
-                foreach ($hooks as $key => $value) {
-                    Hook::add($value['name'], $value['class']);
-                }
-            }
             
             Cache::set('lake_admin_hooks', $hooks);
-        } else {
-            // 批量导入插件
-            Hook::import($data, false);
+        }
+
+        if (!empty($hooks)) {
+            foreach ($hooks as $key => $value) {
+                Hook::add($value['name'], $value['class']);
+            }
         }
     }
 
