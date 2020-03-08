@@ -44,15 +44,14 @@ class InitConfig
     {
         // 读取系统配置
         $system_config = model('admin/Config')->getConfigList();
-
+        
+        // 设置配置信息
         if (!empty($system_config)) {
-            // 设置配置信息
-            if (!empty($system_config)) {
-                foreach ($system_config as $key => $value) {
-                    Config::set($key, $value);
-                }
+            foreach ($system_config as $key => $value) {
+                Config::set($key, $value);
             }
         }
+        
     }
     
     /**
