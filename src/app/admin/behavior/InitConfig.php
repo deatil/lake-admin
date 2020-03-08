@@ -8,7 +8,7 @@ use think\facade\Config;
 /**
  * 初始化配置信息行为
  * 将系统配置信息合并到本地配置
- * @package app\common\behavior
+ * @package app\admin\behavior
  *
  * @create 2019-7-6
  * @author deatil
