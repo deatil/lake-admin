@@ -11,12 +11,12 @@
                     <select name="group" lay-verify="required">
                         <option value=""></option>
                         {volist name="groupArray" id="vo"}
-							<option value="{$key}" {if $key==$group}selected{/if}>{$vo}[{$key}]</option>
+                            <option value="{$key}" {if $key==$group}selected{/if}>{$vo}[{$key}]</option>
                         {/volist}
                     </select>
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">配置类型</label>
                 <div class="layui-input-inline w300">
@@ -28,7 +28,7 @@
                     </select>
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">所属模块</label>
                 <div class="layui-input-inline w200">
@@ -37,15 +37,15 @@
                 <div class="layui-input-inline">
                     <select lay-filter="config_module">
                         <option data-module=""></option>
-						<option data-module="admin">lake-admin</option>
-						{volist name="modules" id="module"}
-							<option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
-						{/volist}
+                        <option data-module="admin">lake-admin</option>
+                        {volist name="modules" id="module"}
+                            <option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
+                        {/volist}
                     </select>
                 </div>
                 <div class="layui-form-mid layui-word-aux">填写字段英文、数字、下划线及其组合，此为必填项</div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">配置标题</label>
                 <div class="layui-input-inline w300">
@@ -53,7 +53,7 @@
                 </div>
                 <div class="layui-form-mid layui-word-aux">一般由中文组成，仅用于显示</div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">配置名称</label>
                 <div class="layui-input-inline w300">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="layui-form-mid layui-word-aux">由英文字母开头和下划线组成，如 <code>web_site_title</code></div>
             </div>
-			
+            
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">配置默认值</label>
                 <div class="layui-input-inline w300">
@@ -71,7 +71,7 @@
                     <br>键值:键名
                     <br>键值:键名</div>
             </div>
-			
+            
             <div class="layui-form-item layui-form-text" id="options">
                 <label class="layui-form-label">配置项</label>
                 <div class="layui-input-inline w300">
@@ -84,21 +84,21 @@
                     <br>键值:键名
                     <br>键值:键名</div>
             </div>
-			
+            
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">配置备注</label>
                 <div class="layui-input-inline w300">
                     <textarea name="remark" placeholder="填写配置说明" class="layui-textarea"></textarea>
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">排序</label>
                 <div class="layui-input-inline w300">
                     <input type="number" name="listorder" autocomplete="off" placeholder="只能是正整数" class="layui-input" value="100">
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">显示</label>
                 <div class="w300">
@@ -106,7 +106,7 @@
                     <input type="radio" name="is_show" value="0" title="隐藏">
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">状态</label>
                 <div class="w300">
@@ -114,7 +114,7 @@
                     <input type="radio" name="status" value="0" title="禁用">
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="formSubmit">立即提交</button>
@@ -131,8 +131,8 @@
 layui.use(['layer', 'form'], function() {
     var layer = layui.layer,
         form = layui.form,
-		$ = layui.$;
-		
+        $ = layui.$;
+        
     form.on('select(config_module)', function(data) {
         $('#config_module').val($(data.elem).find("option:selected").attr("data-module"));
     });

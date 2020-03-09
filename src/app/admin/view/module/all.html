@@ -6,84 +6,84 @@
     <div class="layui-card-body">
         <div class="layui-tab layui-tab-card">
             <ul class="layui-tab-title">
-				<li class="layui-this">
-					<a href="{:url('all')}">全部</a>
-				</li>
+                <li class="layui-this">
+                    <a href="{:url('all')}">全部</a>
+                </li>
                 <li>
-					<a href="{:url('index')}">已安装</a>
-				</li>
+                    <a href="{:url('index')}">已安装</a>
+                </li>
             </ul>
             <div class="layui-tab-content">
-		
-				<table class="layui-hide" id="table" lay-filter="table"></table>
+        
+                <table class="layui-hide" id="table" lay-filter="table"></table>
             </div>
-        </div>	
-	</div>
+        </div>    
+    </div>
 </div>
 {/block}
 
 {block name="script"}
 <script type="text/html" id="toolbar">
-	<div class="layui-btn-container">
-		<a class="layui-btn layui-btn-sm" id="local-install">本地安装</a>
-	</div>
+    <div class="layui-btn-container">
+        <a class="layui-btn layui-btn-sm" id="local-install">本地安装</a>
+    </div>
 </script>
 
 <script type="text/html" id="iconTpl">
-	<a href="javascript:void(0);" title="{{ d.name }}">
-		<img src="{{ d.icon }}" class="module-icon js-module-icon" style="height: 100%;" />
-	</a>
+    <a href="javascript:void(0);" title="{{ d.name }}">
+        <img src="{{ d.icon }}" class="module-icon js-module-icon" style="height: 100%;" />
+    </a>
 </script>
 
 <script type="text/html" id="versionTpl">
-	<div>
-		{{#  if(d.upgrade){ }} 
-			{{ d.upgrade.old }} 
-			<span class="text-danger">({{ d.upgrade.new }} )</span>
-		{{#  } else { }} 
-			{{ d.version }} 
-		{{#  } }}
-	</div>
+    <div>
+        {{#  if(d.upgrade){ }} 
+            {{ d.upgrade.old }} 
+            <span class="text-danger">({{ d.upgrade.new }} )</span>
+        {{#  } else { }} 
+            {{ d.version }} 
+        {{#  } }}
+    </div>
 </script>
 
 <script type="text/html" id="installtimeTpl">
-	<div>
-		{{# if(d.installtime){ }} 
-			{{ layui.util.toDateString(d.installtime * 1000) }}
-		{{#  } else { }} 
-			--
-		{{#  } }}
-	</div>
+    <div>
+        {{# if(d.installtime){ }} 
+            {{ layui.util.toDateString(d.installtime * 1000) }}
+        {{#  } else { }} 
+            --
+        {{#  } }}
+    </div>
 </script>
 
 <script type="text/html" id="actionTpl">
-	{{#  if(d.installtime == "" || d.installtime == null || d.installtime == undefined){ }}
-		<a class="layui-btn layui-btn-xs" href="{:url('install')}?module={{ d.module }}">安装</a>
-	{{#  } else { }}
-		{{#  if (!(d.setting == "" || d.setting == null || d.setting == undefined)){ }}
-			<a class="layui-btn layui-btn-xs layui-iframe" href='{:url("config")}?module={{ d.module }}' title="模块设置">设置</a>
-		{{#  } }}
-		
-		{{# if(d.upgrade){ }} 
-			<a class="layui-btn layui-btn-xs" href="{:url('upgrade')}?module={{ d.module }}">更新</a>
-		{{#  } }}
-		
-		{{#  if(d.status == 0){ }}
-			<a class="layui-btn layui-btn-xs layui-btn-normal js-module-action-btn" 
-				data-url='{:url("enable")}'
-				data-module='{{ d.module }}'
-				data-confirm='你确认要启用该模块吗？'
-				>启用</a>
-		{{#  } else { }}
-			<a class="layui-btn layui-btn-xs layui-btn-warm js-module-action-btn" 
-				data-url='{:url("disable")}'
-				data-module='{{ d.module }}'
-				data-confirm='你确认要禁用该模块吗？'
-				>禁用</a>
-		{{#  } }}
-		
-		<a class="layui-btn layui-btn-xs layui-btn-danger" href="{:url('uninstall')}?module={{ d.module }}">卸载</a>
-	{{#  } }}
+    {{#  if(d.installtime == "" || d.installtime == null || d.installtime == undefined){ }}
+        <a class="layui-btn layui-btn-xs" href="{:url('install')}?module={{ d.module }}">安装</a>
+    {{#  } else { }}
+        {{#  if (!(d.setting == "" || d.setting == null || d.setting == undefined)){ }}
+            <a class="layui-btn layui-btn-xs layui-iframe" href='{:url("config")}?module={{ d.module }}' title="模块设置">设置</a>
+        {{#  } }}
+        
+        {{# if(d.upgrade){ }} 
+            <a class="layui-btn layui-btn-xs" href="{:url('upgrade')}?module={{ d.module }}">更新</a>
+        {{#  } }}
+        
+        {{#  if(d.status == 0){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal js-module-action-btn" 
+                data-url='{:url("enable")}'
+                data-module='{{ d.module }}'
+                data-confirm='你确认要启用该模块吗？'
+                >启用</a>
+        {{#  } else { }}
+            <a class="layui-btn layui-btn-xs layui-btn-warm js-module-action-btn" 
+                data-url='{:url("disable")}'
+                data-module='{{ d.module }}'
+                data-confirm='你确认要禁用该模块吗？'
+                >禁用</a>
+        {{#  } }}
+        
+        <a class="layui-btn layui-btn-xs layui-btn-danger" href="{:url('uninstall')}?module={{ d.module }}">卸载</a>
+    {{#  } }}
 </script>
 
 
@@ -92,7 +92,7 @@ layui.use(['table', 'upload'], function() {
     var table = layui.table,
         $ = layui.$,
         upload = layui.upload;
-		
+        
     table.render({
         elem: '#table',
         toolbar: '#toolbar',
@@ -109,55 +109,55 @@ layui.use(['table', 'upload'], function() {
                 { fixed: 'right', width: 200, title: '操作', templet: '#actionTpl' }
             ]
         ],
-		done: function() {
-			$("td[data-field=name]").each(function() {
-				$(this).find(".layui-table-cell").addClass("break-all");
-			});
-		},
+        done: function() {
+            $("td[data-field=name]").each(function() {
+                $(this).find(".layui-table-cell").addClass("break-all");
+            });
+        },
     });
 
-	/**
-	 * 显示icon
-	 *
-	 * @create 2019-11-23
-	 * @author deatil
-	 */
-	$("body").on('click', ".js-module-icon", function() {
-		var icon = $(this).attr('src');
-		layer.open({
-			type: 1,
-			skin: 'layui-layer-rim',
-			area: ['90%', '90%'],
-			title: false,
-			shadeClose: true,
-			end: function(index, layero) {
-				return false;
-			},
-			content: '<div style="display: flex;align-items: center;justify-content: center;text-align: justify;height: 100%;"><img src="' + icon + '" /></div>',
-		});
-	});
-	
-	$("body").on('click', ".js-module-action-btn", function() {
-		var url = $(this).attr("data-url");
-		var module = $(this).attr("data-module");
-		var confirm = $(this).attr("data-confirm");
-		
-		layer.confirm(confirm, function(index){
-			var loading = layer.load(1, {shade: [0.1, '#fff']});
-			$.post(url, {module: module},function(res){
-				layer.close(loading);
-				if (res.code === 1) {
-					layer.msg(res.msg, {time:1000, icon:1}, function() {
-						location.reload();
-					});
-				}else{
-					layer.msg('操作失败！', {time:1000, icon:2});
-				}
-			});
-			layer.close(index);
-		});
-	});
-		
+    /**
+     * 显示icon
+     *
+     * @create 2019-11-23
+     * @author deatil
+     */
+    $("body").on('click', ".js-module-icon", function() {
+        var icon = $(this).attr('src');
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim',
+            area: ['90%', '90%'],
+            title: false,
+            shadeClose: true,
+            end: function(index, layero) {
+                return false;
+            },
+            content: '<div style="display: flex;align-items: center;justify-content: center;text-align: justify;height: 100%;"><img src="' + icon + '" /></div>',
+        });
+    });
+    
+    $("body").on('click', ".js-module-action-btn", function() {
+        var url = $(this).attr("data-url");
+        var module = $(this).attr("data-module");
+        var confirm = $(this).attr("data-confirm");
+        
+        layer.confirm(confirm, function(index){
+            var loading = layer.load(1, {shade: [0.1, '#fff']});
+            $.post(url, {module: module},function(res){
+                layer.close(loading);
+                if (res.code === 1) {
+                    layer.msg(res.msg, {time:1000, icon:1}, function() {
+                        location.reload();
+                    });
+                }else{
+                    layer.msg('操作失败！', {time:1000, icon:2});
+                }
+            });
+            layer.close(index);
+        });
+    });
+        
     //执行实例
     var uploadInst = upload.render({
         elem: '#local-install',

@@ -21,41 +21,41 @@
                 </div>
                 <div class="layui-form-mid layui-word-aux">填写完整邮箱，如 xxx@163.com</div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">真实姓名</label>
                 <div class="layui-input-inline">
                     <input type="text" name="nickname" autocomplete="off" placeholder="真实姓名" class="layui-input" value="{$data.nickname}">
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">权限组</label>
                 <div class="layui-input-inline">
                     <select name="roleid" xm-select="roleid" xm-select-search="" lay-filter="roleid" lay-verify="required">
                         {volist name="roles" id="vo"}
-							<option value="{$vo['id']}" {if in_array($vo['id'], $data['gids']) }selected{/if}>{$vo['title']}</option>
+                            <option value="{$vo['id']}" {if in_array($vo['id'], $data['gids']) }selected{/if}>{$vo['title']}</option>
                         {/volist}
                     </select>
                 </div>
             </div>
-			
-			<div class="layui-form-item">
-				<label class="layui-form-label">头像</label>
-				<div class="layui-input-inline">
-					<div class="js-upload-image">
-						{php}echo \lake\Form::images('avatar','',$data['avatar']){/php}
-					</div>
-				</div>
-			</div>
-			
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-inline">
+                    <div class="js-upload-image">
+                        {php}echo \lake\Form::images('avatar','',$data['avatar']){/php}
+                    </div>
+                </div>
+            </div>
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">状态</label>
                 <div class="layui-input-inline">
                     <input type="checkbox" name="status" lay-skin="switch" lay-text="启用|禁用" value="{$data.status}" {eq name="data.status" value="1" }checked{/eq}>
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="formSubmit">立即提交</button>
@@ -72,9 +72,9 @@
 <script src="admin/libs/formSelects-v4/formSelects-v4.js"></script>
 <script type="text/javascript">
 $(function() {
-	var formSelects = layui.formSelects;
-	
-	formSelects.value('roleid');
+    var formSelects = layui.formSelects;
+    
+    formSelects.value('roleid');
 });
 
 </script>

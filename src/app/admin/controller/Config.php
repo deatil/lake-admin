@@ -57,9 +57,17 @@ class Config extends Base
     public function index($group = 'system')
     {
         if ($this->request->isAjax()) {
-            $_list = Db::view('config', 'id,name,title,type,listorder,status,update_time')
+            $_list = Db::view(
+                    'config', 
+                    'id,name,title,type,listorder,status,is_system,update_time'
+                )
                 ->where('group', $group)
-                ->view('field_type', 'title as ftitle', 'field_type.name=config.type', 'LEFT')
+                ->view(
+                    'field_type', 
+                    'title as ftitle', 
+                    'field_type.name=config.type', 
+                    'LEFT'
+                )
                 ->order('listorder,id desc')
                 ->select();
             $result = [
@@ -75,7 +83,7 @@ class Config extends Base
             return $this->fetch();
         }
     }
-
+    
     /**
      * 全部配置
      *
@@ -87,7 +95,7 @@ class Config extends Base
         if ($this->request->isAjax()) {
             $limit = $this->request->param('limit/d', 20);
             $page = $this->request->param('page/d', 1);
-
+            
             $search_field = $this->request->param('search_field/s', '', 'trim');
             $keyword = $this->request->param('keyword/s', '', 'trim');
             
@@ -127,7 +135,7 @@ class Config extends Base
             return $this->fetch();
         }
     }
-
+    
     /**
      * 配置设置
      *
@@ -290,7 +298,7 @@ class Config extends Base
             return $this->fetch();
         }
     }
-
+    
     /**
      * 编辑配置
      *
@@ -312,6 +320,15 @@ class Config extends Base
             $id = $data['id'];
             unset($data['id']);
             
+            $info = ConfigModel::get($id);
+            if (empty($info)) {
+                $this->error('信息不存在！');
+            }
+            
+            if ($info['is_system'] == 1) {
+                $this->error('系统默认配置不可操作！');
+            }
+            
             $status = ConfigModel::where([
                 'id' => $id,
             ])->update($data);
@@ -331,7 +348,15 @@ class Config extends Base
                 ->where('name', 'in', $this->banfie)
                 ->order('listorder')
                 ->column('name,title,ifoption,ifstring');
+            
             $info = ConfigModel::get($id);
+            if (empty($info)) {
+                $this->error('信息不存在！');
+            }
+            
+            if ($info['is_system'] == 1) {
+                $this->error('系统配置不可操作！');
+            }
             
             // 模块列表
             $modules = (new ModuleService())->getAll();
@@ -346,7 +371,7 @@ class Config extends Base
             return $this->fetch();
         }
     }
-
+    
     /**
      * 删除配置
      *
@@ -364,6 +389,15 @@ class Config extends Base
             $this->error('参数错误！');
         }
         
+        $info = ConfigModel::get($id);
+        if (empty($info)) {
+            $this->error('信息不存在！');
+        }
+        
+        if ($info['is_system'] == 1) {
+            $this->error('系统默认配置不可操作！');
+        }
+        
         $re = ConfigModel::where([
             'id' => $id,
         ])->delete();
@@ -374,7 +408,7 @@ class Config extends Base
         cache('lake_admin_config', null); //清空缓存配置
         $this->success('删除成功');
     }
-
+    
     /**
      * 排序
      *

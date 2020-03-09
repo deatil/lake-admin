@@ -7,25 +7,25 @@
         <form class="layui-form form-horizontal" method="post">
             <input type="hidden" name="module" value="{$config.module}">
             
-			<div class="layui-form-item">
-				<blockquote class="layui-elem-quote layui-quote-nm">
-					<h3 class="lake-admin-module-name">
-						{$config.name} 
-						<span class="lake-admin-module-ver text-gray">v{$config.version}</span>
-					</h3>
-					
-					<div class="lake-admin-module-author">
-						{$config.author}
-						<span class="lake-admin-module-authoremail text-gray">({$config.authoremail})</span>
-					</div>
-					
-					<div class="lake-admin-module-introduce">
-						{$config.introduce}
-					</div>
-				</blockquote>
-			</div>
-			
-			<div class="layui-form-item">
+            <div class="layui-form-item">
+                <blockquote class="layui-elem-quote layui-quote-nm">
+                    <h3 class="lake-admin-module-name">
+                        {$config.name} 
+                        <span class="lake-admin-module-ver text-gray">v{$config.version}</span>
+                    </h3>
+                    
+                    <div class="lake-admin-module-author">
+                        {$config.author}
+                        <span class="lake-admin-module-authoremail text-gray">({$config.authoremail})</span>
+                    </div>
+                    
+                    <div class="lake-admin-module-introduce">
+                        {$config.introduce}
+                    </div>
+                </blockquote>
+            </div>
+            
+            <div class="layui-form-item">
                 <table class="layui-table" lay-even style="max-width: 280px;">
                     <colgroup>
                         <col width="180">
@@ -40,7 +40,7 @@
                     </thead>
                 </table>
             </div>
-			
+            
             {notempty name="need_module"}
             <div class="layui-form-item">
                 <h4><b>模块依赖检查</b></h4>
@@ -71,7 +71,7 @@
                 </table>
             </div>
             {/notempty}
-			
+            
             {notempty name="table_check"}
             <div class="layui-form-item">
                 <h4><b>数据表检查</b></h4>
@@ -98,8 +98,8 @@
                 </table>
             </div>
             {/notempty}
-			
-			{if !empty($config['tables'])}
+            
+            {if !empty($config['tables'])}
             <div class="layui-form-item">
                 <h4><b>是否清除旧数据</b></h4>
                 <div>
@@ -108,17 +108,17 @@
                 </div>
                 <div class="layui-form-mid layui-word-aux">选择“是”，将删除数据库中已存在的相同数据表</div>
             </div>
-			{/if}
-			
-			{if !empty($config['demo'])}
+            {/if}
+            
+            {if !empty($config['demo'])}
             <div class="layui-form-item">
                 <div>
-					<input type="checkbox" name="demo" title="安装演示数据" value="1" lay-skin="primary" checked>
+                    <input type="checkbox" name="demo" title="安装演示数据" value="1" lay-skin="primary" checked>
                 </div>
                 <div class="layui-form-mid layui-word-aux">含有旧数据时,请勿勾选,以免数据冲突</div>
             </div>
-			{/if}
-			
+            {/if}
+            
             <div class="layui-form-item">
                 <button class="layui-btn" id="install" lay-submit="" lay-filter="*" target-form="form-horizontal">确认安装</button>
                 <button class="layui-btn layui-btn-normal" type="button" onclick="javascript:history.back(-1);">返回</button>

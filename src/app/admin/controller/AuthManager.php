@@ -137,7 +137,7 @@ class AuthManager extends Base
             ->order(['id' => 'ASC'])
             ->column('*', 'id');
         
-        Hook::listen('AuthManagerCreateGroup', $_list);        
+        Hook::listen('AuthManagerCreateGroup', $_list);
         
         $tree->init($_list);
         
@@ -167,9 +167,9 @@ class AuthManager extends Base
      */
     public function editGroup()
     {
-        $id = $this->request->param('id/s');
-        if ($id == 1) {
-            $this->error('系统默认角色不可操作！');
+        $id = $this->request->param('id');
+        if (empty($id)) {
+            $this->error('角色组不存在！');
         }
         
         $auth_group = Db::name('AuthGroup')
@@ -179,7 +179,11 @@ class AuthManager extends Base
             ])
             ->find($id);
         if (empty($auth_group)) {
-            $this->error('角色组不存在');
+            $this->error('角色组不存在！');
+        }
+        
+        if ($auth_group['is_system'] == 1) {
+            $this->error('系统默认角色不可操作！');
         }
     
         $check = $this->AuthManagerService->checkUserGroup($id);
@@ -196,7 +200,7 @@ class AuthManager extends Base
                 'id' => 'ASC',
             ])
             ->column('*', 'id');
-
+            
         $childsId = $tree->getChildsId($_list, $auth_group['id']);
         $childsId[] = $auth_group['id'];
         
@@ -229,41 +233,7 @@ class AuthManager extends Base
         
         return $this->fetch();
     }
-
-    /**
-     * 删除管理员角色
-     *
-     * @create 2019-7-7
-     * @author deatil
-     */
-    public function deleteGroup()
-    {
-        if (!$this->request->isPost()) {
-            $this->error('请求错误！');
-        }
-        
-        $group_id = $this->request->param('id/s');
-        if ($group_id == 1) {
-            $this->error('系统默认角色不可操作！');
-        }
-        
-        $check = $this->AuthManagerService->checkUserGroup($group_id);
-        if ($check['status'] === false) {
-            $this->error($check['msg']);
-        }
-
-        Hook::listen('AuthManagerDeleteGroup', $group_id);
-        
-        $rs = $this->AuthGroupModel->GroupDelete($group_id);
-        
-        if ($rs === false) {
-            $error = $this->AuthGroupModel->getError();
-            $this->error($error ? $error : '删除失败！');
-        }
-        
-        $this->success("删除成功！");
-    }
-
+    
     /**
      * 管理员角色数据写入/更新
      *
@@ -304,8 +274,18 @@ class AuthManager extends Base
         $rules = $this->AuthManagerService->getUserRightAuth($rules);
         
         if (isset($data['id']) && !empty($data['id'])) {
-            if ($data['id'] == 1) {
-                $this->error('系统默认角色不可操作操作！');
+            $auth_group = Db::name('AuthGroup')
+                ->where([
+                    'module' => 'admin', 
+                    'type' => AuthGroupModel::TYPE_ADMIN,
+                ])
+                ->find($data['id']);
+            if (empty($auth_group)) {
+                $this->error('角色组不存在！');
+            }
+            
+            if ($auth_group['is_system'] == 1) {
+                $this->error('系统默认角色不可操作！');
             }
             
             $check = $this->AuthManagerService->checkUserGroup($data['id']);
@@ -347,6 +327,10 @@ class AuthManager extends Base
             if (true !== $result) {
                 return $this->error($result);
             }
+            
+            $data['add_time'] = time();
+            $data['add_ip'] = request()->ip(1);
+            
             $r = $this->AuthGroupModel->allowField(true)->save($data);
         
             if (isset($rules) && !empty($rules)) {
@@ -368,10 +352,58 @@ class AuthManager extends Base
         if ($r === false) {
             $this->error('操作失败' . $this->AuthGroupModel->getError());
         }
-
+        
         $this->success('操作成功!');
     }
-
+    
+    /**
+     * 删除管理员角色
+     *
+     * @create 2019-7-7
+     * @author deatil
+     */
+    public function deleteGroup()
+    {
+        if (!$this->request->isPost()) {
+            $this->error('请求错误！');
+        }
+        
+        $group_id = $this->request->param('id');
+        if (empty($group_id)) {
+            $this->error('角色组不存在！');
+        }
+        
+        $auth_group = Db::name('AuthGroup')
+            ->where([
+                'module' => 'admin', 
+                'type' => AuthGroupModel::TYPE_ADMIN,
+            ])
+            ->find($id);
+        if (empty($auth_group)) {
+            $this->error('角色组不存在');
+        }
+        
+        if ($auth_group['is_system'] == 1) {
+            $this->error('系统默认角色不可操作！');
+        }
+        
+        $check = $this->AuthManagerService->checkUserGroup($group_id);
+        if ($check['status'] === false) {
+            $this->error($check['msg']);
+        }
+        
+        Hook::listen('AuthManagerDeleteGroup', $group_id);
+        
+        $rs = $this->AuthGroupModel->GroupDelete($group_id);
+        
+        if ($rs === false) {
+            $error = $this->AuthGroupModel->getError();
+            $this->error($error ? $error : '删除失败！');
+        }
+        
+        $this->success("删除成功！");
+    }
+    
     /**
      * 访问授权页面
      *
@@ -380,7 +412,7 @@ class AuthManager extends Base
      */
     public function access()
     {
-        $group_id = $this->request->param('group_id/s');
+        $group_id = $this->request->param('group_id');
         if (empty($group_id)) {
             $this->error('角色组ID不能为空');
         }

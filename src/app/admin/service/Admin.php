@@ -114,6 +114,7 @@ class Admin
                 ->join('__AUTH_GROUP_ACCESS__ aga', "aga.group_id = ag.id")
                 ->where([
                     'aga.admin_id' => $uid,
+                    'ag.is_system' => 1,
                     'ag.is_root' => 1,
                 ])
                 ->column('ag.id');

@@ -13,22 +13,22 @@
                 <label class="layui-form-label">角色</label>
                 <div class="layui-input-block">
                     <input type="text" class="layui-input" value="{$auth_group.title}" disabled>
-				</div>
+                </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">权限</label>
                 <div class="layui-input-block">
-					<div class="lake-admin-auth-manager-access left">
-						<ul class="ztree" style="margin-left: 5px;margin-top:5px; padding: 0;">
-							<li><a title="全部展开、折叠 "><span class="button ico_open"></span><span id="ztree_expandAll" data-open="false">全部展开、折叠 </span></a> </li>
-						</ul>
-						<ul id="treeDemo" class="ztree"></ul>
-					</div>		
+                    <div class="lake-admin-auth-manager-access left">
+                        <ul class="ztree" style="margin-left: 5px;margin-top:5px; padding: 0;">
+                            <li><a title="全部展开、折叠 "><span class="button ico_open"></span><span id="ztree_expandAll" data-open="false">全部展开、折叠 </span></a> </li>
+                        </ul>
+                        <ul id="treeDemo" class="ztree"></ul>
+                    </div>        
                 </div>
             </div>
-			
-			<div class="layui-form-item">
+            
+            <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
                     <button class="layui-btn layui-btn-normal layui-close" type="button" onclick="javascript:history.back(-1);">返回</button>
@@ -98,9 +98,9 @@ layui.config({
 
     layui.use(['layer', 'form', 'notice'], function() {
         var layer = layui.layer,
-			notice = layui.notice,
+            notice = layui.notice,
             form = layui.form;
-			
+            
         //通用表单post提交
         $('.ajax-post').on('click', function(e) {
             var target, query, _form;
@@ -136,9 +136,9 @@ layui.config({
             $.post(target, query).success(function(data) {
                 if (data.code == 1) {
                     if (data.url) {
-						notice.success(data.msg)
+                        notice.success(data.msg)
                     } else {
-						notice.error(data.msg);
+                        notice.error(data.msg);
                     }
                     setTimeout(function() {
                         if (data.url) {

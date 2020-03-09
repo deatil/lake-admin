@@ -201,7 +201,7 @@ class Menu extends Base
                 }
             }
             
-            if ($rs['is_sys'] == 1) {
+            if ($rs['is_system'] == 1) {
                 $this->error('系统权限菜单不能进行编辑！');
             }
             
@@ -247,7 +247,7 @@ class Menu extends Base
             $id = $this->request->param('id/s', '');
             $rs = AuthRuleModel::where(["id" => $id])->find();
             
-            if ($rs['is_sys'] == 1) {
+            if ($rs['is_system'] == 1) {
                 $this->error('系统权限菜单不能进行编辑！');
             }
             
@@ -306,7 +306,7 @@ class Menu extends Base
             $this->error('权限菜单不存在！');
         }
         
-        if ($rs['is_sys'] == 1) {
+        if ($rs['is_system'] == 1) {
             $this->error('系统权限菜单不能删除！');
         }
         

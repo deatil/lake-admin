@@ -10,31 +10,31 @@
                     <div class="layui-input-inline">
                         <input type="text" class="layui-input lake-admin-search-date" id="laydate" placeholder="搜索时间范围">
                     </div>
-					<div class="layui-input-inline w120">                    
-						<select name="field" class="lake-admin-search-method">
-							<option value="">请求类型</option>
-							<option value="get">GET</option>
-							<option value="post">POST</option>
-						</select>					
-					</div>
-					<div class="layui-input-inline w120">                    
-						<select name="field" class="lake-admin-search-field">
-							<option value="">搜索类型</option>
-							<option value="admin_id">用户ID</option>
-							<option value="admin_username">账号</option>
-							<option value="url">操作URL</option>
-							<option value="ip">IP</option>
-						</select>					
-					</div>
-					<div class="layui-input-inline">
-						<input type="text" name="keyword" class="layui-input lake-admin-search-val" placeholder="请输入关键字">
-					</div>
-					<a class="layui-btn lake-admin-search-btn" data-type="search">搜索</a>
-					<a class="layui-btn" href="{:url('index')}">查看全部</a>
+                    <div class="layui-input-inline w120">                    
+                        <select name="field" class="lake-admin-search-method">
+                            <option value="">请求类型</option>
+                            <option value="get">GET</option>
+                            <option value="post">POST</option>
+                        </select>                    
+                    </div>
+                    <div class="layui-input-inline w120">                    
+                        <select name="field" class="lake-admin-search-field">
+                            <option value="">搜索类型</option>
+                            <option value="admin_id">用户ID</option>
+                            <option value="admin_username">账号</option>
+                            <option value="url">操作URL</option>
+                            <option value="ip">IP</option>
+                        </select>                    
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="keyword" class="layui-input lake-admin-search-val" placeholder="请输入关键字">
+                    </div>
+                    <a class="layui-btn lake-admin-search-btn" data-type="search">搜索</a>
+                    <a class="layui-btn" href="{:url('index')}">查看全部</a>
                 </div>
             </form>
         </blockquote>
-		
+        
         <table class="layui-hide" id="table" lay-filter="table"></table>
     </div>
 </div>
@@ -42,48 +42,48 @@
 
 {block name="script"}
 <script type="text/html" id="toolbarLog">
-	<div class="layui-btn-container">
-		{if check_auth('admin/adminLog/deletelog')}
-			<button class="layui-btn layui-btn-sm layui-btn-danger ajax-post confirm" 
-				data-post="{}" 
-				data-href="{:url('deletelog')}">删除一个月前日志</button>
-		{/if}
-	</div>
+    <div class="layui-btn-container">
+        {if check_auth('admin/adminLog/deletelog')}
+            <button class="layui-btn layui-btn-sm layui-btn-danger ajax-post confirm" 
+                data-post="{}" 
+                data-href="{:url('deletelog')}">删除一个月前日志</button>
+        {/if}
+    </div>
 </script>
 
 <script type="text/html" id="browserToolbar">
-	{{ d.useragent.split(" ")[0] }}
+    {{ d.useragent.split(" ")[0] }}
 </script>
 
 <script type="text/html" id="statusToolbar">
-	<div>
-		{{#  if(d.status) { }} 
-			<span class='layui-badge-dot layui-bg-green'></span>
-			<span class='text-green'>成功</span>
-		{{#  } else { }}
-			<span class='layui-badge-dot layui-bg-orange'></span>
-			<span class='text-orange'>失败</span>
-		{{#  } }} 
-	</div>
+    <div>
+        {{#  if(d.status) { }} 
+            <span class='layui-badge-dot layui-bg-green'></span>
+            <span class='text-green'>成功</span>
+        {{#  } else { }}
+            <span class='layui-badge-dot layui-bg-orange'></span>
+            <span class='text-orange'>失败</span>
+        {{#  } }} 
+    </div>
 </script>
 
 <script type="text/html" id="actionToolbar">
-	{if check_auth('admin/adminLog/view')}
-		<a href='{:url("view")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="日志详情">详情</a>
-	{/if}
+    {if check_auth('admin/adminLog/view')}
+        <a href='{:url("view")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="日志详情">详情</a>
+    {/if}
 </script>
 
 <script>
 layui.use(['table', 'laydate'], function() {
     var table = layui.table,
         $ = layui.$,
-		laydate = layui.laydate;
-		
+        laydate = layui.laydate;
+        
     laydate.render({
         elem: '#laydate',
         range: true,
     });
-		
+        
     table.render({
         elem: '#table',
         toolbar: '#toolbarLog',
@@ -102,10 +102,10 @@ layui.use(['table', 'laydate'], function() {
             ]
         ],
         page: {},
-		limit: 20
+        limit: 20
     });
-	
-	// 搜索
+    
+    // 搜索
     $(".lake-admin-search-btn").on("click", function() {
         table.reload("table", {
             page: {
@@ -120,7 +120,7 @@ layui.use(['table', 'laydate'], function() {
             }
         })
     });
-	
+    
 });
 </script>
 {/block}

@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>登录 - {:config('lake.name')}</title>
     <base href="__STATIC__/" />
-	<link rel="stylesheet" type="text/css" href="admin/libs/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="admin/libs/layui/css/layui.css" />
     <link rel="stylesheet" type="text/css" href="admin/admin/css/login.css" />
 </head>
 
@@ -45,19 +45,19 @@
         var form = layui.form,
             layer = layui.layer,
             $ = layui.jquery;
-			
+            
         // 登录
         form.on("submit(login)", function(data) {
             var action = $(data.form).attr('action');
-			var username = $(data.form).find('.lake-admin-login-username').val();			
-			var password = $(data.form).find('.lake-admin-login-password').val();			
-			var verify = $(data.form).find('.lake-admin-login-verify').val();			
+            var username = $(data.form).find('.lake-admin-login-username').val();            
+            var password = $(data.form).find('.lake-admin-login-password').val();            
+            var verify = $(data.form).find('.lake-admin-login-verify').val();            
 
             $.post(action, {
-				'username': username,
-				'password': hex_md5(password),
-				'verify': verify,
-			}, success, "json");
+                'username': username,
+                'password': hex_md5(password),
+                'verify': verify,
+            }, success, "json");
             return false;
 
             function success(data) {

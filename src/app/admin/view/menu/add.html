@@ -15,7 +15,7 @@
                 </div>
                 <div class="layui-form-mid layui-word-aux">如果选择上级分类，那么新增的分类则为被选择上级分类的子分类</div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">所属模块 </label>
                 <div class="layui-input-inline w300">
@@ -24,32 +24,32 @@
                 <div class="layui-input-inline">
                     <select lay-filter="module_select">
                         <option data-module=""></option>
-						<option data-module="admin">lake-admin</option>
-						{volist name="modules" id="module"}
-							<option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
-						{/volist}
+                        <option data-module="admin">lake-admin</option>
+                        {volist name="modules" id="module"}
+                            <option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
+                        {/volist}
                     </select>
                 </div>
                 <div class="layui-form-mid layui-word-aux">菜单关联的模块</div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">名称 </label>
                 <div class="layui-input-inline w300">
                     <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="名称" class="layui-input">
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">图标</label>
                 <div class="layui-input-inline w200">
-					<input type="text" name="icon" autocomplete="off" placeholder="图标" class="layui-input" value="">
+                    <input type="text" name="icon" autocomplete="off" placeholder="图标" class="layui-input" value="">
                 </div>
                 <div class="layui-input-inline w300">
                     <input type="text" id="iconPicker" lay-filter="iconPicker" class="hide" value="">
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">后台菜单</label>
                 <div class="layui-input-inline w300">
@@ -57,21 +57,21 @@
                 </div>
                 <div class="layui-form-mid layui-word-aux">后台菜单通常格式为 “模块/控制器/方法”</div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">附加参数</label>
                 <div class="layui-input-inline w300">
                     <input type="text" name="parameter" autocomplete="off" placeholder="附加参数" class="layui-input">
                 </div>
             </div>
-			
-			<div class="layui-form-item">
+            
+            <div class="layui-form-item">
                 <label class="layui-form-label">附加条件</label>
                 <div class="layui-input-block w300">
                     <textarea name="condition" placeholder="规则附加条件" class="layui-textarea"></textarea>
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">验证类型</label>
                 <div class="w300">
@@ -79,35 +79,35 @@
                     <input type="radio" name="type" value="2" title="主菜单" >
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">菜单</label>
                 <div class="layui-input-inline w300">
                     <input type="checkbox" name="is_menu" lay-skin="switch" lay-text="显示|隐藏" value="1" checked="">
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">验证权限</label>
                 <div class="layui-input-inline w300">
                     <input type="checkbox" name="is_need_auth" lay-skin="switch" lay-text="是|否" value="1" checked="">
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">排序</label>
                 <div class="layui-input-inline w300">
                     <input type="text" name="listorder" lay-verify="required" autocomplete="off" placeholder="菜单排序" class="layui-input" value="100">
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">状态</label>
                 <div class="layui-input-inline w300">
                     <input type="checkbox" name="status" lay-skin="switch" lay-text="启用|禁用" value="1" checked="">
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="formSubmit">立即提交</button>
@@ -125,41 +125,41 @@ layui.use(['iconPicker', 'form', 'layer'], function() {
         form = layui.form,
         layer = layui.layer,
         $ = layui.$;
-		
-	iconPicker.render({
-		elem: '#iconPicker4',
-		type: 'fontClass'
-	});
+        
+    iconPicker.render({
+        elem: '#iconPicker4',
+        type: 'fontClass'
+    });
 
-	iconPicker.render({
-		// 选择器，推荐使用input
-		elem: '#iconPicker',
-		// 数据类型：fontClass/unicode，推荐使用fontClass
-		type: 'fontClass',
-		// 是否开启搜索：true/false，默认true
-		search: true,
-		// 是否开启分页：true/false，默认true
-		page: true,
-		// 每页显示数量，默认12
-		limit: 12,
-		// 点击回调
-		click: function (data) {
-			$('input[name=icon]').val(data.icon);
-		},
-		// 渲染成功后的回调
-		success: function(d) {
-			console.log(d);
-		}
-	});	
+    iconPicker.render({
+        // 选择器，推荐使用input
+        elem: '#iconPicker',
+        // 数据类型：fontClass/unicode，推荐使用fontClass
+        type: 'fontClass',
+        // 是否开启搜索：true/false，默认true
+        search: true,
+        // 是否开启分页：true/false，默认true
+        page: true,
+        // 每页显示数量，默认12
+        limit: 12,
+        // 点击回调
+        click: function (data) {
+            $('input[name=icon]').val(data.icon);
+        },
+        // 渲染成功后的回调
+        success: function(d) {
+            console.log(d);
+        }
+    });    
 
     form.on('select(module_select)', function(data) {
         $('#module_select').val($(data.elem).find("option:selected").attr("data-module"));
     });
-	
-	$('input[name=icon]').change(function() {
-		var val = $(this).val();
-		$('#iconPicker').val(val).attr('value', val);
-	});
+    
+    $('input[name=icon]').change(function() {
+        var val = $(this).val();
+        $('#iconPicker').val(val).attr('value', val);
+    });
 });
 </script>
 {/block}

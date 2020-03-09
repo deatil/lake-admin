@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>{:config('lake.name')}</title>
     <meta name="author" content="deatil">
-	<base href="__STATIC__/" />
+    <base href="__STATIC__/" />
     <link rel="stylesheet" href="admin/libs/layui/css/layui.css">
     <link rel="stylesheet" href="admin/admin/css/admin.css">
     <link rel="stylesheet" href="admin/common/font/iconfont.css">
@@ -26,7 +26,7 @@
 
 <body class="lake-admin-container">
     {block name="main"}lake-admin{/block}
-	
+    
     {block name="layui"}
     <script type="text/javascript">
     layui.config({
@@ -37,17 +37,17 @@
         bind: '{/}admin/admin/js/bind'
     }).use(['common', 'bind']);
 
-	layui.define(['table', 'layer'], function(exports) {
-		$ = layui.jquery;
+    layui.define(['table', 'layer'], function(exports) {
+        $ = layui.jquery;
 
-		// iframe内点击 隐藏菜单
-		$(document).on('click', function () { 
-			try {
-				$(top.window.document).find('div.admin-contextmenu').remove();
-			} catch (e) {
-			}
-		});	
-	});	
+        // iframe内点击 隐藏菜单
+        $(document).on('click', function () { 
+            try {
+                $(top.window.document).find('div.admin-contextmenu').remove();
+            } catch (e) {
+            }
+        });    
+    });    
     </script>
     {/block}
     {block name="script"}{/block}

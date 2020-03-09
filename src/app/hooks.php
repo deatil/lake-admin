@@ -7,26 +7,26 @@
  * @author deatil
  */
 
-use think\Db as ThinkDb;
-use think\Hook as Hook;
-use think\Loader as Loader;
+use think\Db;
+use think\Hook;
+use think\Loader;
 use think\Console;
-use think\facade\Hook as ThinkHook;
-use think\facade\View as ThinkView;
-use think\facade\Env as ThinkEnv;
+use think\facade\Hook as FacadeHook;
+use think\facade\View as FacadeView;
+use think\facade\Env as FacadeEnv;
 
 // 监听后台开始
-ThinkHook::listen('lake_admin_hook_begin');
+FacadeHook::listen('lake_admin_hook_begin');
 
 // 注册配置行为
-ThinkHook::add('app_init', "app\\admin\\behavior\\InitConfig");    
+FacadeHook::add('app_init', "app\\admin\\behavior\\InitConfig");    
 // 注册钩子
-ThinkHook::add('app_init', "app\\admin\\behavior\\InitHook");    
+FacadeHook::add('app_init', "app\\admin\\behavior\\InitHook");    
 // 模块检测
-ThinkHook::add('app_begin', "app\\admin\\behavior\\CheckModule");    
+FacadeHook::add('app_begin', "app\\admin\\behavior\\CheckModule");    
 
 // 设置错误跳转页面目录    
-ThinkEnv::set([
+FacadeEnv::set([
     'lake_admin_app_path' => rtrim(__DIR__, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR,
 ]);
 
@@ -52,7 +52,7 @@ function lake_admin_run_hook($name, $tags, $params = []) {
 
 // 执行app_init全局hook信息
 function lake_admin_app_init_hooks() {
-    $hooks = ThinkDb::name('hook')
+    $hooks = Db::name('hook')
         ->where([
             'name' => 'app_init',
             'status' => 1,
@@ -69,7 +69,7 @@ function lake_admin_app_init_hooks() {
 
 // 配置全局hook信息
 function lake_admin_hooks() {
-    $hooks = ThinkDb::name('hook')
+    $hooks = Db::name('hook')
         ->where([
             ['name', 'not in', ['app_init']],
             ['status', '=', 1],
@@ -79,7 +79,7 @@ function lake_admin_hooks() {
         
     if (!empty($hooks)) {
         foreach ($hooks as $hook) {
-            ThinkHook::add($hook['name'], $hook['class']);    
+            FacadeHook::add($hook['name'], $hook['class']);    
         }
     }
 }
@@ -111,20 +111,20 @@ function lake_admin_config()
 lake_admin_config();
 
 // app初始化，全部模块
-ThinkHook::add('app_init', function ($params) {    
+FacadeHook::add('app_init', function ($params) {    
     $path = env('lake_admin_app_path');
     
     $lake_admin_layout = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'layout.html';
     $lake_admin_inputItem = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'inputItem.html';
     
     // 设置环境变量
-    ThinkEnv::set([
+    FacadeEnv::set([
         'lake_admin_layout' => $lake_admin_layout,
         'lake_admin_inputItem' => $lake_admin_inputItem,
     ]);
     
     // 设置公用参数
-    ThinkView::share([
+    FacadeView::share([
         'lake_admin_layout' => $lake_admin_layout,
         'lake_admin_inputItem' => $lake_admin_inputItem,
     ]);
@@ -144,7 +144,7 @@ function lake_admin_container_config_update($module)
         Error::setExceptionHandler($config['app']['exception_handle']);
     }
 
-    ThinkDb::init($config['database']);
+    Db::init($config['database']);
     app()->middleware->setConfig($config['middleware']);
     app()->route->setConfig($config['app']);
     app()->request->init($config['app']);
@@ -173,7 +173,7 @@ function lake_admin_container_config_update($module)
 }
 
 // 添加系统信息
-ThinkHook::add('app_begin', function ($params) {
+FacadeHook::add('app_begin', function ($params) {
     $module = request()->module();
     
     if ($module == 'admin') {
@@ -182,7 +182,7 @@ ThinkHook::add('app_begin', function ($params) {
         // 模块路径
         $path = $module_path . $module . DIRECTORY_SEPARATOR;
     } else {
-        $module_info = ThinkDb::name('module')
+        $module_info = Db::name('module')
             ->field('module, path')
             ->where([
                 'module' => $module,
@@ -200,7 +200,7 @@ ThinkHook::add('app_begin', function ($params) {
         }
     }
 
-    ThinkEnv::set([
+    FacadeEnv::set([
         'lake_admin_module_path' => $path,
     ]);
 
@@ -262,7 +262,7 @@ ThinkHook::add('app_begin', function ($params) {
     }
     
     // 监听 lake_app_begin, 兼容框架 app_begin
-    ThinkHook::listen('lake_admin_app_begin');
+    FacadeHook::listen('lake_admin_app_begin');
     
     // 加载语言包
     app()->lang->load($path . 'lang' . DIRECTORY_SEPARATOR . request()->langset() . '.php');
@@ -270,4 +270,4 @@ ThinkHook::add('app_begin', function ($params) {
 });
 
 // 监听后台结束
-ThinkHook::listen('lake_admin_hook_end');
+FacadeHook::listen('lake_admin_hook_end');

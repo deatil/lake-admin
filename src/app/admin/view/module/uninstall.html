@@ -6,27 +6,27 @@
     <div class="layui-card-body">
         <form class="layui-form form-horizontal" method="post">
             <input type="hidden" name="module" value="{$config.module}">
-			
-			<div class="layui-form-item">
-				<blockquote class="layui-elem-quote layui-quote-nm">
-					<h3 class="lake-admin-module-name">
-						{$config.name} 
-						<span class="lake-admin-module-ver text-gray">v{$config.version}</span>
-					</h3>
-					
-					<div class="lake-admin-module-author">
-						{$config.author}
-						<span class="lake-admin-module-authoremail text-gray">({$config.authoremail})</span>
-					</div>
-					
-					<div class="lake-admin-module-introduce">
-						{$config.introduce}
-					</div>
-				</blockquote>
-			</div>
             
-			{if !empty($config['tables'])}
-			<div class="layui-form-item">
+            <div class="layui-form-item">
+                <blockquote class="layui-elem-quote layui-quote-nm">
+                    <h3 class="lake-admin-module-name">
+                        {$config.name} 
+                        <span class="lake-admin-module-ver text-gray">v{$config.version}</span>
+                    </h3>
+                    
+                    <div class="lake-admin-module-author">
+                        {$config.author}
+                        <span class="lake-admin-module-authoremail text-gray">({$config.authoremail})</span>
+                    </div>
+                    
+                    <div class="lake-admin-module-introduce">
+                        {$config.introduce}
+                    </div>
+                </blockquote>
+            </div>
+            
+            {if !empty($config['tables'])}
+            <div class="layui-form-item">
                 <h4><b>是否清除模块数据</b></h4>
                 <div>
                     <input type="radio" name="clear" value="0" title="否" checked>
@@ -34,8 +34,8 @@
                 </div>
                 <div class="layui-form-mid layui-word-aux">选择“是”，将删除数据库中模块数据表</div>
             </div>
-			{/if}
-			
+            {/if}
+            
             <div class="layui-form-item">
                 <button class="layui-btn ajax-post" id="uninstall" lay-submit="" lay-filter="*" target-form="form-horizontal">确认卸载</button>
                 <button class="layui-btn layui-btn-normal" type="button" onclick="javascript:history.back(-1);">返回</button>

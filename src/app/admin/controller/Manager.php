@@ -166,15 +166,28 @@ class Manager extends Base
             if (true !== $result) {
                 return $this->error($result);
             }
-
-            if ($data['id'] != 1) {
-                if (isset($data['status'])) {
-                    $data['status'] = 1;
-                } else {
-                    $data['status'] = 0;
-                }
-            } else {
+            
+            if (empty($data['id'])) {
+                $this->error('参数错误！');
+            }
+            
+            $admin_info = $this->AdminModel
+                ->where([
+                    "id" => $data['id'],
+                ])
+                ->find();
+            if (empty($admin_info)) {
+                $this->error('信息不存在！');
+            }
+            
+            if ($admin_info['is_system'] == 1) {
+                $this->error('系统默认账户不可操作！');
+            }
+            
+            if (isset($data['status'])) {
                 $data['status'] = 1;
+            } else {
+                $data['status'] = 0;
             }
             
             if (isset($data['roleid']) && !empty($data['roleid'])) {
@@ -215,6 +228,10 @@ class Manager extends Base
                 $this->error('该信息不存在！');
             }
             
+            if ($data['is_system'] == 1) {
+                $this->error('系统默认账户不可操作！');
+            }
+            
             $data['gids'] = Db::name('auth_group_access')
                 ->where([
                     'module' => 'admin',
@@ -238,7 +255,45 @@ class Manager extends Base
             return $this->fetch();
         }
     }
-
+    
+    /**
+     * 管理员删除
+     *
+     * @create 2019-8-1
+     * @author deatil
+     */
+    public function del()
+    {
+        if (!$this->request->isPost()) {
+            $this->error('访问错误！');
+        }
+        
+        $id = $this->request->param('id');
+        if (empty($id)) {
+            $this->error('参数错误！');
+        }
+        
+        $admin_info = $this->AdminModel
+            ->where([
+                "id" => $id,
+            ])
+            ->find();
+        if (empty($admin_info)) {
+            $this->error('信息不存在！');
+        }
+        
+        if ($admin_info['is_system'] == 1) {
+            $this->error('系统默认账户不可操作！');
+        }
+        
+        $rs = $this->AdminModel->deleteManager($id);
+        if ($rs === false) {
+            $this->error($this->AdminModel->getError() ?: '删除失败！');
+        }
+        
+        $this->success("删除成功！");
+    }
+    
     /**
      * 管理员详情
      *
@@ -250,7 +305,7 @@ class Manager extends Base
         if (!$this->request->isGet()) {
             $this->error('访问错误！');
         }
-
+        
         $id = $this->request->param('id/s');
         if (empty($id)) {
             $this->error('参数错误！');
@@ -285,7 +340,7 @@ class Manager extends Base
         $this->assign("data", $data);
         return $this->fetch();
     }
-
+    
     /**
      * 管理员更新密码
      *
@@ -297,7 +352,10 @@ class Manager extends Base
         if ($this->request->isPost()) {
             $post = $this->request->post('');
             
-            if (empty($post) || !isset($post['id']) || !is_array($post)) {
+            if (empty($post) 
+                || !isset($post['id']) 
+                || !is_array($post)
+            ) {
                 $this->error('没有修改的数据！');
                 return false;
             }
@@ -338,30 +396,5 @@ class Manager extends Base
             return $this->fetch();
         }
     }
-
-    /**
-     * 管理员删除
-     *
-     * @create 2019-8-1
-     * @author deatil
-     */
-    public function del()
-    {
-        if (!$this->request->isPost()) {
-            $this->error('访问错误！');
-        }
-        
-        $id = $this->request->param('id/s');
-        if ($id == 1) {
-            $this->error('系统默认管理员不能删除！');
-        }
-        
-        $rs = $this->AdminModel->deleteManager($id);
-        if ($rs === false) {
-            $this->error($this->AdminModel->getError() ?: '删除失败！');
-        }
-        
-        $this->success("删除成功！");
-    }
-
+    
 }

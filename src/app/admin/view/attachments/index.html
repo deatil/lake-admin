@@ -14,11 +14,11 @@
                         <input type="text" name="keyword" class="layui-input searchVal" placeholder="请输入附件名称">
                     </div>
                     <a class="layui-btn search_btn" data-type="reload">搜索</a>
-					<a class="layui-btn" href="{:url('index')}">查看全部</a>
+                    <a class="layui-btn" href="{:url('index')}">查看全部</a>
                 </div>
             </form>
         </blockquote>
-		
+        
         <table class="layui-hide" id="dataTable" lay-filter="dataTable"></table>
     </div>
 </div>
@@ -26,29 +26,29 @@
 
 {block name="script"}
 <script type="text/html" id="toolbarDemo">
-	<div class="layui-btn-container">
-		<button class="layui-btn layui-btn-sm confirm layui-batch-all" data-href='{:url("delete")}'>批量删除</button>
-	</div>
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm confirm layui-batch-all" data-href='{:url("delete")}'>批量删除</button>
+    </div>
 </script>
 
 <script type="text/html" id="barTool">
-	<a href='{:url("delete")}?ids={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
+    <a href='{:url("delete")}?ids={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
 </script>
 
 <script type="text/html" id="pathTpl">
-	<div><a class="layui-btn layui-btn layui-btn-xs layui-iframe" href="{:url('attachments/view')}?id={{ d.id }}" title="附件详情">{{d.name}}</a></div>
+    <div><a class="layui-btn layui-btn layui-btn-xs layui-iframe" href="{:url('attachments/view')}?id={{ d.id }}" title="附件详情">{{d.name}}</a></div>
 </script>
 
 <script type="text/html" id="statusTpl">
-	<div>
-		{{#  if(d.status) { }} 
-			<span class='layui-badge-dot layui-bg-green'></span>
-			<span class='text-green'>启用</span>
-		{{#  } else { }}
-			<span class='layui-badge-dot layui-bg-orange'></span>
-			<span class='text-orange'>禁用</span>
-		{{#  } }} 
-	</div>
+    <div>
+        {{#  if(d.status) { }} 
+            <span class='layui-badge-dot layui-bg-green'></span>
+            <span class='text-green'>启用</span>
+        {{#  } else { }}
+            <span class='layui-badge-dot layui-bg-orange'></span>
+            <span class='text-orange'>禁用</span>
+        {{#  } }} 
+    </div>
 </script>
 
 <script>

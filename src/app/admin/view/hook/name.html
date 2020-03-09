@@ -8,10 +8,10 @@
             <form class="layui-form lake-admin-search-from" method="get" lay-filter="lake-admin-search-from">
                 <div class="layui-inline">
                     <div class="layui-input-inline">                    
-						<select name="field" class="lake-admin-search-field">
-							<option value="name">名称</option>
-						</select>					
-					</div>
+                        <select name="field" class="lake-admin-search-field">
+                            <option value="name">名称</option>
+                        </select>                    
+                    </div>
                     <div class="layui-input-inline">
                         <input type="text" name="keyword" class="layui-input lake-admin-search-val" placeholder="请输入关键字">
                     </div>
@@ -20,8 +20,8 @@
                 </div>
             </form>
         </blockquote>
-		
-		<div class="layui-form">
+        
+        <div class="layui-form">
             <table class="layui-hide" id="table" lay-filter="table"></table>
         </div>
     </div>
@@ -30,30 +30,30 @@
 
 {block name="script"}
 <script type="text/html" id="toolbar">
-	<div class="layui-btn-container">
-		<a class="layui-btn layui-btn-sm" href="{:url('index')}" title="嵌入点列表">嵌入点列表</a>
-	</div>
+    <div class="layui-btn-container">
+        <a class="layui-btn layui-btn-sm" href="{:url('index')}" title="嵌入点列表">嵌入点列表</a>
+    </div>
 </script>
 
 <script type="text/html" id="name">
-	{{ d.name }}
+    {{ d.name }}
 </script>
 
 <script type="text/html" id="barTool">
-	<a href='{:url("index")}?search_field=name&keyword={{ d.name }}' class="layui-btn layui-btn-xs layui-iframe" title="模型列表">模型</a>
+    <a href='{:url("index")}?search_field=name&keyword={{ d.name }}' class="layui-btn layui-btn-xs layui-iframe" title="模型列表">模型</a>
 </script>
 
 <script type="text/javascript">
 layui.use('table', function() {
     var $ = layui.$,
-		table = layui.table,
-		form = layui.form;
-		
-	form.val('lake-admin-search-from', {
-		"field": "{$search_field|default='name'}",
-		"keyword": "{$keyword}",
-	});
-		
+        table = layui.table,
+        form = layui.form;
+        
+    form.val('lake-admin-search-from', {
+        "field": "{$search_field|default='name'}",
+        "keyword": "{$keyword}",
+    });
+        
     table.render({
         elem: '#table',
         toolbar: '#toolbar',
@@ -65,9 +65,9 @@ layui.use('table', function() {
                 { fixed: 'right', width: 120, title: '操作', toolbar: '#barTool' },
             ]
         ],
-		page: {},
+        page: {},
     });
-	
+    
     $(".lake-admin-search-btn").on("click", function() {
         table.reload("table", {
             page: {
@@ -79,7 +79,7 @@ layui.use('table', function() {
             }
         })
     });
-	
+    
 });
 </script>
 {/block}

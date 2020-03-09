@@ -10,11 +10,11 @@
     </div>
 </div>
 <script type="text/html" id="toolbar">
-	<div class="layui-btn-container">
-		<a class="layui-btn layui-btn-sm layui-iframe" title="新增菜单" href="{:url('add')}">新增菜单</a>
-		<a class="layui-btn layui-btn-sm layui-btn-normal" id="openAll">展开或折叠全部</a>
-		<a href="{:url('all')}" class="layui-btn layui-btn-sm">全部菜单</a>
-	</div>
+    <div class="layui-btn-container">
+        <a class="layui-btn layui-btn-sm layui-iframe" title="新增菜单" href="{:url('add')}">新增菜单</a>
+        <a class="layui-btn layui-btn-sm layui-btn-normal" id="openAll">展开或折叠全部</a>
+        <a href="{:url('all')}" class="layui-btn layui-btn-sm">全部菜单</a>
+    </div>
 </script>
 <script type="text/html" id="barTool">
     <a href='{:url("edit")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="编辑菜单">编辑</a>
@@ -40,7 +40,7 @@ layui.use(['table', 'treeGrid'], function() {
         treeGrid = layui.treeGrid,
         tableId = 'treeTable',
         ptable = null;
-		
+        
     ptable = treeGrid.render({
         id: tableId,
         elem: '#' + tableId,
@@ -64,9 +64,9 @@ layui.use(['table', 'treeGrid'], function() {
                 { width: 80,title: '图标',align: 'center',templet:"<div><i class='iconfont {{d.icon}}'></i></div>" },
                 { width: 200,title: '模块/控制器/方法',templet:"<div>{{d.name}}</div>"},
                 /* 
-				{ field: 'is_need_auth', align: 'center', width: 100, title: '权限验证', templet: '#authTpl', unresize: true },
+                { field: 'is_need_auth', align: 'center', width: 100, title: '权限验证', templet: '#authTpl', unresize: true },
                 */
-				{ field: 'is_menu', align: 'center', width: 120, title: '菜单', templet: '#menuTpl', unresize: true },
+                { field: 'is_menu', align: 'center', width: 120, title: '菜单', templet: '#menuTpl', unresize: true },
                 { field: 'status', align: 'center', width: 120, title: '状态', templet: '#switchTpl', unresize: true },
                 { fixed: 'right', align: 'center', width: 200, title: '操作', toolbar: '#barTool' }
             ]

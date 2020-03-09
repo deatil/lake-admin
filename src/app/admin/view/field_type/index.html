@@ -4,25 +4,25 @@
 <div class="layui-card">
     <div class="layui-card-header layui-bg-cyan">字段类型</div>
     <div class="layui-card-body">
-		<blockquote class="layui-elem-quote quoteBox">
-			<form class="layui-form lake-admin-search-from" method="get" lay-filter="lake-admin-search-from">
-				<div class="layui-inline">
-					<div class="layui-input-inline">                    
-						<select name="field" class="lake-admin-search-field">
-							<option value="">全部类型</option>
-							<option value="name">字段类型</option>
-							<option value="title">中文类型名</option>
-						</select>					
-					</div>
-					<div class="layui-input-inline">
-						<input type="text" name="keyword" class="layui-input lake-admin-search-val" placeholder="请输入关键字">
-					</div>
-					<a class="layui-btn lake-admin-search-btn" data-type="search">搜索</a>
-					<a class="layui-btn" href="{:url('index')}">查看全部</a>
-				</div>
-			</form>
-		</blockquote>
-	
+        <blockquote class="layui-elem-quote quoteBox">
+            <form class="layui-form lake-admin-search-from" method="get" lay-filter="lake-admin-search-from">
+                <div class="layui-inline">
+                    <div class="layui-input-inline">                    
+                        <select name="field" class="lake-admin-search-field">
+                            <option value="">全部类型</option>
+                            <option value="name">字段类型</option>
+                            <option value="title">中文类型名</option>
+                        </select>                    
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="keyword" class="layui-input lake-admin-search-val" placeholder="请输入关键字">
+                    </div>
+                    <a class="layui-btn lake-admin-search-btn" data-type="search">搜索</a>
+                    <a class="layui-btn" href="{:url('index')}">查看全部</a>
+                </div>
+            </form>
+        </blockquote>
+    
         <div class="layui-form">
             <table class="layui-hide" id="table" lay-filter="table"></table>
         </div>
@@ -32,39 +32,39 @@
 
 {block name="script"}
 <script type="text/html" id="toolbarDemo">
-	<div class="layui-btn-container">
-		<a class="layui-btn layui-btn-sm layui-iframe" href="{:url('add')}" title="添加字段类型">添加字段类型</a>
-	</div>
+    <div class="layui-btn-container">
+        <a class="layui-btn layui-btn-sm layui-iframe" href="{:url('add')}" title="添加字段类型">添加字段类型</a>
+    </div>
 </script>
 
 <script type="text/html" id="ifoption">
-	{{#  if (d.ifoption == 1){ }}
-		<span>是</span>
-	{{#  } else { }}
-		<span>否</span>
-	{{#  } }}
+    {{#  if (d.ifoption == 1){ }}
+        <span>是</span>
+    {{#  } else { }}
+        <span>否</span>
+    {{#  } }}
 </script>
 
 <script type="text/html" id="ifstring">
-	{{#  if (d.ifstring == 1){ }}
-		<span>是</span>
-	{{#  } else { }}
-		<span>否</span>
-	{{#  } }}
+    {{#  if (d.ifstring == 1){ }}
+        <span>是</span>
+    {{#  } else { }}
+        <span>否</span>
+    {{#  } }}
 </script>
 
 <script type="text/html" id="barTool">
-	{{#  if(d.is_system != 1){ }}
-		<a href='{:url("edit")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="编辑字段类型">编辑</a>
-		<a href='{:url("del")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
-	{{#  } }}
+    {{#  if(d.is_system != 1){ }}
+        <a href='{:url("edit")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="编辑字段类型">编辑</a>
+        <a href='{:url("del")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
+    {{#  } }}
 </script>
 
 <script type="text/javascript">
 layui.use('table', function() {
     var $ = layui.$,
-		table = layui.table;
-		
+        table = layui.table;
+        
     table.render({
         elem: '#table',
         toolbar: '#toolbarDemo',
@@ -82,30 +82,30 @@ layui.use('table', function() {
                 { fixed: 'right', width: 120, title: '操作', toolbar: '#barTool' },
             ]
         ],
-		page: {},
+        page: {},
     });
-	
+    
     // 监听单元格编辑
     table.on('edit(table)', function(obj) {
         var field = obj.field,
-			value = obj.value,
+            value = obj.value,
             data = obj.data;
 
-		if (field == 'listorder') {
-			$.post('{:url("listorder")}', { 
-				'id': data.id, 
-				'value': value 
-			}, function(data) {
-				if (data.code == 1) {
-					layer.msg(data.msg);
-				} else {
-					layer.msg(data.msg);
-				}
-			});
-		}
+        if (field == 'listorder') {
+            $.post('{:url("listorder")}', { 
+                'id': data.id, 
+                'value': value 
+            }, function(data) {
+                if (data.code == 1) {
+                    layer.msg(data.msg);
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        }
     });
-	
-	// 搜索
+    
+    // 搜索
     $(".lake-admin-search-btn").on("click", function() {
         table.reload("table", {
             page: {
@@ -117,7 +117,7 @@ layui.use('table', function() {
             }
         })
     });
-	
+    
 });
 </script>
 {/block}

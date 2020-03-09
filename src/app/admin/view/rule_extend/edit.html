@@ -7,7 +7,7 @@
         <form class="layui-form" method="post">
             <input type="hidden" name="id" value="{$data.id}" />
             
-			<div class="layui-form-item">
+            <div class="layui-form-item">
                 <label class="layui-form-label">所属模块</label>
                 <div class="layui-input-inline">
                     <input type="text" name="module" value="{$data.module}" lay-verify="required" autocomplete="off" placeholder="所属模块" class="layui-input" id="module_select">
@@ -15,33 +15,33 @@
                 <div class="layui-input-inline">
                     <select lay-filter="module_select">
                         <option data-module=""></option>
-						<option data-module="admin">lake-admin</option>
-						{volist name="modules" id="module"}
-							<option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
-						{/volist}
+                        <option data-module="admin">lake-admin</option>
+                        {volist name="modules" id="module"}
+                            <option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
+                        {/volist}
                     </select>
                 </div>
                 <div class="layui-form-mid layui-word-aux">扩展权限所属模块</div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">扩展标识</label>
                 <div class="layui-input-inline">
                     <input type="text" name="type" value="{$data.type}" lay-verify="required" autocomplete="off" placeholder="扩展标识" class="layui-input">
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">权限组</label>
                 <div class="layui-input-inline">
                     <select name="group_id" lay-verify="required">
                         {volist name="roles" id="vo"}
-							<option value="{$vo['id']}" {if $vo['id'] == $data['group_id'] }selected{/if}>{$vo['title']}</option>
+                            <option value="{$vo['id']}" {if $vo['id'] == $data['group_id'] }selected{/if}>{$vo['title']}</option>
                         {/volist}
                     </select>
                 </div>
             </div>
-			
+            
             <div class="layui-form-item">
                 <label class="layui-form-label">扩展规则</label>
                 <div class="layui-input-inline">
@@ -49,20 +49,20 @@
                 </div>
             </div>
 
-			<div class="layui-form-item">
+            <div class="layui-form-item">
                 <label class="layui-form-label">附加条件</label>
                 <div class="layui-input-block w300">
                     <textarea name="condition" placeholder="规则附加条件" class="layui-textarea">{$data.condition}</textarea>
                 </div>
             </div>
-			
-			<div class="layui-form-item">
+            
+            <div class="layui-form-item">
                 <label class="layui-form-label">规则数据</label>
                 <div class="layui-input-block w300">
                     <textarea name="rule_data" placeholder="规则数据" class="layui-textarea">{$data.rule_data}</textarea>
                 </div>
-            </div>			
-			
+            </div>            
+            
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="formSubmit">立即提交</button>
@@ -79,8 +79,8 @@
 layui.use(['layer', 'form'], function() {
     var layer = layui.layer,
         form = layui.form,
-		$ = layui.$;
-		
+        $ = layui.$;
+        
     form.on('select(module_select)', function(data) {
         $('#module_select').val($(data.elem).find("option:selected").attr("data-module"));
     });
