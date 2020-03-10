@@ -104,7 +104,7 @@ class Admin extends Model
             return false;
         }
         
-        $data['id'] = md5(microtime().mt_rand(100000, 999999));
+        //$data['id'] = md5(microtime().mt_rand(100000, 999999));
         $data['add_time'] = time();
         $data['add_ip'] = request()->ip(1);
         
