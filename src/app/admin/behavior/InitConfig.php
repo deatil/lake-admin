@@ -62,7 +62,7 @@ class InitConfig
      */
     private function setAppEnv()
     {
-        $lake_module_path = env('root_path') . 'addons' . DIRECTORY_SEPARATOR;
+        $lake_module_path = config('module_path');
         $root_url = rtrim(dirname($_SERVER["SCRIPT_NAME"]), '\\/') . '/';
     
         Env::set([
