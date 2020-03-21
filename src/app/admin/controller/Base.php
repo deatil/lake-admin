@@ -18,7 +18,7 @@ abstract class Base extends Controller
      * @create 2019-10-10
      * @author deatil
      */
-    protected $_userinfo;
+    protected $userInfo;
     
     /**
      * 空操作
@@ -44,9 +44,9 @@ abstract class Base extends Controller
         $view_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR;
         $this->view->config('view_path', $view_path);
         
-        $this->_userinfo = env('userinfo');
+        $this->userInfo = env('userinfo');
     }
-
+    
     /**
      * 生成查询所需要的条件,排序方式
      *

@@ -14,7 +14,7 @@ class AuthRule extends Validate
 {
     //定义验证规则
     protected $rule = [
-        'parentid|上级菜单' => 'require|number',
+        'parentid|上级菜单' => 'require|alphaNum',
         'title|名称' => 'require|chsAlphaNum',
     ];
 

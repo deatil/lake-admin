@@ -20,15 +20,15 @@ class AdminMainUrl
     public function run($params)
     {
         // 首页链接
-        $main_url = config('admin_main');
+        $mainUrl = config('admin_main');
         
-        if (empty($main_url)) {
-            $main_url = $params;
+        if (empty($mainUrl)) {
+            $mainUrl = $params;
         } else {
-            $main_url = url($main_url);
+            $mainUrl = url($mainUrl);
         }
         
-        return $main_url;
+        return $mainUrl;
     }
     
 }

@@ -22,29 +22,29 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
         second = second < 10 ? ('0' + second) : second;
         return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
     };
-	
-	// jQuery placeholder, fix for IE6,7,8,9
-	var JPlaceHolder = new function () {
-		this.init = function () {
-			if (!('placeholder' in document.createElement('input'))) {
-				$(':input[placeholder]').map(function () {
-					var self = $(this), txt = self.attr('placeholder');
-					self.wrap($('<div></div>').css({zoom: '1', margin: 'none', border: 'none', padding: 'none', background: 'none', position: 'relative'}));
-					var pos = self.position(), h = self.outerHeight(true), paddingleft = self.css('padding-left');
-					var holder = $('<span></span>').text(txt).css({position: 'absolute', left: pos.left, top: pos.top, height: h, lineHeight: h + 'px', paddingLeft: paddingleft, color: '#aaa', zIndex: '999'}).appendTo(self.parent());
-					self.on('focusin focusout change keyup', function () {
-						self.val() ? holder.hide() : holder.show();
-					});
-					holder.click(function () {
-						self.get(0).focus();
-					});
-					self.val() && holder.hide();
-				});
-			}
-		};
-		this.init();
-	};
-	
+    
+    // jQuery placeholder, fix for IE6,7,8,9
+    var JPlaceHolder = new function () {
+        this.init = function () {
+            if (!('placeholder' in document.createElement('input'))) {
+                $(':input[placeholder]').map(function () {
+                    var self = $(this), txt = self.attr('placeholder');
+                    self.wrap($('<div></div>').css({zoom: '1', margin: 'none', border: 'none', padding: 'none', background: 'none', position: 'relative'}));
+                    var pos = self.position(), h = self.outerHeight(true), paddingleft = self.css('padding-left');
+                    var holder = $('<span></span>').text(txt).css({position: 'absolute', left: pos.left, top: pos.top, height: h, lineHeight: h + 'px', paddingLeft: paddingleft, color: '#aaa', zIndex: '999'}).appendTo(self.parent());
+                    self.on('focusin focusout change keyup', function () {
+                        self.val() ? holder.hide() : holder.show();
+                    });
+                    holder.click(function () {
+                        self.get(0).focus();
+                    });
+                    self.val() && holder.hide();
+                });
+            }
+        };
+        this.init();
+    };
+    
     var fly = {
         json: function(url, data, success, options) {
             options = options || {};
@@ -92,7 +92,7 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
     $(document).on('click', '.layui-iframe', function() {
         var that = $(this),
             query = '';
-        var def = { width: '100%', height: '100%', idSync: false, table: 'dataTable', type: 2, url: !that.attr('data-href') ? that.attr('href') : that.attr('data-href'), title: that.attr('title') };
+        var def = { width: '100%', height: '100%', idSync: false, maxmin: true, table: 'dataTable', type: 2, url: !that.attr('data-href') ? that.attr('href') : that.attr('data-href'), title: that.attr('title') };
         var opt = new Function('return ' + that.attr('lay-data'))() || {};
 
         opt.url = opt.url || def.url;
@@ -102,6 +102,7 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
         opt.type = opt.type || def.type;
         opt.table = opt.table || def.table;
         opt.idSync = opt.idSync || def.idSync;
+        opt.maxmin = opt.maxmin || def.maxmin;
 
         if (!opt.url) {
             notice.info('请设置data-href参数');
@@ -132,7 +133,7 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
             opt.url += '?iframe=yes' + query;
         }
 
-        layer.open({ type: opt.type, title: opt.title, content: opt.url, area: [opt.width, opt.height] });
+        layer.open({ type: opt.type, title: opt.title, content: opt.url, maxmin: opt.maxmin, area: [opt.width, opt.height] });
         return false;
 
     });
@@ -144,23 +145,23 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
     $(document).on('click', '.layui-tr-del', function() {
         var that = $(this),
             href = !that.attr('data-href') ? that.attr('href') : that.attr('data-href'),
-			data = that.attr('data-data') ? that.attr('data-data') : {},
-			callback = that.attr('data-callback') ? that.attr('data-callback') : undefined;
+            data = that.attr('data-data') ? that.attr('data-data') : {},
+            callback = that.attr('data-callback') ? that.attr('data-callback') : undefined;
         layer.confirm('删除之后无法恢复，您确定要删除吗？', { icon: 3, title: '提示信息' }, function(index) {
             if (!href) {
                 notice.info('请设置data-href参数');
                 return false;
             }
-			
+            
             $.post(href, data, function(res) {
                 res = fly.onAjaxResponse(res);
                 if (res.code == 1) {
                     notice.success(res.msg);
                     that.parents('tr').remove();
-					
+                    
                     if (callback) {
                         callback(that, res);
-                    }					
+                    }                    
                 } else {
                     notice.error(res.msg);
                 }
@@ -361,68 +362,68 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
             that = this,
             nead_confirm = false;
 
-		var post = function(target, query) {
-			$.post(target, query).success(function(data) {
-				if (data.code == 1) {
-					parent.layui.layer.closeAll();
-					if (data.url) {
-						layer.msg(data.msg + ' 页面即将自动跳转~');
-					} else {
-						layer.msg(data.msg);
-					}
-					setTimeout(function() {
-						if (data.url) {
-							location.href = data.url;
-						} else {
-							location.reload();
-						}
-					}, 1500);
-				} else {
-					layer.msg(data.msg);
-					setTimeout(function() {
-						if (data.url) {
-							location.href = data.url;
-						}
-					}, 1500);
-				}
-			});
-		}
+        var post = function(target, query) {
+            $.post(target, query).success(function(data) {
+                if (data.code == 1) {
+                    parent.layui.layer.closeAll();
+                    if (data.url) {
+                        layer.msg(data.msg + ' 页面即将自动跳转~');
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                    setTimeout(function() {
+                        if (data.url) {
+                            location.href = data.url;
+                        } else {
+                            location.reload();
+                        }
+                    }, 1500);
+                } else {
+                    layer.msg(data.msg);
+                    setTimeout(function() {
+                        if (data.url) {
+                            location.href = data.url;
+                        }
+                    }, 1500);
+                }
+            });
+        }
 
         _form = $('.' + target_form);
         if ($(this).attr('hide-data') === 'true') {
             _form = $('.hide-data');
             query = _form.serialize();
-			
+            
             if ($(this).hasClass('confirm')) {
-				layer.confirm('确认要执行该操作吗?', { 
-					icon: 3, 
-					title: '提示',
-				}, function(index) {
+                layer.confirm('确认要执行该操作吗?', { 
+                    icon: 3, 
+                    title: '提示',
+                }, function(index) {
                     post(target, query);
                 });
-				
-				return false;
+                
+                return false;
             }
-			
-			post(target, query);
+            
+            post(target, query);
         } else if ($(this).attr('data-post') !== undefined 
-			&& $(this).attr('data-href') !== undefined
-		) {
+            && $(this).attr('data-href') !== undefined
+        ) {
             target = $(this).attr('data-href');
             query = $(this).attr('data-post');
-			
+            
             if ($(this).hasClass('confirm')) {
-				layer.confirm('确认要执行该操作吗?', { 
-					icon: 3, 
-					title: '提示',
-				}, function(index) {
+                layer.confirm('确认要执行该操作吗?', { 
+                    icon: 3, 
+                    title: '提示',
+                }, function(index) {
                     post(target, query);
                 });
-				
-				return false;
+                
+                return false;
             }
-			
-			post(target, query);
+            
+            post(target, query);
         } else if (_form.get(0) == undefined) {
             return false;
         } else if (_form.get(0).nodeName == 'FORM') {
@@ -432,57 +433,57 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
                 target = _form.attr("action");
             }
             query = _form.serialize();
-			
+            
             if ($(this).hasClass('confirm')) {
-				layer.confirm('确认要执行该操作吗?', { 
-					icon: 3, 
-					title: '提示',
-				}, function(index) {
+                layer.confirm('确认要执行该操作吗?', { 
+                    icon: 3, 
+                    title: '提示',
+                }, function(index) {
                     post(target, query);
                 });
-				
-				return false;
+                
+                return false;
             }
-			
-			post(target, query);
+            
+            post(target, query);
         } else if (_form.get(0).nodeName == 'INPUT' || _form.get(0).nodeName == 'SELECT' || _form.get(0).nodeName == 'TEXTAREA') {
             _form.each(function(k, v) {
                 if (v.type == 'checkbox' && v.checked == true) {
                     nead_confirm = true;
                 }
             });
-			
+            
             query = _form.serialize();
-			
+            
             if (nead_confirm && $(this).hasClass('confirm')) {
-				layer.confirm('确认要执行该操作吗?', { 
-					icon: 3, 
-					title: '提示',
-				}, function(index) {
+                layer.confirm('确认要执行该操作吗?', { 
+                    icon: 3, 
+                    title: '提示',
+                }, function(index) {
                     post(target, query);
                 });
-				
-				return false;
+                
+                return false;
             }
-			
-			post(target, query);
+            
+            post(target, query);
         } else {
             query = _form.find('input,select,textarea').serialize();
-			
+            
             if ($(this).hasClass('confirm')) {
-				layer.confirm('确认要执行该操作吗?', { 
-					icon: 3, 
-					title: '提示',
-				}, function(index) {
+                layer.confirm('确认要执行该操作吗?', { 
+                    icon: 3, 
+                    title: '提示',
+                }, function(index) {
                     post(target, query);
                 });
-				
-				return false;
+                
+                return false;
             }
-			
-			post(target, query);
+            
+            post(target, query);
         }
-		
+        
         return false;
     });
 
@@ -493,17 +494,17 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
     $(document).on('click', '.layui-close', function() {
         var that = $(this),
             href = !that.attr('data-href') ? that.attr('href') : that.attr('data-href');
-	
-		if (typeof parent.layui.layer.closeAll == 'function') {
-			parent.layui.layer.closeAll();
-		} else {
-			if (href.indexOf('javascript:') == -1) {
-				location.href = href;
-			}
-		}
-		
-		return false;
-	});
-	
+    
+        if (typeof parent.layui.layer.closeAll == 'function') {
+            parent.layui.layer.closeAll();
+        } else {
+            if (href.indexOf('javascript:') == -1) {
+                location.href = href;
+            }
+        }
+        
+        return false;
+    });
+    
     exports('common', {});
 });

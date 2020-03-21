@@ -6,9 +6,9 @@ use think\Db;
 use think\facade\Hook;
 
 use app\admin\model\Attachment as AttachmentModel;
+
 use app\admin\service\Attachment as AttachmentService;
 use app\admin\service\Upload as UploadService;
-
 use app\admin\service\Admin as AdminService;
 
 /**
@@ -35,7 +35,7 @@ class Attachments extends Base
         parent::initialize();
         
         $this->AttachmentModel = new AttachmentModel;
-        $this->uploadUrl = config('public_url') . 'uploads/';
+        $this->uploadUrl = config('upload_url');
         $this->uploadPath = config('upload_path');
     }
 
@@ -52,12 +52,12 @@ class Attachments extends Base
             $page = $this->request->param('page/d', 10);
             $map = $this->buildparams();
             
-            $_list = AttachmentModel::where($map)
+            $list = AttachmentModel::where($map)
                 ->page($page, $limit)
                 ->order('id', 'desc')
                 ->select();
-            if (!empty($_list)) {
-                foreach ($_list as $k => &$v) {
+            if (!empty($list)) {
+                foreach ($list as $k => &$v) {
                     $v['path'] = $v['driver'] == 'local' ? $this->uploadUrl . $v['path'] : $v['path'];
                 }
                 unset($v);
@@ -69,13 +69,13 @@ class Attachments extends Base
             $result = [
                 "code" => 0, 
                 "count" => $total, 
-                "data" => $_list,
+                "data" => $list,
             ];
             
             Hook::listen('AttachmentsIndexAjax', $result);
             
             return json($result);
-        } else {            
+        } else {
             return $this->fetch();
         }
     }
@@ -105,10 +105,10 @@ class Attachments extends Base
         Hook::listen('AttachmentsView', $data);
         
         $this->assign('data', $data);
-
+        
         return $this->fetch();
     }
-
+    
     /**
      * 附件删除
      *

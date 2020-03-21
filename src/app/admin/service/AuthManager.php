@@ -23,16 +23,14 @@ class AuthManager
      * @create 2019-10-13
      * @author deatil
      */
-    public function checkUserAuth($rule_id, $user_auth_ids)
+    public function checkUserAuth($ruleId, $userAuthIds)
     {
-        $is_root = env('is_root');
-        if ($is_root) {
+        $isRoot = env('is_root');
+        if ($isRoot) {
             return false;
         }
         
-        $uid = env('admin_id');
-        
-        return in_array($rule_id, $user_auth_ids) ? false : true;
+        return in_array($ruleId, $userAuthIds) ? false : true;
     }
     
     /**
@@ -50,21 +48,21 @@ class AuthManager
         $uid = env('admin_id');
         
         // 当前用户权限ID列表
-        $user_auth_ids = (new Auth())->getUserAuthIdList($uid);
+        $userAuthIds = (new Auth())->getUserAuthIdList($uid);
         
-        $is_root = env('is_root');
-        if ($is_root) {
+        $isRoot = env('is_root');
+        if ($isRoot) {
             return $rules;
         }
         
-        $new_rules = [];
+        $newRules = [];
         foreach ($rules as $rule) {
-            if (in_array($rule, $user_auth_ids)) {
-                $new_rules[] = $rule;
+            if (in_array($rule, $userAuthIds)) {
+                $newRules[] = $rule;
             }
         }
         
-        return  $new_rules;
+        return  $newRules;
     }
     
     /**
@@ -73,9 +71,9 @@ class AuthManager
      * @create 2019-10-13
      * @author deatil
      */
-    public function checkUserGroup($group_id)
+    public function checkUserGroup($groupId)
     {
-        if (empty($group_id)) {
+        if (empty($groupId)) {
             return [
                 'status' => false,
                 'msg' => '用户组ID不能为空',
@@ -85,7 +83,7 @@ class AuthManager
         $Auth = new Auth();
         
         $group = Db::name('auth_group')->where([
-            'id' => $group_id,
+            'id' => $groupId,
         ])->find();
         if (empty($group)) {
             return [
@@ -94,17 +92,19 @@ class AuthManager
             ];
         }
         
-        $is_root = env('is_root');
-        if ($is_root) {
+        $isRoot = env('is_root');
+        if ($isRoot) {
             return [
                 'status' => true,
                 'msg' => '权限通过',
             ];
         }
         
+        $adminId = env('admin_id');
+        
         // 当前用户组ID列表
-        $user_group_ids = $Auth->getUserGroupIdList(env('admin_id'));
-        if (!in_array($group['parentid'], $user_group_ids)) {
+        $userGroupIds = $Auth->getUserGroupIdList($adminId);
+        if (!in_array($group['parentid'], $userGroupIds)) {
             return [
                 'status' => false,
                 'msg' => '访问受限',
@@ -123,9 +123,9 @@ class AuthManager
      * @create 2019-10-13
      * @author deatil
      */
-    public function checkGroupForUser($group_id)
+    public function checkGroupForUser($groupId)
     {
-        if (empty($group_id)) {
+        if (empty($groupId)) {
             return [
                 'status' => false,
                 'msg' => '用户组ID不能为空',
@@ -135,7 +135,7 @@ class AuthManager
         $Auth = new Auth();
         
         $group = Db::name('auth_group')->where([
-            'id' => $group_id,
+            'id' => $groupId,
         ])->find();
         if (empty($group)) {
             return [
@@ -144,8 +144,8 @@ class AuthManager
             ];
         }
         
-        $is_root = env('is_root');
-        if ($is_root) {
+        $isRoot = env('is_root');
+        if ($isRoot) {
             return [
                 'status' => true,
                 'msg' => '权限通过',
@@ -153,31 +153,31 @@ class AuthManager
         }
         
         // 用户组列表
-        $auth_group_list = Db::name('AuthGroup')
+        $authGroupList = Db::name('AuthGroup')
             ->where([
                 'module' => 'admin',
             ])
             ->order([
                 'id' => 'ASC',
             ])
-            ->select();        
+            ->select();
     
         // 当前用户组ID列表
-        $user_group_ids = $Auth->getUserGroupIdList(env('admin_id'));
+        $userGroupIds = $Auth->getUserGroupIdList(env('admin_id'));
         
         $Tree = new Tree();
         
-        $user_child_group_ids = [];
-        if (!empty($user_group_ids)) {
-            foreach ($user_group_ids as $user_group_id) {
-                $get_child_group_ids = $Tree->getChildsId($auth_group_list, $user_group_id);
-                $user_child_group_ids = array_merge($user_child_group_ids, $get_child_group_ids);
+        $userChildGroupIds = [];
+        if (!empty($userGroupIds)) {
+            foreach ($userGroupIds as $userGroupId) {
+                $getChildGroupIds = $Tree->getChildsId($authGroupList, $userGroupId);
+                $userChildGroupIds = array_merge($userChildGroupIds, $getChildGroupIds);
             }
         }
         
-        $user_child_group_ids = array_merge($user_child_group_ids, $user_group_ids);
+        $userChildGroupIds = array_merge($userChildGroupIds, $userGroupIds);
         
-        if (!in_array($group_id, $user_child_group_ids)) {
+        if (!in_array($groupId, $userChildGroupIds)) {
             return [
                 'status' => false,
                 'msg' => '访问受限',
@@ -202,40 +202,40 @@ class AuthManager
             return [];
         }
         
-        $is_root = env('is_root');
-        if ($is_root) {
+        $isRoot = env('is_root');
+        if ($isRoot) {
             return $list;
         }
         
         $Auth = new Auth();
         
         // 用户组列表
-        $auth_group_list = Db::name('AuthGroup')
+        $authGroupList = Db::name('AuthGroup')
             ->where([
                 'module' => 'admin',
             ])
             ->order([
                 'id' => 'ASC',
             ])
-            ->select();        
+            ->select();
     
         // 当前用户组ID列表
-        $user_group_ids = $Auth->getUserGroupIdList(env('admin_id'));
+        $userGroupIds = $Auth->getUserGroupIdList(env('admin_id'));
         
         $Tree = new Tree();
         
-        $user_child_group_ids = [];
-        if (!empty($user_group_ids)) {
-            foreach ($user_group_ids as $user_group_id) {
-                $get_child_group_ids = $Tree->getChildsId($auth_group_list, $user_group_id);
-                $user_child_group_ids = array_merge($user_child_group_ids, $get_child_group_ids);
+        $userChildGroupIds = [];
+        if (!empty($userGroupIds)) {
+            foreach ($userGroupIds as $user_group_id) {
+                $getChildGroupIds = $Tree->getChildsId($authGroupList, $user_group_id);
+                $userChildGroupIds = array_merge($userChildGroupIds, $getChildGroupIds);
             }
         }
         
-        $user_child_group_ids = array_merge($user_child_group_ids, $user_group_ids);
+        $userChildGroupIds = array_merge($userChildGroupIds, $userGroupIds);
         
         foreach ($list as $k => $v) {
-            if (!in_array($v['id'], $user_child_group_ids)) {
+            if (!in_array($v['id'], $userChildGroupIds)) {
                 $list[$k]['title'] = '匿名权限组';
                 $list[$k]['description'] = '匿名权限组描述';
             }
@@ -254,8 +254,8 @@ class AuthManager
     {
         $Auth = new Auth();
         // 当前用户组ID列表
-        $user_group_ids = $Auth->getUserGroupIdList($uid);
-        return $user_group_ids;
+        $userGroupIds = $Auth->getUserGroupIdList($uid);
+        return $userGroupIds;
     }
     
     /**
@@ -268,10 +268,10 @@ class AuthManager
     {
         $Auth = new Auth();
         // 当前用户组ID列表
-        $user_group_ids = $Auth->getUserGroupIdList($uid);
-        $user_parent_group_ids = $Auth->getParentGroupIdList($user_group_ids);
+        $userGroupIds = $Auth->getUserGroupIdList($uid);
+        $userParentGroupIds = $Auth->getParentGroupIdList($userGroupIds);
         
-        return $user_parent_group_ids;
+        return $userParentGroupIds;
     }
     
     /**
@@ -289,29 +289,29 @@ class AuthManager
         $Auth = new Auth();
         
         // 用户组列表
-        $auth_group_list = Db::name('AuthGroup')
+        $authGroupList = Db::name('AuthGroup')
             ->where([
                 'module' => 'admin',
             ])
             ->order([
                 'id' => 'ASC',
             ])
-            ->select();        
+            ->select();
     
         // 当前用户组ID列表
-        $user_group_ids = $Auth->getUserGroupIdList($uid);
+        $userGroupIds = $Auth->getUserGroupIdList($uid);
         
         $Tree = new Tree();
         
-        $user_child_group_ids = [];
-        if (!empty($user_group_ids)) {
-            foreach ($user_group_ids as $user_group_id) {
-                $get_child_group_ids = $Tree->getChildsId($auth_group_list, $user_group_id);
-                $user_child_group_ids = array_merge($user_child_group_ids, $get_child_group_ids);
+        $userChildGroupIds = [];
+        if (!empty($userGroupIds)) {
+            foreach ($userGroupIds as $user_group_id) {
+                $getChildGroupIds = $Tree->getChildsId($authGroupList, $user_group_id);
+                $userChildGroupIds = array_merge($userChildGroupIds, $getChildGroupIds);
             }
         }
         
-        return  $user_child_group_ids;
+        return  $userChildGroupIds;
     }
     
 }

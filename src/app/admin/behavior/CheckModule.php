@@ -2,7 +2,7 @@
 
 namespace app\admin\behavior;
 
-use app\admin\module\Module as ModuleService;
+use app\admin\module\Module as ModuleModule;
 
 /**
  * 检测模块
@@ -22,11 +22,11 @@ class CheckModule
     {        
         $module = request()->module();
         
-        $moduleService = new ModuleService();
-        $check = $moduleService->checkModule($module);
+        $ModuleModule = new ModuleModule();
+        $check = $ModuleModule->checkModule($module);
         
         if ($check === false) {
-            $error = $moduleService->getError();
+            $error = $ModuleModule->getError();
             abort(404, $error);
         }
     }

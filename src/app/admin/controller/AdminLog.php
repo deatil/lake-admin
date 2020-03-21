@@ -27,7 +27,7 @@ class AdminLog extends Base
         
         $this->AdminlogModel = new AdminlogModel;
     }
-
+    
     /**
      * 日志首页
      *
@@ -39,7 +39,7 @@ class AdminLog extends Base
         if ($this->request->isAjax()) {
             $limit = $this->request->param('limit/d', 20);
             $page = $this->request->param('page/d', 1);
-
+            
             $map = $this->buildparams();
             
             $method = $this->request->param('method/s', '');
@@ -52,12 +52,12 @@ class AdminLog extends Base
                 ->page($page, $limit)
                 ->order('id DESC')
                 ->select();
-                
+            
             $total = $this->AdminlogModel
                 ->where($map)
                 ->order('id DESC')
                 ->count();
-                
+            
             $result = [
                 "code" => 0, 
                 "count" => $total, 
@@ -68,7 +68,7 @@ class AdminLog extends Base
         }
         return $this->fetch();
     }
-
+    
     /**
      * 详情
      *
@@ -96,9 +96,9 @@ class AdminLog extends Base
         }
         
         $this->assign("data", $data);
-        return $this->fetch();        
+        return $this->fetch();
     }
-
+    
     /**
      * 删除一个月前的操作日志
      *

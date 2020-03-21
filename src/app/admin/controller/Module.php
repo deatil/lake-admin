@@ -7,7 +7,7 @@ use think\Controller;
 
 use lake\PclZip;
 
-use app\admin\module\Module as ModuleService;
+use app\admin\module\Module as ModuleModule;
 
 /**
  * 模型管理
@@ -17,7 +17,8 @@ use app\admin\module\Module as ModuleService;
  */
 class Module extends Base
 {
-
+    private $ModuleModule = null;
+    
     /**
      * 框架构造函数
      *
@@ -28,9 +29,9 @@ class Module extends Base
     {
         parent::initialize();
         
-        $this->ModuleService = new ModuleService();
+        $this->ModuleModule = new ModuleModule();
     }
-
+    
     /**
      * 已安装
      *
@@ -50,7 +51,7 @@ class Module extends Base
             
             if (!empty($list)) {
                 foreach ($list as $k => $v) {
-                    $list[$k]['icon'] = $this->ModuleService->getModuleIconData($v['module']);
+                    $list[$k]['icon'] = $this->ModuleModule->getModuleIconData($v['module']);
                 }
             }
             
@@ -72,11 +73,11 @@ class Module extends Base
     public function all()
     {
         if ($this->request->isAjax()) {
-            $list = $this->ModuleService->getAll();
+            $list = $this->ModuleModule->getAll();
             
             if (!empty($list)) {
                 foreach ($list as $k => $v) {
-                    $list[$k]['icon'] = $this->ModuleService->getModuleIconData($v['module']);
+                    $list[$k]['icon'] = $this->ModuleModule->getModuleIconData($v['module']);
                 }
             }
 
@@ -102,10 +103,10 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要安装的模块！');
             }
-            if ($this->ModuleService->install($module)) {
+            if ($this->ModuleModule->install($module)) {
                 $this->success('模块安装成功！一键清理缓存后生效！', url('Module/index'));
             } else {
-                $error = $this->ModuleService->getError();
+                $error = $this->ModuleModule->getError();
                 $this->error($error ? $error : '模块安装失败！');
             }
         } else {
@@ -114,7 +115,7 @@ class Module extends Base
                 $this->error('请选择需要安装的模块！');
             }
             
-            $config = $this->ModuleService->getInfoFromFile($module);
+            $config = $this->ModuleModule->getInfoFromFile($module);
             
             // 版本检查
             $version_check = '';
@@ -126,12 +127,12 @@ class Module extends Base
                 }
             }
             
-            $need_module = [];
-            $table_check = [];
+            $needModule = [];
+            $tableCheck = [];
             
             // 检查模块依赖
             if (isset($config['need_module']) && !empty($config['need_module'])) {
-                $need_module = $this->checkDependence($config['need_module']);
+                $needModule = $this->checkDependence($config['need_module']);
             }
             
             // 检查数据表
@@ -139,12 +140,12 @@ class Module extends Base
                 foreach ($config['tables'] as $table) {
                     $table = config('database.prefix') . $table;
                     if (Db::query("SHOW TABLES LIKE '{$table}'")) {
-                        $table_check[] = [
+                        $tableCheck[] = [
                             'table' => "{$table}",
                             'result' => '<span class="text-danger">存在同名</span>',
                         ];
                     } else {
-                        $table_check[] = [
+                        $tableCheck[] = [
                             'table' => "{$table}",
                             'result' => '<i class="iconfont icon-success text-success"></i>',
                         ];
@@ -153,13 +154,13 @@ class Module extends Base
 
             }
             
-            $this->assign('need_module', $need_module);
+            $this->assign('need_module', $needModule);
             $this->assign('version_check', $version_check);
-            $this->assign('table_check', $table_check);
+            $this->assign('table_check', $tableCheck);
             $this->assign('config', $config);
             
             return $this->fetch();
-
+            
         }
     }
 
@@ -176,10 +177,10 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要安装的模块！');
             }
-            if ($this->ModuleService->uninstall($module)) {
+            if ($this->ModuleModule->uninstall($module)) {
                 $this->success("模块卸载成功！一键清理缓存后生效！", url("Module/index"));
             } else {
-                $error = $this->ModuleService->getError();
+                $error = $this->ModuleModule->getError();
                 $this->error($error ? $error : "模块卸载失败！", url("Module/index"));
             }
         } else {
@@ -187,7 +188,7 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要安装的模块！');
             }
-            $config = $this->ModuleService->getInfoFromFile($module);
+            $config = $this->ModuleModule->getInfoFromFile($module);
             $this->assign('config', $config);
             return $this->fetch();
 
@@ -207,10 +208,10 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要更新的模块！');
             }
-            if ($this->ModuleService->upgrade($module)) {
+            if ($this->ModuleModule->upgrade($module)) {
                 $this->success('模块更新成功！一键清理缓存后生效！', url('Module/index'));
             } else {
-                $error = $this->ModuleService->getError();
+                $error = $this->ModuleModule->getError();
                 $this->error($error ? $error : '模块更新失败！');
             }
         } else {
@@ -219,7 +220,7 @@ class Module extends Base
                 $this->error('请选择需要安装的模块！');
             }
             
-            $config = $this->ModuleService->getInfoFromFile($module);
+            $config = $this->ModuleModule->getInfoFromFile($module);
             
             // 版本检查
             if ($config['adaptation']) {
@@ -230,12 +231,12 @@ class Module extends Base
                 }
             }
             
-            $need_module = [];
-            $table_check = [];
+            $needModule = [];
+            $tableCheck = [];
             
             // 检查模块依赖
             if (isset($config['need_module']) && !empty($config['need_module'])) {
-                $need_module = $this->checkDependence($config['need_module']);
+                $needModule = $this->checkDependence($config['need_module']);
             }
             
             // 检查数据表
@@ -247,12 +248,12 @@ class Module extends Base
                         config('database.prefix')
                     ], $table);
                     if (Db::query("SHOW TABLES LIKE '{$table}'")) {
-                        $table_check[] = [
+                        $tableCheck[] = [
                             'table' => "{$table}",
                             'result' => '<span class="text-danger">存在同名</span>',
                         ];
                     } else {
-                        $table_check[] = [
+                        $tableCheck[] = [
                             'table' => "{$table}",
                             'result' => '<i class="iconfont icon-success text-success"></i>',
                         ];
@@ -261,9 +262,9 @@ class Module extends Base
 
             }
             
-            $this->assign('need_module', $need_module);
+            $this->assign('need_module', $needModule);
             $this->assign('version_check', $version_check);
-            $this->assign('table_check', $table_check);
+            $this->assign('table_check', $tableCheck);
             $this->assign('config', $config);
             
             return $this->fetch();
@@ -325,10 +326,10 @@ class Module extends Base
         $moduleName = pathinfo($files->getInfo('name'));
         $moduleName = $moduleName['filename'];
         // 检查插件目录是否存在
-        if (!$this->ModuleService->isLocal($moduleName)) {
-            $this->error($this->ModuleService->getError());
+        if (!$this->ModuleModule->isLocal($moduleName)) {
+            $this->error($this->ModuleModule->getError());
         }
-
+        
         // 上传临时文件地址
         $filename = $files->getInfo('tmp_name');
         $zip = new PclZip($filename);
@@ -352,14 +353,14 @@ class Module extends Base
             $this->error("请求错误！");
         }
         
-        $module_id = $this->request->param('module/s');
-        if (empty($module_id)) {
+        $moduleId = $this->request->param('module/s');
+        if (empty($moduleId)) {
             $this->error('请选择需要操作的模块！');
         }
         
         // 获取插件信息
         $module = Db::name('module')->where([
-            'module' => $module_id,
+            'module' => $moduleId,
             'status' => 1,
         ])->find();
         if (empty($module)) {
@@ -367,19 +368,19 @@ class Module extends Base
         }
         
         $module['setting'] = json_decode($module['setting'], true);
-        $setting_data = $module['setting_data'];
+        $settingData = $module['setting_data'];
         
         // 载入插件配置数组
-        if (!empty($setting_data)) {
-            $setting_data = json_decode($setting_data, true);
-            if (!empty($setting_data)) {
+        if (!empty($settingData)) {
+            $settingData = json_decode($settingData, true);
+            if (!empty($settingData)) {
                 foreach ($module['setting'] as $key => $value) {
                     if ($value['type'] != 'group') {
-                        $module['setting'][$key]['value'] = isset($setting_data[$key]) ? $setting_data[$key] : '';
+                        $module['setting'][$key]['value'] = isset($settingData[$key]) ? $settingData[$key] : '';
                     } else {
                         foreach ($value['options'] as $gourp => $options) {
                             foreach ($options['options'] as $gkey => $value) {
-                                $module['setting'][$key]['options'][$gourp]['options'][$gkey]['value'] = $setting_data[$gkey];
+                                $module['setting'][$key]['options'][$gourp]['options'][$gkey]['value'] = $settingData[$gkey];
                             }
                         }
                     }
@@ -404,14 +405,14 @@ class Module extends Base
             $this->error('访问错误！');
         }
         
-        $module_id = $this->request->param('module/s');
-        if (empty($module_id)) {
+        $moduleId = $this->request->param('module/s');
+        if (empty($moduleId)) {
             $this->error('请选择需要操作的模块！');
         }
         
         //获取插件信息
         $module = Db::name('module')->where([
-            'module' => $module_id,
+            'module' => $moduleId,
             'status' => 1,
         ])->find();
         if (empty($module)) {
@@ -420,7 +421,7 @@ class Module extends Base
         
         $config = $this->request->param('config/a');
         $flag = Db::name('module')->where([
-            'module' => $module_id,
+            'module' => $moduleId,
         ])->setField('setting_data', json_encode($config));
         
         if ($flag === false) {
@@ -471,10 +472,10 @@ class Module extends Base
             $this->error('模块ID错误！');
         }
         
-        $status = $this->ModuleService->enable($module);
+        $status = $this->ModuleModule->enable($module);
 
         if ($status === false) {
-            $error = $this->ModuleService->getError();
+            $error = $this->ModuleModule->getError();
             $this->error($error);
         }
         
@@ -498,10 +499,10 @@ class Module extends Base
             $this->error('模块ID错误！');
         }
         
-        $status = $this->ModuleService->disable($module);
+        $status = $this->ModuleModule->disable($module);
 
         if ($status === false) {
-            $error = $this->ModuleService->getError();
+            $error = $this->ModuleModule->getError();
             $this->error($error);
         }
         

@@ -3,6 +3,7 @@
 namespace app\admin\module\traits\controller;
 
 use think\Db;
+use think\facade\Env;
 
 /**
  * 插件后台
@@ -27,9 +28,9 @@ trait Admin
     protected function fetch($template = '', $vars = [], $config = [])
     {
         if (!empty($this->moduleViewPath)) {
-            $view_path = $this->moduleViewPath;
+            $viewPath = $this->moduleViewPath;
         } else {
-            $app_path = config('module_path');
+            $appPath = config('module_path');
             
             if (strpos($template, '@') !== FALSE) {
                 $templates = explode('@', $template);
@@ -39,7 +40,7 @@ trait Admin
                 $module = $this->module;
             }
             
-            $module_path = $app_path . $module;
+            $modulePath = $appPath . $module;
             
             // 模块信息
             if (!empty($module)) {
@@ -48,14 +49,19 @@ trait Admin
                     'status' => 1,
                 ])->find();
                 if (!empty($module_info) && !empty($module_info['path'])) {
-                    $module_path = $module_info['path'];
+                    $modulePath = $module_info['path'];
                 }
             }
+            
+            // 保存模块名称
+            Env::set([
+                'module_name' => $module,
+            ]);
         
-            $view_path = $module_path . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR;
+            $viewPath = $modulePath . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR;
         }
         
-        $this->view->config('view_path', $view_path);
+        $this->view->config('view_path', $viewPath);
         return $this->view->fetch($template, $vars, $config);
     }
 

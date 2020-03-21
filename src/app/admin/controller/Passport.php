@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use think\captcha\Captcha;
 
 use app\admin\model\Admin as AdminModel;
+
 use app\admin\service\Admin as AdminService;
 
 /**
@@ -28,25 +29,25 @@ class Passport extends Base
         
         $captcha['length'] = 4;
         
-        //设置验证码字体大小
+        // 设置验证码字体大小
         $captcha['fontSize'] = 18;
         
-        //设置验证码图片宽度
+        // 设置验证码图片宽度
         $captcha['imageW'] = 130;
         
-        //设置验证码图片高度
+        // 设置验证码图片高度
         $captcha['imageH'] = 36;
         
-        //设置背景颜色
-        //$checkcode['background'] = $background;
+        // 设置背景颜色
+        //$checkcode['background'] = '#fff';
         
-        //设置字体颜色
-        //$checkcode['fontcolor'] = $fontcolor;
+        // 设置字体颜色
+        //$checkcode['fontcolor'] = '#000';
         
         $captcha = new Captcha($captcha);
         return $captcha->entry();
     }
-
+    
     /**
      * 登录
      *
@@ -56,7 +57,7 @@ class Passport extends Base
     public function login()
     {
         if (AdminService::instance()->isLogin()) {
-            $this->redirect('index/index');
+            $this->redirect(url('index/index'));
         }
         
         if ($this->request->isPost()) {

@@ -296,7 +296,7 @@ class Upload
             // 水印功能
             if ($watermark == '') {
                 if ($dir == 'images' && config('upload_thumb_water') == 1 && config('upload_thumb_water_pic') > 0) {
-                    model('Attachment')->createWater($info->getRealPath(), config('upload_thumb_water_pic'));
+                    (new AttachmentModel)->createWater($info->getRealPath(), config('upload_thumb_water_pic'));
                 }
             }
 

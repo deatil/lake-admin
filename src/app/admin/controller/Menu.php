@@ -7,7 +7,7 @@ use think\Db;
 use lake\Tree;
 
 use app\admin\model\AuthRule as AuthRuleModel;
-use app\admin\module\Module as ModuleService;
+use app\admin\module\Module as ModuleModule;
 
 /**
  * 后台菜单管理
@@ -17,7 +17,7 @@ use app\admin\module\Module as ModuleService;
  */
 class Menu extends Base
 {
-
+    
     /**
      * 后台菜单首页
      *
@@ -38,13 +38,13 @@ class Menu extends Base
                 ->toArray();
 
             $tree->init($result);
-            $_list = $tree->getTreeList($tree->getTreeArray(0), 'title');
-            $total = count($_list);
+            $list = $tree->getTreeList($tree->getTreeArray(0), 'title');
+            $total = count($list);
             
             $result = [
                 "code" => 0, 
                 "count" => $total, 
-                "data" => $_list
+                "data" => $list
             ];
             return json($result);
         }
@@ -64,14 +64,13 @@ class Menu extends Base
         if ($this->request->isAjax()) {
             $limit = $this->request->param('limit/d', 20);
             $page = $this->request->param('page/d', 1);
-
-            $search_field = $this->request->param('search_field/s', '', 'trim');
+            
+            $searchField = $this->request->param('search_field/s', '', 'trim');
             $keyword = $this->request->param('keyword/s', '', 'trim');
             
             $map = [];
-            if (!empty($search_field) && !empty($keyword)) {
-                $search_field = $search_field;
-                $map[] = [$search_field, 'like', "%$keyword%"];
+            if (!empty($searchField) && !empty($keyword)) {
+                $map[] = [$searchField, 'like', "%$keyword%"];
             }
             
             $data = AuthRuleModel::where($map)
@@ -102,13 +101,13 @@ class Menu extends Base
         if ($this->request->isPost()) {
             $data = $this->request->param();
             
-            if (!empty($data['name'])) {            
+            if (!empty($data['name'])) {
                 $rule = AuthRuleModel::where([
                     "name" => $data['name']
                 ])->find();
                 if (!empty($rule)) {
                     $this->error('规则已经存在，请重新填写！');
-                }                
+                }
             }
             
             if (!isset($data['is_menu'])) {
@@ -163,11 +162,11 @@ class Menu extends Base
             }
             $str = "<option value='\$id' \$selected>\$spacer \$title</option>";
             $tree->init($array);
-            $select_categorys = $tree->get_tree(0, $str);
-            $this->assign("select_categorys", $select_categorys);
+            $selectCategorys = $tree->get_tree(0, $str);
+            $this->assign("select_categorys", $selectCategorys);
             
             // 模块列表
-            $modules = (new ModuleService())->getAll();
+            $modules = (new ModuleModule())->getAll();
             $this->assign("modules", $modules);
             
             return $this->fetch();
@@ -255,7 +254,7 @@ class Menu extends Base
                 'listorder' => 'ASC', 
                 'id' => 'DESC',
             ])->select()->toArray();
-
+            
             $childsId = $tree->getChildsId($result, $rs['id']);
             $childsId[] = $rs['id'];
             
@@ -271,12 +270,12 @@ class Menu extends Base
             
             $str = "<option value='\$id' \$selected>\$spacer \$title</option>";
             $tree->init($array);
-            $select_categorys = $tree->get_tree(0, $str);
+            $selectCategorys = $tree->get_tree(0, $str);
             $this->assign("data", $rs);
-            $this->assign("select_categorys", $select_categorys);
+            $this->assign("select_categorys", $selectCategorys);
             
             // 模块列表
-            $modules = (new ModuleService())->getAll();
+            $modules = (new ModuleModule())->getAll();
             $this->assign("modules", $modules);
             
             return $this->fetch();

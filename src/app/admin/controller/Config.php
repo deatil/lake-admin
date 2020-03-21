@@ -57,7 +57,7 @@ class Config extends Base
     public function index($group = 'system')
     {
         if ($this->request->isAjax()) {
-            $_list = Db::view(
+            $list = Db::view(
                     'config', 
                     'id,name,title,type,listorder,status,is_system,update_time'
                 )
@@ -70,11 +70,11 @@ class Config extends Base
                 )
                 ->order('listorder,id desc')
                 ->select();
-            $result = [
+                
+            return json([
                 "code" => 0, 
-                "data" => $_list
-            ];
-            return json($result);
+                "data" => $list
+            ]);
         } else {
             $this->assign([
                 'groupArray' => config('config_group'),
@@ -96,13 +96,13 @@ class Config extends Base
             $limit = $this->request->param('limit/d', 20);
             $page = $this->request->param('page/d', 1);
             
-            $search_field = $this->request->param('search_field/s', '', 'trim');
+            $searchField = $this->request->param('search_field/s', '', 'trim');
             $keyword = $this->request->param('keyword/s', '', 'trim');
             
             $map = [];
-            if (!empty($search_field) && !empty($keyword)) {
-                $search_field = 'c.'.$search_field;
-                $map[] = [$search_field, 'like', "%$keyword%"];
+            if (!empty($searchField) && !empty($keyword)) {
+                $searchField = 'c.'.$searchField;
+                $map[] = [$searchField, 'like', "%$keyword%"];
             }
             
             $data = Db::name('config')

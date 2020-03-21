@@ -82,6 +82,7 @@ class Admin extends Model
             'last_login_ip' => request()->ip(1),
         ];
         $this->loginStatus($userInfo['id']);
+        
         /* 记录登录SESSION和COOKIES */
         $auth = [
             'uid' => $userInfo['id'],
@@ -104,7 +105,7 @@ class Admin extends Model
             return false;
         }
         
-        //$data['id'] = md5(microtime().mt_rand(100000, 999999));
+        // $data['id'] = md5(microtime().mt_rand(100000, 999999));
         $data['add_time'] = time();
         $data['add_ip'] = request()->ip(1);
         
@@ -114,16 +115,16 @@ class Admin extends Model
                 $roles = explode(',', $data['roleid']);
                 unset($data['roleid']);
                 
-                $group_access = [];
+                $groupAccess = [];
                 foreach ($roles as $role) {
-                    $group_access[] = [
+                    $groupAccess[] = [
                         'module' => 'admin',
                         'admin_id' => $this->id,
                         'group_id' => $role,
                     ];
                 }
-                Db::name('auth_group_access')->insertAll($group_access);
-            }            
+                Db::name('auth_group_access')->insertAll($groupAccess);
+            }
             
             return $id;
         }
@@ -138,7 +139,10 @@ class Admin extends Model
      */
     public function editManager($data)
     {
-        if (empty($data) || !isset($data['id']) || !is_array($data)) {
+        if (empty($data) 
+            || !isset($data['id']) 
+            || !is_array($data)
+        ) {
             $this->error = '没有修改的数据！';
             return false;
         }
@@ -174,7 +178,7 @@ class Admin extends Model
                 'id' => $data['id'],
             ]);
         */
-            
+        
         $status = $this
             ->where([
                 'id' => $data['id'],
@@ -193,15 +197,15 @@ class Admin extends Model
                 'admin_id' => $data['id'],
             ])->delete();
             
-            $group_access = [];
+            $groupAccess = [];
             foreach ($roles as $role) {
-                $group_access[] = [
+                $groupAccess[] = [
                     'module' => 'admin',
                     'admin_id' => $data['id'],
                     'group_id' => $role,
                 ];
             }
-            Db::name('auth_group_access')->insertAll($group_access);
+            Db::name('auth_group_access')->insertAll($groupAccess);
         }
         
         return true;

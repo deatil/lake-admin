@@ -6,6 +6,7 @@ use think\Db;
 
 use app\admin\model\Admin as AdminModel;
 use app\admin\model\AuthGroup as AuthGroupModel;
+
 use app\admin\service\AuthManager as AuthManagerService;
 
 /**
@@ -46,13 +47,13 @@ class Manager extends Base
             $map = $this->buildparams();
             
             if (!env('is_root')) {
-                $user_child_group_ids = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
-                $admin_ids = Db::name('auth_group_access')
+                $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
+                $adminIds = Db::name('auth_group_access')
                     ->where([
-                        ['group_id', 'in', $user_child_group_ids],
+                        ['group_id', 'in', $userChildGroupIds],
                     ])
                     ->column('admin_id');
-                $map[] = ['id', 'in', $admin_ids];
+                $map[] = ['id', 'in', $adminIds];
             }
             
             $list = $this->AdminModel
@@ -114,16 +115,16 @@ class Manager extends Base
             
             if (isset($data['roleid']) && !empty($data['roleid'])) {
                 $roleids = explode(',', $data['roleid']);
-                $user_child_group_ids = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
-                $is_allow = true;
+                $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
+                $isAllow = true;
                 foreach ($roleids as $roleid) {
                     if (!in_array($roleid, $roleids)) {
-                        $is_allow = false;
+                        $isAllow = false;
                         break;
                     }
                 }
                 
-                if ($is_allow === false) {
+                if ($isAllow === false) {
                     $this->error('选择权限组错误！');
                 }
             }
@@ -137,13 +138,13 @@ class Manager extends Base
             $this->success("添加管理员成功！");
         } else {
             if (!env('is_root')) {
-                $user_child_group_ids = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
-                $roles = model('admin/AuthGroup')
+                $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
+                $roles = (new AuthGroupModel)
                     ->getGroups([
-                        ['id', 'in', $user_child_group_ids],
+                        ['id', 'in', $userChildGroupIds],
                     ]);
             } else {
-                $roles = model('admin/AuthGroup')->getGroups();
+                $roles = (new AuthGroupModel)->getGroups();
             }
             $this->assign("roles", $roles);
             
@@ -171,16 +172,16 @@ class Manager extends Base
                 $this->error('参数错误！');
             }
             
-            $admin_info = $this->AdminModel
+            $adminInfo = $this->AdminModel
                 ->where([
                     "id" => $data['id'],
                 ])
                 ->find();
-            if (empty($admin_info)) {
+            if (empty($adminInfo)) {
                 $this->error('信息不存在！');
             }
             
-            if ($admin_info['is_system'] == 1) {
+            if ($adminInfo['is_system'] == 1) {
                 $this->error('系统默认账户不可操作！');
             }
             
@@ -192,16 +193,16 @@ class Manager extends Base
             
             if (isset($data['roleid']) && !empty($data['roleid'])) {
                 $roleids = explode(',', $data['roleid']);
-                $user_child_group_ids = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
-                $is_allow = true;
+                $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
+                $isAllow = true;
                 foreach ($roleids as $roleid) {
                     if (!in_array($roleid, $roleids)) {
-                        $is_allow = false;
+                        $isAllow = false;
                         break;
                     }
                 }
                 
-                if ($is_allow === false) {
+                if ($isAllow === false) {
                     $this->error('选择权限组错误！');
                 }
             }
@@ -242,13 +243,13 @@ class Manager extends Base
             $this->assign("data", $data);
             
             if (!env('is_root')) {
-                $user_child_group_ids = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
-                $roles = model('admin/AuthGroup')
+                $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
+                $roles = (new AuthGroupModel)
                     ->getGroups([
-                        ['id', 'in', $user_child_group_ids],
+                        ['id', 'in', $userChildGroupIds],
                     ]);
             } else {
-                $roles = model('admin/AuthGroup')->getGroups();
+                $roles = (new AuthGroupModel)->getGroups();
             }
             $this->assign("roles", $roles);
             
@@ -273,16 +274,16 @@ class Manager extends Base
             $this->error('参数错误！');
         }
         
-        $admin_info = $this->AdminModel
+        $adminInfo = $this->AdminModel
             ->where([
                 "id" => $id,
             ])
             ->find();
-        if (empty($admin_info)) {
+        if (empty($adminInfo)) {
             $this->error('信息不存在！');
         }
         
-        if ($admin_info['is_system'] == 1) {
+        if ($adminInfo['is_system'] == 1) {
             $this->error('系统默认账户不可操作！');
         }
         
@@ -324,7 +325,7 @@ class Manager extends Base
                 'admin_id' => $id,
             ])
             ->column('group_id');
-        $authGroups = model('admin/AuthGroup')->getGroups();
+        $authGroups = (new AuthGroupModel)->getGroups();
         
         $groups = [];
         if (!empty($authGroups)) {
@@ -392,7 +393,7 @@ class Manager extends Base
             }
             
             $this->assign("data", $data);
-
+            
             return $this->fetch();
         }
     }

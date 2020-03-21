@@ -7,10 +7,11 @@ use think\facade\Hook;
 
 use lake\Tree;
 
-use app\admin\service\Auth;
-use app\admin\service\AuthManager as AuthManagerService;
 use app\admin\model\AuthGroup as AuthGroupModel;
 use app\admin\model\AuthRule as AuthRuleModel;
+
+use app\admin\service\Auth;
+use app\admin\service\AuthManager as AuthManagerService;
 
 /**
  * 权限管理控制器
@@ -51,10 +52,10 @@ class AuthManager extends Base
         if ($this->request->isAjax()) {
             $limit = $this->request->param('limit/d', 10);
             $page = $this->request->param('page/d', 1);
-
+            
             $map = $this->buildparams();
             
-            $_list = Db::name('AuthGroup')
+            $list = Db::name('AuthGroup')
                 ->where([
                     'module' => 'admin',
                 ])
@@ -74,15 +75,15 @@ class AuthManager extends Base
             $result = [];
             if (empty($map)) {
                 $tree = new Tree();
-                $tree->init($_list);
+                $tree->init($list);
                 $result = [];
                 
                 if (!env('is_root')) {
-                    $user_group_ids = $this->AuthManagerService->getUserGroupIds(env('admin_id'));
+                    $userGroupIds = $this->AuthManagerService->getUserGroupIds(env('admin_id'));
                     $data = [];
-                    if (!empty($user_group_ids)) {
-                        foreach ($user_group_ids as $user_group_id) {
-                            $data2 = $tree->getTreeArray($user_group_id);
+                    if (!empty($userGroupIds)) {
+                        foreach ($userGroupIds as $userGroupId) {
+                            $data2 = $tree->getTreeArray($userGroupId);
                             $data = array_merge($data, $data2);
                         }
                     }
@@ -101,7 +102,7 @@ class AuthManager extends Base
                 "data" => $result,
             ];
             
-            Hook::listen('AuthManagerIndexAjax', $result);    
+            Hook::listen('AuthManagerIndexAjax', $result);
             
             return json($result);
         } else {
@@ -132,28 +133,28 @@ class AuthManager extends Base
         
         $tree = new Tree();
         $str = "'<option value='\$id' \$selected>\$spacer\$title</option>";
-        $_list = Db::name('AuthGroup')
+        $list = Db::name('AuthGroup')
             ->where('module', 'admin')
             ->order(['id' => 'ASC'])
             ->column('*', 'id');
         
-        Hook::listen('AuthManagerCreateGroup', $_list);
+        Hook::listen('AuthManagerCreateGroup', $list);
         
-        $tree->init($_list);
+        $tree->init($list);
         
         if (!env('is_root')) {
-            $user_parent_group_ids = $this->AuthManagerService->getUserParentGroupIds(env('admin_id'));
-            $group_data = '';
-            if (!empty($user_parent_group_ids)) {
-                foreach ($user_parent_group_ids as $user_parent_group_id) {
-                    $group_data .= $tree->get_tree($user_parent_group_id, $str, 0);
+            $userParentGroupIds = $this->AuthManagerService->getUserParentGroupIds(env('admin_id'));
+            $groupData = '';
+            if (!empty($userParentGroupIds)) {
+                foreach ($userParentGroupIds as $userParentGroupId) {
+                    $groupData .= $tree->get_tree($userParentGroupId, $str, 0);
                 }
             }
         } else {
-            $group_data = $tree->get_tree(0, $str, 0);
+            $groupData = $tree->get_tree(0, $str, 0);
         }
         
-        $this->assign("group_data", $group_data);
+        $this->assign("group_data", $groupData);
         
         return $this->fetch('edit_group');
 
@@ -172,17 +173,17 @@ class AuthManager extends Base
             $this->error('角色组不存在！');
         }
         
-        $auth_group = Db::name('AuthGroup')
+        $authGroup = Db::name('AuthGroup')
             ->where([
                 'module' => 'admin', 
                 'type' => AuthGroupModel::TYPE_ADMIN,
             ])
             ->find($id);
-        if (empty($auth_group)) {
+        if (empty($authGroup)) {
             $this->error('角色组不存在！');
         }
         
-        if ($auth_group['is_system'] == 1) {
+        if ($authGroup['is_system'] == 1) {
             $this->error('系统默认角色不可操作！');
         }
     
@@ -194,42 +195,42 @@ class AuthManager extends Base
         $tree = new Tree();
         
         $str = "'<option value='\$id' \$selected>\$spacer\$title</option>";
-        $_list = Db::name('AuthGroup')
+        $list = Db::name('AuthGroup')
             ->where('module', 'admin')
             ->order([
                 'id' => 'ASC',
             ])
             ->column('*', 'id');
             
-        $childsId = $tree->getChildsId($_list, $auth_group['id']);
-        $childsId[] = $auth_group['id'];
+        $childsId = $tree->getChildsId($list, $authGroup['id']);
+        $childsId[] = $authGroup['id'];
         
-        Hook::listen('AuthManagerEditGroup', $_list);
+        Hook::listen('AuthManagerEditGroup', $list);
         
-        if (!empty($_list)) {
-            foreach ($_list as $key => $val) {
+        if (!empty($list)) {
+            foreach ($list as $key => $val) {
                 if (in_array($val['id'], $childsId)) {
-                    unset($_list[$key]);
+                    unset($list[$key]);
                 }
             }
         }
-
-        $tree->init($_list);
+        
+        $tree->init($list);
         
         if (!env('is_root')) {
-            $user_parent_group_ids = $this->AuthManagerService->getUserParentGroupIds(env('admin_id'));
-            $group_data = '';
-            if (!empty($user_parent_group_ids)) {
-                foreach ($user_parent_group_ids as $user_parent_group_id) {
-                    $group_data .= $tree->get_tree($user_parent_group_id, $str, $auth_group['parentid']);
+            $userParentGroupIds = $this->AuthManagerService->getUserParentGroupIds(env('admin_id'));
+            $groupData = '';
+            if (!empty($userParentGroupIds)) {
+                foreach ($userParentGroupIds as $userParentGroupId) {
+                    $groupData .= $tree->get_tree($userParentGroupIds, $str, $authGroup['parentid']);
                 }
             }
         } else {
-            $group_data = $tree->get_tree(0, $str, $auth_group['parentid']);
+            $groupData = $tree->get_tree(0, $str, $authGroup['parentid']);
         }
         
-        $this->assign("group_data", $group_data);
-        $this->assign('auth_group', $auth_group);
+        $this->assign("group_data", $groupData);
+        $this->assign('auth_group', $authGroup);
         
         return $this->fetch();
     }
@@ -274,17 +275,17 @@ class AuthManager extends Base
         $rules = $this->AuthManagerService->getUserRightAuth($rules);
         
         if (isset($data['id']) && !empty($data['id'])) {
-            $auth_group = Db::name('AuthGroup')
+            $authGroup = Db::name('AuthGroup')
                 ->where([
                     'module' => 'admin', 
                     'type' => AuthGroupModel::TYPE_ADMIN,
                 ])
                 ->find($data['id']);
-            if (empty($auth_group)) {
+            if (empty($authGroup)) {
                 $this->error('角色组不存在！');
             }
             
-            if ($auth_group['is_system'] == 1) {
+            if ($authGroup['is_system'] == 1) {
                 $this->error('系统默认角色不可操作！');
             }
             
@@ -300,16 +301,18 @@ class AuthManager extends Base
                     'id' => $data['id'],
                 ]);
             
+            // 删除权限
+            Db::name('auth_rule_access')->where([
+                'module' => 'admin',
+                'group_id' => $data['id'],
+            ])->delete();
+            
+            // 有权限就添加
             if (isset($rules) && !empty($rules)) {
-                Db::name('auth_rule_access')->where([
-                    'module' => 'admin',
-                    'group_id' => $data['id'],
-                ])->delete();
-                
-                $rule_access = [];
+                $ruleAccess = [];
                 if (!empty($rules)) {
                     foreach ($rules as $rule) {
-                        $rule_access[] = [
+                        $ruleAccess[] = [
                             'module' => 'admin',
                             'group_id' => $data['id'],
                             'rule_id' => $rule,
@@ -317,9 +320,9 @@ class AuthManager extends Base
                     }
                 }
                 
-                Hook::listen('AuthManagerWriteUpdateGroup', $rule_access);
+                Hook::listen('AuthManagerWriteUpdateGroup', $ruleAccess);
                 
-                Db::name('auth_rule_access')->insertAll($rule_access);
+                Db::name('auth_rule_access')->insertAll($ruleAccess);
             }
             
         } else {
@@ -328,24 +331,25 @@ class AuthManager extends Base
                 return $this->error($result);
             }
             
+            $data['id'] = md5(microtime().mt_rand(100000, 999999));
             $data['add_time'] = time();
             $data['add_ip'] = request()->ip(1);
             
             $r = $this->AuthGroupModel->allowField(true)->save($data);
         
             if (isset($rules) && !empty($rules)) {
-                $rule_access = [];
+                $ruleAccess = [];
                 foreach ($rules as $rule) {
-                    $rule_access[] = [
+                    $ruleAccess[] = [
                         'module' => 'admin',
                         'group_id' => $this->id,
                         'rule_id' => $rule,
                     ];
                 }
                 
-                Hook::listen('AuthManagerWriteInsertGroup', $rule_access);
+                Hook::listen('AuthManagerWriteInsertGroup', $ruleAccess);
                 
-                Db::name('auth_rule_access')->insertAll($rule_access);
+                Db::name('auth_rule_access')->insertAll($ruleAccess);
             }
         }
         
@@ -368,33 +372,34 @@ class AuthManager extends Base
             $this->error('请求错误！');
         }
         
-        $group_id = $this->request->param('id');
-        if (empty($group_id)) {
+        $groupId = $this->request->param('id');
+        if (empty($groupId)) {
             $this->error('角色组不存在！');
         }
         
-        $auth_group = Db::name('AuthGroup')
+        $authGroup = Db::name('AuthGroup')
             ->where([
                 'module' => 'admin', 
                 'type' => AuthGroupModel::TYPE_ADMIN,
+                'id' => $groupId,
             ])
-            ->find($id);
-        if (empty($auth_group)) {
+            ->find();
+        if (empty($authGroup)) {
             $this->error('角色组不存在');
         }
         
-        if ($auth_group['is_system'] == 1) {
+        if ($authGroup['is_system'] == 1) {
             $this->error('系统默认角色不可操作！');
         }
         
-        $check = $this->AuthManagerService->checkUserGroup($group_id);
+        $check = $this->AuthManagerService->checkUserGroup($groupId);
         if ($check['status'] === false) {
             $this->error($check['msg']);
         }
         
-        Hook::listen('AuthManagerDeleteGroup', $group_id);
+        Hook::listen('AuthManagerDeleteGroup', $groupId);
         
-        $rs = $this->AuthGroupModel->GroupDelete($group_id);
+        $rs = $this->AuthGroupModel->GroupDelete($groupId);
         
         if ($rs === false) {
             $error = $this->AuthGroupModel->getError();
@@ -412,12 +417,12 @@ class AuthManager extends Base
      */
     public function access()
     {
-        $group_id = $this->request->param('group_id');
-        if (empty($group_id)) {
+        $groupId = $this->request->param('group_id');
+        if (empty($groupId)) {
             $this->error('角色组ID不能为空');
         }
         
-        $check = $this->AuthManagerService->checkUserGroup($group_id);
+        $check = $this->AuthManagerService->checkUserGroup($groupId);
         if ($check['status'] === false) {
             $this->error($check['msg']);
         }
@@ -425,23 +430,22 @@ class AuthManager extends Base
         $rules = Db::name('AuthGroup')
             ->alias('ag')
             ->leftJoin('__AUTH_RULE_ACCESS__ ara ', 'ara.group_id = ag.id')
-            ->where('ag.status', '<>', 0)
-            ->where('ag.id', '=', $group_id)
             ->where([
-                'ag.type' => AuthGroupModel::TYPE_ADMIN
+                'ag.id' => $groupId,
+                'ag.type' => AuthGroupModel::TYPE_ADMIN,
             ])
             ->column('ara.rule_id');
             
         // 监听权限
         Hook::listen('AuthManagerAccessRules', [
-            'group_id' => $group_id,
+            'group_id' => $groupId,
             'rules' => $rules,
         ]);
         
         // 当前用户权限ID列表
-        $user_auth_ids = (new Auth())->getUserAuthIdList(env('admin_id'));
+        $userAuthIds = (new Auth())->getUserAuthIdList(env('admin_id'));
     
-        $result = model('admin/AuthRule')->returnNodes(false);
+        $result = (new AuthRuleModel)->returnNodes(false);
         
         $json = [];
         if (!empty($result)) {
@@ -451,7 +455,7 @@ class AuthManager extends Base
                     'parentid' => $rs['parentid'],
                     'name' => $rs['title'],
                     'id' => $rs['id'],
-                    'chkDisabled' => $this->AuthManagerService->checkUserAuth($rs['id'], $user_auth_ids),
+                    'chkDisabled' => $this->AuthManagerService->checkUserAuth($rs['id'], $userAuthIds),
                     'checked' => in_array($rs['id'], $rules) ? true : false,
                 ];
                 $json[] = $data;
@@ -460,14 +464,15 @@ class AuthManager extends Base
         
         Hook::listen('AuthManagerAccess', $json);
         
-        $this->assign('group_id', $group_id);
+        $this->assign('group_id', $groupId);
         $this->assign('json', json_encode($json));
         
-        $auth_group = Db::name('AuthGroup')->where([
+        $authGroup = Db::name('AuthGroup')->where([
             'module' => 'admin', 
             'type' => AuthGroupModel::TYPE_ADMIN,
-        ])->find($group_id);
-        $this->assign('auth_group', $auth_group);
+            'id' => $groupId,
+        ])->find();
+        $this->assign('auth_group', $authGroup);
         
         return $this->fetch('access');
     }

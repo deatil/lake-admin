@@ -4,7 +4,8 @@ namespace app\admin\controller;
 
 use think\Db;
 
-use app\admin\module\Module as ModuleService;
+use app\admin\module\Module as ModuleModule;
+use app\admin\model\AuthGroup as AuthGroupModel;
 
 /**
  * 扩展权限
@@ -14,18 +15,6 @@ use app\admin\module\Module as ModuleService;
  */
 class RuleExtend extends Base
 {
-    
-    /**
-     * 框架构造函数
-     *
-     * @create 2019-8-5
-     * @author deatil
-     */
-    protected function initialize()
-    {
-        parent::initialize();
-    }
-
     /**
      * 列表
      *
@@ -38,17 +27,17 @@ class RuleExtend extends Base
             $limit = $this->request->param('limit/d', 10);
             $page = $this->request->param('page/d', 10);
 
-            $search_field = $this->request->param('search_field/s', '', 'trim');
+            $searchField = $this->request->param('search_field/s', '', 'trim');
             $keyword = $this->request->param('keyword/s', '', 'trim');
             
             $map = [];
-            if (!empty($search_field) && !empty($keyword)) {
-                if ($search_field == 'group') {
-                    $search_field = 'ag.title';
+            if (!empty($searchField) && !empty($keyword)) {
+                if ($searchField == 'group') {
+                    $searchField = 'ag.title';
                 } else {
-                    $search_field = 'are.'.$search_field;
+                    $searchField = 'are.'.$searchField;
                 }
-                $map[] = [$search_field, 'like', "%$keyword%"];
+                $map[] = [$searchField, 'like', "%$keyword%"];
             }
             
             $data = Db::name('auth_rule_extend')
@@ -102,10 +91,10 @@ class RuleExtend extends Base
             $this->success("添加成功！");
 
         } else {
-            $this->assign("roles", model('admin/AuthGroup')->getGroups());
+            $this->assign("roles", (new AuthGroupModel)->getGroups());
             
             // 模块列表
-            $modules = (new ModuleService())->getAll();
+            $modules = (new ModuleModule())->getAll();
             $this->assign("modules", $modules);
             
             return $this->fetch();
@@ -145,10 +134,10 @@ class RuleExtend extends Base
             }
             
             $this->assign("data", $data);
-            $this->assign("roles", model('admin/AuthGroup')->getGroups());
+            $this->assign("roles", (new AuthGroupModel)->getGroups());
             
             // 模块列表
-            $modules = (new ModuleService())->getAll();
+            $modules = (new ModuleModule())->getAll();
             $this->assign("modules", $modules);
             
             return $this->fetch();

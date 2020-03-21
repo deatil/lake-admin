@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 use think\Db;
 
-use app\admin\module\Module as ModuleService;
+use app\admin\module\Module as ModuleModule;
 
 /**
  * 嵌入点
@@ -97,7 +97,7 @@ class Hook extends Base
 
         } else {
             // 模块列表
-            $modules = (new ModuleService())->getAll();
+            $modules = (new ModuleModule())->getAll();
             $this->assign("modules", $modules);
             
             return $this->fetch();
@@ -145,7 +145,7 @@ class Hook extends Base
             $this->assign("data", $data);
             
             // 模块列表
-            $modules = (new ModuleService())->getAll();
+            $modules = (new ModuleModule())->getAll();
             $this->assign("modules", $modules);
             
             return $this->fetch();

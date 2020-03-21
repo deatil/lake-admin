@@ -3,8 +3,10 @@
 use think\Db;
 use think\facade\Hook;
 
-use app\admin\model\Attachment;
-use app\admin\service\Auth;
+use app\admin\model\Attachment as AttachmentModel;
+use app\admin\model\Module as ModuleModel;
+
+use app\admin\service\Auth as AuthService;
 
 if (!function_exists('p')) {
     /**
@@ -100,7 +102,7 @@ if (!function_exists('is_module_install')) {
      */
     function is_module_install($moduleName)
     {
-        $appCache = model('admin/Module')->getModuleList();
+        $appCache = (new ModuleModel)->getModuleList();
         if (isset($appCache[$moduleName])) {
             return true;
         }
@@ -740,7 +742,7 @@ if (!function_exists('get_file_name')) {
      */
     function get_file_name($id = '')
     {
-        $name = (new Attachment())->getFileName($id);
+        $name = (new AttachmentModel())->getFileName($id);
         return $name ? $name : '没有找到文件';
     }
 }
@@ -753,7 +755,7 @@ if (!function_exists('get_file_path')) {
      */
     function get_file_path($id)
     {
-        $path = (new Attachment())->getFilePath($id);
+        $path = (new AttachmentModel())->getFilePath($id);
         return ($path !== false) ? $path : "";
     }
 }
@@ -766,7 +768,7 @@ if (!function_exists('get_attachment_path')) {
      */
     function get_attachment_path($id, $domain = false)
     {
-        $path = (new Attachment())->getFilePath($id);
+        $path = (new AttachmentModel())->getFilePath($id);
         return ($path !== false) ? 
             ($domain ? request()->domain() . $path : $path)
             : "";
@@ -827,7 +829,7 @@ if (!function_exists('check_auth')) {
         
         static $Auth = null;
         if (!$Auth) {
-            $Auth = new Auth();
+            $Auth = new AuthService();
         }
         if (!$Auth->check($rule, env('admin_id'), $type, $mode)) {
             return false;
@@ -849,7 +851,7 @@ if (!function_exists('thumb')) {
     function thumb($imgurl, $width = 100, $height = 100, $thumbType = 1, $smallpic = 'none.png')
     {
         static $_thumb_cache = [];
-        $smallpic = config('public_url') . 'static/admin/img/' . $smallpic;
+        $smallpic = config('public_url') . 'static/admin/admin/img/' . $smallpic;
         if (empty($imgurl)) {
             return $smallpic;
         }
@@ -886,7 +888,7 @@ if (!function_exists('thumb')) {
         if ($width >= $width_t || $height >= $height_t) {
             return $imgurl;
         }
-        (new Attachment())->createThumb($uploadPath . DIRECTORY_SEPARATOR . $imgurl_replace, $uploadPath . DIRECTORY_SEPARATOR . dirname($imgurl_replace) . '/', $newimgname, "{$width},{$height}", $thumbType);
+        (new AttachmentModel())->createThumb($uploadPath . DIRECTORY_SEPARATOR . $imgurl_replace, $uploadPath . DIRECTORY_SEPARATOR . dirname($imgurl_replace) . '/', $newimgname, "{$width},{$height}", $thumbType);
         $_thumb_cache[$key] = $uploadUrl . $newimgurl;
         return $_thumb_cache[$key];
 

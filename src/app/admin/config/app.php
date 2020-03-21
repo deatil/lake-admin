@@ -120,6 +120,6 @@ return [
     // +----------------------------------------------------------------------    
     
     // 管理员盐
-    'admin_salt' => 'd,d7ja0db1a974;38cE84976abbac2cd',
+    'admin_salt' => env('admin_salt', 'd,d7ja0db1a974;38cE84976abbac2cd'),
     
 ];

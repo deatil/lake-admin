@@ -227,7 +227,7 @@ class Auth
             return $groups[$uid];
         }
         
-        $user_groups = Db::name($this->_config['AUTH_USER'])
+        $userGroups = Db::name($this->_config['AUTH_USER'])
             ->alias('au')
             ->join($this->_config['AUTH_GROUP_ACCESS'] . ' aga', "aga.admin_id = au.id")
             ->join($this->_config['AUTH_GROUP'] . ' ag', "aga.group_id = ag.id")
@@ -235,7 +235,7 @@ class Auth
             ->where('ag.status', 1)
             ->field('au.id, ag.id, ag.title')
             ->select();
-        $groups[$uid] = $user_groups ?: [];
+        $groups[$uid] = $userGroups ?: [];
         
         return $groups[$uid];
     }
@@ -399,9 +399,11 @@ class Auth
     {
         static $userinfo = [];
         if (!isset($userinfo[$uid])) {
-            $userinfo[$uid] = Db::name($this->_config['auth_user'])->where([
-                'id' => $uid,
-            ])->find();
+            $userinfo[$uid] = Db::name($this->_config['auth_user'])
+                ->where([
+                    'id' => $uid,
+                ])
+                ->find();
         }
         return $userinfo[$uid];
     }

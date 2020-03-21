@@ -11,6 +11,7 @@ use think\facade\Cache;
 use lake\File;
 use lake\Sql;
 
+use app\admin\model\AuthRule as AuthRuleModel;
 use app\admin\model\Module as ModuleModel;
 
 /**
@@ -22,14 +23,21 @@ use app\admin\model\Module as ModuleModel;
 class Module
 {
     // 模块所处目录路径
-    protected $appPath;
+    protected $modulePath;
     
     // 模块模板安装路径
     protected $installdir;
     protected $uninstaldir;
     
+    // 模块配置
+    protected $options = [
+        'module_path' => '',
+        'system_module_list' => '',
+        'module_static_path' => '',
+    ];
+    
     // 静态资源目录
-    public $staticPath = null;
+    protected $staticPath = null;
     
     // 模块列表
     protected $moduleList = [];
@@ -66,12 +74,21 @@ class Module
      */
     public function __construct($options = [])
     {
-        $this->staticPath = env('root_path') . 'public' . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR;
-    
-        $this->appPath = config('module_path');
-        $this->systemModuleList = config('system_module_list');
+        $this->options = array_merge($this->options, [
+            'module_path' => config('module_path'),
+            'system_module_list' => config('system_module_list'),
+            'module_static_path' => config('module_static_path'),
+        ]);
+        
+        if (!empty($options)) {
+            $this->options = array_merge($this->options, $options);
+        }
+        
+        $this->modulePath = $this->options['module_path'];
+        $this->systemModuleList = $this->options['system_module_list'];
+        $this->staticPath = $this->options['module_static_path'];
     }
-
+    
     /**
      * 获取所有模块信息
      *
@@ -84,24 +101,24 @@ class Module
             return $this->moduleList;
         }
         
-        $dirs = array_map('basename', glob($this->appPath . '*', GLOB_ONLYDIR));
-        if ($dirs === false || !file_exists($this->appPath)) {
+        $dirs = array_map('basename', glob($this->modulePath . '*', GLOB_ONLYDIR));
+        if ($dirs === false || !file_exists($this->modulePath)) {
             $this->error = '模块目录不可读或者不存在';
             return false;
         }
         
         // 正常模块(包括已安装和未安装)
-        $dirs_arr = array_diff($dirs, $this->systemModuleList);
-
+        $dirsArr = array_diff($dirs, $this->systemModuleList);
+        
         $list = [];
-        foreach ($dirs_arr as $module) {
-            $module_info = $this->getInfoFromLocalFile($module);
-            if ($module_info !== false) {
-                $list[$module] = $module_info;
+        foreach ($dirsArr as $module) {
+            $moduleInfo = $this->getInfoFromLocalFile($module);
+            if ($moduleInfo !== false) {
+                $list[$module] = $moduleInfo;
             }
         }
         
-        $hookModules = Hook::listen('lake_admin_modules_get_all_end');
+        $hookModules = Hook::listen('lake_admin_modules');
         if (!empty($hookModules)) {
             foreach ($hookModules as $hookModule) {
                 if (isset($hookModule['module']) && !empty($hookModule['module'])) {
@@ -109,9 +126,9 @@ class Module
                 }
             }
         }
-
+        
         // 读取数据库已经安装模块表
-        $moduleList = model('admin/Module')->getModuleList();
+        $moduleList = (new ModuleModel)->getModuleList();
         
         if (!empty($list)) {
             foreach ($list as $name => $config) {
@@ -128,14 +145,14 @@ class Module
                 }
                 
                 $list[$name]['icon'] = rtrim($config['path'], '/') . '/icon.png';
-            }            
+            }
         }
         
         $this->moduleList = $list;
         
         return $list;
     }
-
+    
     /**
      * 获取经安装模块数量
      *
@@ -163,7 +180,7 @@ class Module
             return false;
         }
         
-        $moduleFile = $this->appPath . $name;
+        $moduleFile = $this->modulePath . $name;
         if (file_exists($moduleFile)) {
             $this->error = '该模块目录已经存在！';
             return false;
@@ -243,16 +260,16 @@ class Module
         );
 
         // 从配置文件获取
-        if (!is_file($this->appPath . $name . DIRECTORY_SEPARATOR . 'info.php')) {
+        if (!is_file($this->modulePath . $name . DIRECTORY_SEPARATOR . 'info.php')) {
             return false;
         }
         
-        $moduleConfig = include $this->appPath . $name . DIRECTORY_SEPARATOR . 'info.php';
+        $moduleConfig = include $this->modulePath . $name . DIRECTORY_SEPARATOR . 'info.php';
         
         $config = array_merge($config, $moduleConfig);
         
         if (empty($config['path'])) {
-            $config['path'] = $this->appPath . $name;
+            $config['path'] = $this->modulePath . $name;
         }
         
         return $config;
@@ -290,14 +307,14 @@ class Module
         
         // 安装方法增加模块命名空间
         if (!empty($config['path'])) {
-            $namespace_module_path = rtrim($config['path'], DIRECTORY_SEPARATOR);
+            $namespaceModulePath = rtrim($config['path'], DIRECTORY_SEPARATOR);
         } else {
-            $namespace_module_path = $this->appPath . trim($config['module'], DIRECTORY_SEPARATOR);
+            $namespaceModulePath = $this->modulePath . trim($config['module'], DIRECTORY_SEPARATOR);
         }
         
-        $app_namespace = app()->getNamespace();
+        $appNamespace = app()->getNamespace();
         Loader::addNamespace([
-            $app_namespace . '\\' . $name => $namespace_module_path . DIRECTORY_SEPARATOR,
+            $appNamespace . '\\' . $name => $namespaceModulePath . DIRECTORY_SEPARATOR,
         ]);
         
         // 保存在安装表
@@ -491,7 +508,7 @@ class Module
             'adaptation' => isset($config['adaptation']) ? $config['adaptation'] : '',
             'path' => (isset($config['path']) && !empty($config['path'])) 
                 ? $config['path'] 
-                : $this->appPath . $name,
+                : $this->modulePath . $name,
             'sign' => $config['sign'],
             
             'need_module' => (isset($config['need_module']) && !empty($config['need_module'])) ? json_encode($config['need_module']) : '',
@@ -541,7 +558,7 @@ class Module
             'adaptation' => isset($config['adaptation']) ? $config['adaptation'] : '',
             'path' => (isset($config['path']) && !empty($config['path'])) 
                 ? $config['path'] 
-                : $this->appPath . $name,
+                : $this->modulePath . $name,
             'sign' => $config['sign'],
             
             'need_module' => isset($config['need_module']) ? json_encode($config['need_module']) : '',
@@ -558,10 +575,10 @@ class Module
         if ($status === false) {
             return false;
         }
-
+        
         return true;
     }
-
+    
     /**
      * 安装模块嵌入点
      * @param type $name 模块名称
@@ -598,7 +615,7 @@ class Module
         }
         
     }
-
+    
     /**
      * 卸载菜单项项
      * @param type $name
@@ -641,15 +658,15 @@ class Module
             return false;
         }
         
-        $status = model('admin/AuthRule')->installModuleMenu($menu, $this->getInfoFromFile($name));
+        $status = (new AuthRuleModel)->installModuleMenu($menu, $this->getInfoFromFile($name));
         if ($status === true) {
             return true;
         } else {
-            $this->error = model('admin/AuthRule')->getError() ?: '安装菜单项出现错误！';
+            $this->error = (new AuthRuleModel)->getError() ?: '安装菜单项出现错误！';
             return false;
         }
     }
-
+    
     /**
      * 卸载菜单项项
      * @param type $name
@@ -665,7 +682,7 @@ class Module
             return false;
         }
         
-        model('admin/AuthRule')->delModuleMenu($name);
+        (new AuthRuleModel)->delModuleMenu($name);
         
         return true;
     }
@@ -684,16 +701,16 @@ class Module
         }
         
         // 静态资源文件
-        $from_path = $this->appPath 
+        $fromPath = $this->modulePath 
             . $name . DIRECTORY_SEPARATOR 
             . "install" . DIRECTORY_SEPARATOR 
             . "public" . DIRECTORY_SEPARATOR;
-        $to_path = $this->staticPath 
+        $toPath = $this->staticPath 
             . strtolower($name) . DIRECTORY_SEPARATOR;
         
-        if (file_exists($from_path)) {
+        if (file_exists($fromPath)) {
             // 拷贝静态资源文件到前台静态资源目录
-            File::copyDir($from_path, $to_path);
+            File::copyDir($fromPath, $toPath);
         }
         
         return true;
@@ -718,7 +735,7 @@ class Module
             File::delDir($moduleStatic);
         }
         
-        return true;        
+        return true;
     }
 
     /**
@@ -806,7 +823,7 @@ class Module
             return false;
         }
         
-        $moduleList = model('admin/Module')->getModuleList();
+        $moduleList = (new ModuleModel())->getModuleList();
         return (isset($moduleList[$name]) && $moduleList[$name]) ? true : false;
     }
     
@@ -833,7 +850,7 @@ class Module
         ])->update([
             'status' => 1,
         ]);
-
+        
         if ($status === false) {
             $this->error = '模块启用失败！';
             return false;
@@ -858,7 +875,7 @@ class Module
         
         return true;
     }
-
+    
     /**
      * 禁用
      *
@@ -882,7 +899,7 @@ class Module
         ])->update([
             'status' => 0,
         ]);
-
+        
         if ($status === false) {
             $this->error = '模块禁用失败！';
             return false;
@@ -907,7 +924,7 @@ class Module
         
         return true;
     }
-
+    
     /**
      * 获取模块内文件
      * @param string $file 模块内文件
@@ -922,11 +939,11 @@ class Module
             return false;
         }
         
-        $realFile = $this->appPath . ltrim($file, '/');
+        $realFile = $this->modulePath . ltrim($file, '/');
         
         return $realFile;
     }
-
+    
     /**
      * 获取模块路径
      *
@@ -939,7 +956,7 @@ class Module
             $this->error = '模块名称不能为空！';
             return false;
         }
-
+        
         $models = $this->getAll();
         if (!isset($models[$name])) {
             $this->error = '模块信息不存在！';
@@ -953,7 +970,7 @@ class Module
         
         return $models[$name]['path'];
     }
-
+    
     /**
      * 获取模块标识
      *
@@ -966,7 +983,7 @@ class Module
             $this->error = '模块名称不能为空！';
             return false;
         }
-
+        
         $models = $this->getAll();
         if (!isset($models[$name])) {
             $this->error = '模块信息不存在！';
@@ -980,7 +997,7 @@ class Module
         
         return $models[$name]['icon'];
     }
-
+    
     /**
      * 获取模块标识数据
      *
@@ -997,7 +1014,7 @@ class Module
         if (!file_exists($icon)) {
             $icon = __DIR__ . '/icon/lake.png';
         }
-
+        
         ob_start();
         $data = file_get_contents($icon);
         ob_end_clean();
@@ -1007,7 +1024,7 @@ class Module
         
         return $iconData;
     }
-
+    
     /**
      * 执行数据库脚本
      * @param string $sqlFile 数据库脚本文件
@@ -1055,7 +1072,7 @@ class Module
         
         return true;
     }
-
+    
     /**
      * 删除模块文件，只支持模块文件夹内删除
      *
@@ -1069,7 +1086,7 @@ class Module
             return false;
         }
         
-        $module = $this->appPath . ltrim($name, '/');
+        $module = $this->modulePath . ltrim($name, '/');
         if (!file_exists($module)) {
             $this->error = '模块不存在';
             return false;
@@ -1132,11 +1149,11 @@ class Module
         
         if (!in_array($name, $this->systemModuleList)) {
             return false;
-        }    
-
+        }
+        
         return true;
     }
-
+    
     /**
      * 获取错误信息
      * @return string
@@ -1148,5 +1165,5 @@ class Module
     {
         return $this->error;
     }
-
+    
 }

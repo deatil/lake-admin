@@ -25,9 +25,9 @@ trait Home
     protected function fetch($template = '', $vars = [], $config = [])
     {
         if (!empty($this->moduleViewPath)) {
-            $view_path = $this->moduleViewPath;
+            $viewPath = $this->moduleViewPath;
         } else {
-            $app_path = config('module_path');
+            $appPath = config('module_path');
             
             if (strpos($template, '@') !== FALSE) {
                 $templates = explode('@', $template);
@@ -37,10 +37,10 @@ trait Home
                 $module = $this->module;
             }
             
-            $view_path = $app_path . $module . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR;
+            $viewPath = $appPath . $module . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR;
         }
         
-        $this->view->config('view_path', $view_path);
+        $this->view->config('view_path', $viewPath);
         return $this->view->fetch($template, $vars, $config);
     }
 

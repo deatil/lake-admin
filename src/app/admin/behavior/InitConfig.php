@@ -5,6 +5,8 @@ namespace app\admin\behavior;
 use think\facade\Env;
 use think\facade\Config;
 
+use app\admin\model\Config as ConfigModel;
+
 /**
  * 初始化配置信息行为
  * 将系统配置信息合并到本地配置
@@ -43,7 +45,7 @@ class InitConfig
     private function setAppConfig()
     {
         // 读取系统配置
-        $system_config = model('admin/Config')->getConfigList();
+        $system_config = (new ConfigModel)->getConfigList();
         
         // 设置配置信息
         if (!empty($system_config)) {
@@ -68,7 +70,7 @@ class InitConfig
         Env::set([
             'lake_module_path' => $lake_module_path,
             'root_url' => $root_url,
-        ]);    
+        ]);
     }
 
 }

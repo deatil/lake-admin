@@ -14,8 +14,7 @@ class AuthGroup extends Validate
 {
     //定义验证规则
     protected $rule = [
-        'title' => 'require',
-
+        'title|用户组' => 'require|chsAlphaNum',
     ];
 
     //定义验证提示

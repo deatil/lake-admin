@@ -48,11 +48,11 @@ class AdminAuthCheck
             'admin/passport/login',
             'admin/passport/logout',
         ];
-
+        
         $rule = strtolower(request()->module() . '/' . request()->controller() . '/' . request()->action());
-
+        
         if (!in_array($rule, $allowUrl)) {
-
+            
             if (Env::get('admin_id')) {
                 return;
             }
@@ -137,7 +137,7 @@ class AdminAuthCheck
         
         return $userInfo;
     }
-
+    
     /**
      * 权限检测
      * @param string  $rule    检测的规则

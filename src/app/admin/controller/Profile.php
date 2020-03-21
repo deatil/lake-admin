@@ -37,7 +37,7 @@ class Profile extends Base
             
             $this->success("修改成功！");
         } else {
-            $id = $this->_userinfo['id'];
+            $id = $this->userInfo['id'];
             $data = $AdminModel->where([
                 "id" => $id,
             ])->find();
@@ -96,7 +96,7 @@ class Profile extends Base
                 $this->error('请确保新密码与旧密码不同');
             }
             
-            if (!$AdminModel->login($this->_userinfo['username'], $post['password'])) {
+            if (!$AdminModel->login($this->userInfo['username'], $post['password'])) {
                 $this->error('旧密码错误！');
             }
 
@@ -115,7 +115,7 @@ class Profile extends Base
             
             $this->success("修改成功！");
         } else {
-            $id = $this->_userinfo['id'];
+            $id = $this->userInfo['id'];
             $data = $AdminModel->where([
                 "id" => $id,
             ])->find();

@@ -4,7 +4,7 @@ namespace app\admin\model;
 
 use think\Model;
 
-use app\admin\service\Admin as AdminUser;
+use app\admin\service\Admin as AdminService;
 
 /**
  * 操作日志
@@ -29,19 +29,19 @@ class AdminLog extends Model
      */
     public function record($message, $status = 0)
     {
-        $admin_id = AdminUser::instance()->isLogin();
-        if ($admin_id > 0) {
+        $adminId = AdminService::instance()->isLogin();
+        if ($adminId > 0) {
             $userInfo = env("userInfo");
-            $admin_username = $userInfo['username'];
+            $adminUsername = $userInfo['username'];
         } else {
-            $admin_id = 0;
-            $admin_username = '';
+            $adminId = 0;
+            $adminUsername = '';
         }
     
         $data = [
             'id' => md5(time().mt_rand(10000, 99999)),
-            'admin_id' => $admin_id,
-            'admin_username' => $admin_username,
+            'admin_id' => $adminId,
+            'admin_username' => $adminUsername,
             'info' => "{$message}",
             'method' => request()->method(),
             'url' => request()->url(),

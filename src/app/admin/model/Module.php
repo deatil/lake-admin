@@ -49,7 +49,7 @@ class Module extends Model
                     $module[$v['module']] = $v;
                 }
                 
-                unset($v);                
+                unset($v);
             }
             
             cache('lake_admin_module', $module);

@@ -15,16 +15,17 @@ use app\admin\model\Attachment as AttachmentModel;
 class Attachments
 {
     public $type = '';
-    public $type_id = 0;
+    public $typeId = 0;
 
     private $uploadUrl = '';
     private $uploadPath = '';
 
     public function __construct()
     {
-        $this->AttachmentModel = new AttachmentModel;
-        $this->uploadUrl = config('public_url') . 'uploads/';
+        $this->uploadUrl = config('upload_url');
         $this->uploadPath = config('upload_path');
+        
+        $this->AttachmentModel = new AttachmentModel;
     }
     
     /**
@@ -33,10 +34,10 @@ class Attachments
      * @create 2019-7-18
      * @author deatil
      */
-    public function setTypeInfo($type, $type_id)
+    public function setTypeInfo($type, $typeId)
     {
         $this->type = $type;
-        $this->type_id = $type_id;
+        $this->typeId = $typeId;
         
         return $this;
     }
@@ -57,7 +58,7 @@ class Attachments
         $file_info = [
             'module' => 'admin',
             'type' => $this->type,
-            'type_id' => $this->type_id,
+            'type_id' => $this->typeId,
             'thumb' => '',
         ];
         foreach ($urls as $vo) {

@@ -93,9 +93,9 @@ class InitHook
         if (is_dir($path)) {
             $path_dir = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         }
-
+        
         $path_files = isset($path_dir) ? scandir($path_dir) : [];
-
+        
         foreach ($path_files as $path_file) {
             if ('.' . pathinfo($path_file, PATHINFO_EXTENSION) === '.php' 
                 && file_exists($path_dir . $path_file)
@@ -109,9 +109,9 @@ class InitHook
         if (is_dir($path . 'config')) {
             $dir = $path . 'config' . DIRECTORY_SEPARATOR;
         }
-
+        
         $files = isset($dir) ? scandir($dir) : [];
-
+        
         foreach ($files as $file) {
             if ('.' . pathinfo($file, PATHINFO_EXTENSION) === env('config_ext', '.php')) {
                 app()->config->load($dir . $file, pathinfo($file, PATHINFO_FILENAME));
@@ -122,7 +122,7 @@ class InitHook
         $lang_file = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . request()->langset() . '.php';
         app()->lang->load($lang_file);
     }
-
+    
     /**
      * 添加嵌入点
      *
@@ -141,7 +141,7 @@ class InitHook
             
             Cache::set('lake_admin_hooks', $hooks);
         }
-
+        
         if (!empty($hooks)) {
             foreach ($hooks as $key => $value) {
                 Hook::add($value['name'], $value['class']);

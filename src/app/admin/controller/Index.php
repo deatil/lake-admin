@@ -29,22 +29,22 @@ class Index extends Base
     public function index()
     {
         // 用户信息
-        $this->assign('user_info', $this->_userinfo);
+        $this->assign('user_info', $this->userInfo);
 
         // 左侧菜单
         $menus = (new AuthRuleModel())->getMenuList();
         $this->assign("menus", $menus);
         
         // 默认后台首页
-        $default_main_url = url('index/main');
+        $defaultMainUrl = url('index/main');
         
         // 兼容自定义后台首页
-        $main_url = Hook::listen('lake_admin_main_url', $default_main_url, true);
-        if (empty($main_url)) {
-            $main_url = $default_main_url;
+        $mainUrl = Hook::listen('lake_admin_main_url', $defaultMainUrl, true);
+        if (empty($mainUrl)) {
+            $mainUrl = $defaultMainUrl;
         }
         
-        $this->assign("main_url", $main_url);
+        $this->assign("main_url", $mainUrl);
         
         return $this->fetch();
     }
@@ -57,15 +57,15 @@ class Index extends Base
      */
     public function main()
     {
-        $this->assign('user_info', $this->_userinfo);
+        $this->assign('user_info', $this->userInfo);
         
         // 模型数量
-        $module_count = Db::name('module')->count();
-        $this->assign('module_count', $module_count);
+        $moduleCount = Db::name('module')->count();
+        $this->assign('module_count', $moduleCount);
         
         // 附件数量
-        $attachment_count = Db::name('attachment')->count();
-        $this->assign('attachment_count', $attachment_count);
+        $attachmentCount = Db::name('attachment')->count();
+        $this->assign('attachment_count', $attachmentCount);
         
         $this->assign('sys_info', $this->getSysInfo());
         
@@ -109,7 +109,7 @@ class Index extends Base
         }
         return $sys_info;
     }
-
+    
     /**
      * 缓存更新
      *
@@ -126,7 +126,7 @@ class Index extends Base
                 if ($type == 'data') {
                     break;
                 }
-
+                
             case 'template' || 'all':
                 File::delDir(env('root_path') . 'runtime' . DIRECTORY_SEPARATOR . 'temp');
                 if ($type == 'template') {
