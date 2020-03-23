@@ -25,7 +25,7 @@ class AuthManager
      */
     public function checkUserAuth($ruleId, $userAuthIds)
     {
-        $isRoot = env('is_root');
+        $isRoot = env('admin_is_root');
         if ($isRoot) {
             return false;
         }
@@ -50,7 +50,7 @@ class AuthManager
         // 当前用户权限ID列表
         $userAuthIds = (new Auth())->getUserAuthIdList($uid);
         
-        $isRoot = env('is_root');
+        $isRoot = env('admin_is_root');
         if ($isRoot) {
             return $rules;
         }
@@ -92,7 +92,7 @@ class AuthManager
             ];
         }
         
-        $isRoot = env('is_root');
+        $isRoot = env('admin_is_root');
         if ($isRoot) {
             return [
                 'status' => true,
@@ -144,7 +144,7 @@ class AuthManager
             ];
         }
         
-        $isRoot = env('is_root');
+        $isRoot = env('admin_is_root');
         if ($isRoot) {
             return [
                 'status' => true,
@@ -202,7 +202,7 @@ class AuthManager
             return [];
         }
         
-        $isRoot = env('is_root');
+        $isRoot = env('admin_is_root');
         if ($isRoot) {
             return $list;
         }

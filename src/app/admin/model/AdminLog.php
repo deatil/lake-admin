@@ -31,8 +31,8 @@ class AdminLog extends Model
     {
         $adminId = AdminService::instance()->isLogin();
         if ($adminId > 0) {
-            $userInfo = env("userInfo");
-            $adminUsername = $userInfo['username'];
+            $adminInfo = env("admin_info");
+            $adminUsername = $adminInfo['username'];
         } else {
             $adminId = 0;
             $adminUsername = '';

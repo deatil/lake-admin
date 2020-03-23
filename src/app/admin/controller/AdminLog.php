@@ -14,6 +14,7 @@ use app\admin\model\AdminLog as AdminlogModel;
  */
 class AdminLog extends Base
 {
+    protected $AdminlogModel;
     
     /**
      * 框架构造函数

@@ -18,7 +18,23 @@ abstract class Base extends Controller
      * @create 2019-10-10
      * @author deatil
      */
-    protected $userInfo;
+    protected $adminInfo;
+    
+    /**
+     * 当前登录账号ID
+     *
+     * @create 2020-3-23
+     * @author deatil
+     */
+    protected $adminId = 0;
+    
+    /**
+     * 当前登录账号是否为超级管理员
+     *
+     * @create 2020-3-23
+     * @author deatil
+     */
+    protected $adminIsRoot = false;
     
     /**
      * 空操作
@@ -44,7 +60,10 @@ abstract class Base extends Controller
         $view_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR;
         $this->view->config('view_path', $view_path);
         
-        $this->userInfo = env('userinfo');
+        // 管理员信息
+        $this->adminInfo = env('admin_info');
+        $this->adminId = env('admin_id');
+        $this->adminIsRoot = env('admin_is_root');
     }
     
     /**

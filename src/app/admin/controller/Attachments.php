@@ -19,6 +19,7 @@ use app\admin\service\Admin as AdminService;
  */
 class Attachments extends Base
 {
+    protected $AttachmentModel;
 
     private $uploadUrl = '';
     

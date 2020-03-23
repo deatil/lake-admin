@@ -17,6 +17,9 @@ use app\admin\service\AuthManager as AuthManagerService;
  */
 class Manager extends Base
 {
+    protected $AdminModel;
+    
+    protected $AuthManagerService;
 
     /**
      * 框架构造函数
@@ -46,7 +49,7 @@ class Manager extends Base
 
             $map = $this->buildparams();
             
-            if (!env('is_root')) {
+            if (!env('admin_is_root')) {
                 $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
                 $adminIds = Db::name('auth_group_access')
                     ->where([
@@ -137,7 +140,7 @@ class Manager extends Base
            
             $this->success("添加管理员成功！");
         } else {
-            if (!env('is_root')) {
+            if (!env('admin_is_root')) {
                 $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
                 $roles = (new AuthGroupModel)
                     ->getGroups([
@@ -242,7 +245,7 @@ class Manager extends Base
             
             $this->assign("data", $data);
             
-            if (!env('is_root')) {
+            if (!env('admin_is_root')) {
                 $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
                 $roles = (new AuthGroupModel)
                     ->getGroups([

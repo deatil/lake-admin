@@ -60,14 +60,14 @@ class AdminAuthCheck
             $adminId = AdminService::instance()->isLogin();
             
             // 是否是超级管理员
-            $isRoot = AdminService::instance()->isAdministrator();
+            $adminIsRoot = AdminService::instance()->isAdministrator();
         
             Env::set([
                 'admin_id' => $adminId,
-                'is_root' => $isRoot,
+                'admin_is_root' => $adminIsRoot,
             ]);
         
-            if (!$isRoot && config('admin_allow_ip')) {
+            if (!$adminIsRoot && config('admin_allow_ip')) {
                 // 检查IP地址访问
                 $arr = explode(',', config('admin_allow_ip'));
                 foreach ($arr as $val) {
@@ -91,7 +91,7 @@ class AdminAuthCheck
                 $this->error('请先登陆', $this->loginUrl);
             } else {
                 // 是否超级管理员
-                if (!$isRoot) {
+                if (!$adminIsRoot) {
                     $noNeedAuthRules = (new AuthRuleModel())->getNoNeedAuthRuleList();
                     if (!in_array($rule, $noNeedAuthRules)) {
                         // 检测访问权限
@@ -120,22 +120,22 @@ class AdminAuthCheck
         }
         
         // 获取当前登录用户信息
-        $userInfo = AdminService::instance()->getInfo();
-        if (empty($userInfo)) {
+        $adminInfo = AdminService::instance()->getInfo();
+        if (empty($adminInfo)) {
             AdminService::instance()->logout();
             return false;
         }
         
         // 是否锁定
-        if (!$userInfo['status']) {
+        if (!$adminInfo['status']) {
             AdminService::instance()->logout();
             $this->error('您的帐号已经被锁定！', $this->loginUrl);
             return false;
         }
         
-        Env::set('userinfo', $userInfo);
+        Env::set('admin_info', $adminInfo);
         
-        return $userInfo;
+        return $adminInfo;
     }
     
     /**

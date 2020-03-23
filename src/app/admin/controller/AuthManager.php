@@ -10,7 +10,7 @@ use lake\Tree;
 use app\admin\model\AuthGroup as AuthGroupModel;
 use app\admin\model\AuthRule as AuthRuleModel;
 
-use app\admin\service\Auth;
+use app\admin\service\Auth as AuthService;
 use app\admin\service\AuthManager as AuthManagerService;
 
 /**
@@ -78,7 +78,7 @@ class AuthManager extends Base
                 $tree->init($list);
                 $result = [];
                 
-                if (!env('is_root')) {
+                if (!env('admin_is_root')) {
                     $userGroupIds = $this->AuthManagerService->getUserGroupIds(env('admin_id'));
                     $data = [];
                     if (!empty($userGroupIds)) {
@@ -142,7 +142,7 @@ class AuthManager extends Base
         
         $tree->init($list);
         
-        if (!env('is_root')) {
+        if (!env('admin_is_root')) {
             $userParentGroupIds = $this->AuthManagerService->getUserParentGroupIds(env('admin_id'));
             $groupData = '';
             if (!empty($userParentGroupIds)) {
@@ -217,7 +217,7 @@ class AuthManager extends Base
         
         $tree->init($list);
         
-        if (!env('is_root')) {
+        if (!env('admin_is_root')) {
             $userParentGroupIds = $this->AuthManagerService->getUserParentGroupIds(env('admin_id'));
             $groupData = '';
             if (!empty($userParentGroupIds)) {
@@ -443,7 +443,7 @@ class AuthManager extends Base
         ]);
         
         // 当前用户权限ID列表
-        $userAuthIds = (new Auth())->getUserAuthIdList(env('admin_id'));
+        $userAuthIds = (new AuthService())->getUserAuthIdList(env('admin_id'));
     
         $result = (new AuthRuleModel)->returnNodes(false);
         

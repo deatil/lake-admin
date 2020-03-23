@@ -823,7 +823,7 @@ if (!function_exists('check_auth')) {
      */
     function check_auth($rule, $type = [1, 2], $mode = 'url')
     {
-        if (env('is_root')) {
+        if (env('admin_is_root')) {
             return true;
         }
         

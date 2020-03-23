@@ -29,7 +29,7 @@ class Index extends Base
     public function index()
     {
         // 用户信息
-        $this->assign('user_info', $this->userInfo);
+        $this->assign('user_info', $this->adminInfo);
 
         // 左侧菜单
         $menus = (new AuthRuleModel())->getMenuList();
@@ -57,7 +57,7 @@ class Index extends Base
      */
     public function main()
     {
-        $this->assign('user_info', $this->userInfo);
+        $this->assign('user_info', $this->adminInfo);
         
         // 模型数量
         $moduleCount = Db::name('module')->count();

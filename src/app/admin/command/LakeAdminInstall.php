@@ -90,6 +90,7 @@ class LakeAdminInstall extends Command
         $sqlFile = env('lake_admin_app_path') 
             . 'lake' . DIRECTORY_SEPARATOR
             . 'data' . DIRECTORY_SEPARATOR
+            . 'database' . DIRECTORY_SEPARATOR
             . 'lake.sql';
         if (!file_exists($sqlFile)) {
             $output->info("lake-admin tip: sql is not exist!");
@@ -128,23 +129,29 @@ class LakeAdminInstall extends Command
         }
         
         // 复制静态文件
-        $admin_static_path = env('lake_admin_app_path') . DIRECTORY_SEPARATOR 
+        $adminStaticPath = env('lake_admin_app_path') . DIRECTORY_SEPARATOR 
             . 'lake' . DIRECTORY_SEPARATOR
             . 'static' . DIRECTORY_SEPARATOR;
-        $static_path = env('root_path') . 'public' . DIRECTORY_SEPARATOR 
+        $staticPath = env('root_path') . 'public' . DIRECTORY_SEPARATOR 
             . 'static' . DIRECTORY_SEPARATOR;
-        File::copyDir($admin_static_path, $static_path);
+        File::copyDir($adminStaticPath, $staticPath);
 
-        // 复制lak-admin附件
-        $from_path = env('lake_admin_app_path') . DIRECTORY_SEPARATOR 
+        // 复制lake-admin附件
+        $fromPath = env('lake_admin_app_path') . DIRECTORY_SEPARATOR 
             . 'lake' . DIRECTORY_SEPARATOR 
             . 'data' . DIRECTORY_SEPARATOR
-            . 'public' . DIRECTORY_SEPARATOR
-            . 'uploads' . DIRECTORY_SEPARATOR;
-        $to_path = env('root_path') 
-            . 'public' . DIRECTORY_SEPARATOR 
-            . 'uploads' . DIRECTORY_SEPARATOR;
-        File::copyDir($from_path, $to_path);
+            . 'public' . DIRECTORY_SEPARATOR;
+        $toPath = env('root_path') 
+            . 'public' . DIRECTORY_SEPARATOR;
+        File::copyDir($fromPath, $toPath);
+
+        // 复制admin.php文件
+        $fromPath2 = env('lake_admin_app_path') . DIRECTORY_SEPARATOR 
+            . 'lake' . DIRECTORY_SEPARATOR 
+            . 'data' . DIRECTORY_SEPARATOR
+            . 'root' . DIRECTORY_SEPARATOR;
+        $toPath2 = env('root_path');
+        File::copyDir($fromPath2, $toPath2);
        
         $output->info("Install lake-admin Successed!");
     }
