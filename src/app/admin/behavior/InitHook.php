@@ -43,7 +43,7 @@ class InitHook
         $app_namespace = app()->getNamespace();
         $module_path = config('module_path');
         
-        $modules = Cache::get('modules');
+        $modules = Cache::get('lake_admin_modules');
         if (empty($modules)) {
             $modules = Db::name('module')
                 ->field('module, path')
@@ -52,7 +52,7 @@ class InitHook
                 ])
                 ->select();
             
-            Cache::set('modules', $modules);
+            Cache::set('lake_admin_modules', $modules);
         }
         
         if (!empty($modules)) {

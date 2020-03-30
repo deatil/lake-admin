@@ -343,9 +343,7 @@ class Module
         $this->runScript($name, 'end');
         
         // 更新缓存
-        cache('module', null);
-        cache('hooks', null);
-        cache('modules', null);
+        $this->clearModuleCache();
         
         return true;
     }
@@ -406,9 +404,7 @@ class Module
         $this->runScript($name, 'end', 'uninstall');
         
         // 更新缓存
-        cache('module', null);
-        cache('hooks', null);
-        cache('modules', null);
+        $this->clearModuleCache();
         
         return true;
     }
@@ -471,9 +467,7 @@ class Module
         $this->runScript($name, 'end', 'upgrade');
         
         // 更新缓存
-        cache('module', null);
-        cache('hooks', null);
-        cache('modules', null);
+        $this->clearModuleCache();
         
         return true;
     }
@@ -803,9 +797,7 @@ class Module
         ])->delete();
         
         // 更新缓存
-        cache('module', null);
-        cache('hooks', null);
-        cache('modules', null);
+        $this->clearModuleCache();
     }
 
     /**
@@ -868,10 +860,8 @@ class Module
             'status' => 1,
         ]);
         
-        //更新缓存
-        cache('module', null);
-        cache('hooks', null);
-        cache('modules', null);
+        // 更新缓存
+        $this->clearModuleCache();
         
         return true;
     }
@@ -917,10 +907,8 @@ class Module
             'status' => 0,
         ]);
         
-        //更新缓存
-        cache('module', null);
-        cache('hooks', null);
-        cache('modules', null);
+        // 更新缓存
+        $this->clearModuleCache();
         
         return true;
     }
@@ -1118,6 +1106,12 @@ class Module
             return true;
         }
         
+        // 设置自定义的安装模块
+        $installModules = Hook::listen('lake_admin_install_modules');
+        if (in_array($name, $installModules)) {
+            return true;
+        }
+        
         $module = Db::name('module')->where([
             'module' => $name,
         ])->find();
@@ -1164,6 +1158,20 @@ class Module
     public function getError()
     {
         return $this->error;
+    }
+    
+    /**
+     * 清空缓存
+     *
+     * @create 2020-3-30
+     * @author deatil
+     */
+    private function clearModuleCache()
+    {
+        // 清空缓存
+        cache('lake_admin_module_list', null);
+        cache('lake_admin_hooks', null);
+        cache('lake_admin_modules', null);
     }
     
 }

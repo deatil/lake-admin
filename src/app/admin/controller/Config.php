@@ -16,8 +16,6 @@ use app\admin\module\Module as ModuleService;
  */
 class Config extends Base
 {
-    public $banfie;
-    
     /**
      * 框架构造函数
      *
@@ -27,25 +25,6 @@ class Config extends Base
     protected function initialize()
     {
         parent::initialize();
-        
-        // 允许使用的字段列表
-        $this->banfie = [
-            "text", 
-            "checkbox", 
-            "textarea", 
-            "radio", 
-            "number", 
-            "datetime", 
-            "image", 
-            "images", 
-            "array", 
-            "switch", 
-            "select", 
-            "Ueditor", 
-            "file", 
-            "files", 
-            "color"
-        ];
     }
 
     /**
@@ -279,7 +258,6 @@ class Config extends Base
             $this->success('配置添加成功~');
         } else {
             $fieldType = Db::name('field_type')
-                ->where('name', 'in', $this->banfie)
                 ->order('listorder')
                 ->column('name,title,ifoption,ifstring');
             
@@ -345,7 +323,6 @@ class Config extends Base
             }
             
             $fieldType = Db::name('field_type')
-                ->where('name', 'in', $this->banfie)
                 ->order('listorder')
                 ->column('name,title,ifoption,ifstring');
             

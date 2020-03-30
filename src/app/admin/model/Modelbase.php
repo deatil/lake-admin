@@ -9,7 +9,7 @@ use think\Model;
 /**
  * 公共模型
  */
-abstract ModelBase extends Model
+class ModelBase extends Model
 {
     /**
      * 删除表

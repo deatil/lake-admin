@@ -38,7 +38,7 @@ class Module extends Model
      */
     public function getModuleList()
     {
-        $module = cache('lake_admin_module');
+        $module = cache('lake_admin_module_list');
         if (!$module) {
             $module = [];
             
@@ -52,7 +52,7 @@ class Module extends Model
                 unset($v);
             }
             
-            cache('lake_admin_module', $module);
+            cache('lake_admin_module_list', $module);
         }
         
         return $module;

@@ -115,18 +115,18 @@ FacadeHook::add('app_init', function ($params) {
     $path = env('lake_admin_app_path');
     
     $lake_admin_layout = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'layout.html';
-    $lake_admin_inputItem = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'inputItem.html';
+    $lake_admin_input_item = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'inputItem.html';
     
     // 设置环境变量
     FacadeEnv::set([
         'lake_admin_layout' => $lake_admin_layout,
-        'lake_admin_inputItem' => $lake_admin_inputItem,
+        'lake_admin_input_item' => $lake_admin_input_item,
     ]);
     
     // 设置公用参数
     FacadeView::share([
         'lake_admin_layout' => $lake_admin_layout,
-        'lake_admin_inputItem' => $lake_admin_inputItem,
+        'lake_admin_input_item' => $lake_admin_input_item,
     ]);
     
     lake_admin_app_init_hooks();
