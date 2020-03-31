@@ -7,6 +7,7 @@ use think\Loader;
 use think\Container;
 use think\facade\Hook;
 use think\facade\Cache;
+use think\facade\Config;
 
 use lake\File;
 use lake\Sql;
@@ -1107,7 +1108,7 @@ class Module
         }
         
         // 设置自定义的安装模块
-        $installModules = Hook::listen('lake_admin_install_modules');
+        $installModules = Config::get('install_modules');
         if (in_array($name, $installModules)) {
             return true;
         }

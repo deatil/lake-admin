@@ -62,7 +62,7 @@ class AuthManager extends Base
                 ->where($map)
                 ->page($page, $limit)
                 ->order([
-                    'id' => 'ASC',
+                    'add_time' => 'ASC',
                 ])
                 ->select();
             $total = Db::name('AuthGroup')

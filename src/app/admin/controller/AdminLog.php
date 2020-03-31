@@ -51,7 +51,7 @@ class AdminLog extends Base
             $data = $this->AdminlogModel
                 ->where($map)
                 ->page($page, $limit)
-                ->order('id DESC')
+                ->order('create_time desc')
                 ->select();
             
             $total = $this->AdminlogModel

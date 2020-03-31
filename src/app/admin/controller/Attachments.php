@@ -55,7 +55,7 @@ class Attachments extends Base
             
             $list = AttachmentModel::where($map)
                 ->page($page, $limit)
-                ->order('id', 'desc')
+                ->order('create_time desc')
                 ->select();
             if (!empty($list)) {
                 foreach ($list as $k => &$v) {
@@ -65,7 +65,7 @@ class Attachments extends Base
             }
             
             $total = AttachmentModel::where($map)
-                ->order('create_time', 'desc')
+                ->order('create_time desc')
                 ->count();
             $result = [
                 "code" => 0, 

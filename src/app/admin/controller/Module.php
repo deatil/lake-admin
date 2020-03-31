@@ -45,7 +45,7 @@ class Module extends Base
             
             $list = Db::name('module')
                 ->page($page, $limit)
-                ->order('listorder asc')
+                ->order('listorder ASC, module ASC')
                 ->select();
             
             if (!empty($list)) {

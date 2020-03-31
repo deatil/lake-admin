@@ -47,7 +47,7 @@ class Config extends Base
                     'field_type.name=config.type', 
                     'LEFT'
                 )
-                ->order('listorder,id desc')
+                ->order('listorder,create_time desc')
                 ->select();
                 
             return json([

@@ -104,7 +104,6 @@ function lake_admin_config()
     
     // 注册系统默认指令
     Console::addDefaultCommands([    
-        'app\admin\command\LakeAdminCommand',
         'app\admin\command\LakeAdminInstall',
     ]);
 }

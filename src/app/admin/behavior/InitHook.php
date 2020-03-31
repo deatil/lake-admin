@@ -4,6 +4,7 @@ namespace app\admin\behavior;
 
 use think\Db;
 use think\Loader;
+use think\Console;
 use think\facade\Cache;
 use think\facade\Hook;
 use think\facade\Env;
@@ -76,6 +77,12 @@ class InitHook
                 // 引入公共文件
                 $global = $namespace_module_path . DIRECTORY_SEPARATOR . 'global' . DIRECTORY_SEPARATOR;
                 $this->loadModuleConfigAndFile($global);
+                
+                // 注册模块指令
+                $command = app()->config->get('command');
+                if (!empty($command) && is_array($command)) {
+                    Console::addDefaultCommands($command);
+                }
             }
         }
         
