@@ -15,7 +15,7 @@ class RuleExtend extends Validate
     //定义验证规则
     protected $rule = [
         'module|模块' => 'require|chsAlphaNum',
-        'group_id|角色' => 'require|number',
+        'group_id|角色' => 'require|alphaDash',
         'rule|扩展规则' => 'require',
     ];
 
