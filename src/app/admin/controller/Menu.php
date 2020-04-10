@@ -195,7 +195,7 @@ class Menu extends Base
                 $rule = AuthRuleModel::where([
                     "name" => $data['name']
                 ])->find();
-                if (!empty($rule) && $rule['id'] != $data['id']) {
+                if (!empty($rule) && $rule['id'] == $data['id']) {
                     $this->error('规则已经存在，请重新填写！');
                 }
             }
