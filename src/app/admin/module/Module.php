@@ -277,6 +277,50 @@ class Module
     }
 
     /**
+     * 从安装处获取模块信息
+     * @param string $name 模块名称
+     * @return array|mixed
+     *
+     * @create 2020-4-10
+     * @author deatil
+     */
+    public function getInfoFromInstall($name = '')
+    {
+        if (empty($name)) {
+            $this->error = '模块名称不能为空！';
+            return false;
+        }
+        
+        $info = ModuleModel::where([
+            'module' => $name,
+        ])->find();
+        if (empty($info)) {
+            $this->error = '该模块未安装！';
+            return false;
+        }
+        
+        if (!empty($info['path'])) {
+            $info = rtrim($info['path'], '/') . '/info.php';
+        } else {
+            $info = $this->modulePath . $name . '/info.php';
+        }
+        
+        if (!file_exists($info)) {
+            $this->error = '模块信息文件不存在！';
+            return false;
+        }
+        
+        $config = include $info;
+        
+        if (!is_array($config)) {
+            $this->error = '模块信息错误！';
+            return false;
+        }
+        
+        return $config;
+    }
+
+    /**
      * 执行模块安装
      * @param type $name 模块名(目录名)
      * @return boolean
@@ -434,7 +478,7 @@ class Module
         }
 
         // 加载模块基本配置
-        $config = $this->getInfoFromFile($name);
+        $config = $this->getInfoFromInstall($name);
         if ($config === false) {
             return false;
         }
