@@ -1,10 +1,12 @@
 <?php
 
-namespace app\admin\behavior;
+namespace app\admin\middleware;
 
+use Closure;
+use think\App;
 use think\facade\Env;
-use traits\controller\Jump;
 
+use app\admin\boot\Jump;
 use app\admin\Model\AuthRule as AuthRuleModel;
 use app\admin\service\Auth as AuthService;
 use app\admin\service\Admin as AdminService;
@@ -27,11 +29,13 @@ class AdminAuthCheck
      * @create 2019-7-15
      * @author deatil
      */
-    public function run($params)
+    public function handle($request, Closure $next)
     {
         $this->loginUrl = url('passport/login');
         
         $this->checkAdminLogin();
+        
+        return $next($request);
     }
     
     /**
@@ -49,7 +53,7 @@ class AdminAuthCheck
             'admin/passport/logout',
         ];
         
-        $rule = strtolower(request()->module() . '/' . request()->controller() . '/' . request()->action());
+        $rule = strtolower(app()->http->getName() . '/' . request()->controller() . '/' . request()->action());
         
         if (!in_array($rule, $allowUrl)) {
             

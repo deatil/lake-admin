@@ -2,8 +2,9 @@
 
 namespace app\admin\Controller;
 
-use think\Db;
-use think\facade\Hook;
+use think\facade\Db;
+use think\facade\View;
+use think\facade\Event;
 
 use lake\Tree;
 
@@ -55,7 +56,7 @@ class AuthManager extends Base
             
             $map = $this->buildparams();
             
-            $list = Db::name('AuthGroup')
+            $list = Db::name('auth_group')
                 ->where([
                     'module' => 'admin',
                 ])
@@ -64,14 +65,15 @@ class AuthManager extends Base
                 ->order([
                     'add_time' => 'ASC',
                 ])
-                ->select();
-            $total = Db::name('AuthGroup')
+                ->select()
+                ->toArray();
+            $total = Db::name('auth_group')
                 ->where([
                     'module' => 'admin',
                 ])
                 ->where($map)
                 ->count();
-        
+            
             $result = [];
             if (empty($map)) {
                 $tree = new Tree();
@@ -102,11 +104,11 @@ class AuthManager extends Base
                 "data" => $result,
             ];
             
-            Hook::listen('AuthManagerIndexAjax', $result);
+            Event::trigger('AuthManagerIndexAjax', $result);
             
             return json($result);
         } else {
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -123,7 +125,7 @@ class AuthManager extends Base
         }
         
         // 清除编辑权限的值
-        $this->assign('auth_group', [
+        View::assign('auth_group', [
             'title' => null, 
             'id' => null, 
             'description' => null, 
@@ -138,7 +140,7 @@ class AuthManager extends Base
             ->order(['id' => 'ASC'])
             ->column('*', 'id');
         
-        Hook::listen('AuthManagerCreateGroup', $list);
+        Event::trigger('AuthManagerCreateGroup', $list);
         
         $tree->init($list);
         
@@ -154,9 +156,9 @@ class AuthManager extends Base
             $groupData = $tree->get_tree(0, $str, 0);
         }
         
-        $this->assign("group_data", $groupData);
+        View::assign("group_data", $groupData);
         
-        return $this->fetch('edit_group');
+        return View::fetch('edit_group');
 
     }
 
@@ -205,7 +207,7 @@ class AuthManager extends Base
         $childsId = $tree->getChildsId($list, $authGroup['id']);
         $childsId[] = $authGroup['id'];
         
-        Hook::listen('AuthManagerEditGroup', $list);
+        Event::trigger('AuthManagerEditGroup', $list);
         
         if (!empty($list)) {
             foreach ($list as $key => $val) {
@@ -229,10 +231,10 @@ class AuthManager extends Base
             $groupData = $tree->get_tree(0, $str, $authGroup['parentid']);
         }
         
-        $this->assign("group_data", $groupData);
-        $this->assign('auth_group', $authGroup);
+        View::assign("group_data", $groupData);
+        View::assign('auth_group', $authGroup);
         
-        return $this->fetch();
+        return View::fetch();
     }
     
     /**
@@ -260,7 +262,7 @@ class AuthManager extends Base
         $data['module'] = 'admin';
         $data['type'] = AuthGroupModel::TYPE_ADMIN;
         
-        Hook::listen('AuthManagerWriteGroup', $data);
+        Event::trigger('AuthManagerWriteGroup', $data);
         
         $rules = [];
         if (isset($data['rules']) && !empty($data['rules'])) {
@@ -269,7 +271,7 @@ class AuthManager extends Base
         }
         
         // 监听权限
-        Hook::listen('AuthManagerWriteGroupRules', $rules);
+        Event::trigger('AuthManagerWriteGroupRules', $rules);
         
         // 获取提交的正确权限
         $rules = $this->AuthManagerService->getUserRightAuth($rules);
@@ -296,10 +298,10 @@ class AuthManager extends Base
         
             // 更新
             $r = $this->AuthGroupModel
-                ->allowField(true)
-                ->save($data, [
+                ->where([
                     'id' => $data['id'],
-                ]);
+                ])
+                ->update($data);
             
             // 删除权限
             Db::name('auth_rule_access')->where([
@@ -320,7 +322,7 @@ class AuthManager extends Base
                     }
                 }
                 
-                Hook::listen('AuthManagerWriteUpdateGroup', $ruleAccess);
+                Event::trigger('AuthManagerWriteUpdateGroup', $ruleAccess);
                 
                 Db::name('auth_rule_access')->insertAll($ruleAccess);
             }
@@ -335,7 +337,7 @@ class AuthManager extends Base
             $data['add_time'] = time();
             $data['add_ip'] = request()->ip(1);
             
-            $r = $this->AuthGroupModel->allowField(true)->save($data);
+            $r = $this->AuthGroupModel->save($data);
         
             if (isset($rules) && !empty($rules)) {
                 $ruleAccess = [];
@@ -347,7 +349,7 @@ class AuthManager extends Base
                     ];
                 }
                 
-                Hook::listen('AuthManagerWriteInsertGroup', $ruleAccess);
+                Event::trigger('AuthManagerWriteInsertGroup', $ruleAccess);
                 
                 Db::name('auth_rule_access')->insertAll($ruleAccess);
             }
@@ -397,7 +399,7 @@ class AuthManager extends Base
             $this->error($check['msg']);
         }
         
-        Hook::listen('AuthManagerDeleteGroup', $groupId);
+        Event::trigger('AuthManagerDeleteGroup', $groupId);
         
         $rs = $this->AuthGroupModel->GroupDelete($groupId);
         
@@ -429,7 +431,7 @@ class AuthManager extends Base
         
         $rules = Db::name('AuthGroup')
             ->alias('ag')
-            ->leftJoin('__AUTH_RULE_ACCESS__ ara ', 'ara.group_id = ag.id')
+            ->leftJoin('auth_rule_access ara ', 'ara.group_id = ag.id')
             ->where([
                 'ag.id' => $groupId,
                 'ag.type' => AuthGroupModel::TYPE_ADMIN,
@@ -437,7 +439,7 @@ class AuthManager extends Base
             ->column('ara.rule_id');
             
         // 监听权限
-        Hook::listen('AuthManagerAccessRules', [
+        Event::trigger('AuthManagerAccessRules', [
             'group_id' => $groupId,
             'rules' => $rules,
         ]);
@@ -462,19 +464,19 @@ class AuthManager extends Base
             }
         }
         
-        Hook::listen('AuthManagerAccess', $json);
+        Event::trigger('AuthManagerAccess', $json);
         
-        $this->assign('group_id', $groupId);
-        $this->assign('json', json_encode($json));
+        View::assign('group_id', $groupId);
+        View::assign('json', json_encode($json));
         
         $authGroup = Db::name('AuthGroup')->where([
             'module' => 'admin', 
             'type' => AuthGroupModel::TYPE_ADMIN,
             'id' => $groupId,
         ])->find();
-        $this->assign('auth_group', $authGroup);
+        View::assign('auth_group', $authGroup);
         
-        return $this->fetch('access');
+        return View::fetch('access');
     }
     
 }

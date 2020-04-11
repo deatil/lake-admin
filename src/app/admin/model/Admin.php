@@ -2,7 +2,7 @@
 
 namespace app\admin\model;
 
-use think\Db;
+use think\facade\Db;
 use think\Model;
 use think\facade\Session;
 
@@ -105,11 +105,10 @@ class Admin extends Model
             return false;
         }
         
-        // $data['id'] = md5(microtime().mt_rand(100000, 999999));
         $data['add_time'] = time();
         $data['add_ip'] = request()->ip(1);
         
-        $id = $this->allowField(true)->save($data);
+        $id = $this->save($data);
         if ($id !== false) {
             if (isset($data['roleid']) && !empty($data['roleid'])) {
                 $roles = explode(',', $data['roleid']);
@@ -286,7 +285,9 @@ class Admin extends Model
             'last_login_time' => time(), 
             'last_login_ip' => request()->ip(1)
         ];
-        return $this->save($data, ['id' => $id]);
+        return $this->where([
+            'id' => $id,
+        ])->save($data);
     }
 
     /**
@@ -299,7 +300,7 @@ class Admin extends Model
     {
         $pwd = [];
         $pwd['encrypt'] = $encrypt ? $encrypt : get_random_string();
-        $pwd['password'] = md5(md5(trim($password) . $pwd['encrypt']) . config("admin_salt"));
+        $pwd['password'] = md5(md5(trim($password) . $pwd['encrypt']) . config("app.admin_salt"));
         return $encrypt ? $pwd['password'] : $pwd;
     }
     

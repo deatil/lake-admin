@@ -27,7 +27,7 @@ class InitConfig
      * @create 2019-7-6
      * @author deatil
      */
-    public function run($params)
+    public function handle($params)
     {
         // 定义系统配置信息
         $this->setAppConfig();
@@ -50,10 +50,11 @@ class InitConfig
         // 设置配置信息
         if (!empty($system_config)) {
             foreach ($system_config as $key => $value) {
-                Config::set($key, $value);
+                Config::set([
+                    $key => $value,
+                ], 'app');
             }
         }
-        
     }
     
     /**
@@ -64,7 +65,7 @@ class InitConfig
      */
     private function setAppEnv()
     {
-        $lake_module_path = config('module_path');
+        $lake_module_path = config('app.module_path');
         $root_url = rtrim(dirname($_SERVER["SCRIPT_NAME"]), '\\/') . '/';
     
         Env::set([

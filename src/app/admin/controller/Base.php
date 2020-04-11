@@ -2,7 +2,10 @@
 
 namespace app\admin\controller;
 
-use think\Controller;
+use think\facade\View;
+
+use app\admin\boot\Jump;
+use app\admin\boot\BaseController;
 
 /**
  * 后台基础类
@@ -10,8 +13,10 @@ use think\Controller;
  * @create 2019-7-15
  * @author deatil
  */
-abstract class Base extends Controller
+abstract class Base extends BaseController
 {
+    use Jump;
+    
     /**
      * 当前登录账号信息
      *
@@ -19,22 +24,6 @@ abstract class Base extends Controller
      * @author deatil
      */
     protected $adminInfo;
-    
-    /**
-     * 当前登录账号ID
-     *
-     * @create 2020-3-23
-     * @author deatil
-     */
-    protected $adminId = 0;
-    
-    /**
-     * 当前登录账号是否为超级管理员
-     *
-     * @create 2020-3-23
-     * @author deatil
-     */
-    protected $adminIsRoot = false;
     
     /**
      * 空操作
@@ -56,14 +45,6 @@ abstract class Base extends Controller
     protected function initialize()
     {
         parent::initialize();
-        
-        $view_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR;
-        $this->view->config('view_path', $view_path);
-        
-        // 管理员信息
-        $this->adminInfo = env('admin_info');
-        $this->adminId = env('admin_id');
-        $this->adminIsRoot = env('admin_is_root');
     }
     
     /**
@@ -77,14 +58,14 @@ abstract class Base extends Controller
         $search_field = $this->request->param('search_field/s', '', 'trim');
         $keyword = $this->request->param('keyword/s', '', 'trim');
        
-        $this->assign("search_field", $search_field);
-        $this->assign("keyword", $keyword);
+        View::assign("search_field", $search_field);
+        View::assign("keyword", $keyword);
 
         $filter_time = $this->request->param('filter_time/s', '', 'trim');
         $filter_time_range = $this->request->param('filter_time_range/s', '', 'trim');
        
-        $this->assign("filter_time", $filter_time);
-        $this->assign("filter_time_range", $filter_time_range);
+        View::assign("filter_time", $filter_time);
+        View::assign("filter_time_range", $filter_time_range);
 
         $map = [];
         // 关键词搜索

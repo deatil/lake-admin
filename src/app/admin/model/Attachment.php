@@ -68,7 +68,7 @@ class Attachment extends Model
         $watermarkPos = '', 
         $watermarkAlpha = ''
     ) {
-        $uploadPath = config('upload_path');
+        $uploadPath = config('app.upload_path');
         $path = $this->getFilePath($watermarkImg, 1);
         $thumbWaterPic = realpath($uploadPath . '/' . $path);
         if (is_file($thumbWaterPic)) {
@@ -91,7 +91,7 @@ class Attachment extends Model
      */
     public function getFilePath($id = '', $type = 0)
     {
-        $uploadPath = config('public_url') . 'uploads/';
+        $uploadPath = config('app.public_url') . 'uploads/';
         
         if ((strpos($id, ',') !== false) || is_array($id)) {
             if (!is_array($id)) {
@@ -153,21 +153,21 @@ class Attachment extends Model
      */
     public function deleteFile($id)
     {
-        $path = config('upload_path');
+        $path = config('app.upload_path');
 
         $filePath = self::where('id', $id)->field('path,thumb')->find();
         if (!isset($filePath['path'])) {
             throw new \Exception("文件数据库记录已不存在~");
         }
         
-        $realPath = realpath($path . '/' . $filePath['path']);
+        $realPath = realpath(root_path() . '/' . $path . '/' . $filePath['path']);
         if (!is_file($realPath) || !unlink($realPath)) {
-            throw new \Exception("删除" . $realPath . "失败");
+            throw new \Exception("删除" . $filePath['path'] . "失败");
         }
         
         $status = self::where('id', $id)->delete();
         if ($status === false) {
-            throw new \Exception("删除" . $realPath . "失败");
+            throw new \Exception("删除" . $filePath['path'] . "失败");
         }
     }
 

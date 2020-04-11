@@ -19,9 +19,9 @@ class AdminLog
      * @create 2019-7-15
      * @author deatil
      */
-    public function run($params)
+    public function handle($params)
     {
-        $msg = request()->param(true);
+        $msg = request()->param();
         (new AdminLogModel())->record(json_encode($msg), 1);
     }
     

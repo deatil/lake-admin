@@ -2,8 +2,9 @@
 
 namespace app\admin\controller;
 
-use think\Db;
-use think\facade\Hook;
+use think\facade\Db;
+use think\facade\View;
+use think\facade\Event;
 
 use app\admin\model\Attachment as AttachmentModel;
 
@@ -36,8 +37,8 @@ class Attachments extends Base
         parent::initialize();
         
         $this->AttachmentModel = new AttachmentModel;
-        $this->uploadUrl = config('upload_url');
-        $this->uploadPath = config('upload_path');
+        $this->uploadUrl = config('app.upload_url');
+        $this->uploadPath = config('app.upload_path');
     }
 
     /**
@@ -73,11 +74,11 @@ class Attachments extends Base
                 "data" => $list,
             ];
             
-            Hook::listen('AttachmentsIndexAjax', $result);
+            Event::trigger('AttachmentsIndexAjax', $result);
             
             return json($result);
         } else {
-            return $this->fetch();
+            return View::fetch();
         }
     }
     
@@ -103,11 +104,11 @@ class Attachments extends Base
     
         $data['path'] = ($data['driver'] == 'local') ? $this->uploadUrl . $data['path'] : $data['path'];
         
-        Hook::listen('AttachmentsView', $data);
+        Event::trigger('AttachmentsView', $data);
         
-        $this->assign('data', $data);
+        View::assign('data', $data);
         
-        return $this->fetch();
+        return View::fetch();
     }
     
     /**
@@ -131,7 +132,7 @@ class Attachments extends Base
             $ids = [0 => $ids];
         }
         
-        Hook::listen('AttachmentsDelete', $ids);
+        Event::trigger('AttachmentsDelete', $ids);
         
         foreach ($ids as $id) {
             try {

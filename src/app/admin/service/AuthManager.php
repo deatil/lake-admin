@@ -2,7 +2,7 @@
 
 namespace app\admin\service;
 
-use think\Db;
+use think\facade\Db;
 
 use lake\Tree;
 

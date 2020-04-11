@@ -2,7 +2,8 @@
 
 namespace app\admin\controller;
 
-use think\Db;
+use think\facade\Db;
+use think\facade\View;
 
 use lake\PclZip;
 
@@ -46,7 +47,8 @@ class Module extends Base
             $list = Db::name('module')
                 ->page($page, $limit)
                 ->order('listorder ASC, module ASC')
-                ->select();
+                ->select()
+                ->toArray();
             
             if (!empty($list)) {
                 foreach ($list as $k => $v) {
@@ -59,7 +61,7 @@ class Module extends Base
                 "data" => $list,
             ]);
         } else {
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -73,6 +75,12 @@ class Module extends Base
     {
         if ($this->request->isAjax()) {
             $list = $this->ModuleModule->getAll();
+            if ($list === false) {
+                return json([
+                    "code" => 1, 
+                    "msg" => $this->ModuleModule->getError(),
+                ]);
+            }
             
             if (!empty($list)) {
                 foreach ($list as $k => $v) {
@@ -85,7 +93,7 @@ class Module extends Base
                 "data" => $list,
             ]);
         } else {
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -102,12 +110,12 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要安装的模块！');
             }
-            if ($this->ModuleModule->install($module)) {
-                $this->success('模块安装成功！一键清理缓存后生效！', url('Module/index'));
-            } else {
+            if (!$this->ModuleModule->install($module)) {
                 $error = $this->ModuleModule->getError();
                 $this->error($error ? $error : '模块安装失败！');
             }
+            
+            $this->success('模块安装成功！一键清理缓存后生效！', url('Module/index'));
         } else {
             $module = $this->request->param('module', '');
             if (empty($module)) {
@@ -134,10 +142,12 @@ class Module extends Base
                 $needModule = $this->checkDependence($config['need_module']);
             }
             
+            $dbPrefix = app()->db->getConnection()->getConfig('prefix');
+            
             // 检查数据表
             if (isset($config['tables']) && !empty($config['tables'])) {
                 foreach ($config['tables'] as $table) {
-                    $table = config('database.prefix') . $table;
+                    $table = $dbPrefix . $table;
                     if (Db::query("SHOW TABLES LIKE '{$table}'")) {
                         $tableCheck[] = [
                             'table' => "{$table}",
@@ -153,12 +163,12 @@ class Module extends Base
 
             }
             
-            $this->assign('need_module', $needModule);
-            $this->assign('version_check', $version_check);
-            $this->assign('table_check', $tableCheck);
-            $this->assign('config', $config);
+            View::assign('need_module', $needModule);
+            View::assign('version_check', $version_check);
+            View::assign('table_check', $tableCheck);
+            View::assign('config', $config);
             
-            return $this->fetch();
+            return View::fetch();
             
         }
     }
@@ -188,8 +198,8 @@ class Module extends Base
                 $this->error('请选择需要安装的模块！');
             }
             $config = $this->ModuleModule->getInfoFromFile($module);
-            $this->assign('config', $config);
-            return $this->fetch();
+            View::assign('config', $config);
+            return View::fetch();
 
         }
     }
@@ -238,13 +248,15 @@ class Module extends Base
                 $needModule = $this->checkDependence($config['need_module']);
             }
             
+            $dbPrefix = app()->db->getConnection()->getConfig('prefix');
+            
             // 检查数据表
             if (isset($config['tables']) && !empty($config['tables'])) {
                 foreach ($config['tables'] as $table) {
                     $table = str_replace([
                         'pre__'
                     ], [
-                        config('database.prefix')
+                        $dbPrefix
                     ], $table);
                     if (Db::query("SHOW TABLES LIKE '{$table}'")) {
                         $tableCheck[] = [
@@ -261,12 +273,12 @@ class Module extends Base
 
             }
             
-            $this->assign('need_module', $needModule);
-            $this->assign('version_check', $version_check);
-            $this->assign('table_check', $tableCheck);
-            $this->assign('config', $config);
+            View::assign('need_module', $needModule);
+            View::assign('version_check', $version_check);
+            View::assign('table_check', $tableCheck);
+            View::assign('config', $config);
             
-            return $this->fetch();
+            return View::fetch();
 
         }
     }
@@ -280,6 +292,10 @@ class Module extends Base
     private function checkDependence($data = [])
     {
         $need = [];
+        if (empty($data) || !is_array($data)) {
+            return $need;
+        }
+        
         foreach ($data as $key => $value) {
             if (!isset($value[2])) {
                 $value[2] = '=';
@@ -387,9 +403,9 @@ class Module extends Base
             }
         }
         
-        $this->assign('data', $module);
+        View::assign('data', $module);
         
-        return $this->fetch();
+        return View::fetch();
     }
 
     /**
@@ -421,7 +437,9 @@ class Module extends Base
         $config = $this->request->param('config/a');
         $flag = Db::name('module')->where([
             'module' => $moduleId,
-        ])->setField('setting_data', json_encode($config));
+        ])->data([
+            'setting_data' => json_encode($config),
+        ])->update();
         
         if ($flag === false) {
             $this->error('保存失败');
@@ -450,8 +468,8 @@ class Module extends Base
             $this->error('信息不存在！');
         }
         
-        $this->assign("data", $data);
-        return $this->fetch();
+        View::assign("data", $data);
+        return View::fetch();
     }
     
     /**

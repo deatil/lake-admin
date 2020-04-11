@@ -16,7 +16,7 @@ class Error
      * @create 2019-10-10
      * @author deatil
      */
-    public function _empty()
+    public function index()
     {
         abort(404, '控制器不存在~');
     }

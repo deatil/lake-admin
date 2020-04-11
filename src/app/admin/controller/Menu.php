@@ -2,7 +2,8 @@
 
 namespace app\admin\controller;
 
-use think\Db;
+use think\facade\Db;
+use think\facade\View;
 
 use lake\Tree;
 
@@ -49,7 +50,7 @@ class Menu extends Base
             return json($result);
         }
         
-        return $this->fetch();
+        return View::fetch();
 
     }
 
@@ -86,7 +87,7 @@ class Menu extends Base
             ];
             return json($result);
         } else {
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -163,13 +164,13 @@ class Menu extends Base
             $str = "<option value='\$id' \$selected>\$spacer \$title</option>";
             $tree->init($array);
             $selectCategorys = $tree->get_tree(0, $str);
-            $this->assign("select_categorys", $selectCategorys);
+            View::assign("select_categorys", $selectCategorys);
             
             // 模块列表
             $modules = (new ModuleModule())->getAll();
-            $this->assign("modules", $modules);
+            View::assign("modules", $modules);
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -271,14 +272,14 @@ class Menu extends Base
             $str = "<option value='\$id' \$selected>\$spacer \$title</option>";
             $tree->init($array);
             $selectCategorys = $tree->get_tree(0, $str);
-            $this->assign("data", $rs);
-            $this->assign("select_categorys", $selectCategorys);
+            View::assign("data", $rs);
+            View::assign("select_categorys", $selectCategorys);
             
             // 模块列表
             $modules = (new ModuleModule())->getAll();
-            $this->assign("modules", $modules);
+            View::assign("modules", $modules);
             
-            return $this->fetch();
+            return View::fetch();
         }
 
     }

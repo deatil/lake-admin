@@ -2,7 +2,7 @@
 
 namespace app\admin\Model;
 
-use think\Db;
+use think\facade\Db;
 use think\Model;
 
 use app\admin\service\Auth as AuthService;
@@ -73,7 +73,7 @@ class AuthRule extends Model
                     "title" => $a['title'],
                     "icon" => $a['icon'],
                     "parent" => $parent,
-                    "url" => url("{$name}{$fu}", ["menuid" => $id]),
+                    "url" => (string) url("{$name}{$fu}", ["menuid" => $id]),
                 ];
                 $ret[$id . $module] = $array;
                 $child = $this->getTree($a['id'], $id, $Level);

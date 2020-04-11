@@ -2,6 +2,8 @@
 
 namespace app\admin\controller;
 
+use think\facade\View;
+
 use app\admin\model\Admin as AdminModel;
 
 /**
@@ -21,6 +23,8 @@ class Profile extends Base
      */
     public function index()
     {
+        $adminInfo = env('admin_info');
+        
         $AdminModel = new AdminModel;
         if ($this->request->isPost()) {
             $post = $this->request->post();
@@ -29,7 +33,7 @@ class Profile extends Base
             $data['id'] = $post['id'];
             $data['avatar'] = $post['avatar'];
 
-            $status = $AdminModel->allowField(true)->isUpdate(true)->save($data);
+            $status = $AdminModel->isUpdate(true)->save($data);
             
             if ($status === false) {
                 $this->error('修改失败！');
@@ -37,15 +41,15 @@ class Profile extends Base
             
             $this->success("修改成功！");
         } else {
-            $id = $this->adminInfo['id'];
+            $id = $adminInfo['id'];
             $data = $AdminModel->where([
                 "id" => $id,
             ])->find();
             if (empty($data)) {
                 $this->error('该信息不存在！');
             }
-            $this->assign("data", $data);
-            return $this->fetch();
+            View::assign("data", $data);
+            return View::fetch();
         }
     }
 
@@ -57,6 +61,8 @@ class Profile extends Base
      */
     public function password()
     {
+        $adminInfo = env('admin_info');
+        
         $AdminModel = new AdminModel;
         if ($this->request->isPost()) {
             $post = $this->request->post();
@@ -96,7 +102,7 @@ class Profile extends Base
                 $this->error('请确保新密码与旧密码不同');
             }
             
-            if (!$AdminModel->login($this->adminInfo['username'], $post['password'])) {
+            if (!$AdminModel->login($adminInfo['username'], $post['password'])) {
                 $this->error('旧密码错误！');
             }
 
@@ -107,7 +113,7 @@ class Profile extends Base
             $data['encrypt'] = $passwordinfo['encrypt'];
             $data['password'] = $passwordinfo['password'];
 
-            $status = $AdminModel->allowField(true)->isUpdate(true)->save($data);
+            $status = $AdminModel->isUpdate(true)->save($data);
             
             if ($status === false) {
                 $this->error('修改失败！');
@@ -115,15 +121,15 @@ class Profile extends Base
             
             $this->success("修改成功！");
         } else {
-            $id = $this->adminInfo['id'];
+            $id = $adminInfo['id'];
             $data = $AdminModel->where([
                 "id" => $id,
             ])->find();
             if (empty($data)) {
                 $this->error('该信息不存在！');
             }
-            $this->assign("data", $data);
-            return $this->fetch();
+            View::assign("data", $data);
+            return View::fetch();
         }
     }
 

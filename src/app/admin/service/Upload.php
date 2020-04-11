@@ -87,8 +87,8 @@ class Upload
     {        
         $this->request = request();
         
-        $this->uploadUrl = config('public_url') . 'uploads/';
-        $this->uploadPath = config('upload_path');
+        $this->uploadUrl = config('app.public_url');
+        $this->uploadPath = config('app.upload_path');
     }
     
     /**
@@ -171,7 +171,7 @@ class Upload
             }
         }
         // 附件大小限制
-        $size_limit = $dir == 'images' ? config('upload_image_size') : config('upload_file_size');
+        $size_limit = $dir == 'images' ? config('app.upload_image_size') : config('app.upload_file_size');
         if (-1 != $sizelimit) {
             $sizelimit = intval($sizelimit);
             if ($sizelimit >= 0 && (0 == $size_limit || ($size_limit > 0 && $sizelimit > 0 && $size_limit > $sizelimit))) {
@@ -180,7 +180,7 @@ class Upload
         }
         $size_limit = $size_limit * 1024;
         // 附件类型限制
-        $ext_limit = $dir == 'images' ? config('upload_image_ext') : config('upload_file_ext');
+        $ext_limit = $dir == 'images' ? config('app.upload_image_ext') : config('app.upload_file_ext');
         $ext_limit = $ext_limit != '' ? parse_attr($ext_limit) : '';
 
         // 水印参数
@@ -207,7 +207,9 @@ class Upload
         }
 
         // 判断附件是否已存在
-        if ($file_exists = AttachmentModel::get(['md5' => $file->hash('md5')])) {
+        if ($file_exists = AttachmentModel::where([
+            'md5' => $file->hash('md5'),
+        ])->find()) {
             if ($file_exists['driver'] == 'local') {
                 $file_path = $this->uploadUrl . $file_exists['path'];
             } else {
@@ -216,9 +218,9 @@ class Upload
             
             AttachmentModel::where([
                 'md5' => $file->hash('md5'),
-            ])->update([
+            ])->data([
                 'update_time' => time(),
-            ]);
+            ])->update();
             
             switch ($from) {
                 case 'ueditor':
@@ -295,8 +297,8 @@ class Upload
         if ($info) {
             // 水印功能
             if ($watermark == '') {
-                if ($dir == 'images' && config('upload_thumb_water') == 1 && config('upload_thumb_water_pic') > 0) {
-                    (new AttachmentModel)->createWater($info->getRealPath(), config('upload_thumb_water_pic'));
+                if ($dir == 'images' && config('app.upload_thumb_water') == 1 && config('app.upload_thumb_water_pic') > 0) {
+                    (new AttachmentModel)->createWater($info->getRealPath(), config('app.upload_thumb_water_pic'));
                 }
             }
 
@@ -426,7 +428,7 @@ class Upload
             /* 列出图片 */
             case 'listimage':
             default:
-                $allowExit = '' == $allowExit ? config('upload_image_ext') : $allowExit;
+                $allowExit = '' == $allowExit ? config('app.upload_image_ext') : $allowExit;
         }
 
         /* 获取附件列表 */
@@ -439,7 +441,7 @@ class Upload
                 "total" => 0
             ]);
         }
-        $uploadUrl = config('public_url');
+        $uploadUrl = config('app.public_url');
         $list = [];
         $i = 0;
         foreach ($filelist as $value) {

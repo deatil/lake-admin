@@ -42,7 +42,7 @@ class Module extends Model
         if (!$module) {
             $module = [];
             
-            $data = $this->column(true, 'module');
+            $data = $this->column('*', 'module');
             if (!empty($data)) {
                 foreach ($data as &$v) {
                     to_time($v, 'installtime');

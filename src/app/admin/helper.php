@@ -1,7 +1,7 @@
 <?php
 
-use think\Db;
-use think\facade\Hook;
+use think\facade\Db;
+use think\facade\Event;
 
 use app\admin\model\Attachment as AttachmentModel;
 use app\admin\model\Module as ModuleModel;
@@ -74,7 +74,7 @@ if (!function_exists('runhook')) {
      */
     function runhook($tag, $params = null, $once = false)
     {
-        $hooks = Hook::listen($tag, $params, $once);
+        $hooks = Event::trigger($tag, $params, $once);
         if ($once) {
             return $hooks;
         } else {
@@ -212,7 +212,9 @@ if (!function_exists('lake_admin_config_update')) {
         
         return Db::name('config')->where([
             'name' => $name,
-        ])->setField('value', $value);
+        ])->data([
+            'value' => $value,
+        ])->update();
     }
 }
 
@@ -851,7 +853,7 @@ if (!function_exists('thumb')) {
     function thumb($imgurl, $width = 100, $height = 100, $thumbType = 1, $smallpic = 'none.png')
     {
         static $_thumb_cache = [];
-        $smallpic = config('public_url') . 'static/admin/admin/img/' . $smallpic;
+        $smallpic = config('app.public_url') . 'static/admin/admin/img/' . $smallpic;
         if (empty($imgurl)) {
             return $smallpic;
         }
@@ -864,8 +866,8 @@ if (!function_exists('thumb')) {
             return $smallpic;
         }
 
-        $uploadUrl = config('public_url') . 'uploads/';
-        $uploadPath = config('upload_path');
+        $uploadUrl = config('app.public_url') . 'uploads/';
+        $uploadPath = config('app.upload_path');
         $imgurl_replace = str_replace($uploadUrl, '', $imgurl);
 
         $newimgname = 'thumb_' . $width . '_' . $height . '_' . basename($imgurl_replace);

@@ -2,7 +2,8 @@
 
 namespace app\admin\controller;
 
-use think\Db;
+use think\facade\Db;
+use think\facade\View;
 
 use app\admin\model\AdminLog as AdminlogModel;
 
@@ -67,7 +68,7 @@ class AdminLog extends Base
             
             return json($result);
         }
-        return $this->fetch();
+        return View::fetch();
     }
     
     /**
@@ -96,8 +97,8 @@ class AdminLog extends Base
             $this->error('信息不存在！');
         }
         
-        $this->assign("data", $data);
-        return $this->fetch();
+        View::assign("data", $data);
+        return View::fetch();
     }
     
     /**

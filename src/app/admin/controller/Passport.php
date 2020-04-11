@@ -2,7 +2,7 @@
 
 namespace app\admin\controller;
 
-use think\captcha\Captcha;
+use think\facade\View;
 
 use app\admin\model\Admin as AdminModel;
 
@@ -18,13 +18,15 @@ class Passport extends Base
 {
     
     /**
-     * 验证码
+     * 框架构造函数
      *
-     * @create 2019-7-7
+     * @create 2020-4-9
      * @author deatil
      */
-    public function captcha()
+    protected function initialize()
     {
+        parent::initialize();
+        
         $captcha = [];
         
         $captcha['length'] = 4;
@@ -44,8 +46,18 @@ class Passport extends Base
         // 设置字体颜色
         //$checkcode['fontcolor'] = '#000';
         
-        $captcha = new Captcha($captcha);
-        return $captcha->entry();
+        app()->config->set($captcha, 'captcha');
+    }
+    
+    /**
+     * 验证码
+     *
+     * @create 2019-7-7
+     * @author deatil
+     */
+    public function captcha()
+    {        
+        return captcha();
     }
     
     /**
@@ -57,11 +69,11 @@ class Passport extends Base
     public function login()
     {
         if (AdminService::instance()->isLogin()) {
-            $this->redirect(url('index/index'));
+            return $this->redirect(url('index/index'));
         }
         
         if ($this->request->isPost()) {
-            $data = $this->request->post();
+            $data = request()->post();
             
             // 验证码
             if (!captcha_check($data['verify'])) {
@@ -88,7 +100,9 @@ class Passport extends Base
 
             $this->success('恭喜您，登陆成功', url('Index/index'));
         } else {
-            return $this->fetch();
+            $session = session('admin_user_auth');
+            print_r($session);
+            return View::fetch();
         }
     }
 

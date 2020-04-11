@@ -2,7 +2,8 @@
 
 namespace app\admin\controller;
 
-use think\Db;
+use think\facade\Db;
+use think\facade\View;
 use think\facade\Validate;
 
 use app\admin\model\Config as ConfigModel;
@@ -55,11 +56,11 @@ class Config extends Base
                 "data" => $list
             ]);
         } else {
-            $this->assign([
-                'groupArray' => config('config_group'),
+            View::assign([
+                'groupArray' => config('app.config_group'),
                 'group' => $group,
             ]);
-            return $this->fetch();
+            return View::fetch();
         }
     }
     
@@ -107,11 +108,11 @@ class Config extends Base
             ];
             return json($result);
         } else {
-            $this->assign([
-                'groupArray' => config('config_group'),
+            View::assign([
+                'groupArray' => config('app.config_group'),
                 'group' => 'all',
             ]);
-            return $this->fetch();
+            return View::fetch();
         }
     }
     
@@ -190,7 +191,9 @@ class Config extends Base
                     if (isset($data[$name])) {
                         ConfigModel::where([
                             'name' => $name,
-                        ])->setField('value', $data[$name]);
+                        ])->update([
+                            'value' => $data[$name],
+                        ]);
                     }
                 }
             }
@@ -220,12 +223,12 @@ class Config extends Base
                 }
                 $value['fieldArr'] = 'modelField';
             }
-            $this->assign([
-                'groupArray' => config('config_group'),
+            View::assign([
+                'groupArray' => config('app.config_group'),
                 'fieldList' => $configList,
                 'group' => $group,
             ]);
-            return $this->fetch();
+            return View::fetch();
         }
 
     }
@@ -266,14 +269,14 @@ class Config extends Base
             // 模块列表
             $modules = (new ModuleService())->getAll();
             
-            $this->assign([
+            View::assign([
                 'modules' => $modules,
-                'groupArray' => config('config_group'),
+                'groupArray' => config('app.config_group'),
                 'fieldType' => $fieldType,
                 'group' => $group,
             ]);
     
-            return $this->fetch();
+            return View::fetch();
         }
     }
     
@@ -298,7 +301,9 @@ class Config extends Base
             $id = $data['id'];
             unset($data['id']);
             
-            $info = ConfigModel::get($id);
+            $info = ConfigModel::where([
+                'id' => $id,
+            ])->find();
             if (empty($info)) {
                 $this->error('信息不存在！');
             }
@@ -326,7 +331,9 @@ class Config extends Base
                 ->order('listorder')
                 ->column('name,title,ifoption,ifstring');
             
-            $info = ConfigModel::get($id);
+            $info = ConfigModel::where([
+                'id' => $id,
+            ])->find();
             if (empty($info)) {
                 $this->error('信息不存在！');
             }
@@ -338,14 +345,14 @@ class Config extends Base
             // 模块列表
             $modules = (new ModuleService())->getAll();
             
-            $this->assign([
+            View::assign([
                 'modules' => $modules,
-                'groupArray' => config('config_group'),
+                'groupArray' => config('app.config_group'),
                 'fieldType' => $fieldType,
                 'info' => $info,
             ]);
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
     
@@ -366,7 +373,9 @@ class Config extends Base
             $this->error('参数错误！');
         }
         
-        $info = ConfigModel::get($id);
+        $info = ConfigModel::where([
+            'id' => $id,
+        ])->find();
         if (empty($info)) {
             $this->error('信息不存在！');
         }

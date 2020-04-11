@@ -6,8 +6,11 @@
 
 return [
 
+    // app命名空间
+    'module_namespace' => 'app',
+
     // 模块地址
-    'module_path' => env('root_path') . 'addons' . DIRECTORY_SEPARATOR,
+    'module_path' => root_path() . 'addons' . DIRECTORY_SEPARATOR,
     // 系统模块
     'system_module_list' => [
         'index', 
@@ -22,10 +25,10 @@ return [
     // 资源文件路径
     'static_url' => '/static/',
     // 文件上传文件路径
-    'upload_path' => env('root_path') . 'public' . DIRECTORY_SEPARATOR . 'uploads',
+    'upload_path' => root_path() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'uploads',
     // 资源文件路径
-    'static_path' => env('root_path') . 'public' . DIRECTORY_SEPARATOR . 'static',
+    'static_path' => root_path() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'static',
     // 模块资源文件路径
-    'module_static_path' => env('root_path') . 'public' . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR,
+    'module_static_path' => root_path() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR,
 
 ];

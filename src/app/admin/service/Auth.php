@@ -2,7 +2,7 @@
 
 namespace app\admin\service;
 
-use think\Db;
+use think\facade\Db;
 use think\facade\Config;
 use think\facade\Request;
 

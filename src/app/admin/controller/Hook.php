@@ -2,7 +2,8 @@
 
 namespace app\admin\controller;
 
-use think\Db;
+use think\facade\Db;
+use think\facade\View;
 
 use app\admin\module\Module as ModuleModule;
 
@@ -58,7 +59,7 @@ class Hook extends Base
         } else {
             $this->buildparams();
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -98,9 +99,9 @@ class Hook extends Base
         } else {
             // 模块列表
             $modules = (new ModuleModule())->getAll();
-            $this->assign("modules", $modules);
+            View::assign("modules", $modules);
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -142,13 +143,13 @@ class Hook extends Base
                 $this->error('信息不存在！');
             }
             
-            $this->assign("data", $data);
+            View::assign("data", $data);
             
             // 模块列表
             $modules = (new ModuleModule())->getAll();
-            $this->assign("modules", $modules);
+            View::assign("modules", $modules);
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -257,7 +258,7 @@ class Hook extends Base
         } else {
             $this->buildparams();
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -295,7 +296,7 @@ class Hook extends Base
         } else {
             $this->buildparams();
             
-            return $this->fetch();
+            return View::fetch();
         }
     }    
 }

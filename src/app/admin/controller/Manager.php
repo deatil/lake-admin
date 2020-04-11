@@ -2,7 +2,8 @@
 
 namespace app\admin\controller;
 
-use think\Db;
+use think\facade\Db;
+use think\facade\View;
 
 use app\admin\model\Admin as AdminModel;
 use app\admin\model\AuthGroup as AuthGroupModel;
@@ -71,7 +72,7 @@ class Manager extends Base
                 foreach ($list as $k => $v) {
                     $groups = Db::name('auth_group')
                         ->alias('ag')
-                        ->join('__AUTH_GROUP_ACCESS__ aga', "aga.group_id = ag.id")
+                        ->join('auth_group_access aga', "aga.group_id = ag.id")
                         ->where([
                             'aga.admin_id' => $v['id'],
                         ])
@@ -91,7 +92,7 @@ class Manager extends Base
             ];
             return json($result);
         }
-        return $this->fetch();
+        return View::fetch();
     }
 
     /**
@@ -149,9 +150,9 @@ class Manager extends Base
             } else {
                 $roles = (new AuthGroupModel)->getGroups();
             }
-            $this->assign("roles", $roles);
+            View::assign("roles", $roles);
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -243,7 +244,7 @@ class Manager extends Base
                 ])
                 ->column('group_id');
             
-            $this->assign("data", $data);
+            View::assign("data", $data);
             
             if (!env('admin_is_root')) {
                 $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
@@ -254,9 +255,9 @@ class Manager extends Base
             } else {
                 $roles = (new AuthGroupModel)->getGroups();
             }
-            $this->assign("roles", $roles);
+            View::assign("roles", $roles);
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
     
@@ -341,8 +342,8 @@ class Manager extends Base
         
         $data['groups'] = implode(',', $groups);
         
-        $this->assign("data", $data);
-        return $this->fetch();
+        View::assign("data", $data);
+        return View::fetch();
     }
     
     /**
@@ -395,9 +396,9 @@ class Manager extends Base
                 $this->error('该信息不存在！');
             }
             
-            $this->assign("data", $data);
+            View::assign("data", $data);
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
     

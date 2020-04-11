@@ -35,46 +35,46 @@ class Config extends Model
             }
             switch ($value['type']) {
                 case 'array':
-                    $newConfigs[$key] = parse_attr($value['value']);
+                    $newConfigs[$value['name']] = parse_attr($value['value']);
                     break;
                 case 'radio':
-                    $newConfigs[$key] = isset($value['options'][$value['value']]) ? ['key' => $value['value'], 'value' => $value['options'][$value['value']]] : ['key' => $value['value'], 'value' => $value['value']];
+                    $newConfigs[$value['name']] = isset($value['options'][$value['value']]) ? ['key' => $value['value'], 'value' => $value['options'][$value['value']]] : ['key' => $value['value'], 'value' => $value['value']];
                     break;
                 case 'select':
-                    $newConfigs[$key] = isset($value['options'][$value['value']]) ? ['key' => $value['value'], 'value' => $value['options'][$value['value']]] : ['key' => $value['value'], 'value' => $value['value']];
+                    $newConfigs[$value['name']] = isset($value['options'][$value['value']]) ? ['key' => $value['value'], 'value' => $value['options'][$value['value']]] : ['key' => $value['value'], 'value' => $value['value']];
                     break;
                 case 'checkbox':
                     if (empty($value['value'])) {
-                        $newConfigs[$key] = [];
+                        $newConfigs[$value['name']] = [];
                     } else {
                         $valueArr = explode(',', $value['value']);
                         foreach ($valueArr as $v) {
                             if (isset($value['options'][$v])) {
-                                $newConfigs[$key][$v] = $value['options'][$v];
+                                $newConfigs[$value['name']][$v] = $value['options'][$v];
                             } elseif ($v) {
-                                $newConfigs[$key][$v] = $v;
+                                $newConfigs[$value['name']][$v] = $v;
                             }
                         }
                     }
                     break;
                 case 'image':
-                    $newConfigs[$key] = empty($value['value']) ? '' : get_file_path($value['value']);
+                    $newConfigs[$value['name']] = empty($value['value']) ? '' : get_file_path($value['value']);
                     break;
                 case 'images':
                     if (!empty($value['value'])) {
                         $images_values = explode(',', $value['value']);
                         foreach ($value['value'] as $val) {
-                            $newConfigs[$key][] = get_file_path($val);
+                            $newConfigs[$value['name']][] = get_file_path($val);
                         }
                     } else {
-                        $newConfigs[$key] = [];
+                        $newConfigs[$value['name']] = [];
                     }
                     break;
                 case 'Ueditor':
-                    $newConfigs[$key] = htmlspecialchars_decode($value['value']);
+                    $newConfigs[$value['name']] = htmlspecialchars_decode($value['value']);
                     break;
                 default:
-                    $newConfigs[$key] = $value['value'];
+                    $newConfigs[$value['name']] = $value['value'];
                     break;
             }
         }

@@ -2,10 +2,11 @@
 
 namespace app\admin\module;
 
-use think\Db;
-use think\Loader;
+use Composer\Autoload\ClassLoader;
+
 use think\Container;
-use think\facade\Hook;
+use think\facade\Db;
+use think\facade\Event;
 use think\facade\Cache;
 use think\facade\Config;
 
@@ -76,9 +77,9 @@ class Module
     public function __construct($options = [])
     {
         $this->options = array_merge($this->options, [
-            'module_path' => config('module_path'),
-            'system_module_list' => config('system_module_list'),
-            'module_static_path' => config('module_static_path'),
+            'module_path' => config('app.module_path'),
+            'system_module_list' => config('app.system_module_list'),
+            'module_static_path' => config('app.module_static_path'),
         ]);
         
         if (!empty($options)) {
@@ -101,7 +102,7 @@ class Module
         if (!empty($this->moduleList)) {
             return $this->moduleList;
         }
-        
+
         $dirs = array_map('basename', glob($this->modulePath . '*', GLOB_ONLYDIR));
         if ($dirs === false || !file_exists($this->modulePath)) {
             $this->error = '模块目录不可读或者不存在';
@@ -119,7 +120,7 @@ class Module
             }
         }
         
-        $hookModules = Hook::listen('lake_admin_modules');
+        $hookModules = Event::trigger('lake_admin_modules');
         if (!empty($hookModules)) {
             foreach ($hookModules as $hookModule) {
                 if (isset($hookModule['module']) && !empty($hookModule['module'])) {
@@ -129,7 +130,7 @@ class Module
         }
         
         // 读取数据库已经安装模块表
-        $moduleList = (new ModuleModel)->getModuleList();
+        $moduleList = (new ModuleModel())->getModuleList();
         
         if (!empty($list)) {
             foreach ($list as $name => $config) {
@@ -357,10 +358,11 @@ class Module
             $namespaceModulePath = $this->modulePath . trim($config['module'], DIRECTORY_SEPARATOR);
         }
         
-        $appNamespace = app()->getNamespace();
-        Loader::addNamespace([
-            $appNamespace . '\\' . $name => $namespaceModulePath . DIRECTORY_SEPARATOR,
-        ]);
+        $appNamespace = config('app.module_namespace');
+        
+        $loader = new ClassLoader();
+        $loader->addPsr4($appNamespace . '\\' . $name . '\\', $namespaceModulePath . DIRECTORY_SEPARATOR);
+        $loader->register();
         
         // 保存在安装表
         if (!$this->installModuleConfig($name, $config)) {
@@ -556,12 +558,13 @@ class Module
             'listorder' => (isset($config['listorder']) && !empty($config['listorder'])) ? intval($config['listorder']) : 100,
         
             'installtime' => time(),
+            'status' => 1,
             'add_time' => time(),
             'add_ip' => request()->ip(1),
         ];
         
         // 保存在安装表
-        if (!ModuleModel::create($data, true)) {
+        if (!ModuleModel::create($data, [], true)) {
             return false;
         }
 
@@ -795,12 +798,12 @@ class Module
         }
         
         // 检查是否有安装脚本
-        $class = "\\app\\{$name}\\{$dir}\\{$dir}";
+        $class = "\\app\\{$name}\\{$dir}\\".ucwords($dir);
         if (!class_exists($class)) {
             return false;
         }
         
-        $installObj = Container::get($class);
+        $installObj = Container::getInstance()->make($class);
         
         if (!method_exists($installObj, $type)) {
             return true;
@@ -1086,7 +1089,7 @@ class Module
         }
         
         if (empty($dbPre)) {
-            $dbPre = config('database.prefix');
+            $dbPre = app()->db->getConnection()->getConfig('prefix');
         }
     
         foreach ($sqlStatement as $value) {

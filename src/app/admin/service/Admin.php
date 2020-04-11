@@ -2,7 +2,7 @@
 
 namespace app\admin\service;
 
-use think\Db;
+use think\facade\Db;
 use think\facade\Session;
 
 use app\admin\model\Admin as AdminModel;
@@ -111,7 +111,7 @@ class Admin
         if (!empty($uid)) {
             $gids = Db::name('auth_group')
                 ->alias('ag')
-                ->join('__AUTH_GROUP_ACCESS__ aga', "aga.group_id = ag.id")
+                ->join('auth_group_access aga', "aga.group_id = ag.id")
                 ->where([
                     'aga.admin_id' => $uid,
                     'ag.is_system' => 1,

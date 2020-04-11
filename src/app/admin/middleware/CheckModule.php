@@ -1,6 +1,9 @@
 <?php
 
-namespace app\admin\behavior;
+namespace app\admin\middleware;
+
+use Closure;
+use think\App;
 
 use app\admin\module\Module as ModuleModule;
 
@@ -12,15 +15,24 @@ use app\admin\module\Module as ModuleModule;
  */
 class CheckModule
 {
+
+    /** @var App */
+    protected $app;
+
+    public function __construct(App $app)
+    {
+        $this->app  = $app;
+    }
+    
     /**
      * 行为扩展执行入口
      *
      * @create 2019-7-6
      * @author deatil
      */
-    public function run($params)
-    {        
-        $module = request()->module();
+    public function handle($request, Closure $next)
+    {
+        $module = $this->app->http->getName();
         
         $ModuleModule = new ModuleModule();
         $check = $ModuleModule->checkModule($module);
@@ -29,6 +41,8 @@ class CheckModule
             $error = $ModuleModule->getError();
             abort(404, $error);
         }
+        
+        return $next($request);
     }
 
 }

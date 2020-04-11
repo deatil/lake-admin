@@ -2,8 +2,9 @@
 
 namespace app\admin\controller;
 
-use think\Db;
-use think\facade\Hook;
+use think\facade\Db;
+use think\facade\View;
+use think\facade\Event;
 use think\facade\Cache;
 use think\captcha\Captcha;
 
@@ -29,24 +30,24 @@ class Index extends Base
     public function index()
     {
         // 用户信息
-        $this->assign('user_info', $this->adminInfo);
+        View::assign('user_info', env('admin_info'));
 
         // 左侧菜单
         $menus = (new AuthRuleModel())->getMenuList();
-        $this->assign("menus", $menus);
+        View::assign("menus", $menus);
         
         // 默认后台首页
-        $defaultMainUrl = url('index/main');
+        $defaultMainUrl = (string) url('index/main');
         
         // 兼容自定义后台首页
-        $mainUrl = Hook::listen('lake_admin_main_url', $defaultMainUrl, true);
+        $mainUrl = Event::trigger('lake_admin_main_url', $defaultMainUrl, true);
         if (empty($mainUrl)) {
             $mainUrl = $defaultMainUrl;
         }
         
-        $this->assign("main_url", $mainUrl);
+        View::assign("main_url", $mainUrl);
         
-        return $this->fetch();
+        return View::fetch();
     }
     
     /**
@@ -57,19 +58,19 @@ class Index extends Base
      */
     public function main()
     {
-        $this->assign('user_info', $this->adminInfo);
+        View::assign('user_info', env('admin_info'));
         
         // 模型数量
         $moduleCount = Db::name('module')->count();
-        $this->assign('module_count', $moduleCount);
+        View::assign('module_count', $moduleCount);
         
         // 附件数量
         $attachmentCount = Db::name('attachment')->count();
-        $this->assign('attachment_count', $attachmentCount);
+        View::assign('attachment_count', $attachmentCount);
         
-        $this->assign('sys_info', $this->getSysInfo());
+        View::assign('sys_info', $this->getSysInfo());
         
-        return $this->fetch();
+        return View::fetch();
     }
 
     /**

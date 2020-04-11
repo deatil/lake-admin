@@ -2,7 +2,8 @@
 
 namespace app\admin\controller;
 
-use think\Db;
+use think\facade\Db;
+use think\facade\View;
 
 use app\admin\module\Module as ModuleModule;
 use app\admin\model\AuthGroup as AuthGroupModel;
@@ -63,7 +64,7 @@ class RuleExtend extends Base
             
             return json($result);
         }
-        return $this->fetch();
+        return View::fetch();
     }
 
     /**
@@ -85,19 +86,19 @@ class RuleExtend extends Base
             $rs = Db::name('auth_rule_extend')->data($data)->insert();
        
             if ($rs === false) {
-                $this->error("添加失败！");
+                return $this->error("添加失败！");
             }
             
-            $this->success("添加成功！");
+            return $this->success("添加成功！");
 
         } else {
-            $this->assign("roles", (new AuthGroupModel)->getGroups());
+            View::assign("roles", (new AuthGroupModel)->getGroups());
             
             // 模块列表
             $modules = (new ModuleModule())->getAll();
-            $this->assign("modules", $modules);
+            View::assign("modules", $modules);
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -133,14 +134,14 @@ class RuleExtend extends Base
                 $this->error('信息不存在！');
             }
             
-            $this->assign("data", $data);
-            $this->assign("roles", (new AuthGroupModel)->getGroups());
+            View::assign("data", $data);
+            View::assign("roles", (new AuthGroupModel)->getGroups());
             
             // 模块列表
             $modules = (new ModuleModule())->getAll();
-            $this->assign("modules", $modules);
+            View::assign("modules", $modules);
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -205,8 +206,8 @@ class RuleExtend extends Base
             $this->error('信息不存在！');
         }
         
-        $this->assign("data", $data);
-        return $this->fetch();
+        View::assign("data", $data);
+        return View::fetch();
     }
 
 }

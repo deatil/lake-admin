@@ -2,7 +2,7 @@
 
 namespace app\admin\model;
 
-use think\Db;
+use think\facade\Db;
 use think\facade\Config;
 use think\Model;
 
@@ -18,7 +18,8 @@ class ModelBase extends Model
      */
     public function drop_table($table)
     {
-        $table = Config::get("database.prefix") . strtolower($table);
+        $dbPrefix = app()->db->getConnection()->getConfig('prefix');
+        $table = $dbPrefix . strtolower($table);
         return Db::query("DROP TABLE $table");
     }
 
@@ -28,7 +29,8 @@ class ModelBase extends Model
      */
     public function table_exists($table)
     {
-        $table = Config::get("database.prefix") . strtolower($table);
+        $dbPrefix = app()->db->getConnection()->getConfig('prefix');
+        $table = $dbPrefix . strtolower($table);
         if (true == Db::query("SHOW TABLES LIKE '{$table}'")) {
             return true;
         } else {
@@ -53,7 +55,8 @@ class ModelBase extends Model
     public function get_fields($table)
     {
         $fields = [];
-        $table = Config::get("database.prefix") . strtolower($table);
+        $dbPrefix = app()->db->getConnection()->getConfig('prefix');
+        $table = $dbPrefix . strtolower($table);
         $data = Db::query("SHOW COLUMNS FROM $table");
         foreach ($data as $v) {
             $fields[$v['Field']] = $v['Type'];

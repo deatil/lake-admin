@@ -2,7 +2,8 @@
 
 namespace app\admin\controller;
 
-use think\Db;
+use think\facade\Db;
+use think\facade\View;
 
 use app\admin\model\Admin as AdminUserModel;
 use app\admin\model\AuthGroup as AuthGroupModel;
@@ -167,7 +168,7 @@ class FieldType extends Base
             
             return json($result);
         }
-        return $this->fetch();
+        return View::fetch();
     }
 
     /**
@@ -210,12 +211,12 @@ class FieldType extends Base
 
         } else {
             // 类型列表
-            $this->assign("types", $this->types);
+            View::assign("types", $this->types);
             
             // 验证规则列表
-            $this->assign("vrules", $this->vrules);
+            View::assign("vrules", $this->vrules);
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
 
@@ -263,15 +264,15 @@ class FieldType extends Base
                 $this->error('信息不存在！');
             }
             
-            $this->assign("data", $data);
+            View::assign("data", $data);
             
             // 类型列表
-            $this->assign("types", $this->types);
+            View::assign("types", $this->types);
             
             // 验证规则列表
-            $this->assign("vrules", $this->vrules);
+            View::assign("vrules", $this->vrules);
             
-            return $this->fetch();
+            return View::fetch();
         }
     }
 

@@ -2,7 +2,7 @@
 
 namespace app\admin\service;
 
-use think\Db;
+use think\facade\Db;
 
 use app\admin\model\Attachment as AttachmentModel;
 
@@ -22,8 +22,8 @@ class Attachments
 
     public function __construct()
     {
-        $this->uploadUrl = config('upload_url');
-        $this->uploadPath = config('upload_path');
+        $this->uploadUrl = config('app.upload_url');
+        $this->uploadPath = config('app.upload_path');
         
         $this->AttachmentModel = new AttachmentModel;
     }

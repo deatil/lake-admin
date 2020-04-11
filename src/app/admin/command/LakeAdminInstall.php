@@ -2,7 +2,7 @@
 
 namespace app\admin\command;
 
-use think\Db;
+use think\facade\Db;
 
 use think\console\Command;
 use think\console\Input;
@@ -57,7 +57,7 @@ class LakeAdminInstall extends Command
         $dbpre = $input->getOption('dbpre');
         
         if (empty($dbpre)) {
-            $dbpre = config('database.prefix');
+            $dbpre = app()->db->getConnection()->getConfig('prefix');
         }
         
         // 数据库配置

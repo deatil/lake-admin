@@ -1,12 +1,15 @@
 <?php
 
-namespace app\admin\behavior;
+namespace app\admin\middleware;
 
-use think\Db;
-use think\Loader;
+use Composer\Autoload\ClassLoader;
+
+use Closure;
+use think\App;
 use think\Console;
+use think\facade\Db;
 use think\facade\Cache;
-use think\facade\Hook;
+use think\facade\Event;
 use think\facade\Env;
 
 /**
@@ -24,13 +27,15 @@ class InitHook
      * @create 2019-7-6
      * @author deatil
      */
-    public function run($params)
+    public function handle($request, Closure $next)
     {
         // 后台命名空间
         $this->addModuleNamespace();
         
         // 嵌入点
         $this->addModuleHooks();
+        
+        return $next($request);
     }
     
     /**
@@ -41,8 +46,8 @@ class InitHook
      */
     private function addModuleNamespace()
     {
-        $app_namespace = app()->getNamespace();
-        $module_path = config('module_path');
+        $app_namespace = config('app.module_namespace');
+        $module_path = config('app.module_path');
         
         $modules = Cache::get('lake_admin_modules');
         if (empty($modules)) {
@@ -56,6 +61,8 @@ class InitHook
             Cache::set('lake_admin_modules', $modules);
         }
         
+        $loader = new ClassLoader();
+        
         if (!empty($modules)) {
             foreach ($modules as $module) {
                 if (!empty($module['path'])) {
@@ -67,12 +74,14 @@ class InitHook
                 $namespace_module_path = rtrim($namespace_module_path, DIRECTORY_SEPARATOR);
                 
                 $module_namespace = [
-                    $app_namespace . '\\' . $module['module'] => $namespace_module_path . DIRECTORY_SEPARATOR,
-                    $app_namespace . '\\api' => $namespace_module_path . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR,
-                    $app_namespace . '\\admin' => $namespace_module_path . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR,
+                    $app_namespace . '\\' . $module['module'] . '\\' => $namespace_module_path . DIRECTORY_SEPARATOR,
+                    $app_namespace . '\\api\\' => $namespace_module_path . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR,
+                    $app_namespace . '\\admin\\' => $namespace_module_path . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR,
                 ];
                 
-                Loader::addNamespace($module_namespace);
+                foreach ($module_namespace as $namespace => $path) {
+                    $loader->addPsr4($namespace, $path);
+                }
                 
                 // 引入公共文件
                 $global = $namespace_module_path . DIRECTORY_SEPARATOR . 'global' . DIRECTORY_SEPARATOR;
@@ -85,6 +94,8 @@ class InitHook
                 }
             }
         }
+        
+        $loader->register();
         
     }
 
@@ -126,8 +137,7 @@ class InitHook
         }
         
         // 加载语言包
-        $lang_file = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . request()->langset() . '.php';
-        app()->lang->load($lang_file);
+        app()->loadLangPack(app()->lang->defaultLangSet());
     }
     
     /**
@@ -151,7 +161,7 @@ class InitHook
         
         if (!empty($hooks)) {
             foreach ($hooks as $key => $value) {
-                Hook::add($value['name'], $value['class']);
+                Event::listen($value['name'], $value['class']);
             }
         }
     }

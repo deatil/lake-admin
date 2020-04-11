@@ -17,7 +17,7 @@ class AdminMainUrl
      * @create 2020-1-6
      * @author deatil
      */
-    public function run($params)
+    public function handle($params)
     {
         // 首页链接
         $mainUrl = config('admin_main');
