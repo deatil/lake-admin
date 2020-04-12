@@ -14,7 +14,7 @@ class AdminLog
 {
     
     /**
-     * 行为扩展的执行入口必须是run
+     * 行为扩展的执行入口必须是handle
      *
      * @create 2019-7-15
      * @author deatil

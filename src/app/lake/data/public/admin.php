@@ -8,19 +8,27 @@
  * 同时修改config/app.php中的'deny_module_list',
  * 把admin模块也添加进去
  *
- * @create 2019-7-31
+ * @create 2020-4-12
  * @author deatil
  */
 
 namespace think;
 
-if (version_compare(PHP_VERSION, '5.6.0', '<')) {
+if (version_compare(PHP_VERSION, '7.1.0', '<')) {
     header("Content-type: text/html; charset=utf-8");
     die('PHP 5.6.0 及以上版本系统才可运行~ ');
 }
 
-// 加载基础文件
-require '..' . DIRECTORY_SEPARATOR . 'thinkphp' . DIRECTORY_SEPARATOR . 'base.php';
+// [ 应用入口文件 ]
+namespace think;
 
-// 执行应用并响应
-Container::get('app')->bind('admin')->run()->send();
+require __DIR__ . '/../vendor/autoload.php';
+
+// 执行HTTP应用并响应
+$http = (new App())->http;
+
+$response = $http->name('admin')->run();
+
+$response->send();
+
+$http->end($response);
