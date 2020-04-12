@@ -88,9 +88,11 @@ class InitHook
                 $this->loadModuleConfigAndFile($global);
                 
                 // 注册模块指令
-                $command = app()->config->get('command');
-                if (!empty($command) && is_array($command)) {
-                    Console::addDefaultCommands($command);
+                $commands = app()->config->get('app.command');
+                if (!empty($commands) && is_array($commands)) {
+                    Console::starting(function (Console $console) use ($commands) {
+                        $console->addCommands($commands);
+                    });
                 }
             }
         }

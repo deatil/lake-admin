@@ -48,7 +48,7 @@ class Service extends BaseService
         
         // 注册系统默认指令
         $this->commands([
-            'LakeAdminInstall' => \app\admin\command\LakeAdminInstall::class,
+            \app\admin\command\LakeAdminInstall::class,
         ]);
         
         // app初始化，全部模块

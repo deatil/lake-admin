@@ -6,6 +6,7 @@ use think\facade\Db;
 
 use think\console\Command;
 use think\console\Input;
+use think\console\input\Argument;
 use think\console\input\Option;
 use think\console\Output;
 
@@ -56,13 +57,15 @@ class LakeAdminInstall extends Command
         // 使用 getOption() 取出选项值
         $dbpre = $input->getOption('dbpre');
         
+        $dbConnection = app()->db->getConnection();
+        
         if (empty($dbpre)) {
-            $dbpre = app()->db->getConnection()->getConfig('prefix');
+            $dbpre = $dbConnection->getConfig('prefix');
         }
         
         // 数据库配置
-        $database = config('database.database');
-        $databaseCharset = config('database.charset');
+        $database = $dbConnection->getConfig('database');
+        $databaseCharset = $dbConnection->getConfig('charset');
         
         if (empty($database)) {
             $output->info("lake-admin tip: place set database!");
@@ -74,15 +77,20 @@ class LakeAdminInstall extends Command
         }
         
         // 创建数据库
-        $dbConfig = config('database.');
-        $db = Db::connect([
-            'type' => "mysql",
-            'hostname' => $dbConfig['hostname'],
-            'username' => $dbConfig['username'],
-            'password' => $dbConfig['password'],
-            'hostport' => $dbConfig['hostport'],
-            'charset' => $dbConfig['charset'],
-        ]);
+        $dbConfig = $dbConnection->getConfig();
+        app()->config->set([
+            'connections' => [
+                'lake-admin-db1' => [
+                    'type' => "mysql",
+                    'hostname' => $dbConfig['hostname'],
+                    'username' => $dbConfig['username'],
+                    'password' => $dbConfig['password'],
+                    'hostport' => $dbConfig['hostport'],
+                    'charset' => $dbConfig['charset'],
+                ],
+            ],
+        ], 'database');
+        $db = Db::connect('lake-admin-db1');
         $db->execute("CREATE DATABASE IF NOT EXISTS `".$database."` DEFAULT CHARACTER SET ".$databaseCharset." COLLATE ".$databaseCharset."_unicode_ci;");
         
         // 导入数据库
@@ -103,16 +111,21 @@ class LakeAdminInstall extends Command
             return false;
         }
         
-        $db2 = Db::connect([
-            'type' => "mysql",
-            'hostname' => $dbConfig['hostname'],
-            'database' => $dbConfig['database'],
-            'username' => $dbConfig['username'],
-            'password' => $dbConfig['password'],
-            'hostport' => $dbConfig['hostport'],
-            'charset' => $dbConfig['charset'],
-            'prefix' => $dbpre,
-        ]);
+        app()->config->set([
+            'connections' => [
+                'lake-admin-db2' => [
+                    'type' => "mysql",
+                    'hostname' => $dbConfig['hostname'],
+                    'database' => $dbConfig['database'],
+                    'username' => $dbConfig['username'],
+                    'password' => $dbConfig['password'],
+                    'hostport' => $dbConfig['hostport'],
+                    'charset' => $dbConfig['charset'],
+                    'prefix' => $dbpre,
+                ],
+            ],
+        ], 'database');
+        $db2 = Db::connect('lake-admin-db2');
         
         foreach ($sqlStatement as $value) {
             try {
@@ -132,7 +145,7 @@ class LakeAdminInstall extends Command
         $adminStaticPath = env('lake_admin_app_path') . DIRECTORY_SEPARATOR 
             . 'lake' . DIRECTORY_SEPARATOR
             . 'static' . DIRECTORY_SEPARATOR;
-        $staticPath = env('root_path') . 'public' . DIRECTORY_SEPARATOR 
+        $staticPath = root_path() . 'public' . DIRECTORY_SEPARATOR 
             . 'static' . DIRECTORY_SEPARATOR;
         File::copyDir($adminStaticPath, $staticPath);
 
@@ -141,7 +154,7 @@ class LakeAdminInstall extends Command
             . 'lake' . DIRECTORY_SEPARATOR 
             . 'data' . DIRECTORY_SEPARATOR
             . 'public' . DIRECTORY_SEPARATOR;
-        $toPath = env('root_path') 
+        $toPath = root_path() 
             . 'public' . DIRECTORY_SEPARATOR;
         File::copyDir($fromPath, $toPath);
 
@@ -150,7 +163,7 @@ class LakeAdminInstall extends Command
             . 'lake' . DIRECTORY_SEPARATOR 
             . 'data' . DIRECTORY_SEPARATOR
             . 'root' . DIRECTORY_SEPARATOR;
-        $toPath2 = env('root_path');
+        $toPath2 = root_path();
         File::copyDir($fromPath2, $toPath2);
        
         $output->info("Install lake-admin Successed!");
