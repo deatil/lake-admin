@@ -70,8 +70,6 @@ class Service extends BaseService
                 'lake_admin_input_item' => $lake_admin_input_item,
             ]);
             
-            $this->HttpRunHooks();
-            
             $this->app->middleware->add(LoadModule::class);
             
             $this->setSystemHooks();
@@ -80,51 +78,6 @@ class Service extends BaseService
             $this->app->middleware->add(CheckModule::class);
             
         });
-    }
-    
-    /**
-     * 执行 HttpRun 全局hook信息
-     *
-     * @create 2020-4-7
-     * @author deatil
-     */
-    protected function HttpRunHooks() 
-    {
-        $hooks = Db::name('hook')
-            ->where([
-                'name' => 'HttpRun',
-                'status' => 1,
-            ])
-            ->order('listorder ASC, id ASC')
-            ->select();
-            
-        if (!empty($hooks)) {
-            foreach ($hooks as $hook) {
-                $this->triggerEvent('HttpRun', $hook['class']);
-            }
-        }
-    }
-    
-    /**
-     * 配置全局hook信息
-     *
-     * @create 2020-4-7
-     * @author deatil
-     */
-    protected function setSystemHooks() {
-        $hooks = Db::name('hook')
-            ->where([
-                ['name', 'not in', ['app_init']],
-                ['status', '=', 1],
-            ])
-            ->order('listorder ASC, id ASC')
-            ->select();
-            
-        if (!empty($hooks)) {
-            foreach ($hooks as $hook) {
-                $this->app->event->listen($hook['name'], $hook['class']);
-            }
-        }
     }
     
     /**
@@ -149,6 +102,29 @@ class Service extends BaseService
                 $this->app->config->load($dir . $file, pathinfo($file, PATHINFO_FILENAME));
             }
         }    
+    }
+    
+    /**
+     * 配置全局hook信息
+     *
+     * @create 2020-4-7
+     * @author deatil
+     */
+    protected function setSystemHooks() {
+        $hooks = Db::name('hook')
+            ->where([
+                ['name', 'not in', ['app_init']],
+                ['status', '=', 1],
+            ])
+            ->order('listorder ASC, id ASC')
+            ->select()
+            ->toArray();
+            
+        if (!empty($hooks)) {
+            foreach ($hooks as $hook) {
+                $this->app->event->listen($hook['name'], $hook['class']);
+            }
+        }
     }
     
 }

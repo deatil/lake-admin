@@ -49,7 +49,8 @@ class Config extends Base
                     'LEFT'
                 )
                 ->order('listorder,create_time desc')
-                ->select();
+                ->select()
+                ->toArray();
                 
             return json([
                 "code" => 0, 
@@ -95,7 +96,8 @@ class Config extends Base
                 ->page($page, $limit)
                 ->where($map)
                 ->order('c.group ASC, c.listorder ASC, c.name ASC, c.id DESC')
-                ->select();
+                ->select()
+                ->toArray();
             $total = Db::name('config')
                 ->alias('c')
                 ->where($map)

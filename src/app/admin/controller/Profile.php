@@ -30,10 +30,16 @@ class Profile extends Base
             $post = $this->request->post();
             
             $data = [];
-            $data['id'] = $post['id'];
+            $data['email'] = $post['email'];
+            $data['nickname'] = $post['nickname'];
             $data['avatar'] = $post['avatar'];
 
-            $status = $AdminModel->isUpdate(true)->save($data);
+            $status = $AdminModel
+                ->where([
+                    'id' => $post['id'],
+                ])
+                ->data($data)
+                ->update();
             
             if ($status === false) {
                 $this->error('修改失败！');

@@ -5,10 +5,13 @@ namespace app\admin\module\controller;
 use think\facade\Db;
 use think\facade\Env;
 
+use app\admin\boot\Jump;
 use app\admin\boot\BaseController;
 
 class Homebase extends BaseController
 {    
+    use Jump;
+    
     // 初始化
     protected function initialize()
     {
@@ -37,18 +40,18 @@ class Homebase extends BaseController
         } else {
             $appPath = config('app.module_path');
             
-            $module = $this->module;
-            
-            $modulePath = $appPath . $module;
+            $module = $this->app->http->getName();
+
+            $modulePath = rtrim($appPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $module;
             
             // 模块信息
             if (!empty($module)) {
-                $module_info = Db::name('module')->where([
+                $moduleInfo = Db::name('module')->where([
                     'module' => $module,
                     'status' => 1,
                 ])->find();
-                if (!empty($module_info) && !empty($module_info['path'])) {
-                    $modulePath = $module_info['path'];
+                if (!empty($moduleInfo) && !empty($moduleInfo['path'])) {
+                    $modulePath = $moduleInfo['path'];
                 }
             }
             

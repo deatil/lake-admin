@@ -63,7 +63,8 @@ class Manager extends Base
             $list = $this->AdminModel
                 ->where($map)
                 ->page($page, $limit)
-                ->select();
+                ->select()
+                ->toArray();
             $total = $this->AdminModel
                 ->where($map)
                 ->count();

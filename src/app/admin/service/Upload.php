@@ -2,6 +2,8 @@
 
 namespace app\admin\service;
 
+use think\facade\Filesystem;
+
 use app\admin\model\Attachment as AttachmentModel;
 
 /**
@@ -87,8 +89,8 @@ class Upload
     {        
         $this->request = request();
         
-        $this->uploadUrl = config('app.public_url');
-        $this->uploadPath = config('app.upload_path');
+        $this->uploadUrl = Filesystem::getDiskConfig('public', 'url') . '/';
+        $this->uploadPath = 'images';
     }
     
     /**
@@ -162,7 +164,9 @@ class Upload
         if (!function_exists("finfo_open")) {
             switch ($from) {
                 case 'ueditor':
-                    return json(['state' => '检测到环境未开启php_fileinfo拓展']);
+                    return json([
+                        'state' => '检测到环境未开启php_fileinfo拓展',
+                    ]);
                 default:
                     return json([
                         'code' => -1,
@@ -242,7 +246,7 @@ class Upload
         }
 
         // 判断附件大小是否超过限制
-        if ($size_limit > 0 && ($file->getInfo('size') > $size_limit)) {
+        if ($size_limit > 0 && ($file->getSize() > $size_limit)) {
             switch ($from) {
                 case 'ueditor':
                     return json(['state' => '附件过大']);
@@ -255,7 +259,7 @@ class Upload
             }
         }
         // 判断附件格式是否符合
-        $file_name = $file->getInfo('name');
+        $file_name = $file->getOriginalName();
         $file_ext = strtolower(substr($file_name, strrpos($file_name, '.') + 1));
         $error_msg = '';
         if ($ext_limit == '') {
@@ -293,12 +297,12 @@ class Upload
         }
         
         // 移动到框架应用根目录指定目录下
-        $info = $file->move($this->uploadPath . DIRECTORY_SEPARATOR . $dir);
-        if ($info) {
+        $savename = Filesystem::disk('public')->putFile($this->uploadPath, $file);
+        if ($savename) {
             // 水印功能
             if ($watermark == '') {
                 if ($dir == 'images' && config('app.upload_thumb_water') == 1 && config('app.upload_thumb_water_pic') > 0) {
-                    (new AttachmentModel)->createWater($info->getRealPath(), config('app.upload_thumb_water_pic'));
+                    (new AttachmentModel)->createWater(realpath('.' . $this->uploadUrl . $savename), config('app.upload_thumb_water_pic'));
                 }
             }
 
@@ -308,20 +312,21 @@ class Upload
                 'module' => $module,
                 'type' => $this->type,
                 'type_id' => $this->type_id,
-                'name' => $file->getInfo('name'),
-                'mime' => $file->getInfo('type'),
-                'path' => $dir . '/' . str_replace('\\', '/', $info->getSaveName()),
-                'ext' => $info->getExtension(),
-                'size' => $info->getSize(),
-                'md5' => $info->hash('md5'),
-                'sha1' => $info->hash('sha1'),
+                'name' => $file->getOriginalName(),
+                'mime' => $file->getOriginalMime(),
+                'path' => $this->uploadUrl . str_replace('\\', '/', $savename),
+                'ext' => $file->getOriginalExtension(),
+                'size' => $file->getSize(),
+                'md5' => $file->hash('md5'),
+                'sha1' => $file->hash('sha1'),
+                'status' => 1,
             ];
             if ($file_add = AttachmentModel::create($file_info)) {
                 switch ($from) {
                     case 'ueditor':
                         return json([
                             "state" => "SUCCESS", // 上传状态，上传成功时必须返回"SUCCESS"
-                            "url" => $this->uploadUrl . $file_info['path'], // 返回的地址
+                            "url" => $file_info['path'], // 返回的地址
                             "title" => $file_info['name'], // 附件名
                         ]);
                         break;
@@ -330,7 +335,7 @@ class Upload
                             'code' => 0,
                             'info' => $file_info['name'] . '上传成功',
                             'id' => $file_add['id'],
-                            'path' => empty($file_info['thumb']) ? $this->uploadUrl . $file_info['path'] : $this->uploadUrl . $file_info['thumb'],
+                            'path' => $file_info['path'],
                         ]);
                 }
             } else {

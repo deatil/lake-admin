@@ -48,7 +48,8 @@ class RuleExtend extends Base
                 ->where($map)
                 ->page($page, $limit)
                 ->order('are.module ASC')
-                ->select();
+                ->select()
+                ->toArray();
             
             $total = Db::name('auth_rule_extend')
                 ->alias('are')

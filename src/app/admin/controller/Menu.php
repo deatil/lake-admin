@@ -77,7 +77,8 @@ class Menu extends Base
             $data = AuthRuleModel::where($map)
                 ->page($page, $limit)
                 ->order('module ASC, name ASC, title ASC, id ASC')
-                ->select();
+                ->select()
+                ->toArray();
             $total = AuthRuleModel::where($map)->count();
             
             $result = [

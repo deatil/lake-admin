@@ -44,7 +44,8 @@ class Hook extends Base
                 ->page($page, $limit)
                 ->where($map)
                 ->order('listorder ASC, module ASC')
-                ->select();
+                ->select()
+                ->toArray();
             $total = Db::name('hook')
                 ->where($map)
                 ->order('listorder ASC, module ASC')
@@ -243,7 +244,8 @@ class Hook extends Base
                 ->field("module, count(module) as num")
                 ->group("module")
                 ->order('module ASC')
-                ->select();
+                ->select()
+                ->toArray();
             $total = Db::name('hook')
                 ->where($map)
                 ->group("module")
@@ -281,7 +283,8 @@ class Hook extends Base
                 ->field("name, count(name) as num")
                 ->group("name")
                 ->order('name ASC')
-                ->select();
+                ->select()
+                ->toArray();
             $total = Db::name('hook')
                 ->where($map)
                 ->group("name")

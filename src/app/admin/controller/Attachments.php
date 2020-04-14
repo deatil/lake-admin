@@ -57,7 +57,8 @@ class Attachments extends Base
             $list = AttachmentModel::where($map)
                 ->page($page, $limit)
                 ->order('create_time desc')
-                ->select();
+                ->select()
+                ->toArray();
             if (!empty($list)) {
                 foreach ($list as $k => &$v) {
                     $v['path'] = $v['driver'] == 'local' ? $this->uploadUrl . $v['path'] : $v['path'];

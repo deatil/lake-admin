@@ -44,16 +44,16 @@ class AdminBase extends Base
             
             $module = $this->module;
             
-            $modulePath = $appPath . $module;
+            $modulePath = rtrim($appPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $module;
             
             // 模块信息
             if (!empty($module)) {
-                $module_info = Db::name('module')->where([
+                $moduleInfo = Db::name('module')->where([
                     'module' => $module,
                     'status' => 1,
                 ])->find();
-                if (!empty($module_info) && !empty($module_info['path'])) {
-                    $modulePath = $module_info['path'];
+                if (!empty($moduleInfo) && !empty($moduleInfo['path'])) {
+                    $modulePath = $moduleInfo['path'];
                 }
             }
             

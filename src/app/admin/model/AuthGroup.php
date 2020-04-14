@@ -34,7 +34,7 @@ class AuthGroup extends Model
             'type' => self::TYPE_ADMIN, 
             'module' => 'admin'
         ];
-        return $this->where($map)->where($where)->select();
+        return $this->where($map)->where($where)->select()->toArray();
     }
 
     /**

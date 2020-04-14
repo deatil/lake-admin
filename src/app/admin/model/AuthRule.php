@@ -30,7 +30,6 @@ class AuthRule extends Model
                 'status' => 1,
             ])
             ->order('listorder ASC,module ASC')
-            ->cache(60)
             ->column('name');
         return $data;
     }
@@ -99,7 +98,6 @@ class AuthRule extends Model
                 'status' => 1,
             ])
             ->order('listorder ASC, module ASC')
-            ->cache(60)
             ->select()
             ->toArray();
         if (empty($result)) {

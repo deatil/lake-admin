@@ -153,7 +153,8 @@ class FieldType extends Base
                 ->where($map)
                 ->page($page, $limit)
                 ->order('listorder ASC')
-                ->select();
+                ->select()
+                ->toArray();
             
             $total = Db::name('field_type')
                 ->where($map)

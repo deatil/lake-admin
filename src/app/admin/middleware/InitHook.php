@@ -6,6 +6,7 @@ use Composer\Autoload\ClassLoader;
 
 use Closure;
 use think\App;
+use think\Event as ThinkEvent;
 use think\Console;
 use think\facade\Db;
 use think\facade\Cache;
@@ -20,6 +21,13 @@ use think\facade\Env;
  */
 class InitHook
 {
+    /** @var App */
+    protected $app;
+
+    public function __construct(App $app)
+    {
+        $this->app  = $app;
+    }
 
     /**
      * 行为扩展执行入口
@@ -56,12 +64,11 @@ class InitHook
                 ->where([
                     'status' => 1,
                 ])
-                ->select();
+                ->select()
+                ->toArray();
             
             Cache::set('lake_admin_modules', $modules);
         }
-        
-        $loader = new ClassLoader();
         
         if (!empty($modules)) {
             foreach ($modules as $module) {
@@ -79,9 +86,23 @@ class InitHook
                     $app_namespace . '\\admin\\' => $namespace_module_path . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR,
                 ];
                 
+                $loader = new ClassLoader();
                 foreach ($module_namespace as $namespace => $path) {
                     $loader->addPsr4($namespace, $path);
                 }
+                $loader->register();
+                unset($loader);
+                
+                // 设置模块地址
+                $app_maps = $this->app->config->get('app.app_map');
+                $app_maps = array_merge($app_maps, [
+                    $module['module'] => function($app) use($namespace_module_path) {
+                        $app->http->path($namespace_module_path);
+                    },
+                ]);
+                $this->app->config->set([
+                    'app_map' => $app_maps,
+                ], 'app');
                 
                 // 引入公共文件
                 $global = $namespace_module_path . DIRECTORY_SEPARATOR . 'global' . DIRECTORY_SEPARATOR;
@@ -97,7 +118,7 @@ class InitHook
             }
         }
         
-        $loader->register();
+        $this->HttpRunHooks();
         
     }
 
@@ -156,7 +177,8 @@ class InitHook
             $hooks = Db::name('Hook')
                 ->field('name, class')
                 ->order('listorder ASC')
-                ->select();
+                ->select()
+                ->toArray();
             
             Cache::set('lake_admin_hooks', $hooks);
         }
@@ -167,5 +189,53 @@ class InitHook
             }
         }
     }
+    
+    /**
+     * 执行 HttpRun 全局hook信息
+     *
+     * @create 2020-4-7
+     * @author deatil
+     */
+    protected function HttpRunHooks() 
+    {
+        $hooks = Db::name('hook')
+            ->where([
+                'name' => 'HttpRun',
+                'status' => 1,
+            ])
+            ->order('listorder ASC, id ASC')
+            ->select()
+            ->toArray();
+            
+        if (!empty($hooks)) {
+            foreach ($hooks as $hook) {
+                $this->triggerEvent('HttpRun', $hook['class']);
+            }
+        }
+    }
+    
+    /**
+     * 触发事件
+     *
+     * @create 2020-4-7
+     * @author deatil
+     */
+    protected function triggerEvent($event, $listeners, $params = null) 
+    {
+        if (empty($event) || empty($listeners)) {
+            return false;
+        }
+        
+        $EventObj = new ThinkEvent($this->app);
+        if (is_array($listeners)) {
+            foreach ($listeners as $listener) {
+                $EventObj->listen($event, $listener);
+            }
+        } else {
+            $EventObj->listen($event, $listeners);
+        }
+        
+        $EventObj->trigger($event, $params);
+    }    
 
 }

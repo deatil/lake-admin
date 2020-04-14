@@ -91,7 +91,7 @@ class Attachment extends Model
      */
     public function getFilePath($id = '', $type = 0)
     {
-        $uploadPath = config('app.public_url') . 'uploads/';
+        $uploadPath = '';
         
         if ((strpos($id, ',') !== false) || is_array($id)) {
             if (!is_array($id)) {
@@ -104,7 +104,8 @@ class Attachment extends Model
                     ['id', 'in', $ids],
                 ])
                 ->field('path,driver,thumb')
-                ->select();
+                ->select()
+                ->toArray();
             $paths = [];
             if (!empty($dataList)) {
                 foreach ($dataList as $key => $value) {
@@ -153,14 +154,12 @@ class Attachment extends Model
      */
     public function deleteFile($id)
     {
-        $path = config('app.upload_path');
-
         $filePath = self::where('id', $id)->field('path,thumb')->find();
         if (!isset($filePath['path'])) {
             throw new \Exception("文件数据库记录已不存在~");
         }
         
-        $realPath = realpath(root_path() . '/' . $path . '/' . $filePath['path']);
+        $realPath = realpath('.' . $filePath['path']);
         if (!is_file($realPath) || !unlink($realPath)) {
             throw new \Exception("删除" . $filePath['path'] . "失败");
         }
