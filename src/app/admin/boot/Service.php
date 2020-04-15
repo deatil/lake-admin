@@ -7,9 +7,10 @@ use think\facade\View;
 use think\facade\Db;
 
 use app\admin\middleware\LakeAdminAppMap;
-use app\admin\middleware\InitHook;
 use app\admin\middleware\LoadModule;
 use app\admin\middleware\CheckModule;
+
+use app\admin\service\InitHook as InitHookService;
 
 /**
  * lake-admin 服务
@@ -33,26 +34,26 @@ class Service extends BaseService
         
         // 系统配置
         $this->setSystemConfig();
+        
+        // 初始化钩子信息
+        (new InitHookService())->handle();
     }
     
     public function boot()
     {
+        // 注册配置行为
+        $this->app->event->listen('AppInit', "app\\admin\\behavior\\InitConfig", true);
+        
+        // 导入后台配置
         $this->app->event->listen('HttpRun', function () {
-            // 注册钩子
-            $this->app->middleware->add(InitHook::class);
             $this->app->middleware->add(LakeAdminAppMap::class);
         }, true);
         
-        // 注册配置行为
-        $this->app->event->listen('HttpRun', "app\\admin\\behavior\\InitConfig", true);
-        
-        // 注册系统默认指令
-        $this->commands([
-            \app\admin\command\LakeAdminInstall::class,
-        ]);
-        
         // app初始化，全部模块
         $this->app->event->listen('HttpRun', function ($params) {    
+            // 后台系统配置
+            $this->setSystemHooks();
+            
             $path = env('lake_admin_app_path');
             
             $lake_admin_layout = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'layout.html';
@@ -72,12 +73,15 @@ class Service extends BaseService
             
             $this->app->middleware->add(LoadModule::class);
             
-            $this->setSystemHooks();
-            
             // 模块检测
             $this->app->middleware->add(CheckModule::class);
             
         });
+        
+        // 注册系统默认指令
+        $this->commands([
+            \app\admin\command\LakeAdminInstall::class,
+        ]);
     }
     
     /**

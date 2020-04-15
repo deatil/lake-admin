@@ -1,12 +1,10 @@
 <?php
 
-namespace app\admin\middleware;
+namespace app\admin\service;
 
 use Composer\Autoload\ClassLoader;
 
-use Closure;
 use think\App;
-use think\Event as ThinkEvent;
 use think\Console;
 use think\facade\Db;
 use think\facade\Cache;
@@ -16,7 +14,7 @@ use think\facade\Env;
 /**
  * 初始化钩子信息
  *
- * @create 2019-7-6
+ * @create 2020-4-15
  * @author deatil
  */
 class InitHook
@@ -24,32 +22,27 @@ class InitHook
     /** @var App */
     protected $app;
 
-    public function __construct(App $app)
-    {
-        $this->app  = $app;
-    }
-
     /**
      * 行为扩展执行入口
      *
-     * @create 2019-7-6
+     * @create 2020-4-15
      * @author deatil
      */
-    public function handle($request, Closure $next)
+    public function handle()
     {
+        $this->app  = app();
+        
         // 后台命名空间
         $this->addModuleNamespace();
         
         // 嵌入点
         $this->addModuleHooks();
-        
-        return $next($request);
     }
     
     /**
      * 添加插件后台命名空间
      *
-     * @create 2019-7-6
+     * @create 2020-4-15
      * @author deatil
      */
     private function addModuleNamespace()
@@ -117,9 +110,6 @@ class InitHook
                 }
             }
         }
-        
-        $this->HttpRunHooks();
-        
     }
 
     /**
@@ -189,53 +179,5 @@ class InitHook
             }
         }
     }
-    
-    /**
-     * 执行 HttpRun 全局hook信息
-     *
-     * @create 2020-4-7
-     * @author deatil
-     */
-    protected function HttpRunHooks() 
-    {
-        $hooks = Db::name('hook')
-            ->where([
-                'name' => 'HttpRun',
-                'status' => 1,
-            ])
-            ->order('listorder ASC, id ASC')
-            ->select()
-            ->toArray();
-            
-        if (!empty($hooks)) {
-            foreach ($hooks as $hook) {
-                $this->triggerEvent('HttpRun', $hook['class']);
-            }
-        }
-    }
-    
-    /**
-     * 触发事件
-     *
-     * @create 2020-4-7
-     * @author deatil
-     */
-    protected function triggerEvent($event, $listeners, $params = null) 
-    {
-        if (empty($event) || empty($listeners)) {
-            return false;
-        }
-        
-        $EventObj = new ThinkEvent($this->app);
-        if (is_array($listeners)) {
-            foreach ($listeners as $listener) {
-                $EventObj->listen($event, $listener);
-            }
-        } else {
-            $EventObj->listen($event, $listeners);
-        }
-        
-        $EventObj->trigger($event, $params);
-    }    
 
 }
