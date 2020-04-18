@@ -9,6 +9,7 @@ use think\facade\Db;
 use app\admin\middleware\LakeAdminAppMap;
 use app\admin\middleware\LoadModule;
 use app\admin\middleware\CheckModule;
+use app\admin\middleware\AdminAuthCheck;
 
 use app\admin\service\InitHook as InitHookService;
 
@@ -41,13 +42,13 @@ class Service extends BaseService
     
     public function boot()
     {
-        // 注册配置行为
-        $this->app->event->listen('AppInit', "app\\admin\\behavior\\InitConfig", true);
-        
         // 导入后台配置
         $this->app->event->listen('HttpRun', function () {
             $this->app->middleware->add(LakeAdminAppMap::class);
         }, true);
+        
+        // 注册配置行为
+        $this->app->event->listen('HttpRun', "app\\admin\\behavior\\InitConfig", true);
         
         // app初始化，全部模块
         $this->app->event->listen('HttpRun', function ($params) {    
