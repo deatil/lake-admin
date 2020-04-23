@@ -18,6 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {if in_array($data['ext'], ["png", "jpg", "jpeg", "gif", "bmp"])}
                     <tr>
                         <td>预览</td>
                         <td>
@@ -26,6 +27,7 @@
                             </a>
                         </td>
                     </tr>
+                    {/if}
                     <tr>
                         <td>文件ID</td>
                         <td>{$data.id}</td>
@@ -50,13 +52,15 @@
                         <td>文件路径</td>
                         <td>{$data.path}</td>
                     </tr>
+                    {if in_array($data['ext'], ["png", "jpg", "jpeg", "gif", "bmp"])}
                     <tr>
                         <td>缩略图路径</td>
-                        <td>{$data.thumb}</td>
+                        <td>{$data.thumb|default='--'}</td>
                     </tr>
+                    {/if}
                     <tr>
                         <td>文件链接</td>
-                        <td>{$data.url}</td>
+                        <td>{$data.url|default='--'}</td>
                     </tr>
                     <tr>
                         <td>文件mime类型</td>
