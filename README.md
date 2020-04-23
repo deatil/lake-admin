@@ -24,5 +24,5 @@
 *  配置数据的连接信息
 *  composer require lake/lake-admin 下载系统文件
 *  cmd里执行 php think lake-admin:install 安装lake-admin后台管理系统
-*  后台admin.php登陆，超级管理员账号及密码：admin/123456
+*  后台admin登陆，超级管理员账号及密码：admin/123456
 *  模块插件目录：addons 文件夹

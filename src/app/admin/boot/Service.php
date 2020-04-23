@@ -118,7 +118,6 @@ class Service extends BaseService
     protected function setSystemHooks() {
         $hooks = Db::name('hook')
             ->where([
-                ['name', 'not in', ['app_init']],
                 ['status', '=', 1],
             ])
             ->order('listorder ASC, id ASC')

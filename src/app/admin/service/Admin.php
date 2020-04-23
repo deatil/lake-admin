@@ -4,6 +4,7 @@ namespace app\admin\service;
 
 use think\facade\Db;
 use think\facade\Session;
+use think\facade\Cookie;
 
 use app\admin\model\Admin as AdminModel;
 

@@ -21,7 +21,7 @@ return [
     // 公开路径
     'public_url' => '/',
     // 文件上传文件路径
-    'upload_url' => '/storage/',
+    'upload_url' => '',
     // 资源文件路径
     'static_url' => '/static/',
     // 文件上传文件路径

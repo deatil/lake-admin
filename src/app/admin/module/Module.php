@@ -371,7 +371,10 @@ class Module
         }
         
         // 执行安装脚本
-        $this->runScript($name);
+        $installScript = $this->runScript($name);
+        if ($installScript === false) {
+            return false;
+        }
         
         // 执行菜单项安装
         if (isset($config['menus']) && !empty($config['menus'])) {
@@ -387,7 +390,10 @@ class Module
         }
         
         // 安装结束，最后调用安装脚本完成
-        $this->runScript($name, 'end');
+        $installScript = $this->runScript($name, 'end');
+        if ($installScript === false) {
+            return false;
+        }
         
         // 更新缓存
         $this->clearModuleCache();
@@ -437,7 +443,10 @@ class Module
         }
         
         // 执行卸载脚本
-        $this->runScript($name, 'run', 'uninstall');
+        $installScript = $this->runScript($name, 'run', 'uninstall');
+        if ($installScript === false) {
+            return false;
+        }
         
         // 删除菜单项
         $this->uninstallMenu($name);
@@ -448,7 +457,10 @@ class Module
         ])->delete();
         
         // 卸载结束，最后调用卸载脚本完成
-        $this->runScript($name, 'end', 'uninstall');
+        $installScript = $this->runScript($name, 'end', 'uninstall');
+        if ($installScript === false) {
+            return false;
+        }
         
         // 更新缓存
         $this->clearModuleCache();
@@ -492,7 +504,10 @@ class Module
         }
         
         // 执行更新脚本
-        $this->runScript($name, 'run', 'upgrade');
+        $installScript = $this->runScript($name, 'run', 'upgrade');
+        if ($installScript === false) {
+            return false;
+        }
         
         // 执行菜单项安装
         $this->uninstallMenu($name);
@@ -511,7 +526,10 @@ class Module
         }
         
         // 更新结束，最后调用安装脚本完成
-        $this->runScript($name, 'end', 'upgrade');
+        $installScript = $this->runScript($name, 'end', 'upgrade');
+        if ($installScript === false) {
+            return false;
+        }
         
         // 更新缓存
         $this->clearModuleCache();
@@ -794,23 +812,27 @@ class Module
         $dir = 'install'
     ) {
         if (empty($name)) {
+            $this->error = '模块名不嫩为空';
             return false;
         }
         
         // 检查是否有安装脚本
         $class = "\\app\\{$name}\\{$dir}\\".ucwords($dir);
         if (!class_exists($class)) {
+            $this->error = '安装脚本错误或者不存在';
             return false;
         }
         
         $installObj = Container::getInstance()->make($class);
         
         if (!method_exists($installObj, $type)) {
+            $this->error = '安装脚本错误';
             return true;
         }
         
         // 执行安装
-        if (false === $installObj->$type()) {
+        if (false === Container::getInstance()->invoke([$installObj, $type], [])) {
+            $this->error = '安装模块失败';
             return false;
         }
         

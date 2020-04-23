@@ -5,7 +5,6 @@ namespace app\admin\controller;
 use think\facade\View;
 
 use app\admin\model\Admin as AdminModel;
-
 use app\admin\service\Admin as AdminService;
 
 /**
