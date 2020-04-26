@@ -1,6 +1,6 @@
 <?php
 
-namespace app\admin\behavior;
+namespace app\admin\listener;
 
 /**
  * 后台控制台设置
@@ -12,7 +12,7 @@ class AdminMainUrl
 {
     
     /**
-     * 行为扩展的执行入口必须是run
+     * 执行入口
      *
      * @create 2020-1-6
      * @author deatil
@@ -20,12 +20,10 @@ class AdminMainUrl
     public function handle($params)
     {
         // 首页链接
-        $mainUrl = config('admin_main');
+        $mainUrl = config('app.admin_main_url');
         
         if (empty($mainUrl)) {
             $mainUrl = $params;
-        } else {
-            $mainUrl = url($mainUrl);
         }
         
         return $mainUrl;

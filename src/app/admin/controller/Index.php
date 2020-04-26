@@ -40,7 +40,7 @@ class Index extends Base
         $defaultMainUrl = (string) url('index/main');
         
         // 兼容自定义后台首页
-        $mainUrl = Event::trigger('lake_admin_main_url', $defaultMainUrl, true);
+        $mainUrl = Event::trigger('LakeAdminMainUrl', $defaultMainUrl, true);
         if (empty($mainUrl)) {
             $mainUrl = $defaultMainUrl;
         }

@@ -9,10 +9,16 @@ return [
         'HttpRun'  => [],
         'HttpEnd'  => [
             // 操作记录
-            '\\app\\admin\\behavior\\AdminLog',
+            '\\app\\admin\\listener\\AdminLog',
         ],
         'LogLevel' => [],
         'LogWrite' => [],
+    
+        // 自定义后台首页
+        'LakeAdminMainUrl' => [
+            // 自定义后台首页
+            '\\app\\admin\\listener\\AdminMainUrl',
+        ],
     ],
 
     'subscribe' => [

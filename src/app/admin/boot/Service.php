@@ -48,7 +48,7 @@ class Service extends BaseService
         }, true);
         
         // 注册配置行为
-        $this->app->event->listen('HttpRun', "app\\admin\\behavior\\InitConfig", true);
+        $this->app->event->listen('HttpRun', "app\\admin\\listener\\InitConfig", true);
         
         // app初始化，全部模块
         $this->app->event->listen('HttpRun', function ($params) {    

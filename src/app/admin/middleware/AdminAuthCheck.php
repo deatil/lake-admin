@@ -75,9 +75,9 @@ class AdminAuthCheck
                 'admin_is_root' => $adminIsRoot,
             ]);
         
-            if (!$adminIsRoot && config('admin_allow_ip')) {
+            if (!$adminIsRoot && config('app.admin_allow_ip')) {
                 // 检查IP地址访问
-                $arr = explode(',', config('admin_allow_ip'));
+                $arr = explode(',', config('app.admin_allow_ip'));
                 foreach ($arr as $val) {
                     // 是否是IP段
                     if (strpos($val, '*')) {

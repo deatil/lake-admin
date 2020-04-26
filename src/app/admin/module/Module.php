@@ -12,6 +12,7 @@ use think\facade\Config;
 
 use lake\File;
 use lake\Sql;
+use lake\Symlink;
 
 use app\admin\model\AuthRule as AuthRuleModel;
 use app\admin\model\Module as ModuleModel;
@@ -88,7 +89,7 @@ class Module
         
         $this->modulePath = $this->options['module_path'];
         $this->systemModuleList = $this->options['system_module_list'];
-        $this->staticPath = $this->options['module_static_path'];
+        $this->staticPath = realpath($this->options['module_static_path']);
     }
     
     /**
@@ -760,17 +761,20 @@ class Module
             return false;
         }
         
-        // 静态资源文件
+        $name = strtolower($name);
+        
+        // 静态资源文件软链接
         $fromPath = $this->modulePath 
             . $name . DIRECTORY_SEPARATOR 
-            . "install" . DIRECTORY_SEPARATOR 
-            . "public" . DIRECTORY_SEPARATOR;
-        $toPath = $this->staticPath 
-            . strtolower($name) . DIRECTORY_SEPARATOR;
+            . "static" . DIRECTORY_SEPARATOR;
+        $toPath = $this->staticPath . DIRECTORY_SEPARATOR 
+            . $name . DIRECTORY_SEPARATOR;
         
-        if (file_exists($fromPath)) {
-            // 拷贝静态资源文件到前台静态资源目录
-            File::copyDir($fromPath, $toPath);
+        // 创建静态资源文件软链接
+        $status = Symlink::make($fromPath, $toPath);
+        if ($status === false) {
+            $this->error = '创建模块静态资源软链接失败！';
+            return false;
         }
         
         return true;
@@ -789,10 +793,11 @@ class Module
             return false;
         }
         
-        // 移除静态资源
-        $moduleStatic = $this->staticPath . strtolower($name) . DIRECTORY_SEPARATOR;
-        if (is_dir($moduleStatic)) {
-            File::delDir($moduleStatic);
+        // 移除静态资源软链接
+        $moduleStatic = $this->staticPath . DIRECTORY_SEPARATOR
+            . strtolower($name) . DIRECTORY_SEPARATOR;
+        if (file_exists($moduleStatic)) {
+            Symlink::remove($moduleStatic);
         }
         
         return true;

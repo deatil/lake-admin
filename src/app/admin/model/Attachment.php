@@ -40,12 +40,12 @@ class Attachment extends Model
         $thumbType = ''
     ) {
         // 获取要生成的缩略图最大宽度和高度
-        $thumbSize = $thumbSize == '' ? config('upload_image_thumb') : $thumbSize;
+        $thumbSize = $thumbSize == '' ? config('app.upload_image_thumb') : $thumbSize;
         list($thumbMaxWidth, $thumbMaxHeight) = explode(',', $thumbSize);
         // 读取图片
         $image = Image::open($file);
         // 生成缩略图
-        $thumbType = $thumbType == '' ? config('upload_image_thumb_type') : $thumbType;
+        $thumbType = $thumbType == '' ? config('app.upload_image_thumb_type') : $thumbType;
         $image->thumb($thumbMaxWidth, $thumbMaxHeight, $thumbType);
 
         if (!is_dir($filename)) {
@@ -75,8 +75,8 @@ class Attachment extends Model
             // 读取图片
             $image = Image::open($file);
             // 添加水印
-            $watermarkPos = $watermarkPos == '' ? config('upload_thumb_water_position')['key'] : $watermarkPos;
-            $watermarkAlpha = $watermarkAlpha == '' ? config('upload_thumb_water_alpha') : $watermarkAlpha;
+            $watermarkPos = $watermarkPos == '' ? config('app.upload_thumb_water_position')['key'] : $watermarkPos;
+            $watermarkAlpha = $watermarkAlpha == '' ? config('app.upload_thumb_water_alpha') : $watermarkAlpha;
             $image->water($thumbWaterPic, $watermarkPos, $watermarkAlpha);
             // 保存水印图片，覆盖原图
             $image->save($file);

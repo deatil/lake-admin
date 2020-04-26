@@ -428,7 +428,7 @@ class Upload
         switch ($type) {
             /* 列出附件 */
             case 'listfile':
-                $allowExit = '' == $allowExit ? config('upload_file_ext') : $allowExit;
+                $allowExit = '' == $allowExit ? config('app.upload_file_ext') : $allowExit;
                 break;
             /* 列出图片 */
             case 'listimage':

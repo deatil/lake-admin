@@ -12,6 +12,7 @@ use think\console\Output;
 
 use lake\File;
 use lake\Sql;
+use lake\Symlink;
 
 use lake\Module;
 
@@ -141,16 +142,18 @@ class LakeAdminInstall extends Command
             }
         }
         
-        // 复制静态文件
-        $adminStaticPath = env('lake_admin_app_path') . DIRECTORY_SEPARATOR 
+        // 创建静态文件软链接
+        $adminStaticPath = env('lake_admin_app_path') 
             . 'lake' . DIRECTORY_SEPARATOR
-            . 'static' . DIRECTORY_SEPARATOR;
+            . 'static' . DIRECTORY_SEPARATOR
+            . 'admin' . DIRECTORY_SEPARATOR;
         $staticPath = root_path() . 'public' . DIRECTORY_SEPARATOR 
-            . 'static' . DIRECTORY_SEPARATOR;
-        File::copyDir($adminStaticPath, $staticPath);
+            . 'static' . DIRECTORY_SEPARATOR
+            . 'admin' . DIRECTORY_SEPARATOR;
+        Symlink::make($adminStaticPath, $staticPath);
 
         // 复制lake-admin附件
-        $fromPath = env('lake_admin_app_path') . DIRECTORY_SEPARATOR 
+        $fromPath = env('lake_admin_app_path') 
             . 'lake' . DIRECTORY_SEPARATOR 
             . 'data' . DIRECTORY_SEPARATOR
             . 'public' . DIRECTORY_SEPARATOR;

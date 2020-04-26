@@ -1,6 +1,6 @@
 <?php
 
-namespace app\admin\behavior;
+namespace app\admin\listener;
 
 use think\facade\Env;
 use think\facade\Config;
@@ -10,7 +10,6 @@ use app\admin\model\Config as ConfigModel;
 /**
  * 初始化配置信息行为
  * 将系统配置信息合并到本地配置
- * @package app\admin\behavior
  *
  * @create 2019-7-6
  * @author deatil
@@ -19,7 +18,7 @@ class InitConfig
 {
 
     /**
-     * 执行行为 run方法是Behavior唯一的接口
+     * 执行入口
      * @access public
      * @param mixed $params  行为参数
      * @return void
