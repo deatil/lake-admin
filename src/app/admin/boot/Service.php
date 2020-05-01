@@ -3,8 +3,9 @@
 namespace app\admin\boot;
 
 use think\Service as BaseService;
-use think\facade\View;
 use think\facade\Db;
+use think\facade\View;
+use think\facade\Cache;
 
 use app\admin\middleware\LakeAdminAppMap;
 use app\admin\middleware\LoadModule;
@@ -106,7 +107,7 @@ class Service extends BaseService
             if ('.' . pathinfo($file, PATHINFO_EXTENSION) === env('config_ext', '.php')) {
                 $this->app->config->load($dir . $file, pathinfo($file, PATHINFO_FILENAME));
             }
-        }    
+        }
     }
     
     /**
@@ -115,14 +116,19 @@ class Service extends BaseService
      * @create 2020-4-7
      * @author deatil
      */
-    protected function setSystemHooks() {
-        $hooks = Db::name('hook')
-            ->where([
-                ['status', '=', 1],
-            ])
-            ->order('listorder ASC, id ASC')
-            ->select()
-            ->toArray();
+    protected function setSystemHooks() 
+    {
+        $hooks = Cache::get("lake_admin_hooks");
+        if (empty($hooks)) {
+            $hooks = Db::name('hook')
+                ->where([
+                    ['status', '=', 1],
+                ])
+                ->order('listorder ASC, id ASC')
+                ->select()
+                ->toArray();
+            Cache::set("lake_admin_hooks", $hooks);
+        }
             
         if (!empty($hooks)) {
             foreach ($hooks as $hook) {
