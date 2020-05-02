@@ -92,7 +92,7 @@ class LakeAdminInstall extends Command
             ],
         ], 'database');
         $db = Db::connect('lake-admin-db1');
-        $db->execute("CREATE DATABASE IF NOT EXISTS `".$database."` DEFAULT CHARACTER SET ".$databaseCharset." COLLATE ".$databaseCharset."_unicode_ci;");
+        $db->execute("CREATE DATABASE IF NOT EXISTS `".$dbConfig['database']."` DEFAULT CHARACTER SET ".$databaseCharset." COLLATE ".$databaseCharset."_unicode_ci;");
         
         // 导入数据库
         $Module = new Module();

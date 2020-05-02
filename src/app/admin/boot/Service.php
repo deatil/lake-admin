@@ -6,6 +6,7 @@ use think\Service as BaseService;
 use think\facade\Db;
 use think\facade\View;
 use think\facade\Cache;
+use think\console\Input;
 
 use app\admin\middleware\LakeAdminAppMap;
 use app\admin\middleware\LoadModule;
@@ -37,8 +38,10 @@ class Service extends BaseService
         // 系统配置
         $this->setSystemConfig();
         
-        // 初始化钩子信息
-        (new InitHookService())->handle();
+        if ($this->checkCli() !== true) {
+            // 初始化钩子信息
+            (new InitHookService())->handle();
+        }
     }
     
     public function boot()
@@ -48,14 +51,8 @@ class Service extends BaseService
             $this->app->middleware->add(LakeAdminAppMap::class);
         }, true);
         
-        // 注册配置行为
-        $this->app->event->listen('HttpRun', "app\\admin\\listener\\InitConfig", true);
-        
         // app初始化，全部模块
         $this->app->event->listen('HttpRun', function ($params) {    
-            // 后台系统配置
-            $this->setSystemHooks();
-            
             $path = env('lake_admin_app_path');
             
             $lake_admin_layout = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'layout.html';
@@ -72,18 +69,49 @@ class Service extends BaseService
                 'lake_admin_layout' => $lake_admin_layout,
                 'lake_admin_input_item' => $lake_admin_input_item,
             ]);
-            
-            $this->app->middleware->add(LoadModule::class);
-            
-            // 模块检测
-            $this->app->middleware->add(CheckModule::class);
-            
         });
+        
+        if ($this->checkCli() !== true) {
+            // 注册配置行为
+            $this->app->event->listen('HttpRun', "app\\admin\\listener\\InitConfig", true);
+            
+            // 全部模块
+            $this->app->event->listen('HttpRun', function ($params) {    
+                // 后台系统配置
+                $this->setSystemHooks();
+                
+                // 导入模块
+                $this->app->middleware->add(LoadModule::class);
+                
+                // 模块检测
+                $this->app->middleware->add(CheckModule::class);
+                
+            });
+        }
         
         // 注册系统默认指令
         $this->commands([
             \app\admin\command\LakeAdminInstall::class,
         ]);
+    }
+    
+    /**
+     * 检测是否加载数据库配置
+     *
+     * @create 2020-5-2
+     * @author deatil
+     */
+    protected function checkCli()
+    {
+        $isCliAndInstall = false;
+        if ($this->app->request->isCli()) {
+            $commandName = (new Input())->getFirstArgument();
+            if ($commandName == 'lake-admin:install') {
+                $isCliAndInstall = true;
+            }
+        }
+        
+        return $isCliAndInstall;
     }
     
     /**
