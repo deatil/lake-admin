@@ -16,6 +16,15 @@ use app\admin\boot\BaseController;
 abstract class Base extends BaseController
 {
     use Jump;
+
+    /**
+     * 控制器中间件
+     * @var array
+     */
+    protected $middleware = [
+        // 权限检测
+        '\\app\\admin\\middleware\\AdminAuthCheck',
+    ];
     
     /**
      * 当前登录账号信息

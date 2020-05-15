@@ -1173,7 +1173,7 @@ class Module
     public function checkModule($name)
     {
         if (empty($name)) {
-            $this->error = '模块名称不能为空！';
+            $this->error = '应用模块不存在！';
             return false;
         }
         

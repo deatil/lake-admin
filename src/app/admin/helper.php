@@ -8,31 +8,31 @@ use app\admin\model\Module as ModuleModel;
 
 use app\admin\service\Auth as AuthService;
 
-if (!function_exists('p')) {
+if (!function_exists('lake_p')) {
     /**
      * 打印输出数据到文件
      * @param mixed $data 输出的数据
      * @param boolean $force 强制替换
      * @param string|null $file 文件名称
      */
-    function p($data, $force = false, $file = null)
+    function lake_p($data, $force = false, $file = null)
     {
         if (is_null($file)) {
-            $file = env('runtime_path') . date('Ymd') . '.txt';
+            $file = runtime_path() . date('Ymd') . '.txt';
         }
         $str = (is_string($data) ? $data : (is_array($data) || is_object($data)) ? print_r($data, true) : var_export($data, true)) . PHP_EOL;
         $force ? file_put_contents($file, $str) : file_put_contents($file, $str, FILE_APPEND);
     }
 }
 
-if (!function_exists('var_exports')) {
+if (!function_exists('lake_var_export')) {
     /**
      * 返回数组
      * @param array $arr 输出的数据
      * @param string $blankspace 空格
      * @return string
      */
-    function var_exports($arr = [], $blankspace = '')
+    function lake_var_export($arr = [], $blankspace = '')
     {
         $blank = '    ';
         $ret = "[\n";
@@ -46,7 +46,7 @@ if (!function_exists('var_exports')) {
                         $ret .= $v.",";
                         break;
                     case 'array':
-                        $ret .= var_exports($v, $blankspace . $blank).",";
+                        $ret .= lake_var_export($v, $blankspace . $blank).",";
                         break;
                     case 'null':
                         $ret .= "NULL,";
@@ -64,7 +64,7 @@ if (!function_exists('var_exports')) {
     }
 }
 
-if (!function_exists('runhook')) {
+if (!function_exists('lake_runhook')) {
     /**
      * 行为
      * @param  string $tag    标签名称
@@ -72,7 +72,7 @@ if (!function_exists('runhook')) {
      * @param  bool   $once   只获取一个有效返回值
      * @return mixed
      */
-    function runhook($tag, $params = null, $once = false)
+    function lake_runhook($tag, $params = null, $once = false)
     {
         $hooks = Event::trigger($tag, $params, $once);
         if ($once) {
@@ -91,7 +91,7 @@ if (!function_exists('runhook')) {
     }
 }
 
-if (!function_exists('is_module_install')) {
+if (!function_exists('lake_is_module_install')) {
     /**
      * 检查模块是否已经安装
      * @param type $moduleName 模块名称
@@ -100,7 +100,7 @@ if (!function_exists('is_module_install')) {
      * @create 2019-10-13
      * @author deatil
      */
-    function is_module_install($moduleName)
+    function lake_is_module_install($moduleName)
     {
         $appCache = (new ModuleModel)->getModuleList();
         if (isset($appCache[$moduleName])) {
@@ -110,7 +110,7 @@ if (!function_exists('is_module_install')) {
     }
 }
 
-if (!function_exists('get_module_config')) {
+if (!function_exists('lake_get_module_config')) {
     /**
      * 获取模块的配置值
      * @param string $name 模块名
@@ -119,7 +119,7 @@ if (!function_exists('get_module_config')) {
      * @create 2019-10-13
      * @author deatil
      */
-    function get_module_config($name)
+    function lake_get_module_config($name)
     {
         static $_config = [];
         
@@ -162,7 +162,7 @@ if (!function_exists('get_module_config')) {
     }
 }
 
-if (!function_exists('get_module_path')) {
+if (!function_exists('lake_get_module_path')) {
     /**
      * 获取模块的路径
      * @param string $name 模块名
@@ -171,7 +171,7 @@ if (!function_exists('get_module_path')) {
      * @create 2020-2-28
      * @author deatil
      */
-    function get_module_path($name)
+    function lake_get_module_path($name)
     {
         static $modules = [];
         
@@ -197,14 +197,14 @@ if (!function_exists('get_module_path')) {
     }
 }
 
-if (!function_exists('lake_admin_config_update')) {
+if (!function_exists('lake_config_update')) {
     /**
      * 更新配置
      *
      * @create 2019-10-17
      * @author deatil
      */
-    function lake_admin_config_update($name, $value)
+    function lake_config_update($name, $value)
     {
         if (empty($name)) {
             return false;
@@ -218,14 +218,14 @@ if (!function_exists('lake_admin_config_update')) {
     }
 }
 
-if (!function_exists('lake_admin_static')) {
+if (!function_exists('lake_static')) {
     /**
      * 静态文件
      *
      * @create 2019-10-13
      * @author deatil
      */
-    function lake_admin_static($file, $domain = false)
+    function lake_static($file, $domain = false)
     {
         $uri = '/static/';
         
@@ -237,18 +237,18 @@ if (!function_exists('lake_admin_static')) {
     }
 }
 
-if (!function_exists('lake_admin_module_static')) {
+if (!function_exists('lake_module_static')) {
     /**
      * 模块静态文件
      *
      * @create 2019-10-13
      * @author deatil
      */
-    function lake_admin_module_static($file, $domain = false)
+    function lake_module_static($file, $domain = false)
     {
         $file = '/modules/' . ltrim($file, '/');
         
-        return lake_admin_static($file, $domain);
+        return lake_static($file, $domain);
     }
 }
 

@@ -25,7 +25,7 @@ class Service extends BaseService
 {
     public function register()
     {
-        // 设置错误跳转页面目录
+        // 设置admin目录
         $this->app->env->set([
             'lake_admin_app_path' => rtrim(dirname(dirname(__DIR__)), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR,
         ]);
@@ -33,12 +33,12 @@ class Service extends BaseService
         // 设置模块基础别名
         class_alias('app\\admin\\module\\Module', 'lake\\Module');
         class_alias('app\\admin\\module\\controller\\AdminBase', 'lake\\module\\controller\\AdminBase');
-        class_alias('app\\admin\\module\\controller\\Homebase', 'lake\\module\\controller\\Homebase');
+        class_alias('app\\admin\\module\\controller\\HomeBase', 'lake\\module\\controller\\HomeBase');
         
         // 系统配置
         $this->setSystemConfig();
         
-        if ($this->checkCli() !== true) {
+        if ($this->isLakeAdminInstallCli() !== true) {
             // 初始化钩子信息
             (new InitHookService())->handle();
         }
@@ -46,7 +46,6 @@ class Service extends BaseService
     
     public function boot()
     {
-        // 导入后台配置
         $this->app->event->listen('HttpRun', function () {
             $this->app->middleware->add(LakeAdminAppMap::class);
         }, true);
@@ -71,7 +70,7 @@ class Service extends BaseService
             ]);
         });
         
-        if ($this->checkCli() !== true) {
+        if ($this->isLakeAdminInstallCli() !== true) {
             // 注册配置行为
             $this->app->event->listen('HttpRun', "app\\admin\\listener\\InitConfig", true);
             
@@ -96,12 +95,12 @@ class Service extends BaseService
     }
     
     /**
-     * 检测是否加载数据库配置
+     * 是否为安装系统命令
      *
      * @create 2020-5-2
      * @author deatil
      */
-    protected function checkCli()
+    protected function isLakeAdminInstallCli()
     {
         $isCliAndInstall = false;
         if ($this->app->request->isCli()) {

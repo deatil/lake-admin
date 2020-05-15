@@ -35,10 +35,7 @@ abstract class BaseController
      * 控制器中间件
      * @var array
      */
-    protected $middleware = [
-        // 权限检测
-        '\\app\\admin\\middleware\\AdminAuthCheck',
-    ];
+    protected $middleware = [];
 
     /**
      * 构造方法

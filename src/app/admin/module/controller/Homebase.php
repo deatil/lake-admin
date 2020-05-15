@@ -8,7 +8,7 @@ use think\facade\Env;
 use app\admin\boot\Jump;
 use app\admin\boot\BaseController;
 
-class Homebase extends BaseController
+class HomeBase extends BaseController
 {    
     use Jump;
     

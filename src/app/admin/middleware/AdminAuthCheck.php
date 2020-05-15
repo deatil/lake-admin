@@ -56,7 +56,7 @@ class AdminAuthCheck
             'admin/passport/login',
             'admin/passport/logout',
         ];
-        
+
         $rule = strtolower(app()->http->getName() . '/' . request()->controller() . '/' . request()->action());
         
         if (!in_array($rule, $allowUrl)) {
