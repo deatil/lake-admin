@@ -23,16 +23,16 @@
 </div>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        {if check_auth('admin/config/add')}
+        {if lake_check_auth('admin/config/add')}
             <a class="layui-btn layui-btn-sm layui-iframe" href="{:url('add')}?group={$group}" title="新增配置项">新增配置项</a>
         {/if}
     </div>
 </script>
 <script type="text/html" id="barTool">
-    {if check_auth('admin/config/edit')}
+    {if lake_check_auth('admin/config/edit')}
         <a href='{:url("edit")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="编辑配置项">编辑</a>
     {/if}
-    {if check_auth('admin/config/del')}
+    {if lake_check_auth('admin/config/del')}
         <a href='{:url("del")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
     {/if}
 </script>

@@ -212,7 +212,7 @@ class Config extends Base
                 ->column('name,title,remark,type,value,options');
             foreach ($configList as &$value) {
                 if ($value['options'] != '') {
-                    $value['options'] = parse_attr($value['options']);
+                    $value['options'] = lake_parse_attr($value['options']);
                 }
                 if ($value['type'] == 'checkbox') {
                     $value['value'] = empty($value['value']) ? [] : explode(',', $value['value']);

@@ -185,7 +185,7 @@ class Upload
         $size_limit = $size_limit * 1024;
         // 附件类型限制
         $ext_limit = $dir == 'images' ? config('app.upload_image_ext') : config('app.upload_file_ext');
-        $ext_limit = $ext_limit != '' ? parse_attr($ext_limit) : '';
+        $ext_limit = $ext_limit != '' ? lake_parse_attr($ext_limit) : '';
 
         // 水印参数
         $watermark = $this->request->post('watermark', '');
@@ -453,7 +453,7 @@ class Upload
             $list[$i]['id'] = $value['id'];
             $list[$i]['url'] = $uploadUrl . 'uploads/' . $value['path'];
             $list[$i]['name'] = $value['name'];
-            $list[$i]['size'] = format_bytes($value['size']);
+            $list[$i]['size'] = lake_format_bytes($value['size']);
             $list[$i]['mtime'] = $value['create_time'];
             $i++;
         }

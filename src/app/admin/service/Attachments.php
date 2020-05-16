@@ -71,7 +71,7 @@ class Attachments
                     exit($content);
                 }
                 $filename = $this->uploadPath . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR . md5($vo) . $fileExt;
-                if (http_down($vo, $filename) !== false) {
+                if (lake_http_down($vo, $filename) !== false) {
                     $file_info['md5'] = hash_file('md5', $filename);
                     if ($file_exists = AttachmentModel::get(['md5' => $file_info['md5']])) {
                         unlink($filename);

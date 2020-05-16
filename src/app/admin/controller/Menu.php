@@ -142,7 +142,7 @@ class Menu extends Base
                 }
             }
             
-            $data['id'] = md5(time().md5($data['module']).md5($data['title']).md5($data['module']).get_random_string(12));
+            $data['id'] = md5(time().md5($data['module']).md5($data['title']).md5($data['module']).lake_get_random_string(12));
             $res = AuthRuleModel::create($data);
             
             if ($res === false) {

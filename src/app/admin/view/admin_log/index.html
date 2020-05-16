@@ -43,7 +43,7 @@
 {block name="script"}
 <script type="text/html" id="toolbarLog">
     <div class="layui-btn-container">
-        {if check_auth('admin/adminLog/deletelog')}
+        {if lake_check_auth('admin/adminLog/deletelog')}
             <button class="layui-btn layui-btn-sm layui-btn-danger ajax-post confirm" 
                 data-post="{}" 
                 data-href="{:url('deletelog')}">删除一个月前日志</button>
@@ -68,7 +68,7 @@
 </script>
 
 <script type="text/html" id="actionToolbar">
-    {if check_auth('admin/adminLog/view')}
+    {if lake_check_auth('admin/adminLog/view')}
         <a href='{:url("view")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="日志详情">详情</a>
     {/if}
 </script>

@@ -52,14 +52,14 @@
                         <span class="lake-admin-winner-hide">&nbsp;主题</span>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd data-skin="black"><a href="javascript:;">默认</a></dd>
+                        <dd data-skin="black"><a href="javascript:;">黑白</a></dd>
                         <dd data-skin="white"><a href="javascript:;">纯白</a></dd>
                         <dd data-skin="blue"><a href="javascript:;">蓝白</a></dd>
                     </dl>
                 </li>                
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                        <img src="{:get_file_path($user_info['avatar'])}" class="layui-nav-img userAvatar" width="35" height="35">
+                        <img src="{:lake_get_file_path($user_info['avatar'])}" class="layui-nav-img userAvatar" width="35" height="35">
                         <span class="lake-admin-winner-hide">{$user_info.nickname}</span>
                     </a>
                     <dl class="layui-nav-child">
@@ -146,7 +146,7 @@
     <script src="admin/libs/layui/layui.js"></script>
     <script type="text/javascript">
     var SUBMENU_CONFIG = <?php echo json_encode($menus); ?>;
-    var clear_cache_url = '{:url("index/cache")}';
+    var clear_cache_url = '{:url("index/clear")}';
     
     layui.config({
         version: '1557143998899',

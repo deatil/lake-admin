@@ -90,7 +90,7 @@ class Admin extends Model
             'last_login_time' => $userInfo['last_login_time'],
         ];
         Session::set('admin_user_auth', $auth);
-        Session::set('admin_user_auth_sign', data_auth_sign($auth));
+        Session::set('admin_user_auth_sign', lake_data_auth_sign($auth));
     }
 
     /**
@@ -299,7 +299,7 @@ class Admin extends Model
     protected function encryptPassword($password, $encrypt = '')
     {
         $pwd = [];
-        $pwd['encrypt'] = $encrypt ? $encrypt : get_random_string();
+        $pwd['encrypt'] = $encrypt ? $encrypt : lake_get_random_string();
         $pwd['password'] = md5(md5(trim($password) . $pwd['encrypt']) . config("app.admin_salt"));
         return $encrypt ? $pwd['password'] : $pwd;
     }

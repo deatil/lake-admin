@@ -45,7 +45,7 @@ class Module extends Model
             $data = $this->column('*', 'module');
             if (!empty($data)) {
                 foreach ($data as &$v) {
-                    to_time($v, 'installtime');
+                    lake_to_time($v, 'installtime');
                     $module[$v['module']] = $v;
                 }
                 

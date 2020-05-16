@@ -166,7 +166,7 @@ class AuthRule extends Model
             foreach ($list as $key => $value) {
                 $list[$key]['url'] = $value['name'];
             }
-            $nodes = list_to_tree($list, $pk = 'id', $pid = 'parentid', $child = 'operator', $root = 0);
+            $nodes = lake_list_to_tree($list, $pk = 'id', $pid = 'parentid', $child = 'operator', $root = 0);
             foreach ($nodes as $key => $value) {
                 if (!empty($value['operator'])) {
                     $nodes[$key]['child'] = $value['operator'];
@@ -237,7 +237,7 @@ class AuthRule extends Model
                 'is_menu' => isset($rs['is_menu']) ? $rs['is_menu'] : 0,
                 'status' => 1,
             ];
-            $newData['id'] = md5(time().md5($newData['module']).md5($newData['title']).md5($newData['module']).get_random_string(12));
+            $newData['id'] = md5(time().md5($newData['module']).md5($newData['title']).md5($newData['module']).lake_get_random_string(12));
 
             $result = self::create($newData);
             if (!$result) {

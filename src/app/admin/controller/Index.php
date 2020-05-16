@@ -10,7 +10,7 @@ use think\captcha\Captcha;
 
 use lake\File;
 
-use app\admin\Model\AuthRule as AuthRuleModel;
+use app\admin\model\AuthRule as AuthRuleModel;
 
 /**
  * 后台首页
@@ -112,27 +112,29 @@ class Index extends Base
     }
     
     /**
-     * 缓存更新
+     * 清空缓存
      *
      * @create 2019-7-7
      * @author deatil
      */
-    public function cache()
+    public function clear()
     {
         $type = $this->request->request("type", 'all');
         switch ($type) {
-            case 'data' || 'all':
-                File::delDir(env('root_path') . 'runtime' . DIRECTORY_SEPARATOR . 'cache');
+            case 'data':
+                File::delDir(root_path() . 'runtime' . DIRECTORY_SEPARATOR . 'cache');
                 Cache::clear();
-                if ($type == 'data') {
-                    break;
-                }
+                break;
                 
-            case 'template' || 'all':
-                File::delDir(env('root_path') . 'runtime' . DIRECTORY_SEPARATOR . 'temp');
-                if ($type == 'template') {
-                    break;
-                }
+            case 'template':
+                File::delDir(root_path() . 'runtime' . DIRECTORY_SEPARATOR . 'temp');
+                break;
+                
+            case 'all':
+                File::delDir(root_path() . 'runtime' . DIRECTORY_SEPARATOR . 'cache');
+                Cache::clear();
+                File::delDir(root_path() . 'runtime' . DIRECTORY_SEPARATOR . 'temp');
+                break;
         }
         
         $this->success('清理缓存成功');

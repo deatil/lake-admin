@@ -663,7 +663,7 @@ class Module
         
         foreach ($hooks as $hook) {
             Db::name('hook')->insert([
-                'id' => md5(time().to_guid_string(time()).mt_rand(0, 100000)),
+                'id' => md5(time().lake_to_guid_string(time()).mt_rand(0, 100000)),
                 'module' => $name,
                 'name' => $hook['name'],
                 'class' => $hook['class'],

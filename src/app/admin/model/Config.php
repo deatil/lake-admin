@@ -31,11 +31,11 @@ class Config extends Model
         $newConfigs = [];
         foreach ($configs as $key => $value) {
             if ($value['options'] != '') {
-                $value['options'] = parse_attr($value['options']);
+                $value['options'] = lake_parse_attr($value['options']);
             }
             switch ($value['type']) {
                 case 'array':
-                    $newConfigs[$value['name']] = parse_attr($value['value']);
+                    $newConfigs[$value['name']] = lake_parse_attr($value['value']);
                     break;
                 case 'radio':
                     $newConfigs[$value['name']] = isset($value['options'][$value['value']]) ? ['key' => $value['value'], 'value' => $value['options'][$value['value']]] : ['key' => $value['value'], 'value' => $value['value']];
@@ -58,13 +58,13 @@ class Config extends Model
                     }
                     break;
                 case 'image':
-                    $newConfigs[$value['name']] = empty($value['value']) ? '' : get_file_path($value['value']);
+                    $newConfigs[$value['name']] = empty($value['value']) ? '' : lake_get_file_path($value['value']);
                     break;
                 case 'images':
                     if (!empty($value['value'])) {
                         $images_values = explode(',', $value['value']);
                         foreach ($value['value'] as $val) {
-                            $newConfigs[$value['name']][] = get_file_path($val);
+                            $newConfigs[$value['name']][] = lake_get_file_path($val);
                         }
                     } else {
                         $newConfigs[$value['name']] = [];

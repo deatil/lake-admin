@@ -89,7 +89,7 @@ class Admin
             return 0;
         }
  
-        return Session::get('admin_user_auth_sign') == data_auth_sign($user) ? $user['uid'] : 0;
+        return Session::get('admin_user_auth_sign') == lake_data_auth_sign($user) ? $user['uid'] : 0;
     }
 
     /**

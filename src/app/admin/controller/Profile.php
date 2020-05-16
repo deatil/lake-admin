@@ -112,7 +112,7 @@ class Profile extends Base
                 $this->error('旧密码错误！');
             }
 
-            $passwordinfo = encrypt_password($post['password2']); //对密码进行处理
+            $passwordinfo = lake_encrypt_password($post['password2']); //对密码进行处理
             
             $data = [];
             $data['id'] = $post['id'];

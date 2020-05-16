@@ -20,7 +20,7 @@ class Attachment extends Model
 
     public function getSizeAttr($value)
     {
-        return format_bytes($value);
+        return lake_format_bytes($value);
     }
 
     /**

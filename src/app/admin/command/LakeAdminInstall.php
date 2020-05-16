@@ -82,7 +82,7 @@ class LakeAdminInstall extends Command
         app()->config->set([
             'connections' => [
                 'lake-admin-db1' => [
-                    'type' => "mysql",
+                    'type' => $dbConfig['type'],
                     'hostname' => $dbConfig['hostname'],
                     'username' => $dbConfig['username'],
                     'password' => $dbConfig['password'],
@@ -115,7 +115,7 @@ class LakeAdminInstall extends Command
         app()->config->set([
             'connections' => [
                 'lake-admin-db2' => [
-                    'type' => "mysql",
+                    'type' => $dbConfig['type'],
                     'hostname' => $dbConfig['hostname'],
                     'database' => $dbConfig['database'],
                     'username' => $dbConfig['username'],

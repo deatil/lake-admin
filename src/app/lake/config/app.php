@@ -9,13 +9,16 @@ return [
     // app命名空间
     'module_namespace' => 'app',
 
+    // admin命名空间
+    'admin_namespace' => env('admin_namespace', 'admin'),
+
     // 模块地址
     'module_path' => root_path() . 'addons' . DIRECTORY_SEPARATOR,
     // 系统模块
     'system_module_list' => [
-        'index', 
         'admin', 
         'api',
+        'index', 
     ],
     
     // 公开路径
