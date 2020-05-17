@@ -61,18 +61,26 @@ class AuthRule extends Model
                 $id = $a['id'];
                 $module = $a['module'];
                 $name = $a['name'];
-                //附带参数
-                $fu = "";
-                if ($a['parameter']) {
-                    $fu = "?" . $a['parameter'];
+                
+                if (strpos($name, '://') || 0 === strpos($name, '/')) {
+                    $url = $name;
+                } else {
+                    // 附带参数
+                    $exta = "";
+                    if ($a['parameter']) {
+                        $exta = "?" . $a['parameter'];
+                    }
+                    
+                    $url = (string) url("{$name}{$exta}", ["menuid" => $id]);
                 }
+                
                 $array = [
                     "menuid" => $id,
                     "id" => $id . $module,
                     "title" => $a['title'],
                     "icon" => $a['icon'],
                     "parent" => $parent,
-                    "url" => (string) url("{$name}{$fu}", ["menuid" => $id]),
+                    "url" => $url,
                 ];
                 $ret[$id . $module] = $array;
                 $child = $this->getTree($a['id'], $id, $Level);
@@ -252,8 +260,8 @@ class AuthRule extends Model
             }
         }
         
-        //清除缓存
-        cache('menu', null);
+        // 清除缓存
+        cache('lake_admin_menus', null);
         
         return true;
     }
@@ -299,7 +307,7 @@ class AuthRule extends Model
      */
     public function getMenusList()
     {
-        $menus = cache('menu');
+        $menus = cache('lake_admin_menus');
         if (!$menus) {
             $menus = [];
             
@@ -310,7 +318,7 @@ class AuthRule extends Model
                 }
             }
             
-            cache('menu', $menus);
+            cache('lake_admin_menus', $menus);
         }
         
         return $menus;

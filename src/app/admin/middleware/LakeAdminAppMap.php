@@ -42,6 +42,7 @@ class LakeAdminAppMap
                 $app->http->path(dirname(__DIR__));
             },
             $admin_namespace => 'admin',
+            'api' => 'api',
         ]);
         $this->app->config->set([
             'app_map' => $app_maps,

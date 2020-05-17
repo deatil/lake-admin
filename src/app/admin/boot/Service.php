@@ -148,6 +148,7 @@ class Service extends BaseService
         $hooks = Cache::get("lake_admin_hooks");
         if (empty($hooks)) {
             $hooks = Db::name('hook')
+                ->field('name,class')
                 ->where([
                     ['status', '=', 1],
                 ])
