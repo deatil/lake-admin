@@ -20,13 +20,13 @@ class AuthRule extends Model
     const RULE_MAIN = 2; //主菜单
     
     /**
-     * 获取菜单
+     * 获取不需要鉴权的菜单
      * @return type
      */
     public function getNoNeedAuthRuleList()
     {
         $data = $this->where([
-                'is_need_auth' => 1,
+                'is_need_auth' => 0,
                 'status' => 1,
             ])
             ->order('listorder ASC,module ASC')

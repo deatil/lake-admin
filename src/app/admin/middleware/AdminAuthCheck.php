@@ -56,26 +56,34 @@ class AdminAuthCheck
             'admin/passport/login',
             'admin/passport/logout',
         ];
-
-        $rule = strtolower(app()->http->getName() . '/' . request()->controller() . '/' . request()->action());
+        
+        $rule = strtolower(
+            app()->http->getName() . 
+            '/' . request()->controller() . 
+            '/' . request()->action()
+        );
         
         if (!in_array($rule, $allowUrl)) {
-            
+            // 重复检测跳过
             if (Env::get('admin_id')) {
                 return;
             }
             
-            $adminId = AdminService::instance()->isLogin();
+            // 检测登陆
+            if (false === $this->competence()) {
+                // 跳转到登录界面
+                $this->error('请先登陆', $this->loginUrl);
+            }
             
             // 是否是超级管理员
-            $adminIsRoot = AdminService::instance()->isAdministrator();
+            $adminIsRoot = Env::get('admin_is_root');
+
+            // 超级管理员跳过
+            if ($adminIsRoot) {
+                return;
+            }
         
-            Env::set([
-                'admin_id' => $adminId,
-                'admin_is_root' => $adminIsRoot,
-            ]);
-        
-            if (!$adminIsRoot && config('app.admin_allow_ip')) {
+            if (config('app.admin_allow_ip')) {
                 // 检查IP地址访问
                 $arr = explode(',', config('app.admin_allow_ip'));
                 foreach ($arr as $val) {
@@ -89,24 +97,15 @@ class AdminAuthCheck
                         if (request()->ip() == $val) {
                             $this->error('403:IP地址绝对匹配,禁止访问！');
                         }
-
                     }
                 }
             }
             
-            if (false == $this->competence()) {
-                // 跳转到登录界面
-                $this->error('请先登陆', $this->loginUrl);
-            } else {
-                // 是否超级管理员
-                if (!$adminIsRoot) {
-                    $noNeedAuthRules = (new AuthRuleModel())->getNoNeedAuthRuleList();
-                    if (!in_array($rule, $noNeedAuthRules)) {
-                        // 检测访问权限
-                        if (!$this->checkRule($rule, [1, 2])) {
-                            $this->error('未授权访问!');
-                        }
-                    }
+            $noNeedAuthRules = (new AuthRuleModel())->getNoNeedAuthRuleList();
+            if (!in_array($rule, $noNeedAuthRules)) {
+                // 检测访问权限
+                if (!$this->checkRule($rule, [1, 2])) {
+                    $this->error('未授权访问!');
                 }
             }
         }
@@ -121,27 +120,36 @@ class AdminAuthCheck
      */
     final private function competence()
     {
+        $AdminService = AdminService::instance();
+        
         // 检查是否登录
-        $adminId = AdminService::instance()->isLogin();
+        $adminId = $AdminService->isLogin();
         if (empty($adminId)) {
             return false;
         }
         
         // 获取当前登录用户信息
-        $adminInfo = AdminService::instance()->getInfo();
+        $adminInfo = $AdminService->getInfo();
         if (empty($adminInfo)) {
-            AdminService::instance()->logout();
+            $AdminService->logout();
             return false;
         }
         
         // 是否锁定
         if (!$adminInfo['status']) {
-            AdminService::instance()->logout();
+            $AdminService->logout();
             $this->error('您的帐号已经被锁定！', $this->loginUrl);
             return false;
         }
+            
+        // 是否是超级管理员
+        $adminIsRoot = $AdminService->isAdministrator();
         
-        Env::set('admin_info', $adminInfo);
+        Env::set([
+            'admin_id' => $adminId,
+            'admin_is_root' => $adminIsRoot,
+            'admin_info' => $adminInfo,
+        ]);
         
         return $adminInfo;
     }
@@ -161,6 +169,7 @@ class AdminAuthCheck
         if (!$Auth) {
             $Auth = new AuthService();
         }
+        
         if (!$Auth->check($rule, Env::get('admin_id'), $type, $mode, $relation)) {
             return false;
         }
