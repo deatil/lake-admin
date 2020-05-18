@@ -108,7 +108,7 @@ class AdminLog extends Base
      * @create 2019-8-4
      * @author deatil
      */
-    public function deletelog()
+    public function clear()
     {
         if (!$this->request->isPost()) {
             $this->error('请求错误！');

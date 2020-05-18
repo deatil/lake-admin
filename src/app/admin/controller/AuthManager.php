@@ -149,11 +149,11 @@ class AuthManager extends Base
             $groupData = '';
             if (!empty($userParentGroupIds)) {
                 foreach ($userParentGroupIds as $userParentGroupId) {
-                    $groupData .= $tree->get_tree($userParentGroupId, $str, 0);
+                    $groupData .= $tree->getTree($userParentGroupId, $str, 0);
                 }
             }
         } else {
-            $groupData = $tree->get_tree(0, $str, 0);
+            $groupData = $tree->getTree(0, $str, 0);
         }
         
         View::assign("group_data", $groupData);
@@ -224,11 +224,11 @@ class AuthManager extends Base
             $groupData = '';
             if (!empty($userParentGroupIds)) {
                 foreach ($userParentGroupIds as $userParentGroupId) {
-                    $groupData .= $tree->get_tree($userParentGroupIds, $str, $authGroup['parentid']);
+                    $groupData .= $tree->getTree($userParentGroupIds, $str, $authGroup['parentid']);
                 }
             }
         } else {
-            $groupData = $tree->get_tree(0, $str, $authGroup['parentid']);
+            $groupData = $tree->getTree(0, $str, $authGroup['parentid']);
         }
         
         View::assign("group_data", $groupData);

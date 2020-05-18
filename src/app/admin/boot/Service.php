@@ -11,7 +11,6 @@ use think\console\Input;
 use app\admin\middleware\LakeAdminAppMap;
 use app\admin\middleware\LoadModule;
 use app\admin\middleware\CheckModule;
-use app\admin\middleware\AdminAuthCheck;
 
 use app\admin\service\InitHook as InitHookService;
 
@@ -84,7 +83,6 @@ class Service extends BaseService
                 
                 // 模块检测
                 $this->app->middleware->add(CheckModule::class);
-                
             });
         }
         
@@ -102,15 +100,15 @@ class Service extends BaseService
      */
     protected function isLakeAdminInstallCli()
     {
-        $isCliAndInstall = false;
+        $isInstallCli = false;
         if ($this->app->request->isCli()) {
             $commandName = (new Input())->getFirstArgument();
             if ($commandName == 'lake-admin:install') {
-                $isCliAndInstall = true;
+                $isInstallCli = true;
             }
         }
         
-        return $isCliAndInstall;
+        return $isInstallCli;
     }
     
     /**

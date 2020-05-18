@@ -69,11 +69,11 @@ class LakeAdminInstall extends Command
         $databaseCharset = $dbConnection->getConfig('charset');
         
         if (empty($database)) {
-            $output->info("lake-admin tip: place set database!");
+            $output->info("<info>lake-admin tip:</info> place set database!");
             return false;
         }
         if (empty($databaseCharset)) {
-            $output->info("lake-admin tip: place set database charset!");
+            $output->info("<info>lake-admin tip:</info> place set database charset!");
             return false;
         }
         
@@ -102,13 +102,13 @@ class LakeAdminInstall extends Command
             . 'database' . DIRECTORY_SEPARATOR
             . 'lake.sql';
         if (!file_exists($sqlFile)) {
-            $output->info("lake-admin tip: sql is not exist!");
+            $output->info("<info>lake-admin tip:</info> sql is not exist!");
             return false;
         }
         
         $sqlStatement = Sql::getSqlFromFile($sqlFile);
         if (empty($sqlStatement)) {
-            $output->info("lake-admin tip: sql is empty!");
+            $output->info("<info>lake-admin tip:</info> sql is empty!");
             return false;
         }
         
@@ -137,7 +137,7 @@ class LakeAdminInstall extends Command
                 ], trim($value));
                 $db2->execute($value);
             } catch (\Exception $e) {
-                $output->info("lake-admin tip: import sql is error!");
+                $output->info("<info>lake-admin tip:</info> import sql is error!");
                 return false;
             }
         }
@@ -152,22 +152,13 @@ class LakeAdminInstall extends Command
             . 'admin' . DIRECTORY_SEPARATOR;
         Symlink::make($adminStaticPath, $staticPath);
 
-        // 复制lake-admin附件
-        $fromPath = env('lake_admin_app_path') 
-            . 'lake' . DIRECTORY_SEPARATOR 
-            . 'data' . DIRECTORY_SEPARATOR
-            . 'public' . DIRECTORY_SEPARATOR;
-        $toPath = root_path() 
-            . 'public' . DIRECTORY_SEPARATOR;
-        File::copyDir($fromPath, $toPath);
-
-        // 复制admin.php文件
-        $fromPath2 = env('lake_admin_app_path') . DIRECTORY_SEPARATOR 
+        // 复制文件
+        $fromPath = env('lake_admin_app_path') . DIRECTORY_SEPARATOR 
             . 'lake' . DIRECTORY_SEPARATOR 
             . 'data' . DIRECTORY_SEPARATOR
             . 'root' . DIRECTORY_SEPARATOR;
-        $toPath2 = root_path();
-        File::copyDir($fromPath2, $toPath2);
+        $toPath = root_path();
+        File::copyDir($fromPath, $toPath);
        
         $output->info("Install lake-admin Successed!");
     }

@@ -164,7 +164,7 @@ class Menu extends Base
             }
             $str = "<option value='\$id' \$selected>\$spacer \$title</option>";
             $tree->init($array);
-            $selectCategorys = $tree->get_tree(0, $str);
+            $selectCategorys = $tree->getTree(0, $str);
             View::assign("select_categorys", $selectCategorys);
             
             // 模块列表
@@ -272,7 +272,7 @@ class Menu extends Base
             
             $str = "<option value='\$id' \$selected>\$spacer \$title</option>";
             $tree->init($array);
-            $selectCategorys = $tree->get_tree(0, $str);
+            $selectCategorys = $tree->getTree(0, $str);
             View::assign("data", $rs);
             View::assign("select_categorys", $selectCategorys);
             

@@ -35,11 +35,13 @@ class AdminAuthCheck
         
         $this->checkAdminLogin();
         
-        return app()->middleware->pipeline('app')
+        $request = app()->middleware->pipeline('app')
             ->send($request)
             ->then(function ($request) use ($next) {
                 return $next($request);
             });
+        
+        return $request;
     }
     
     /**

@@ -43,10 +43,10 @@
 {block name="script"}
 <script type="text/html" id="toolbarLog">
     <div class="layui-btn-container">
-        {if lake_check_auth('admin/adminLog/deletelog')}
+        {if lake_check_auth('admin/adminLog/clear')}
             <button class="layui-btn layui-btn-sm layui-btn-danger ajax-post confirm" 
                 data-post="{}" 
-                data-href="{:url('deletelog')}">删除一个月前日志</button>
+                data-href="{:url('clear')}">删除一个月前日志</button>
         {/if}
     </div>
 </script>
