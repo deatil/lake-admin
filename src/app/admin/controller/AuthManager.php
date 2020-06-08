@@ -57,9 +57,6 @@ class AuthManager extends Base
             $map = $this->buildparams();
             
             $list = Db::name('auth_group')
-                ->where([
-                    'module' => 'admin',
-                ])
                 ->where($map)
                 ->page($page, $limit)
                 ->order([
@@ -68,9 +65,6 @@ class AuthManager extends Base
                 ->select()
                 ->toArray();
             $total = Db::name('auth_group')
-                ->where([
-                    'module' => 'admin',
-                ])
                 ->where($map)
                 ->count();
             
@@ -136,7 +130,6 @@ class AuthManager extends Base
         $tree = new Tree();
         $str = "'<option value='\$id' \$selected>\$spacer\$title</option>";
         $list = Db::name('AuthGroup')
-            ->where('module', 'admin')
             ->order(['id' => 'ASC'])
             ->column('*', 'id');
         
@@ -177,7 +170,6 @@ class AuthManager extends Base
         
         $authGroup = Db::name('AuthGroup')
             ->where([
-                'module' => 'admin', 
                 'type' => AuthGroupModel::TYPE_ADMIN,
             ])
             ->find($id);
@@ -198,7 +190,6 @@ class AuthManager extends Base
         
         $str = "'<option value='\$id' \$selected>\$spacer\$title</option>";
         $list = Db::name('AuthGroup')
-            ->where('module', 'admin')
             ->order([
                 'id' => 'ASC',
             ])
@@ -259,7 +250,6 @@ class AuthManager extends Base
             $this->error($check['msg']);
         }
         
-        $data['module'] = 'admin';
         $data['type'] = AuthGroupModel::TYPE_ADMIN;
         
         Event::trigger('AuthManagerWriteGroup', $data);
@@ -279,7 +269,6 @@ class AuthManager extends Base
         if (isset($data['id']) && !empty($data['id'])) {
             $authGroup = Db::name('AuthGroup')
                 ->where([
-                    'module' => 'admin', 
                     'type' => AuthGroupModel::TYPE_ADMIN,
                 ])
                 ->find($data['id']);
@@ -305,7 +294,6 @@ class AuthManager extends Base
             
             // 删除权限
             Db::name('auth_rule_access')->where([
-                'module' => 'admin',
                 'group_id' => $data['id'],
             ])->delete();
             
@@ -315,7 +303,6 @@ class AuthManager extends Base
                 if (!empty($rules)) {
                     foreach ($rules as $rule) {
                         $ruleAccess[] = [
-                            'module' => 'admin',
                             'group_id' => $data['id'],
                             'rule_id' => $rule,
                         ];
@@ -343,7 +330,6 @@ class AuthManager extends Base
                 $ruleAccess = [];
                 foreach ($rules as $rule) {
                     $ruleAccess[] = [
-                        'module' => 'admin',
                         'group_id' => $this->id,
                         'rule_id' => $rule,
                     ];
@@ -381,7 +367,6 @@ class AuthManager extends Base
         
         $authGroup = Db::name('AuthGroup')
             ->where([
-                'module' => 'admin', 
                 'type' => AuthGroupModel::TYPE_ADMIN,
                 'id' => $groupId,
             ])
@@ -470,7 +455,6 @@ class AuthManager extends Base
         View::assign('json', json_encode($json));
         
         $authGroup = Db::name('AuthGroup')->where([
-            'module' => 'admin', 
             'type' => AuthGroupModel::TYPE_ADMIN,
             'id' => $groupId,
         ])->find();

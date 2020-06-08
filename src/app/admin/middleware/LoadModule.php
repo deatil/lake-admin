@@ -126,13 +126,7 @@ class LoadModule
         // 行为扩展 HttpRun 兼容性处理
         if (isset($events) && is_array($events)) {
             if (isset($events['listen']['HttpRun'])) {
-                if (is_array($events['listen']['HttpRun'])) {
-                    foreach ($events['listen']['HttpRun'] as $event) {
-                        $this->triggerEvent('HttpRun', $event, $params);
-                    }
-                } else {
-                    $this->triggerEvent('HttpRun', $events['listen']['HttpRun'], $params);
-                }
+                $this->triggerEvent('HttpRun', $events['listen']['HttpRun'], $params);
             }
         }
     }
