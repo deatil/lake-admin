@@ -27,7 +27,7 @@ class RuleExtend extends Base
         if ($this->request->isAjax()) {
             $limit = $this->request->param('limit/d', 10);
             $page = $this->request->param('page/d', 10);
-
+            
             $searchField = $this->request->param('search_field/s', '', 'trim');
             $keyword = $this->request->param('keyword/s', '', 'trim');
             
@@ -67,7 +67,7 @@ class RuleExtend extends Base
         }
         return View::fetch();
     }
-
+    
     /**
      * 添加
      *
@@ -91,7 +91,7 @@ class RuleExtend extends Base
             }
             
             return $this->success("添加成功！");
-
+            
         } else {
             View::assign("roles", (new AuthGroupModel)->getGroups());
             
@@ -102,7 +102,7 @@ class RuleExtend extends Base
             return View::fetch();
         }
     }
-
+    
     /**
      * 编辑
      *
@@ -145,7 +145,7 @@ class RuleExtend extends Base
             return View::fetch();
         }
     }
-
+    
     /**
      * 删除
      *
@@ -182,7 +182,7 @@ class RuleExtend extends Base
         
         $this->success("删除成功！");
     }
-
+    
     /**
      * 数据
      *
@@ -210,5 +210,5 @@ class RuleExtend extends Base
         View::assign("data", $data);
         return View::fetch();
     }
-
+    
 }

@@ -152,9 +152,8 @@ class AuthManager extends Base
         View::assign("group_data", $groupData);
         
         return View::fetch('edit_group');
-
     }
-
+    
     /**
      * 编辑管理员角色
      *

@@ -68,8 +68,9 @@ class AdminLog extends Base
             ];
             
             return json($result);
+        } else {
+            return View::fetch();
         }
-        return View::fetch();
     }
     
     /**
@@ -121,5 +122,4 @@ class AdminLog extends Base
         
         $this->success("删除日志成功！");
     }
-
 }

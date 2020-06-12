@@ -80,10 +80,11 @@ class Hook extends Base
             }
             
             $data['id'] = md5(time().lake_to_guid_string(time()));
-            if (!isset($data['status']) || $data['status'] == 0) {
-                $data['status'] = 0;
-            } else {
+            if (isset($data['status']) 
+                && $data['status'] == 1) {
                 $data['status'] = 1;
+            } else {
+                $data['status'] = 0;
             }
             
             $data['add_time'] = time();
@@ -96,7 +97,7 @@ class Hook extends Base
             }
             
             $this->success("添加成功！");
-
+            
         } else {
             // 模块列表
             $modules = (new ModuleModule())->getAll();
@@ -105,7 +106,7 @@ class Hook extends Base
             return View::fetch();
         }
     }
-
+    
     /**
      * 编辑
      *
@@ -121,10 +122,11 @@ class Hook extends Base
                 return $this->error($result);
             }
             
-            if (!isset($data['status']) || $data['status'] == 0) {
-                $data['status'] = 0;
-            } else {
+            if (isset($data['status']) 
+                && $data['status'] == 1) {
                 $data['status'] = 1;
+            } else {
+                $data['status'] = 0;
             }
             
             $rs = Db::name('hook')
@@ -153,7 +155,7 @@ class Hook extends Base
             return View::fetch();
         }
     }
-
+    
     /**
      * 删除
      *
@@ -190,7 +192,7 @@ class Hook extends Base
         
         $this->success("删除成功！");
     }
-
+    
     /**
      * 排序
      *
@@ -224,7 +226,7 @@ class Hook extends Base
         
         $this->success("排序成功！");
     }
-
+    
     /**
      * 模块列表
      *
@@ -263,7 +265,7 @@ class Hook extends Base
             return View::fetch();
         }
     }
-
+    
     /**
      * 嵌入点列表
      *
@@ -301,5 +303,6 @@ class Hook extends Base
             
             return View::fetch();
         }
-    }    
+    }
+    
 }

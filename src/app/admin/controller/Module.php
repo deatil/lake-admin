@@ -96,7 +96,7 @@ class Module extends Base
             return View::fetch();
         }
     }
-
+    
     /**
      * 模块安装
      *
@@ -200,10 +200,10 @@ class Module extends Base
             $config = $this->ModuleModule->getInfoFromFile($module);
             View::assign('config', $config);
             return View::fetch();
-
+            
         }
     }
-
+    
     /**
      * 模块更新
      *
@@ -270,7 +270,7 @@ class Module extends Base
                         ];
                     }
                 }
-
+            
             }
             
             View::assign('need_module', $needModule);
@@ -279,10 +279,10 @@ class Module extends Base
             View::assign('config', $config);
             
             return View::fetch();
-
+        
         }
     }
-
+    
     /**
      * 检查依赖
      * @param string $type 类型：module
@@ -303,7 +303,7 @@ class Module extends Base
             
             // 当前版本
             $curr_version = Db::name('Module')->where('module', $value[0])->value('version');
-
+            
             $result = version_compare($curr_version, $value[1], $value[2]);
             $need[$key] = [
                 'module' => $value[0],
@@ -312,10 +312,10 @@ class Module extends Base
                 'result' => $result ? '<i class="iconfont icon-success text-success"></i>' : '<i class="iconfont icon-delete text-danger"></i>',
             ];
         }
-
+        
         return $need;
     }
-
+    
     /**
      * 本地安装
      *
@@ -407,7 +407,7 @@ class Module extends Base
         
         return View::fetch();
     }
-
+    
     /**
      * 保存模块设置
      *
@@ -447,7 +447,7 @@ class Module extends Base
         
         $this->success('保存成功');
     }
-
+    
     /**
      * 模块详情
      *
@@ -490,7 +490,7 @@ class Module extends Base
         }
         
         $status = $this->ModuleModule->enable($module);
-
+        
         if ($status === false) {
             $error = $this->ModuleModule->getError();
             $this->error($error);
@@ -498,7 +498,7 @@ class Module extends Base
         
         $this->success('启用成功！');
     }
-
+    
     /**
      * 禁用
      *
@@ -517,7 +517,7 @@ class Module extends Base
         }
         
         $status = $this->ModuleModule->disable($module);
-
+        
         if ($status === false) {
             $error = $this->ModuleModule->getError();
             $this->error($error);
@@ -525,5 +525,5 @@ class Module extends Base
         
         $this->success('禁用成功！');
     }
-
+    
 }

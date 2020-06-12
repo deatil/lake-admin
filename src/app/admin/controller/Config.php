@@ -246,7 +246,12 @@ class Config extends Base
         if ($this->request->isPost()) {
             $data = $this->request->post();
             
-            $data['status'] = isset($data['status']) ? intval($data['status']) : 1;
+            if (isset($data['status']) 
+                && $data['status'] == 1) {
+                $data['status'] = 1;
+            } else {
+                $data['status'] = 0;
+            }
             
             $result = $this->validate($data, 'Config');
             if (false === $result) {
@@ -300,6 +305,7 @@ class Config extends Base
             if (!isset($data['id']) || empty($data['id'])) {
                 return $this->error('配置ID不能为空！');
             }
+            
             $id = $data['id'];
             unset($data['id']);
             
@@ -432,7 +438,7 @@ class Config extends Base
         cache('lake_admin_config', null); //清空缓存配置
         $this->success("排序成功！");
     }
-
+    
     /**
      * 设置配置状态
      *
@@ -467,5 +473,5 @@ class Config extends Base
         cache('lake_admin_config', null); //清空缓存配置
         $this->success('操作成功！');
     }
-
+    
 }

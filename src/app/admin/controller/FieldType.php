@@ -134,7 +134,7 @@ class FieldType extends Base
     {
         parent::initialize();
     }
-
+    
     /**
      * 列表
      *
@@ -182,21 +182,22 @@ class FieldType extends Base
     {
         if ($this->request->isPost()) {
             $data = $this->request->post('');
+            
             $result = $this->validate($data, 'FieldType.insert');
             if (true !== $result) {
                 return $this->error($result);
             }
             
-            if (!isset($data['ifoption']) || $data['ifoption'] == 0) {
-                $data['ifoption'] = 0;
-            } else {
+            if (isset($data['ifoption']) && $data['ifoption'] == 1) {
                 $data['ifoption'] = 1;
+            } else {
+                $data['ifoption'] = 0;
             }
             
-            if (!isset($data['ifstring']) || $data['ifstring'] == 0) {
-                $data['ifstring'] = 0;
-            } else {
+            if (isset($data['ifstring']) && $data['ifstring'] == 1) {
                 $data['ifstring'] = 1;
+            } else {
+                $data['ifstring'] = 0;
             }
             
             $data['is_system'] = 0;
@@ -236,16 +237,16 @@ class FieldType extends Base
                 return $this->error($result);
             }
             
-            if (!isset($data['ifoption']) || $data['ifoption'] == 0) {
-                $data['ifoption'] = 0;
-            } else {
+            if (isset($data['ifoption']) && $data['ifoption'] == 1) {
                 $data['ifoption'] = 1;
+            } else {
+                $data['ifoption'] = 0;
             }
             
-            if (!isset($data['ifstring']) || $data['ifstring'] == 0) {
-                $data['ifstring'] = 0;
-            } else {
+            if (isset($data['ifstring']) && $data['ifstring'] == 1) {
                 $data['ifstring'] = 1;
+            } else {
+                $data['ifstring'] = 0;
             }
             
             $rs = Db::name('field_type')
@@ -258,6 +259,7 @@ class FieldType extends Base
             $this->success("修改成功！");
         } else {
             $id = $this->request->param('id');
+            
             $data = Db::name('field_type')->where([
                 "id" => $id,
             ])->find();
@@ -351,5 +353,5 @@ class FieldType extends Base
         
         $this->success("排序成功！");
     }
-
+    
 }

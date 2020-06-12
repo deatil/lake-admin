@@ -96,15 +96,15 @@ class Passport extends Base
             if (!$AdminModel->login($data['username'], $data['password'])) {
                 $this->error("用户名或者密码错误，登陆失败！", url('index/login'));
             }
-
+            
             $this->success('恭喜您，登陆成功', url('Index/index'));
         } else {
             $session = session('admin_user_auth');
-            print_r($session);
+            
             return View::fetch();
         }
     }
-
+    
     /**
      * 手动退出登录
      *
