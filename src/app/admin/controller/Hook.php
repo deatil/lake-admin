@@ -81,7 +81,8 @@ class Hook extends Base
             
             $data['id'] = md5(time().lake_to_guid_string(time()));
             if (isset($data['status']) 
-                && $data['status'] == 1) {
+                && $data['status'] == 1
+            ) {
                 $data['status'] = 1;
             } else {
                 $data['status'] = 0;
@@ -123,7 +124,8 @@ class Hook extends Base
             }
             
             if (isset($data['status']) 
-                && $data['status'] == 1) {
+                && $data['status'] == 1
+            ) {
                 $data['status'] = 1;
             } else {
                 $data['status'] = 0;
