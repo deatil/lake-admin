@@ -15,15 +15,15 @@ use think\facade\Db;
  */
 class LoadModule
 {
-
+    
     /** @var App */
     protected $app;
-
+    
     public function __construct(App $app)
     {
         $this->app  = $app;
     }
-
+    
     /**
      * 中间件
      * @access public
@@ -82,7 +82,7 @@ class LoadModule
         
         $this->loadApp($appPath, $params);
     }
-
+    
     /**
      * 加载应用配置文件
      * @param string $appPath 应用路径
@@ -96,33 +96,33 @@ class LoadModule
         if (is_file($appPath . 'common.php')) {
             include_once $appPath . 'common.php';
         }
-
+        
         $files = [];
-
+        
         $files = array_merge($files, glob($appPath . 'config' . DIRECTORY_SEPARATOR . '*' . $this->app->getConfigExt()));
-
+        
         foreach ($files as $file) {
             $this->app->config->load($file, pathinfo($file, PATHINFO_FILENAME));
         }
-
+        
         if (is_file($appPath . 'event.php')) {
             $events = include $appPath . 'event.php';
             if (is_array($events)) {
                 $this->app->loadEvent($events);
             }
         }
-
+        
         if (is_file($appPath . 'middleware.php')) {
             $this->app->middleware->import(include $appPath . 'middleware.php', 'app');
         }
-
+        
         if (is_file($appPath . 'provider.php')) {
             $this->app->bind(include $appPath . 'provider.php');
         }
-
+        
         // 加载应用默认语言包
         $this->app->loadLangPack($this->app->lang->defaultLangSet());
-    
+        
         // 行为扩展 HttpRun 兼容性处理
         if (isset($events) && is_array($events)) {
             if (isset($events['listen']['HttpRun'])) {

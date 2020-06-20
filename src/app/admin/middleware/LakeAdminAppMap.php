@@ -13,15 +13,15 @@ use think\App;
  */
 class LakeAdminAppMap
 {
-
+    
     /** @var App */
     protected $app;
-
+    
     public function __construct(App $app)
     {
         $this->app  = $app;
     }
-
+    
     /**
      * 中间件
      * @access public
@@ -50,5 +50,5 @@ class LakeAdminAppMap
         
         return $next($request);
     }
-
+    
 }

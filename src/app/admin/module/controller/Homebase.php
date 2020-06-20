@@ -8,6 +8,12 @@ use think\facade\Env;
 use app\admin\boot\Jump;
 use app\admin\boot\BaseController;
 
+/**
+ * 插件前台基础类
+ *
+ * @create 2020-4-10
+ * @author deatil
+ */
 class HomeBase extends BaseController
 {    
     use Jump;
