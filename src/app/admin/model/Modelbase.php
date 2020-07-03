@@ -18,7 +18,7 @@ class ModelBase extends Model
      */
     public function drop_table($table)
     {
-        $dbPrefix = app()->db->getConnection()->getConfig('prefix');
+        $dbPrefix = app()->db->connect()->getConfig('prefix');
         $table = $dbPrefix . strtolower($table);
         return Db::query("DROP TABLE $table");
     }
@@ -29,7 +29,7 @@ class ModelBase extends Model
      */
     public function table_exists($table)
     {
-        $dbPrefix = app()->db->getConnection()->getConfig('prefix');
+        $dbPrefix = app()->db->connect()->getConfig('prefix');
         $table = $dbPrefix . strtolower($table);
         if (true == Db::query("SHOW TABLES LIKE '{$table}'")) {
             return true;
@@ -55,7 +55,7 @@ class ModelBase extends Model
     public function get_fields($table)
     {
         $fields = [];
-        $dbPrefix = app()->db->getConnection()->getConfig('prefix');
+        $dbPrefix = app()->db->connect()->getConfig('prefix');
         $table = $dbPrefix . strtolower($table);
         $data = Db::query("SHOW COLUMNS FROM $table");
         foreach ($data as $v) {

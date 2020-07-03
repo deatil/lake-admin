@@ -52,13 +52,19 @@ class LakeAdminInstall extends Command
      */
     protected function execute(Input $input, Output $output)
     {
+        $installLockFile = root_path() . 'install.lock';
+        if (file_exists($installLockFile)) {
+            $output->info("<info>lake-admin tip:</info> lake-admin is installed!");
+            return false;
+        }
+        
         // 使用 getArgument() 取出参数值
         // $dbpre = $input->getArgument('dbpre');
         
         // 使用 getOption() 取出选项值
         $dbpre = $input->getOption('dbpre');
         
-        $dbConnection = app()->db->getConnection();
+        $dbConnection = app()->db->connect();
         
         if (empty($dbpre)) {
             $dbpre = $dbConnection->getConfig('prefix');
@@ -69,11 +75,11 @@ class LakeAdminInstall extends Command
         $databaseCharset = $dbConnection->getConfig('charset');
         
         if (empty($database)) {
-            $output->info("<info>lake-admin tip:</info> place set database!");
+            $output->info("<info>lake-admin tip:</info> place set database config!");
             return false;
         }
         if (empty($databaseCharset)) {
-            $output->info("<info>lake-admin tip:</info> place set database charset!");
+            $output->info("<info>lake-admin tip:</info> place set database charset config!");
             return false;
         }
         
@@ -159,6 +165,9 @@ class LakeAdminInstall extends Command
             . 'root' . DIRECTORY_SEPARATOR;
         $toPath = root_path();
         File::copyDir($fromPath, $toPath);
+        
+        // 添加安装锁定文件
+        file_put_contents(root_path().'install.lock', '');
        
         $output->info("Install lake-admin Successed!");
     }

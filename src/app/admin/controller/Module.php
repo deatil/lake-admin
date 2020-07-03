@@ -142,7 +142,7 @@ class Module extends Base
                 $needModule = $this->checkDependence($config['need_module']);
             }
             
-            $dbPrefix = app()->db->getConnection()->getConfig('prefix');
+            $dbPrefix = app()->db->connect()->getConfig('prefix');
             
             // 检查数据表
             if (isset($config['tables']) && !empty($config['tables'])) {
@@ -248,7 +248,7 @@ class Module extends Base
                 $needModule = $this->checkDependence($config['need_module']);
             }
             
-            $dbPrefix = app()->db->getConnection()->getConfig('prefix');
+            $dbPrefix = app()->db->connect()->getConfig('prefix');
             
             // 检查数据表
             if (isset($config['tables']) && !empty($config['tables'])) {

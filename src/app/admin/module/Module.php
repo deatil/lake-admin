@@ -1116,7 +1116,7 @@ class Module
         }
         
         if (empty($dbPre)) {
-            $dbPre = app()->db->getConnection()->getConfig('prefix');
+            $dbPre = app()->db->connect()->getConfig('prefix');
         }
     
         foreach ($sqlStatement as $value) {
