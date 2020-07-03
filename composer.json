@@ -23,10 +23,7 @@
         "topthink/think-view": "^1.0",
         "topthink/think-multi-app": "^1.0",
         "topthink/think-captcha": "^3.0",
-        "phpmailer/phpmailer": "^6.0",
-        "guzzlehttp/guzzle": "^6.3",
         "overtrue/pinyin": "~4.0",
-        "yansongda/pay": "^2.7",
         "lake/lake": ">=1.0.2"
     },
     "require-dev": {
