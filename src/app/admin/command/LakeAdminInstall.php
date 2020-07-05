@@ -64,15 +64,12 @@ class LakeAdminInstall extends Command
         // 使用 getOption() 取出选项值
         $dbpre = $input->getOption('dbpre');
         
-        $dbConnection = app()->db->connect();
-        
-        if (empty($dbpre)) {
-            $dbpre = $dbConnection->getConfig('prefix');
-        }
+        // 当前连接数据库配置
+        $dbConfig = app()->db->connect()->getConfig();
         
         // 数据库配置
-        $database = $dbConnection->getConfig('database');
-        $databaseCharset = $dbConnection->getConfig('charset');
+        $database = $dbConfig['database'];
+        $databaseCharset = $dbConfig['charset'];
         
         if (empty($database)) {
             $output->info("<info>lake-admin tip:</info> place set database config!");
@@ -84,21 +81,15 @@ class LakeAdminInstall extends Command
         }
         
         // 创建数据库
-        $dbConfig = $dbConnection->getConfig();
+        $dbConfig1 = $dbConfig;
+        unset($dbConfig1['database']);
         app()->config->set([
             'connections' => [
-                'lake-admin-db1' => [
-                    'type' => $dbConfig['type'],
-                    'hostname' => $dbConfig['hostname'],
-                    'username' => $dbConfig['username'],
-                    'password' => $dbConfig['password'],
-                    'hostport' => $dbConfig['hostport'],
-                    'charset' => $dbConfig['charset'],
-                ],
+                'lake-admin-db1' => $dbConfig1,
             ],
         ], 'database');
         $db = Db::connect('lake-admin-db1');
-        $db->execute("CREATE DATABASE IF NOT EXISTS `".$dbConfig['database']."` DEFAULT CHARACTER SET ".$databaseCharset." COLLATE ".$databaseCharset."_unicode_ci;");
+        $db->execute("CREATE DATABASE IF NOT EXISTS `".$database."` DEFAULT CHARACTER SET ".$databaseCharset." COLLATE ".$databaseCharset."_unicode_ci;");
         
         // 导入数据库
         $Module = new Module();
@@ -118,28 +109,25 @@ class LakeAdminInstall extends Command
             return false;
         }
         
+        // 执行sql
+        $dbConfig2 = $dbConfig;
+        if (!empty($dbpre)) {
+            $dbConfig2['prefix'] = $dbpre;
+        }
         app()->config->set([
             'connections' => [
-                'lake-admin-db2' => [
-                    'type' => $dbConfig['type'],
-                    'hostname' => $dbConfig['hostname'],
-                    'database' => $dbConfig['database'],
-                    'username' => $dbConfig['username'],
-                    'password' => $dbConfig['password'],
-                    'hostport' => $dbConfig['hostport'],
-                    'charset' => $dbConfig['charset'],
-                    'prefix' => $dbpre,
-                ],
+                'lake-admin-db2' => $dbConfig2,
             ],
         ], 'database');
         $db2 = Db::connect('lake-admin-db2');
         
+        $dbPrefix = $dbConfig2['prefix'];
         foreach ($sqlStatement as $value) {
             try {
                 $value = str_replace([
                     'pre__',
                 ], [
-                    $dbpre,
+                    $dbPrefix,
                 ], trim($value));
                 $db2->execute($value);
             } catch (\Exception $e) {
@@ -167,7 +155,7 @@ class LakeAdminInstall extends Command
         File::copyDir($fromPath, $toPath);
         
         // 添加安装锁定文件
-        file_put_contents(root_path().'install.lock', '');
+        file_put_contents($installLockFile, '');
        
         $output->info("Install lake-admin Successed!");
     }

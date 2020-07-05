@@ -333,20 +333,21 @@ class Module extends Base
             $this->error("请选择上传文件！");
         }
         
-        if (strtolower(substr($files->getInfo('name'), -3, 3)) != 'zip') {
+        $originalName = $files->getOriginalName();
+        if (strtolower(substr($originalName, -3, 3)) != 'zip') {
             $this->error("上传的文件格式有误！");
         }
         
         // 插件名称
-        $moduleName = pathinfo($files->getInfo('name'));
-        $moduleName = $moduleName['filename'];
+        $modulePathinfo = pathinfo($originalName);
+        $moduleName = $modulePathinfo['filename'];
         // 检查插件目录是否存在
         if (!$this->ModuleModule->isLocal($moduleName)) {
             $this->error($this->ModuleModule->getError());
         }
         
-        // 上传临时文件地址
-        $filename = $files->getInfo('tmp_name');
+        // 上传临时文件全路径地址
+        $filename = $files->getPathname();
         $zip = new PclZip($filename);
         $status = $zip->extract(PCLZIP_OPT_PATH, env('lake_module_path') . $moduleName);
         if (!$status) {
