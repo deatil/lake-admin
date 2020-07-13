@@ -125,12 +125,12 @@ class Module extends Base
             $config = $this->ModuleModule->getInfoFromFile($module);
             
             // 版本检查
-            $version_check = '';
+            $versionCheck = '';
             if ($config['adaptation']) {
                 if (version_compare(config('lake.version'), $config['adaptation'], '>=') == false) {
-                    $version_check = '<i class="iconfont icon-delete text-danger"></i>';
+                    $versionCheck = '<i class="iconfont icon-delete text-danger"></i>';
                 } else {
-                    $version_check = '<i class="iconfont icon-success text-success"></i>';
+                    $versionCheck = '<i class="iconfont icon-success text-success"></i>';
                 }
             }
             
@@ -164,7 +164,7 @@ class Module extends Base
             }
             
             View::assign('need_module', $needModule);
-            View::assign('version_check', $version_check);
+            View::assign('version_check', $versionCheck);
             View::assign('table_check', $tableCheck);
             View::assign('config', $config);
             
@@ -232,11 +232,12 @@ class Module extends Base
             $config = $this->ModuleModule->getInfoFromFile($module);
             
             // 版本检查
+            $versionCheck = '';
             if ($config['adaptation']) {
                 if (version_compare(config('lake.version'), $config['adaptation'], '>=') == false) {
-                    $version_check = '<i class="iconfont icon-delete text-danger"></i>';
+                    $versionCheck = '<i class="iconfont icon-delete text-danger"></i>';
                 } else {
-                    $version_check = '<i class="iconfont icon-success text-success"></i>';
+                    $versionCheck = '<i class="iconfont icon-success text-success"></i>';
                 }
             }
             
@@ -274,7 +275,7 @@ class Module extends Base
             }
             
             View::assign('need_module', $needModule);
-            View::assign('version_check', $version_check);
+            View::assign('version_check', $versionCheck);
             View::assign('table_check', $tableCheck);
             View::assign('config', $config);
             
@@ -302,12 +303,12 @@ class Module extends Base
             }
             
             // 当前版本
-            $curr_version = Db::name('Module')->where('module', $value[0])->value('version');
+            $currVersion = Db::name('Module')->where('module', $value[0])->value('version');
             
-            $result = version_compare($curr_version, $value[1], $value[2]);
+            $result = version_compare($currVersion, $value[1], $value[2]);
             $need[$key] = [
                 'module' => $value[0],
-                'version' => $curr_version ? $curr_version : '未安装',
+                'version' => $currVersion ? $currVersion : '未安装',
                 'version_need' => $value[2] . $value[1],
                 'result' => $result ? '<i class="iconfont icon-success text-success"></i>' : '<i class="iconfont icon-delete text-danger"></i>',
             ];

@@ -17,7 +17,7 @@ use lake\Symlink;
 use lake\Module;
 
 /**
- * lake-admin 插件cmd安装-静态文件移动
+ * lake-admin 插件cmd安装
  *
  * php think lake-admin:install [--dbpre lake_]
  *
