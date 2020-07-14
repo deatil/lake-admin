@@ -73,5 +73,4 @@ class HomeBase extends BaseController
             'view_path' => $viewPath,
         ], 'view');
     }
-    
 }
