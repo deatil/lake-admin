@@ -8,6 +8,20 @@ use app\admin\model\Module as ModuleModel;
 
 use app\admin\service\Auth as AuthService;
 
+if (!function_exists('lake_app')) {
+    /**
+     * 快速获取容器中的实例 支持依赖注入
+     * @param string $name        类名或标识 默认获取当前应用实例
+     * @param array  $args        参数
+     * @param bool   $newInstance 是否每次创建新的实例
+     * @return object|App
+     */
+    function lake_app($name = '', $args = [], $newInstance = false)
+    {
+        return app($name, $args, $newInstance);
+    }
+}
+
 if (!function_exists('lake_p')) {
     /**
      * 打印输出数据到文件
