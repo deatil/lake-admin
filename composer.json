@@ -1,6 +1,6 @@
 {
     "name": "lake/lake-admin",
-    "description": "The lake-admin is an admin package",
+    "description": "The lake-admin is an admin package.",
     "license": "Apache-2.0",
     "type": "library",
     "keywords": [
@@ -24,7 +24,7 @@
         "topthink/think-multi-app": "^1.0",
         "topthink/think-captcha": "^3.0",
         "overtrue/pinyin": "~4.0",
-        "lake/lake": ">=1.0.2"
+        "lake/lake": ">1.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^4.2",
@@ -39,12 +39,5 @@
         ],
         "classmap": [
         ]
-    },
-    "extra": {
-        "think":{
-            "services":[
-                "app\\admin\\boot\\Service"
-            ]
-        }
     }
 }
