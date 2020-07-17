@@ -177,6 +177,12 @@ class Manager extends Base
                 $this->error('参数错误！');
             }
             
+            if (env('admin_is_root') != 1) {
+                if ($data['id'] == env('admin_id')) {
+                    $this->error('不能修改自己的账户！');
+                }
+            }
+            
             $adminInfo = $this->AdminModel
                 ->where([
                     "id" => $data['id'],
