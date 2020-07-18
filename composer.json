@@ -40,6 +40,14 @@
         "classmap": [
         ]
     },
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php think lake-admin:service-discover"
+        ]
+    },
     "extra": {
         "think":{
             "services":[
