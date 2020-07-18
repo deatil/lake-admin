@@ -270,7 +270,7 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
             $("#side_menus_bar").find(".layui-this").removeClass('layui-this');
             $("#side_menus_bar").find("a[lay-id=" + data_id + "]").parent().addClass('layui-this');
             
-            if ($("#side_menus_bar.lake-admin-module").find("a[lay-id=" + data_id + "]").length > 0) {				
+            if ($("#side_menus_bar.lake-admin-module").find("a[lay-id=" + data_id + "]").length > 0) {
                 $("#side_menus_bar").find("a[lay-id=" + data_id + "]")
                     .parent().parent().parent()
                     .addClass('layui-nav-itemed')
@@ -361,7 +361,7 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
                 ul.animate({
                     left: '+=' + distance
                 }, 200, 'swing');
-            }			
+            }
         }
     }
 
@@ -378,12 +378,12 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
         $("#side_menus_bar").find(".layui-this").removeClass('layui-this');
         $("#side_menus_bar").find("a[lay-id=" + data_id + "]").parent().addClass('layui-this');
         
-        if ($("#side_menus_bar.lake-admin-module").find("a[lay-id=" + data_id + "]").length > 0) {				
+        if ($("#side_menus_bar.lake-admin-module").find("a[lay-id=" + data_id + "]").length > 0) {
             $("#side_menus_bar").find("a[lay-id=" + data_id + "]")
                 .parent().parent().parent()
                 .addClass('layui-nav-itemed')
                 .siblings().removeClass('layui-nav-itemed');
-        }		
+        }
     }
     
     // 刷新打开当前页面
@@ -400,7 +400,7 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
             objtopmenu.parent().addClass('layui-this').siblings().removeClass('layui-this');
             //触发事件
             objtopmenu.click();
-        }		
+        }
         
         // 点击左侧菜单
         $("#side_menus_bar a[lay-id="+lake_admin_menuid+"], .js-menu-nav a[lay-id="+lake_admin_menuid+"]").trigger('click');
@@ -409,7 +409,7 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
     }
 
     // 右键
-    $(document).on('contextmenu', ".lake-admin-top-tab li", function (e) {		
+    $(document).on('contextmenu', ".lake-admin-top-tab li", function (e) {
         e.preventDefault();
         e.stopPropagation();
     
@@ -431,12 +431,14 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
         if (!(this_data_id != '' && this_data_id != 'default')) {
             var ul = '<ul>';
             ul += '<li data-target="lake-admin-contextmenu-refresh-page" title="刷新当前选项卡"><i class="iconfont icon-shuaxin" aria-hidden="true"></i> 刷新</li>';
+            ul += '<hr>';
             ul += '<li data-target="lake-admin-contextmenu-close-other-page" title="关闭其他选项卡"><i class="layui-icon layui-icon-radio" aria-hidden="true"></i> 关闭其他</li>';
             ul += '<li data-target="lake-admin-contextmenu-close-all-page" title="关闭全部选项卡"><i class="iconfont icon-richangqingli" aria-hidden="true"></i> 全部关闭</li>';
             ul += '</ul>';
         } else {
             var ul = '<ul>';
             ul += '<li data-target="lake-admin-contextmenu-refresh-page" title="刷新当前选项卡"><i class="iconfont icon-shuaxin" aria-hidden="true"></i> 刷新</li>';
+            ul += '<hr>';
             ul += '<li data-target="lake-admin-contextmenu-close-current-page" title="关闭当前选项卡"><i class="layui-icon layui-icon-close" aria-hidden="true"></i> 关闭当前</li>';
             ul += '<li data-target="lake-admin-contextmenu-close-other-page" title="关闭其他选项卡"><i class="layui-icon layui-icon-radio" aria-hidden="true"></i> 关闭其他</li>';
             ul += '<li data-target="lake-admin-contextmenu-close-all-page" title="关闭全部选项卡"><i class="iconfont icon-richangqingli" aria-hidden="true"></i> 全部关闭</li>';
@@ -472,7 +474,7 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
                             if (iframe[0].contentWindow) {
                                 reloadPage(iframe[0].contentWindow);
                                 layer.close(index);
-                            }								
+                            }
                             break;
                         case 'lake-admin-contextmenu-close-current-page': //关闭当前
                             if ($($target).find(".layui-tab-close").length > 0) {
@@ -480,14 +482,14 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
                             }
                             break;
                         case 'lake-admin-contextmenu-close-other-page': //关闭其他
-                            top_nav.children('li').each(function () {								
+                            top_nav.children('li').each(function () {
                                 if ($(this).attr('lay-id') == id) {
                                     return;
                                 }
                                 
                                 if ($(this).find(".layui-tab-close").length > 0) {
                                     $(this).find(".layui-tab-close").trigger('click');
-                                }								
+                                }
                             });
                             
                             top_tab_ul.animate({
@@ -501,7 +503,7 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
                             top_nav.children('li').each(function () {
                                 if ($(this).find(".layui-tab-close").length > 0) {
                                     $(this).find(".layui-tab-close").trigger('click');
-                                }								
+                                }
                             });
                             
                             top_tab_ul.animate({
@@ -522,7 +524,7 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
                 $context.remove();
             });
         }
-        return false;		
+        return false;
     });
     
     // 刷新当前页
@@ -536,6 +538,34 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
         if (iframe[0].contentWindow) {
             reloadPage(iframe[0].contentWindow);
             layer.close(index);
+        }
+        
+        $(document).find('div.lake-admin-contextmenu').remove();
+    });
+    
+    // 本页前进
+    $(document).on("click", ".lake-admin-refresh-page-back", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var id = $('#body_history .layui-this').attr('lay-id'),
+            iframe = $('#iframe_' + id);
+        if (iframe[0].contentWindow) {
+            iframe[0].contentWindow.history.go(-1);;
+        }
+        
+        $(document).find('div.lake-admin-contextmenu').remove();
+    });
+    
+    // 本页后退
+    $(document).on("click", ".lake-admin-refresh-page-forward", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var id = $('#body_history .layui-this').attr('lay-id'),
+            iframe = $('#iframe_' + id);
+        if (iframe[0].contentWindow) {
+            iframe[0].contentWindow.history.go(1);;
         }
         
         $(document).find('div.lake-admin-contextmenu').remove();
@@ -576,7 +606,7 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
                 
                 if ($(this).find(".layui-tab-close").length > 0) {
                     $(this).find(".layui-tab-close").trigger('click');
-                }								
+                }
             });
 
         } else {
@@ -602,7 +632,7 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
             $("#body_history li").each(function() {
                 if ($(this).find(".layui-tab-close").length > 0) {
                     $(this).find(".layui-tab-close").trigger('click');
-                }								
+                }
             });
 
         } else {
