@@ -78,6 +78,43 @@ if (!function_exists('lake_var_export')) {
     }
 }
 
+if (!function_exists('lake_array_merge_deep')) {
+    /**
+     * 数组深度合并
+     *
+     * @create 2020-7-19
+     * @author deatil
+     */
+    function lake_array_merge_deep($arr1, $arr2 = []){
+        $merged = $arr1;
+        
+        if (empty($arr1)) {
+            return $arr2;
+        }
+        
+        if (empty($arr2)) {
+            return $arr1;
+        }
+        
+        foreach ($arr2 as $key => $value) {
+            if (is_array($value) 
+                && isset($merged[$key]) 
+                && is_array($merged[$key])
+            ) {
+                $merged[$key] = lake_array_merge_deep($merged[$key], $value);
+            } elseif (is_numeric($key)) {
+                if (!in_array($value, $merged)) {
+                    $merged[] = $value;
+                }
+            } else {
+                $merged[$key] = $value;
+            }
+        }
+        
+        return $merged;
+    }
+}
+
 if (!function_exists('lake_data_auth_sign')) {
     /**
      * 数据签名认证
