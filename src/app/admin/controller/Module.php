@@ -7,7 +7,7 @@ use think\facade\View;
 
 use lake\PclZip;
 
-use app\admin\module\Module as ModuleModule;
+use app\admin\facade\Module as ModuleFacade;
 
 /**
  * 模型管理
@@ -17,7 +17,6 @@ use app\admin\module\Module as ModuleModule;
  */
 class Module extends Base
 {
-    private $ModuleModule = null;
     
     /**
      * 框架构造函数
@@ -28,8 +27,6 @@ class Module extends Base
     protected function initialize()
     {
         parent::initialize();
-        
-        $this->ModuleModule = new ModuleModule();
     }
     
     /**
@@ -52,7 +49,7 @@ class Module extends Base
             
             if (!empty($list)) {
                 foreach ($list as $k => $v) {
-                    $list[$k]['icon'] = $this->ModuleModule->getModuleIconData($v['module']);
+                    $list[$k]['icon'] = ModuleFacade::getModuleIconData($v['module']);
                 }
             }
             
@@ -74,17 +71,17 @@ class Module extends Base
     public function all()
     {
         if ($this->request->isAjax()) {
-            $list = $this->ModuleModule->getAll();
+            $list = ModuleFacade::getAll();
             if ($list === false) {
                 return json([
                     "code" => 1, 
-                    "msg" => $this->ModuleModule->getError(),
+                    "msg" => ModuleFacade::getError(),
                 ]);
             }
             
             if (!empty($list)) {
                 foreach ($list as $k => $v) {
-                    $list[$k]['icon'] = $this->ModuleModule->getModuleIconData($v['module']);
+                    $list[$k]['icon'] = ModuleFacade::getModuleIconData($v['module']);
                 }
             }
 
@@ -110,8 +107,8 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要安装的模块！');
             }
-            if (!$this->ModuleModule->install($module)) {
-                $error = $this->ModuleModule->getError();
+            if (!ModuleFacade::install($module)) {
+                $error = ModuleFacade::getError();
                 $this->error($error ? $error : '模块安装失败！');
             }
             
@@ -122,7 +119,7 @@ class Module extends Base
                 $this->error('请选择需要安装的模块！');
             }
             
-            $config = $this->ModuleModule->getInfoFromFile($module);
+            $config = ModuleFacade::getInfoFromFile($module);
             
             // 版本检查
             $versionCheck = '';
@@ -186,10 +183,10 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要安装的模块！');
             }
-            if ($this->ModuleModule->uninstall($module)) {
+            if (ModuleFacade::uninstall($module)) {
                 $this->success("模块卸载成功！一键清理缓存后生效！", url("Module/index"));
             } else {
-                $error = $this->ModuleModule->getError();
+                $error = ModuleFacade::getError();
                 $this->error($error ? $error : "模块卸载失败！", url("Module/index"));
             }
         } else {
@@ -197,7 +194,7 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要安装的模块！');
             }
-            $config = $this->ModuleModule->getInfoFromFile($module);
+            $config = ModuleFacade::getInfoFromFile($module);
             View::assign('config', $config);
             return View::fetch();
             
@@ -217,10 +214,10 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要更新的模块！');
             }
-            if ($this->ModuleModule->upgrade($module)) {
+            if (ModuleFacade::upgrade($module)) {
                 $this->success('模块更新成功！一键清理缓存后生效！', url('Module/index'));
             } else {
-                $error = $this->ModuleModule->getError();
+                $error = ModuleFacade::getError();
                 $this->error($error ? $error : '模块更新失败！');
             }
         } else {
@@ -229,7 +226,7 @@ class Module extends Base
                 $this->error('请选择需要安装的模块！');
             }
             
-            $config = $this->ModuleModule->getInfoFromFile($module);
+            $config = ModuleFacade::getInfoFromFile($module);
             
             // 版本检查
             $versionCheck = '';
@@ -343,8 +340,8 @@ class Module extends Base
         $modulePathinfo = pathinfo($originalName);
         $moduleName = $modulePathinfo['filename'];
         // 检查插件目录是否存在
-        if (!$this->ModuleModule->isLocal($moduleName)) {
-            $this->error($this->ModuleModule->getError());
+        if (!ModuleFacade::isLocal($moduleName)) {
+            $this->error(ModuleFacade::getError());
         }
         
         // 上传临时文件全路径地址
@@ -491,10 +488,10 @@ class Module extends Base
             $this->error('模块ID错误！');
         }
         
-        $status = $this->ModuleModule->enable($module);
+        $status = ModuleFacade::enable($module);
         
         if ($status === false) {
-            $error = $this->ModuleModule->getError();
+            $error = ModuleFacade::getError();
             $this->error($error);
         }
         
@@ -518,10 +515,10 @@ class Module extends Base
             $this->error('模块ID错误！');
         }
         
-        $status = $this->ModuleModule->disable($module);
+        $status = ModuleFacade::disable($module);
         
         if ($status === false) {
-            $error = $this->ModuleModule->getError();
+            $error = ModuleFacade::getError();
             $this->error($error);
         }
         
