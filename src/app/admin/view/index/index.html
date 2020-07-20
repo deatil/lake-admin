@@ -8,8 +8,8 @@
     <meta name="author" content="lake">
     <base href="__STATIC__/" />
     <link rel="stylesheet" href="admin/libs/layui/css/layui.css">
+    <link rel="stylesheet" href="admin/libs/iconfont/iconfont.css">
     <link rel="stylesheet" href="admin/admin/css/index.css">
-    <link rel="stylesheet" href="admin/common/font/iconfont.css">
 </head>
 
 <body class="layui-layout-body lake-admin">
@@ -130,12 +130,12 @@
                                     </a>
                                 </dd>
                                 <dd>
-                                    <a href="javascript:;" class="lake-admin-refresh-page-forward" title="本页后退">
+                                    <a href="javascript:;" class="lake-admin-refresh-page-back" title="本页后退">
                                         <i class="layui-icon layui-icon-prev"></i> 本页后退
                                     </a>
                                 </dd>
                                 <dd>
-                                    <a href="javascript:;" class="lake-admin-refresh-page-back" title="本页前进">
+                                    <a href="javascript:;" class="lake-admin-refresh-page-forward" title="本页前进">
                                         <i class="layui-icon layui-icon-next"></i> 本页前进
                                     </a>
                                 </dd>
@@ -179,7 +179,7 @@
     
     layui.config({
         version: '1557143998899',
-        base: 'admin/libs/layui/extend/'
+        base: 'admin/libs/layui-extend/'
     }).extend({
         jquery_cookie: 'jquery.cookie',
         index: '{/}admin/admin/js/index'

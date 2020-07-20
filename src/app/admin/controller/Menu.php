@@ -103,15 +103,6 @@ class Menu extends Base
         if ($this->request->isPost()) {
             $data = $this->request->param();
             
-            if (!empty($data['name'])) {
-                $rule = AuthRuleModel::where([
-                    "name" => $data['name']
-                ])->find();
-                if (!empty($rule)) {
-                    $this->error('规则已经存在，请重新填写！');
-                }
-            }
-            
             if (!isset($data['is_menu'])) {
                 $data['is_menu'] = 0;
             } else {
@@ -191,15 +182,6 @@ class Menu extends Base
             ])->find();
             if (empty($rs)) {
                 $this->error('权限菜单不存在！');
-            }
-            
-            if (!empty($data['name'])) {
-                $rule = AuthRuleModel::where([
-                    "name" => $data['name']
-                ])->find();
-                if (!empty($rule) && $rule['id'] == $data['id']) {
-                    $this->error('规则已经存在，请重新填写！');
-                }
             }
             
             if ($rs['is_system'] == 1) {

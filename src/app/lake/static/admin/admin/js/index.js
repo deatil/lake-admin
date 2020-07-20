@@ -563,7 +563,7 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
         var id = $('#body_history .layui-this').attr('lay-id'),
             iframe = $('#iframe_' + id);
         if (iframe[0].contentWindow) {
-            iframe[0].contentWindow.history.go(1);;
+            iframe[0].contentWindow.history.go(1);
         }
         
         $(document).find('div.lake-admin-contextmenu').remove();
