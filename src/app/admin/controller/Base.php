@@ -4,7 +4,8 @@ namespace app\admin\controller;
 
 use think\facade\View;
 
-use app\admin\boot\Jump;
+use app\admin\boot\Jump as JumpTrait;
+use app\admin\boot\View as ViewTrait;
 use app\admin\boot\BaseController;
 
 /**
@@ -15,7 +16,8 @@ use app\admin\boot\BaseController;
  */
 abstract class Base extends BaseController
 {
-    use Jump;
+    use JumpTrait;
+    use ViewTrait;
 
     /**
      * 控制器中间件
@@ -24,6 +26,8 @@ abstract class Base extends BaseController
     protected $middleware = [
         // 权限检测
         '\\app\\admin\\middleware\\AdminAuthCheck',
+        // 锁屏检测
+        '\\app\\admin\\middleware\\AdminScreenLockCheck',
     ];
     
     /**

@@ -5,7 +5,8 @@ namespace app\admin\module\controller;
 use think\facade\Db;
 use think\facade\Env;
 
-use app\admin\boot\Jump;
+use app\admin\boot\Jump as JumpTrait;
+use app\admin\boot\View as ViewTrait;
 use app\admin\boot\BaseController;
 
 /**
@@ -16,7 +17,8 @@ use app\admin\boot\BaseController;
  */
 class HomeBase extends BaseController
 {    
-    use Jump;
+    use JumpTrait;
+    use ViewTrait;
     
     // 初始化
     protected function initialize()

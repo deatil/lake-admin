@@ -9,7 +9,7 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">字段类型</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline w300">
                     <input type="text" name="name" value="{$data.name}" lay-verify="required" autocomplete="off" placeholder="字段类型" class="layui-input">
                 </div>
                 <div class="layui-form-mid layui-word-aux">3-20位字符，可由字母和数字，下划线"_"及破折号"-"组成。</div>
@@ -17,7 +17,7 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">中文类型名</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline w300">
                     <input type="text" name="title" value="{$data.title}" lay-verify="required" autocomplete="off" placeholder="中文类型名" class="layui-input">
                 </div>
             </div>
@@ -42,7 +42,7 @@
 
             <div class="layui-form-item">
                 <label class="layui-form-label">类型</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline w300">
                     <select name="type" lay-verify="required" lay-filter="type">
                         <option></option>
                         {volist name="types" id="vo"}
@@ -70,7 +70,7 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">验证规则</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline w300">
                     <select name="vrule" lay-filter="vrule">
                         <option></option>
                         {volist name="vrules" id="vo"}
@@ -105,7 +105,6 @@
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="formSubmit">立即提交</button>
-                    <button class="layui-btn layui-btn-normal layui-close" type="button" onclick="javascript:history.back(-1);">返回</button>
                 </div>
             </div>
         </form>

@@ -4,6 +4,9 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
         form = layui.form,
         utils = layui.utils,
         layer = layui.layer;
+    
+    // 添加cookie
+    $ = layui.jquery_cookie($);
 
     // 锁定账户
     var lock_inter = "";
@@ -21,6 +24,9 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
                 }
             });
             
+            $.cookie('lake-admin-menuid', '', {
+                expires: 0,
+            });
         });
     });
 

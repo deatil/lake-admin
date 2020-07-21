@@ -22,11 +22,13 @@ class Screen extends Base
      */
     public function lock()
     {
-        if (!$this->request->isPost()) {
+        if (!request()->isPost()) {
             $this->error('访问错误！');
         }
         
-        (new ScreenService())->lock();
+        $url = request()->url();
+        
+        (new ScreenService())->lock($url);
         
         $this->success('屏幕锁定成功');
     }
@@ -39,7 +41,7 @@ class Screen extends Base
      */
     public function unlock()
     {
-        if (!$this->request->isPost()) {
+        if (!request()->isPost()) {
             $this->error('访问错误！');
         }
         

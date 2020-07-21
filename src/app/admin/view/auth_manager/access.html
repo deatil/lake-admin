@@ -23,15 +23,14 @@
                         <ul class="ztree" style="margin-left: 5px;margin-top:5px; padding: 0;">
                             <li><a title="全部展开、折叠 "><span class="button ico_open"></span><span id="ztree_expandAll" data-open="false">全部展开、折叠 </span></a> </li>
                         </ul>
-                        <ul id="treeDemo" class="ztree"></ul>
-                    </div>        
+                        <ul id="treeRule" class="ztree"></ul>
+                    </div>
                 </div>
             </div>
             
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
-                    <button class="layui-btn layui-btn-normal layui-close" type="button" onclick="javascript:history.back(-1);">返回</button>
                 </div>
             </div>
         </form>
@@ -45,9 +44,10 @@
 <link rel="stylesheet" href="admin/libs/zTree/metroStyle.css">
 <script>
 layui.config({
-    base: "admin/libs/layui/extend/"
+    base: "admin/libs/layui-extend/"
 }).use(['jquery', 'ztree'], function() {
     var $ = layui.$;
+    
     //配置
     var setting = {
         //设置 zTree 的节点上是否显示 checkbox / radio
@@ -82,8 +82,8 @@ layui.config({
     //zTree对象
     var zTree = null;
     $(document).ready(function() {
-        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-        zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        $.fn.zTree.init($("#treeRule"), setting, zNodes);
+        zTree = $.fn.zTree.getZTreeObj("treeRule");
         zTree.expandAll(true);
         $("#ztree_expandAll").click(function() {
             if ($(this).data("open")) {

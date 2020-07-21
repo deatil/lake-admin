@@ -18,9 +18,9 @@ class Screen
      * @create 2020-7-20
      * @author deatil
      */
-    public function lock()
+    public function lock($value = '')
     {
-        session($this->key, time());
+        session($this->key, $value);
         
         return true;
     }
@@ -51,7 +51,7 @@ class Screen
             return false;
         }
         
-        return true;
+        return $data;
     }
     
 }

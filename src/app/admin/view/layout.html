@@ -31,6 +31,10 @@
     
     {block name="layui"}
     <script type="text/javascript">
+    if (self.location == top.location) {
+        window.location.href = '{:url("index/index")}';
+    }
+    
     layui.config({
         version: '2020072023015895',
         base: 'admin/libs/layui-extend/'
@@ -50,8 +54,8 @@
                 $(top.window.document).find('div.admin-contextmenu').remove();
             } catch (e) {
             }
-        });    
-    });    
+        });
+    });
     </script>
     {/block}
     {block name="script"}{/block}

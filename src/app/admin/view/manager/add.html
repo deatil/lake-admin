@@ -6,7 +6,7 @@
         <form class="layui-form" method="post">
             <div class="layui-form-item">
                 <label class="layui-form-label">用户名</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline w300">
                     <input type="text" name="username" lay-verify="required" autocomplete="off" placeholder="用户名" class="layui-input">
                 </div>
                 <div class="layui-form-mid layui-word-aux">3-20位字符，可由字母和数字，下划线"_"及破折号"-"组成。</div>
@@ -14,7 +14,7 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">E-mail</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline w300">
                     <input type="text" name="email" lay-verify="required|email" autocomplete="off" placeholder="E-mail" class="layui-input">
                 </div>
                 <div class="layui-form-mid layui-word-aux">填写完整邮箱，如 xxx@163.com</div>
@@ -22,14 +22,14 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">真实姓名</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline w300">
                     <input type="text" name="nickname" autocomplete="off" placeholder="真实姓名" class="layui-input">
                 </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">权限组</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline w300">
                     <select name="roleid" xm-select="roleid" xm-select-search="" lay-filter="roleid" lay-verify="required">
                         {volist name="roles" id="vo"}
                             <option value="{$vo['id']}">{$vo['title']}</option>
@@ -40,7 +40,7 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">头像</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline w300">
                     <div class="js-upload-image">
                         {php}echo \app\admin\service\Form::images('avatar','',0){/php}
                     </div>
@@ -49,7 +49,7 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">状态</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline w300">
                     <input type="checkbox" name="status" lay-skin="switch" lay-text="启用|禁用" value="1" checked>
                 </div>
             </div>
@@ -57,7 +57,6 @@
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="formSubmit">立即提交</button>
-                    <button class="layui-btn layui-btn-normal layui-close" type="button" onclick="javascript:history.back(-1);">返回</button>
                 </div>
             </div>
         </form>

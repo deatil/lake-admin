@@ -13,7 +13,7 @@
  */
 namespace app\admin\boot;
 
-use think\facade\View as BaseView;
+use think\facade\View as ViewFacade;
 
 /**
  * 页面视图
@@ -32,7 +32,7 @@ trait View
      */
     public function engine($type = null)
     {
-        return BaseView::engine($type);
+        return ViewFacade::engine($type);
     }
 
     /**
@@ -44,7 +44,7 @@ trait View
      */
     public function assign($name, $value = null)
     {
-        BaseView::assign($name, $value);
+        ViewFacade::assign($name, $value);
     }
 
     /**
@@ -55,7 +55,7 @@ trait View
      */
     public function filter($filter = null)
     {
-        BaseView::filter($filter);
+        ViewFacade::filter($filter);
     }
 
     /**
@@ -68,7 +68,7 @@ trait View
      */
     public function fetch($template = '', $vars = [])
     {
-        return BaseView::fetch($template, $vars);
+        return ViewFacade::fetch($template, $vars);
     }
 
     /**
@@ -80,7 +80,7 @@ trait View
      */
     public function display($content, $vars = [])
     {
-        return BaseView::display($content, $vars);
+        return ViewFacade::display($content, $vars);
     }
 
 }

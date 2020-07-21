@@ -256,8 +256,8 @@ class AuthManager extends Base
         $rules = [];
         if (isset($data['rules']) && !empty($data['rules'])) {
             $rules = explode(',', $data['rules']);
-            unset($data['rules']);
         }
+        unset($data['rules']);
         
         // 监听权限
         Event::trigger('AuthManagerWriteGroupRules', $rules);

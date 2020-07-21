@@ -22,7 +22,7 @@
                     <input type="text" name="module" lay-verify="required" autocomplete="off" placeholder="菜单所属模块" class="layui-input" id="module_select" value="{$data.module}">
                 </div>
                 <div class="layui-input-inline">
-                    <select lay-filter="module_select">
+                    <select lay-filter="module_select" class="module-select-list">
                         <option data-module=""></option>
                         <option data-module="admin">lake-admin</option>
                         {volist name="modules" id="module"}
@@ -112,7 +112,6 @@
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="formSubmit">立即提交</button>
-                    <button class="layui-btn layui-btn-normal layui-close" type="button" onclick="javascript:history.back(-1);">返回</button>
                 </div>
             </div>
         </form>
@@ -148,6 +147,10 @@ layui.use(['iconPicker', 'form', 'layer'], function() {
             // console.log(d);
         }
     });
+    
+    var module = $('#module_select').val();
+    $(".module-select-list option[data-module='"+module+"']").attr("selected", true);
+    form.render('select');
 
     form.on('select(module_select)', function(data) {
         $('#module_select').val($(data.elem).find("option:selected").attr("data-module"));
