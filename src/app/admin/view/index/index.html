@@ -35,6 +35,16 @@
                         <span>&nbsp;站点主页</span>
                     </a>
                 </li>
+                <li class="layui-nav-item layui-hide-xs lake-admin-top-tip" lay-title="锁屏">
+                    <a class="lake-admin-lock js-lake-admin-lock" 
+                        href="javascript:"
+                        data-lock="{:url('screen/lock')}"
+                        data-unlock="{:url('screen/unlock')}"
+                        data-logout="{:url('passport/logout')}"
+                        >
+                        <i class="iconfont icon-lock"></i><cite></cite>
+                    </a>
+                </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">
                         <i class="iconfont icon-richangqingli"></i>
@@ -56,7 +66,7 @@
                         <dd data-skin="white"><a href="javascript:;">纯白</a></dd>
                         <dd data-skin="blue"><a href="javascript:;">蓝白</a></dd>
                     </dl>
-                </li>                
+                </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">
                         <img src="{:lake_get_file_path($user_info['avatar'])}" class="layui-nav-img userAvatar" width="35" height="35">
@@ -173,17 +183,19 @@
         </div>
     </div>
     <script src="admin/libs/layui/layui.js"></script>
+    {include file="lockscreen" /}
     <script type="text/javascript">
     var SUBMENU_CONFIG = <?php echo json_encode($menus); ?>;
     var clear_cache_url = '{:url("index/clear")}';
     
     layui.config({
-        version: '1557143998899',
+        version: '2020072023015895',
         base: 'admin/libs/layui-extend/'
     }).extend({
         jquery_cookie: 'jquery.cookie',
-        index: '{/}admin/admin/js/index'
-    }).use('index');
+        index: '{/}admin/admin/js/index',
+        lock_screen: '{/}admin/libs/lock-screen/lock-screen',
+    }).use(['index', 'lock_screen']);
     </script>
 </body>
 

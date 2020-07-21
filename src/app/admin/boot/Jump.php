@@ -18,6 +18,12 @@ use think\exception\HttpResponseException;
 use think\Response;
 use think\response\Redirect;
 
+/**
+ * 页面跳转
+ *
+ * @create 2019-7-7
+ * @author deatil
+ */
 trait Jump
 {
 

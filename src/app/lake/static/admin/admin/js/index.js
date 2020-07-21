@@ -1,6 +1,8 @@
-layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) {
+layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], function(exports) {
     var $ = layui.jquery,
         element = layui.element,
+        form = layui.form,
+        utils = layui.utils,
         layer = layui.layer;
     
     // 添加cookie
@@ -702,7 +704,19 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
     if ($.cookie('admin-collapse') == 'collapse') {
         $(".layui-layout-admin").addClass("layui-layout-admin-collapse");
     }
-
+    
+    // 顶部鼠标移上显示
+    var top_nav_layer_tips;
+    $(document).on('mouseenter', ".lake-admin-top-tip", function() {
+        var title = $(this).attr("lay-title");
+        top_nav_layer_tips = layer.tips(title, this, {
+            tips: [1, '#009688'],
+        });
+    });
+    $(document).on('mouseleave', ".lake-admin-top-tip", function() {
+        layer.close(top_nav_layer_tips);
+    });
+    
     // 左侧导航标题
     var left_nav_layer_tips;
     $(document).on('mouseenter', ".layui-layout-admin-collapse .lay-tip-title", function() {
@@ -791,6 +805,6 @@ layui.define(['element', 'layer', 'jquery', 'jquery_cookie'], function(exports) 
     shadeMobile.on('click', function() {
         $('body').removeClass('lake-admin-site-mobile');
     });
-    
+
     exports('index', {});
 })

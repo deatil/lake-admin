@@ -45,22 +45,22 @@
 }
 
 .text-white {
-	color: #fff !important;
+    color: #fff !important;
 }
 .text-gray {
-	color: #868e96 !important;
+    color: #868e96 !important;
 }
 .text-secondary {
-	color: #868e96 !important;
+    color: #868e96 !important;
 }
 .text-light {
-	color: #f8f9fa !important;
+    color: #f8f9fa !important;
 }
 .text-dark {
-	color: #343a40 !important;
+    color: #343a40 !important;
 }
 .text-muted {
-	color: #868e96 !important;
+    color: #868e96 !important;
 }
 .text-danger {
     color: #d26a5c;
@@ -101,11 +101,11 @@
 }
 
 .text-hide {
-	font: 0/0 a;
-	color: transparent;
-	text-shadow: none;
-	background-color: transparent;
-	border: 0;
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
 }
 
 .text-justify {
@@ -304,25 +304,25 @@ code {
 
 /* 安装模块详情 */
 .lake-admin-module-name {
-	font-weight: bold;
-	font-size: 16px;
+    font-weight: bold;
+    font-size: 16px;
 }
 .lake-admin-module-name .lake-admin-module-ver {
-	font-size: 13px;
+    font-size: 13px;
 }
 .lake-admin-module-author {
-	font-size: 13px;
-	margin-top: 3px;
+    font-size: 13px;
+    margin-top: 3px;
 }
 .lake-admin-module-introduce {
-	font-size: 16px;
-	margin: 10px 0 5px 0;
+    font-size: 16px;
+    margin: 10px 0 5px 0;
 }
 
 .lake-admin-auth-manager-access  {
-	border: 1px solid #D2D2D2;
+    border: 1px solid #D2D2D2;
     border-radius: 2px;	
-	padding: 5px 0 5px 3px;
-	max-height: 500px;
+    padding: 5px 0 5px 3px;
+    max-height: 500px;
     overflow-y: scroll;
 }

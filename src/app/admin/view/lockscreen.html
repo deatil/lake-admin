@@ -1,0 +1,52 @@
+<!-- 锁屏 -->
+<link rel="stylesheet" href="admin/libs/lock-screen/lock-screen.css">
+<script src="admin/libs/snowflake.js"></script>
+<script type="text/javascript" src="admin/libs/md5.js"></script>
+<div class="lock-screen" style="display:none;">
+    <div class="lock-bg">
+        <img class="lock-gradual active" src="admin/admin/img/wallpaper/9f28afe0e71b3ba8778e307bea2f006d.jpg" alt=""/>
+        <img class="lock-gradual" src="admin/admin/img/wallpaper/29bce2d5cf30fc96866dcb5e287661ea.jpg" alt=""/>
+        <img class="lock-gradual" src="admin/admin/img/wallpaper/b4b55f8ec6b2763a737a2d6e1c50b71e.jpg" alt=""/>
+        <img class="lock-gradual" src="admin/admin/img/wallpaper/b8df65c6452dcf8b0302b8bfce9e7ec9.jpg" alt=""/>
+        <img class="lock-gradual" src="admin/admin/img/wallpaper/b390e4c33b7d656f09dc7fd155759a4f.jpg" alt=""/>
+        <img class="lock-gradual" src="admin/admin/img/wallpaper/3fded2e777723f145a4773dfdb68a9e3.jpg" alt=""/>
+    </div>
+    <div class="lock-content">
+        <!--雪花-->
+        <div class="snowflake">
+            <canvas id="snowflake"></canvas>
+        </div>
+        <!--雪花 END-->
+        <div class="time">
+            <div>
+                <div class="hhmmss"></div>
+                <div class="yyyymmdd"></div>
+            </div>
+        </div>
+        <div class="quit" id="lockQuit">
+            <i class="layui-icon layui-icon-logout" title="退出登录"></i>
+        </div>
+        <table class="unlock">
+            <tr>
+                <td>
+                    <div class="layui-form lock-form">
+                        <div class="lock-head">
+                            <img src="{:lake_get_file_path($user_info['avatar'])}" alt="{:lake_get_file_path($user_info['avatar'])}"/>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+                                <input type="password" required lay-verify="required" id="lockPassword" name="lock_password" style="border-radius: 0;border:0;height: 44px" placeholder="请输入登录密码" autocomplete="off"
+                                       class="layui-input"/>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                                <button style="width: 100%;box-sizing:border-box;border-radius: 0;" type="button" lay-submit lay-filter="lockSubmit"
+                                        class="layui-btn lock-btn layui-btn-lg layui-btn-normal">确定
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

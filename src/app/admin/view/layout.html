@@ -13,13 +13,15 @@
     <script src="admin/libs/layui/layui.js"></script>
     <script src="admin/libs/jquery/jquery.min.js"></script>
     <script type="text/javascript">
-    //全局变量
-    var GV = {
-        'image_upload_url': '{$image_upload_url ? $image_upload_url : url("attachments/upload", ["dir" => "images", "module" => env("module_name", app("http")->getName())])}',
-        'file_upload_url': '{$file_upload_url ? $file_upload_url : url("attachments/upload", ["dir" => "files", "module" => env("module_name", app("http")->getName())])}',
-        'WebUploader_swf': 'admin/webuploader/Uploader.swf',
-        'ueditor_upload_url': '{$ueditor_upload_url ? $ueditor_upload_url : url("attachments/upload", ["dir" => "images","from"=>"ueditor", "module" => env("module_name", app("http")->getName())])}',
-        'ueditor_grabimg_url': '{$ueditor_upload_url ? $ueditor_upload_url : url("attachments/geturlfile")}',
+    // 全局变量
+    var lake = {
+        url: {
+            'image_upload_url': '{$image_upload_url ? $image_upload_url : url("attachments/upload", ["dir" => "images", "module" => env("module_name", app("http")->getName())])}',
+            'file_upload_url': '{$file_upload_url ? $file_upload_url : url("attachments/upload", ["dir" => "files", "module" => env("module_name", app("http")->getName())])}',
+            'webuploader_swf': 'admin/webuploader/Uploader.swf',
+            'ueditor_upload_url': '{$ueditor_upload_url ? $ueditor_upload_url : url("attachments/upload", ["dir" => "images","from"=>"ueditor", "module" => env("module_name", app("http")->getName())])}',
+            'ueditor_grabimg_url': '{$ueditor_upload_url ? $ueditor_upload_url : url("attachments/geturlfile")}',
+        }
     };
     </script>
 </head>
@@ -30,9 +32,11 @@
     {block name="layui"}
     <script type="text/javascript">
     layui.config({
-        version: '1557143998899',
+        version: '2020072023015895',
         base: 'admin/libs/layui-extend/'
     }).extend({
+        tagsinput: '{/}admin/libs/layui-extend-tagsinput/tagsinput',
+        jquery_cookie: 'jquery.cookie',
         common: '{/}admin/admin/js/common',
         bind: '{/}admin/admin/js/bind'
     }).use(['common', 'bind']);

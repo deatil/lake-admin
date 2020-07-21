@@ -6,8 +6,8 @@ use think\facade\Db;
 use think\facade\View;
 use think\facade\Validate;
 
+use app\admin\facade\Module as ModuleFacade;
 use app\admin\model\Config as ConfigModel;
-use app\admin\module\Module as ModuleService;
 
 /**
  * 系统配置
@@ -274,7 +274,7 @@ class Config extends Base
             $group = $this->request->param('group');
             
             // 模块列表
-            $modules = (new ModuleService())->getAll();
+            $modules = ModuleFacade::getAll();
             
             View::assign([
                 'modules' => $modules,
@@ -351,7 +351,7 @@ class Config extends Base
             }
             
             // 模块列表
-            $modules = (new ModuleService())->getAll();
+            $modules = ModuleFacade::getAll();
             
             View::assign([
                 'modules' => $modules,

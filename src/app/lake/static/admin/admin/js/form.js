@@ -13,11 +13,11 @@
              initialFrameHeight: 400, //初始化编辑器高度,默认320
              autoHeightEnabled: false, //是否自动长高
              maximumWords: 50000, //允许的最大字符数
-             serverUrl: GV.ueditor_upload_url,
+             serverUrl: lake.url.ueditor_upload_url,
          });
          $('#' + ueditor_name + 'grabimg').click(function() {
              var con = ueditors[ueditor_name].getContent();
-             $.post(GV.ueditor_grabimg_url, { 'content': con, 'type': 'images' },
+             $.post(lake.url.ueditor_grabimg_url, { 'content': con, 'type': 'images' },
                  function(data) {
                      ueditors[ueditor_name].setContent(data);
                      layer.msg("图片本地化完成");
@@ -45,9 +45,9 @@
              // 去重
              duplicate: true,
              // swf文件路径
-             swf: GV.WebUploader_swf,
+             swf: lake.url.webuploader_swf,
              // 文件接收服务端。
-             server: GV.file_upload_url,
+             server: lake.url.file_upload_url,
              // 选择文件的按钮。可选。
              // 内部根据当前运行是创建，可能是input元素，也可能是flash.
              pick: {
@@ -179,12 +179,12 @@
              resize: false,
              compress: false,
              // swf文件路径
-             swf: GV.WebUploader_swf,
+             swf: lake.url.webuploader_swf,
              pick: {
                  id: '#picker_' + $input_file_name,
                  multiple: $multiple
              },
-             server: GV.image_upload_url,
+             server: lake.url.image_upload_url,
              // 图片限制大小
              fileSingleSizeLimit: $size,
              // 只允许选择图片文件。
