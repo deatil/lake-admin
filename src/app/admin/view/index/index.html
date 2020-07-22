@@ -38,8 +38,8 @@
                 <li class="layui-nav-item layui-hide-xs lake-admin-top-tip" lay-title="锁屏">
                     <a class="lake-admin-lock js-lake-admin-lock" 
                         href="javascript:"
-                        data-lock="{:url('screen/lock')}"
-                        data-unlock="{:url('screen/unlock')}"
+                        data-lock="{:url('passport/lockscreen')}"
+                        data-unlock="{:url('passport/unlockscreen')}"
                         data-logout="{:url('passport/logout')}"
                         >
                         <i class="iconfont icon-lock"></i><cite></cite>
@@ -77,7 +77,7 @@
                             <a href="{:url('profile/index')}" 
                                 lay-id="0213cb7994fca486bd1da1cf4c380450"
                                 lay-icon="iconfont icon-people" 
-                                lay-title="更改密码"
+                                lay-title="账号信息"
                                 >
                                 <i class="iconfont icon-people"></i>&nbsp;账号信息
                             </a>
@@ -183,7 +183,7 @@
         </div>
     </div>
     <script src="admin/libs/layui/layui.js"></script>
-    {include file="lockscreen" /}
+    {include file="index/lockscreen" /}
     <script type="text/javascript">
     var SUBMENU_CONFIG = <?php echo json_encode($menus); ?>;
     var clear_cache_url = '{:url("index/clear")}';

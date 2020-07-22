@@ -25,14 +25,14 @@ class AdminScreenLockCheck
      */
     public function handle($request, Closure $next)
     {
-        // 过滤不需要登陆的行为
+        // 过滤的行为
         $allowUrl = [
             'admin/passport/captcha',
             'admin/passport/login',
             'admin/passport/logout',
+            'admin/passport/unlockscreen',
             'admin/index/index',
             'admin/index/main',
-            'admin/screen/unlock',
         ];
         
         $rule = strtolower(

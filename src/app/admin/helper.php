@@ -3,6 +3,8 @@
 use think\facade\Db;
 use think\facade\Event;
 
+use app\admin\facade\Password as PasswordFacade;
+
 use app\admin\model\Attachment as AttachmentModel;
 use app\admin\model\Module as ModuleModel;
 
@@ -607,10 +609,8 @@ if (!function_exists('lake_encrypt_password')) {
      */
     function lake_encrypt_password($password, $encrypt = '')
     {
-        $pwd = [];
-        $pwd['encrypt'] = $encrypt ? $encrypt : lake_get_random_string();
-        $pwd['password'] = md5(trim($password) . $pwd['encrypt']);
-        return $encrypt ? $pwd['password'] : $pwd;
+        $pwd = PasswordFacade::setSalt(config("app.admin_salt"))->encrypt($password, $encrypt);
+        return $pwd;
     }
 }
 

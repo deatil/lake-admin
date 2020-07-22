@@ -75,9 +75,9 @@ class Profile extends Base
             
             // 验证数据
             $rule = [
-                'password|旧密码' => 'require|length:3,20',
-                'password2|新密码' => 'require|length:3,20',
-                'password2_confirm|确认新密码' => 'require|length:3,20',
+                'password|旧密码' => 'require|length:32',
+                'password2|新密码' => 'require|length:32',
+                'password2_confirm|确认新密码' => 'require|length:32',
             ];
             $result = $this->validate($post, $rule);
             if (true !== $result) {
@@ -115,24 +115,25 @@ class Profile extends Base
             $passwordinfo = lake_encrypt_password($post['password2']); //对密码进行处理
             
             $data = [];
-            $data['id'] = $post['id'];
             $data['encrypt'] = $passwordinfo['encrypt'];
             $data['password'] = $passwordinfo['password'];
 
-            $status = $AdminModel->isUpdate(true)->save($data);
+            $status = $AdminModel->where([
+                'id' => $post['id'],
+            ])->update($data);
             
             if ($status === false) {
-                $this->error('修改失败！');
+                $this->error('修改密码失败！');
             }
             
-            $this->success("修改成功！");
+            $this->success("修改密码成功！");
         } else {
             $id = $adminInfo['id'];
             $data = $AdminModel->where([
                 "id" => $id,
             ])->find();
             if (empty($data)) {
-                $this->error('该信息不存在！');
+                $this->error('信息不存在！');
             }
             View::assign("data", $data);
             return View::fetch();

@@ -6,6 +6,8 @@ use think\facade\Db;
 use think\Model;
 use think\facade\Session;
 
+use app\admin\facade\Password as PasswordFacade;
+
 /**
  * 管理员
  *
@@ -298,10 +300,8 @@ class Admin extends Model
      */
     protected function encryptPassword($password, $encrypt = '')
     {
-        $pwd = [];
-        $pwd['encrypt'] = $encrypt ? $encrypt : lake_get_random_string();
-        $pwd['password'] = md5(md5(trim($password) . $pwd['encrypt']) . config("app.admin_salt"));
-        return $encrypt ? $pwd['password'] : $pwd;
+        $pwd = PasswordFacade::setSalt(config("app.admin_salt"))->encrypt($password, $encrypt);
+        return $pwd;
     }
     
 }

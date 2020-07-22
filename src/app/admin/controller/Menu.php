@@ -7,8 +7,8 @@ use think\facade\View;
 
 use lake\Tree;
 
+use app\admin\facade\Module as ModuleFacade;
 use app\admin\model\AuthRule as AuthRuleModel;
-use app\admin\module\Module as ModuleModule;
 
 /**
  * 后台菜单管理
@@ -159,7 +159,7 @@ class Menu extends Base
             View::assign("select_categorys", $selectCategorys);
             
             // 模块列表
-            $modules = (new ModuleModule())->getAll();
+            $modules = ModuleFacade::getAll();
             View::assign("modules", $modules);
             
             return View::fetch();
@@ -259,7 +259,7 @@ class Menu extends Base
             View::assign("select_categorys", $selectCategorys);
             
             // 模块列表
-            $modules = (new ModuleModule())->getAll();
+            $modules = ModuleFacade::getAll();
             View::assign("modules", $modules);
             
             return View::fetch();

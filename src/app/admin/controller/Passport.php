@@ -6,6 +6,7 @@ use think\facade\View;
 
 use app\admin\model\Admin as AdminModel;
 use app\admin\service\Admin as AdminService;
+use app\admin\service\Screen as ScreenService;
 
 /**
  * 登陆
@@ -117,5 +118,48 @@ class Passport extends Base
             $this->success('注销成功！', url("passport/login"));
         }
     }
-
+    
+    /**
+     * 锁定
+     *
+     * @create 2020-7-21
+     * @author deatil
+     */
+    public function lockscreen()
+    {
+        if (!request()->isPost()) {
+            $this->error('访问错误！');
+        }
+        
+        $url = request()->url();
+        
+        (new ScreenService())->lock($url);
+        
+        $this->success('屏幕锁定成功');
+    }
+    
+    /**
+     * 解除锁定
+     *
+     * @create 2020-7-21
+     * @author deatil
+     */
+    public function unlockscreen()
+    {
+        if (!request()->isPost()) {
+            $this->error('访问错误！');
+        }
+        
+        $adminInfo = env('admin_info');
+        $password = request()->post('password');
+        
+        $AdminModel = new AdminModel;
+        if (!$AdminModel->login($adminInfo['username'], $password)) {
+            $this->error("用户名或者密码错误，解除锁定失败！");
+        }
+        
+        (new ScreenService())->unlock();
+        
+        $this->success('屏幕解除锁定成功');
+    }
 }

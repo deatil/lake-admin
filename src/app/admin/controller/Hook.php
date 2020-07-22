@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use think\facade\Db;
 use think\facade\View;
 
-use app\admin\module\Module as ModuleModule;
+use app\admin\facade\Module as ModuleFacade;
 
 /**
  * 嵌入点
@@ -101,7 +101,7 @@ class Hook extends Base
             
         } else {
             // 模块列表
-            $modules = (new ModuleModule())->getAll();
+            $modules = ModuleFacade::getAll();
             View::assign("modules", $modules);
             
             return View::fetch();
@@ -151,7 +151,7 @@ class Hook extends Base
             View::assign("data", $data);
             
             // 模块列表
-            $modules = (new ModuleModule())->getAll();
+            $modules = ModuleFacade::getAll();
             View::assign("modules", $modules);
             
             return View::fetch();

@@ -5,7 +5,7 @@ namespace app\admin\middleware;
 use Closure;
 use think\App;
 
-use app\admin\module\Module as ModuleModule;
+use app\admin\facade\Module as ModuleFacade;
 
 /**
  * 检测模块
@@ -34,11 +34,10 @@ class CheckModule
     {
         $module = $this->app->http->getName();
         
-        $ModuleModule = new ModuleModule();
-        $check = $ModuleModule->checkModule($module);
+        $check = ModuleFacade::checkModule($module);
         
         if ($check === false) {
-            $error = $ModuleModule->getError();
+            $error = ModuleFacade::getError();
             abort(404, $error);
         }
         

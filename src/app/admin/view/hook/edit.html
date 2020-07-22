@@ -13,7 +13,7 @@
                     <input type="text" name="module" value="{$data.module}" lay-verify="required" autocomplete="off" placeholder="所属模块" class="layui-input" id="module_select">
                 </div>
                 <div class="layui-input-inline">
-                    <select lay-filter="module_select">
+                    <select lay-filter="module_select" class="module-select-list">
                         <option data-module=""></option>
                         <option data-module="admin">lake-admin</option>
                         {volist name="modules" id="module"}
@@ -77,6 +77,10 @@ layui.use(['layer', 'form'], function() {
     var layer = layui.layer,
         form = layui.form,
         $ = layui.$;
+        
+    var module = $('#module_select').val();
+    $(".module-select-list option[data-module='"+module+"']").attr("selected", true);
+    form.render('select');
         
     form.on('select(module_select)', function(data) {
         $('#module_select').val($(data.elem).find("option:selected").attr("data-module"));

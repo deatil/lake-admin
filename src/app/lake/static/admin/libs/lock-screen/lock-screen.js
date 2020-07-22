@@ -19,13 +19,13 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
                     layer.close(index);
                     utils.local("isLock", '1');//设置锁屏缓存防止刷新失效
                     lockShowInit(utils);//锁屏
+                    
+                    $.cookie('lake-admin-menuid', '', {
+                        expires: 0,
+                    });
                 } else {
                     layer.alert("锁定账户失败！");
                 }
-            });
-            
-            $.cookie('lake-admin-menuid', '', {
-                expires: 0,
             });
         });
     });

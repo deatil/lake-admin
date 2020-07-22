@@ -22,7 +22,7 @@
                     <input type="text" name="module" lay-verify="required" autocomplete="off" placeholder="菜单所属模块" class="layui-input" id="module_select" value="admin">
                 </div>
                 <div class="layui-input-inline">
-                    <select lay-filter="module_select">
+                    <select lay-filter="module_select" class="module-select-list">
                         <option data-module=""></option>
                         <option data-module="admin">lake-admin</option>
                         {volist name="modules" id="module"}
@@ -75,8 +75,8 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">验证类型</label>
                 <div class="w300">
-                    <input type="radio" name="type" value="1" title="链接"  checked="">
-                    <input type="radio" name="type" value="2" title="主菜单" >
+                    <input type="radio" name="type" value="2" title="主菜单" checked="">
+                    <input type="radio" name="type" value="1" title="链接">
                 </div>
             </div>
             
@@ -149,8 +149,12 @@ layui.use(['iconPicker', 'form', 'layer'], function() {
         success: function(d) {
             console.log(d);
         }
-    });    
-
+    });
+    
+    var module = $('#module_select').val();
+    $(".module-select-list option[data-module='"+module+"']").attr("selected", true);
+    form.render('select');
+    
     form.on('select(module_select)', function(data) {
         $('#module_select').val($(data.elem).find("option:selected").attr("data-module"));
     });

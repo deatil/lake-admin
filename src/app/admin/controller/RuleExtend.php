@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use think\facade\Db;
 use think\facade\View;
 
-use app\admin\module\Module as ModuleModule;
+use app\admin\facade\Module as ModuleFacade;
 use app\admin\model\AuthGroup as AuthGroupModel;
 
 /**
@@ -96,7 +96,7 @@ class RuleExtend extends Base
             View::assign("roles", (new AuthGroupModel)->getGroups());
             
             // 模块列表
-            $modules = (new ModuleModule())->getAll();
+            $modules = ModuleFacade::getAll();
             View::assign("modules", $modules);
             
             return View::fetch();
@@ -139,7 +139,7 @@ class RuleExtend extends Base
             View::assign("roles", (new AuthGroupModel)->getGroups());
             
             // 模块列表
-            $modules = (new ModuleModule())->getAll();
+            $modules = ModuleFacade::getAll();
             View::assign("modules", $modules);
             
             return View::fetch();
