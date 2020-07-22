@@ -154,8 +154,8 @@ class Passport extends Base
         $password = request()->post('password');
         
         $AdminModel = new AdminModel;
-        if (!$AdminModel->login($adminInfo['username'], $password)) {
-            $this->error("用户名或者密码错误，解除锁定失败！");
+        if (!$AdminModel->getUserInfo($adminInfo['username'], $password)) {
+            $this->error("密码错误，解除锁定失败！");
         }
         
         (new ScreenService())->unlock();
