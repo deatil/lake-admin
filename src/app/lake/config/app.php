@@ -6,11 +6,15 @@
 
 return [
 
+    // 根目录
+    'root_path' => root_path(),
+
     // app命名空间
     'module_namespace' => 'app',
 
     // 模块地址
     'module_path' => root_path() . 'addons' . DIRECTORY_SEPARATOR,
+    
     // 系统模块
     'system_module_list' => [
         'admin', 

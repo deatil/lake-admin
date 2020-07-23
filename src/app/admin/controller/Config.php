@@ -18,17 +18,6 @@ use app\admin\model\Config as ConfigModel;
 class Config extends Base
 {
     /**
-     * 框架构造函数
-     *
-     * @create 2019-8-4
-     * @author deatil
-     */
-    protected function initialize()
-    {
-        parent::initialize();
-    }
-
-    /**
      * 配置首页
      *
      * @create 2019-7-31
@@ -317,7 +306,7 @@ class Config extends Base
             }
             
             if ($info['is_system'] == 1) {
-                $this->error('系统默认配置不可操作！');
+                unset($data['name'], $data['module']);
             }
             
             $status = ConfigModel::where([
@@ -344,10 +333,6 @@ class Config extends Base
             ])->find();
             if (empty($info)) {
                 $this->error('信息不存在！');
-            }
-            
-            if ($info['is_system'] == 1) {
-                $this->error('系统配置不可操作！');
             }
             
             // 模块列表

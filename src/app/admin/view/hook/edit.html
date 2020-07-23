@@ -81,7 +81,7 @@ layui.use(['layer', 'form'], function() {
     var module = $('#module_select').val();
     $(".module-select-list option[data-module='"+module+"']").attr("selected", true);
     form.render('select');
-        
+    
     form.on('select(module_select)', function(data) {
         $('#module_select').val($(data.elem).find("option:selected").attr("data-module"));
     });

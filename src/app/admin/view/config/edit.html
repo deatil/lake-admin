@@ -4,6 +4,13 @@
 <div class="layui-card">
     <div class="layui-card-header layui-bg-cyan">编辑配置</div>
     <div class="layui-card-body">
+        {if $info['is_system'] == 1}
+            <blockquote class="layui-elem-quote">
+                <span class="text-danger font-weight-bold">注意：</span>
+                系统内置配置的 <span class="layui-badge layui-bg-cyan">配置名称</span> 和 <span class="layui-badge layui-bg-cyan">所属模块</span> 不能被修改
+            </blockquote>
+        {/if}
+        
         <form class="layui-form" method="post">
             <div class="layui-form-item">
                 <label class="layui-form-label">分组</label>
@@ -23,7 +30,7 @@
                     <select name="type" lay-filter="type" lay-verify="required">
                         <option value=""></option>
                         {volist name="fieldType" id="vo"}
-                        <option value="{$vo.name}" data-ifoption="{$vo.ifoption}" {if $info.type==$vo.name}selected{/if}>{$vo.title}[{$vo.name}]</option>
+                            <option value="{$vo.name}" data-ifoption="{$vo.ifoption}" {if $info.type==$vo.name}selected{/if}>{$vo.title}[{$vo.name}]</option>
                         {/volist}
                     </select>
                 </div>
@@ -35,7 +42,7 @@
                     <input type="text" name="module" lay-verify="required" value="{$info.module}" autocomplete="off" placeholder="字段英文、数字、下划线及其组合" class="layui-input" id="config_module">
                 </div>
                 <div class="layui-input-inline">
-                    <select lay-filter="config_module">
+                    <select lay-filter="config_module" class="module-select-list">
                         <option data-module=""></option>
                         <option data-module="admin">lake-admin</option>
                         {volist name="modules" id="module"}
@@ -133,7 +140,11 @@ layui.use(['layer', 'form'], function() {
     var layer = layui.layer,
         form = layui.form,
         $ = layui.$;
-        
+    
+    var module = $('#config_module').val();
+    $(".module-select-list option[data-module='"+module+"']").attr("selected", true);
+    form.render('select');
+    
     form.on('select(config_module)', function(data) {
         $('#config_module').val($(data.elem).find("option:selected").attr("data-module"));
     });

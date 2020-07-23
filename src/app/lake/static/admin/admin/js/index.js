@@ -4,9 +4,6 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
         form = layui.form,
         utils = layui.utils,
         layer = layui.layer;
-    
-    // 添加cookie
-    $ = layui.jquery_cookie($);
 
     var menus = SUBMENU_CONFIG;
     var nowTabMenuid = ''; // 当前tab的ID

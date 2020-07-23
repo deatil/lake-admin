@@ -85,13 +85,13 @@ class Module
     public function __construct($options = [])
     {
         $this->options = array_merge($this->options, [
-            'root_path' => root_path(),
+            'root_path' => config('app.root_path'),
             'module_path' => config('app.module_path'),
             'system_module_list' => config('app.system_module_list'),
             'module_static_path' => config('app.module_static_path'),
         ]);
         
-        if (!empty($options)) {
+        if (!empty($options) && is_array($options)) {
             $this->options = array_merge($this->options, $options);
         }
         
@@ -312,8 +312,12 @@ class Module
             'setting' => [],
             // 嵌入点
             'hooks' => [],
-            // 缓存
-            'cache' => [],
+            // 菜单
+            'menus' => [],
+            // 数据表，不用加表前缀
+            'tables' => [],
+            // 演示数据
+            'demo' => 0,
         ];
 
         // 从配置文件获取
@@ -1107,10 +1111,16 @@ class Module
             return '';
         }
         
-        $moduleRealPath = str_replace(DIRECTORY_SEPARATOR, '/', $moduleRealPath);
-        $this->rootPath = str_replace(DIRECTORY_SEPARATOR, '/', $this->rootPath);
+        $moduleRealPath = str_replace([
+            DIRECTORY_SEPARATOR,
+            '\\',
+        ], '/', $moduleRealPath);
+        $this->rootPath = str_replace([
+            DIRECTORY_SEPARATOR,
+            '\\',
+        ], '/', $this->rootPath);
         
-        $modulePath = str_replace($this->rootPath, '', $moduleRealPath);
+        $modulePath = substr($moduleRealPath, strlen($this->rootPath));
         return $modulePath;
     }
     

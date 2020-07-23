@@ -35,7 +35,7 @@
                     <input type="text" name="module" lay-verify="required" value="admin" autocomplete="off" placeholder="字段英文、数字、下划线及其组合" class="layui-input" id="config_module">
                 </div>
                 <div class="layui-input-inline">
-                    <select lay-filter="config_module">
+                    <select lay-filter="config_module" class="module-select-list">
                         <option data-module=""></option>
                         <option data-module="admin">lake-admin</option>
                         {volist name="modules" id="module"}
@@ -132,7 +132,11 @@ layui.use(['layer', 'form'], function() {
     var layer = layui.layer,
         form = layui.form,
         $ = layui.$;
-        
+    
+    var module = $('#config_module').val();
+    $(".module-select-list option[data-module='"+module+"']").attr("selected", true);
+    form.render('select');
+    
     form.on('select(config_module)', function(data) {
         $('#config_module').val($(data.elem).find("option:selected").attr("data-module"));
     });
