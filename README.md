@@ -29,3 +29,4 @@
 *  后台admin登陆，超级管理员账号及密码：`admin/123456`
 *  模块插件目录：`addons` 文件夹 及 自定义包模块插件
 *  自定义包模块插件可以查看：`lake-admin-addon-lmenu` 插件 及 `lake-admin-addon-lroute` 插件
+*  如果项目搬迁移，可以执行 `php think lake-admin:repair` 修复静态文件失效问题，已安装模块请升级更新一次
