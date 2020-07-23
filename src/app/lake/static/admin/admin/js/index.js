@@ -794,7 +794,26 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
             .addClass("lake-admin-skin-active");
     }
     skin();
-
+    
+    // 退出登陆
+    $(document).on('click', '.js-lake-admin-logout', function (e) {
+        // 取消事件的默认动作
+        e.preventDefault();
+        // 终止事件 不再派发事件
+        e.stopPropagation();
+        
+        var url = $(this).attr('href');
+        layer.confirm('您确定要退出登陆吗？', { 
+            icon: 3, 
+            title: '提示信息' 
+        }, function(index) {
+            $.cookie('lake-admin-menuid', '', {
+                expires: 0,
+            });
+            location.href = url;
+        });
+    });
+    
     // 手机设备适配
     var treeMobile = $('.lake-admin-site-tree-mobile'),
         shadeMobile = $('.lake-admin-site-mobile-shade')

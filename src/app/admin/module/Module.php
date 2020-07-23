@@ -25,6 +25,9 @@ use app\admin\model\Module as ModuleModel;
  */
 class Module
 {
+    // 根目录
+    protected $rootPath;
+    
     // 模块所处目录路径
     protected $modulePath;
     
@@ -34,6 +37,7 @@ class Module
     
     // 模块配置
     protected $options = [
+        'root_path' => '',
         'module_path' => '',
         'system_module_list' => '',
         'module_static_path' => '',
@@ -44,6 +48,9 @@ class Module
     
     // 模块列表
     protected $moduleList = [];
+    
+    // 模块本地列表
+    protected $moduleLocalList = [];
     
     // 系统模块，隐藏
     protected $systemModuleList = [];
@@ -78,6 +85,7 @@ class Module
     public function __construct($options = [])
     {
         $this->options = array_merge($this->options, [
+            'root_path' => root_path(),
             'module_path' => config('app.module_path'),
             'system_module_list' => config('app.system_module_list'),
             'module_static_path' => config('app.module_static_path'),
@@ -87,13 +95,14 @@ class Module
             $this->options = array_merge($this->options, $options);
         }
         
+        $this->rootPath = $this->options['root_path'];
         $this->modulePath = $this->options['module_path'];
         $this->systemModuleList = $this->options['system_module_list'];
         $this->staticPath = realpath($this->options['module_static_path']);
     }
     
     /**
-     * 获取所有模块信息
+     * 所有模块
      *
      * @create 2019-7-25
      * @author deatil
@@ -103,32 +112,8 @@ class Module
         if (!empty($this->moduleList)) {
             return $this->moduleList;
         }
-
-        $dirs = array_map('basename', glob($this->modulePath . '*', GLOB_ONLYDIR));
-        if ($dirs === false || !file_exists($this->modulePath)) {
-            $this->error = '模块目录不可读或者不存在';
-            return false;
-        }
         
-        // 正常模块(包括已安装和未安装)
-        $dirsArr = array_diff($dirs, $this->systemModuleList);
-        
-        $list = [];
-        foreach ($dirsArr as $module) {
-            $moduleInfo = $this->getInfoFromLocalFile($module);
-            if ($moduleInfo !== false) {
-                $list[$module] = $moduleInfo;
-            }
-        }
-        
-        $hookModules = Event::trigger('lake_admin_modules');
-        if (!empty($hookModules)) {
-            foreach ($hookModules as $hookModule) {
-                if (isset($hookModule['module']) && !empty($hookModule['module'])) {
-                    $list[$hookModule['module']] = $hookModule;
-                }
-            }
-        }
+        $list = $this->getLocalList();
         
         // 读取数据库已经安装模块表
         $moduleList = (new ModuleModel())->getModuleList();
@@ -157,17 +142,62 @@ class Module
     }
     
     /**
-     * 获取经安装模块数量
+     * 所有本地模块
      *
-     * @create 2019-7-25
+     * @create 2020-7-23
      * @author deatil
      */
-    public function getCount()
+    public function getLocalList()
     {
-        // 读取数据库已经安装模块表
-        $moduleCount = ModuleModel::order('listorder asc')->count();
+        if (!empty($this->moduleLocalList)) {
+            return $this->moduleLocalList;
+        }
+
+        $dirs = array_map('basename', glob($this->modulePath . '*', GLOB_ONLYDIR));
+        if ($dirs === false || !file_exists($this->modulePath)) {
+            $this->error = '模块目录不可读或者不存在';
+            return false;
+        }
         
-        return $moduleCount;
+        // 本地模块
+        $dirsArr = array_diff($dirs, $this->systemModuleList);
+        
+        $list = [];
+        if (!empty($dirsArr)) {
+            foreach ($dirsArr as $module) {
+                $moduleInfo = $this->getInfoFromLocalFile($module);
+                if ($moduleInfo !== false) {
+                    $list[$module] = $moduleInfo;
+                }
+            }
+        }
+        
+        // 自定义包插件
+        $composerModules = Event::trigger('lake_admin_module');
+        if (!empty($composerModules)) {
+            foreach ($composerModules as $composerModule) {
+                if (isset($composerModule['module']) && !empty($composerModule['module'])) {
+                    $list[$composerModule['module']] = $composerModule;
+                }
+            }
+        }
+        
+        $this->moduleLocalList = $list;
+        
+        return $list;
+    }
+    
+    /**
+     * 本地模块数量
+     *
+     * @create 2020-7-23
+     * @author deatil
+     */
+    public function getLocalCount()
+    {
+        $list = $this->getLocalList();
+        
+        return count($list);
     }
 
     /**
@@ -193,6 +223,30 @@ class Module
     }
 
     /**
+     * 获取模块信息，包括数据库合并信息
+     * @param string $name 模块名称
+     * @return array|mixed
+     *
+     * @create 2020-7-23
+     * @author deatil
+     */
+    public function getInfo($name = '')
+    {
+        if (empty($name)) {
+            $this->error = '模块名称不能为空！';
+            return false;
+        }
+        
+        $models = $this->getAll();
+        if (!isset($models[$name])) {
+            $this->error = '模块信息不能存在！';
+            return false;
+        }
+        
+        return $models[$name];
+    }
+
+    /**
      * 获取模块信息
      * @param string $name 模块名称
      * @return array|mixed
@@ -207,7 +261,7 @@ class Module
             return false;
         }
         
-        $models = $this->getAll();
+        $models = $this->getLocalList();
         if (!isset($models[$name])) {
             $this->error = '模块信息不能存在！';
             return false;
@@ -231,7 +285,7 @@ class Module
             return false;
         }
         
-        $config = array(
+        $config = [
             // 模块目录
             'module' => $name,
             // 模块名称
@@ -246,7 +300,7 @@ class Module
             'authoremail' => '',
             // 版本号，请不要带除数字外的其他字符
             'version' => '',
-            // 适配最低lake版本，
+            // 适配最低lake-admin版本，
             'adaptation' => '',
             // 模块路径，默认为空，自定义包插件可填写
             'path' => '',
@@ -260,7 +314,7 @@ class Module
             'hooks' => [],
             // 缓存
             'cache' => [],
-        );
+        ];
 
         // 从配置文件获取
         if (!is_file($this->modulePath . $name . DIRECTORY_SEPARATOR . 'info.php')) {
@@ -302,7 +356,7 @@ class Module
         }
         
         if (!empty($info['path'])) {
-            $info = rtrim($info['path'], '/') . '/info.php';
+            $info = rtrim($this->getModuleRealPath($info['path']), '/') . '/info.php';
         } else {
             $info = $this->modulePath . $name . '/info.php';
         }
@@ -354,7 +408,7 @@ class Module
         
         // 安装方法增加模块命名空间
         if (!empty($config['path'])) {
-            $namespaceModulePath = rtrim($config['path'], DIRECTORY_SEPARATOR);
+            $namespaceModulePath = rtrim($this->getModuleRealPath($config['path']), DIRECTORY_SEPARATOR);
         } else {
             $namespaceModulePath = $this->modulePath . trim($config['module'], DIRECTORY_SEPARATOR);
         }
@@ -429,7 +483,9 @@ class Module
         }
         
         // 取得该模块数据库中记录的安装信息
-        $info = ModuleModel::where(array('module' => $name))->find();
+        $info = ModuleModel::where([
+            'module' => $name,
+        ])->find();
         if (empty($info)) {
             $this->error = '该模块未安装，无需卸载！';
             return false;
@@ -557,6 +613,11 @@ class Module
             return false;
         }
         
+        $modulePath = (isset($config['path']) && !empty($config['path'])) 
+            ? $config['path'] 
+            : $this->modulePath . $name;
+        $modulePath = $this->getModulePath($modulePath);
+        
         $data = [
             'module' => $name,
             'name' => $config['name'],
@@ -566,9 +627,7 @@ class Module
             'authoremail' => isset($config['authoremail']) ? $config['authoremail'] : '',
             'version' => $config['version'],
             'adaptation' => isset($config['adaptation']) ? $config['adaptation'] : '',
-            'path' => (isset($config['path']) && !empty($config['path'])) 
-                ? $config['path'] 
-                : $this->modulePath . $name,
+            'path' => $modulePath,
             'sign' => $config['sign'],
             
             'need_module' => (isset($config['need_module']) && !empty($config['need_module'])) ? json_encode($config['need_module']) : '',
@@ -609,6 +668,11 @@ class Module
             return false;
         }
         
+        $modulePath = (isset($config['path']) && !empty($config['path'])) 
+            ? $config['path'] 
+            : $this->modulePath . $name;
+        $modulePath = $this->getModulePath($modulePath);
+        
         $data = [
             'name' => $config['name'],
             'introduce' => isset($config['introduce']) ? $config['introduce'] : '',
@@ -617,9 +681,7 @@ class Module
             'authoremail' => isset($config['authoremail']) ? $config['authoremail'] : '',
             'version' => $config['version'],
             'adaptation' => isset($config['adaptation']) ? $config['adaptation'] : '',
-            'path' => (isset($config['path']) && !empty($config['path'])) 
-                ? $config['path'] 
-                : $this->modulePath . $name,
+            'path' => $modulePath,
             'sign' => $config['sign'],
             
             'need_module' => isset($config['need_module']) ? json_encode($config['need_module']) : '',
@@ -824,8 +886,7 @@ class Module
         // 检查是否有安装脚本
         $class = "\\app\\{$name}\\{$dir}\\".ucwords($dir);
         if (!class_exists($class)) {
-            $this->error = '安装脚本错误或者不存在';
-            return false;
+            return true;
         }
         
         $installObj = Container::getInstance()->make($class);
@@ -1008,12 +1069,12 @@ class Module
     }
     
     /**
-     * 获取模块路径
+     * 获取模块路径信息
      *
      * @create 2019-11-23
      * @author deatil
      */    
-    public function getModulePath($name = '')
+    public function getModulePathInfo($name = '')
     {
         if (empty($name)) {
             $this->error = '模块名称不能为空！';
@@ -1032,6 +1093,48 @@ class Module
         }
         
         return $models[$name]['path'];
+    }
+    
+    /**
+     * 获取模块相对路径，去掉绝对路径信息
+     *
+     * @create 2020-7-23
+     * @author deatil
+     */    
+    public function getModulePath($moduleRealPath = '')
+    {
+        if (empty($moduleRealPath)) {
+            return '';
+        }
+        
+        $moduleRealPath = str_replace(DIRECTORY_SEPARATOR, '/', $moduleRealPath);
+        $this->rootPath = str_replace(DIRECTORY_SEPARATOR, '/', $this->rootPath);
+        
+        $modulePath = str_replace($this->rootPath, '', $moduleRealPath);
+        return $modulePath;
+    }
+    
+    /**
+     * 获取模块真实路径，添加绝对路径信息
+     *
+     * @create 2020-7-23
+     * @author deatil
+     */    
+    public function getModuleRealPath($modulePath = '')
+    {
+        if (empty($modulePath)) {
+            return '';
+        }
+        
+        $modulePath = str_replace('/', DIRECTORY_SEPARATOR, $modulePath);
+        $this->rootPath = str_replace('/', DIRECTORY_SEPARATOR, $this->rootPath);
+        
+        if (file_exists($modulePath)) {
+            return $modulePath;
+        }
+        
+        $moduleRealPath = $this->rootPath . ltrim($modulePath, DIRECTORY_SEPARATOR);
+        return $moduleRealPath;
     }
     
     /**

@@ -7,6 +7,8 @@ use think\App;
 use think\Event;
 use think\facade\Db;
 
+use app\admin\facade\Module as ModuleFacade;
+
 /**
  * lake-admin 中间件
  *
@@ -67,7 +69,7 @@ class LoadModule
                 ->find();
                 
             if (!empty($moduleInfo['path'])) {
-                $appPath = rtrim($moduleInfo['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+                $appPath = rtrim(ModuleFacade::getModuleRealPath($moduleInfo['path']), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
             } else {
                 $modulePath = rtrim(config('app.module_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
                 

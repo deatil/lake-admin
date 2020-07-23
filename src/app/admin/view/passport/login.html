@@ -46,6 +46,10 @@
     <script type="text/javascript" src="admin/libs/md5.js"></script>
     <script type="text/javascript" src="admin/libs/layui/layui.js"></script>
     <script type="text/javascript">
+    if (self.location != top.location) {
+        window.location.href = '{:url("index/index")}';
+    }
+    
     layui.use(['form', 'layer', 'jquery'], function() {
         var form = layui.form,
             layer = layui.layer,
@@ -67,7 +71,7 @@
 
             function success(data) {
                 if (data.code) {
-                    layer.msg('登入成功', {
+                    layer.msg(data.msg, {
                         offset: '15px',
                         icon: 1,
                         time: 1000
@@ -75,7 +79,10 @@
                         window.location.href = data.url;
                     });
                 } else {
-                    layer.msg(data.msg, { icon: 5 });
+                    layer.msg(data.msg, { 
+                        offset: '15px',
+                        icon: 5 
+                    });
                     // 刷新验证码
                     $("#verify").click();
                 }

@@ -89,6 +89,7 @@ class Service extends BaseService
         // 注册系统默认指令
         $this->commands([
             \app\admin\command\LakeAdminInstall::class,
+            \app\admin\command\LakeAdminRepair::class,
             \app\admin\command\LakeAdminServiceDiscover::class,
         ]);
     }

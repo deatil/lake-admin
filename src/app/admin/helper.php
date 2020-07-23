@@ -3,6 +3,9 @@
 use think\facade\Db;
 use think\facade\Event;
 
+use lake\Arr;
+use lake\Random;
+
 use app\admin\facade\Password as PasswordFacade;
 
 use app\admin\model\Attachment as AttachmentModel;
@@ -50,70 +53,8 @@ if (!function_exists('lake_var_export')) {
      */
     function lake_var_export($arr = [], $blankspace = '')
     {
-        $blank = '    ';
-        $ret = "[\n";
-        if (!empty($arr)) {
-            foreach ($arr as $k => $v) {
-                $ret .= $blankspace . $blank;
-                $ret .= (is_numeric($k) ? '' : "'".$k."' => ");
-                $_type = strtolower(gettype($v));
-                switch($_type){
-                    case 'integer':
-                        $ret .= $v.",";
-                        break;
-                    case 'array':
-                        $ret .= lake_var_export($v, $blankspace . $blank).",";
-                        break;
-                    case 'null':
-                        $ret .= "NULL,";
-                        break;
-                    default:
-                        $ret  .= "'".$v."',";
-                        break;
-                }
-                $ret .= "\n";
-            }
-        }
-        
-        $ret .= $blankspace . "]";
+        $ret = Arr::varExport($arr, $blankspace);
         return $ret;
-    }
-}
-
-if (!function_exists('lake_array_merge_deep')) {
-    /**
-     * 数组深度合并
-     *
-     * @create 2020-7-19
-     * @author deatil
-     */
-    function lake_array_merge_deep($arr1, $arr2 = []){
-        $merged = $arr1;
-        
-        if (empty($arr1)) {
-            return $arr2;
-        }
-        
-        if (empty($arr2)) {
-            return $arr1;
-        }
-        
-        foreach ($arr2 as $key => $value) {
-            if (is_array($value) 
-                && isset($merged[$key]) 
-                && is_array($merged[$key])
-            ) {
-                $merged[$key] = lake_array_merge_deep($merged[$key], $value);
-            } elseif (is_numeric($key)) {
-                if (!in_array($value, $merged)) {
-                    $merged[] = $value;
-                }
-            } else {
-                $merged[$key] = $value;
-            }
-        }
-        
-        return $merged;
     }
 }
 
@@ -125,14 +66,7 @@ if (!function_exists('lake_data_auth_sign')) {
      */
     function lake_data_auth_sign($data)
     {
-        //数据类型检测
-        if (!is_array($data)) {
-            $data = (array) $data;
-        }
-        ksort($data); //排序
-        $code = http_build_query($data); //url编码并生成query字符串
-        $sign = sha1($code); //生成签名
-        return $sign;
+        return Arr::dataAuthSign($data);
     }
 }
 
@@ -153,20 +87,9 @@ if (!function_exists('lake_int_to_string')) {
      *  )
      *
      */
-    function lake_int_to_string(&$data, $map = array('status' => [1 => '正常', -1 => '删除', 0 => '禁用', 2 => '未审核', 3 => '草稿']))
+    function lake_int_to_string($data, $map = ['status' => [1 => '正常', -1 => '删除', 0 => '禁用', 2 => '未审核', 3 => '草稿']])
     {
-        if ($data === false || $data === null) {
-            return $data;
-        }
-        $data = (array) $data;
-        foreach ($data as $key => $row) {
-            foreach ($map as $col => $pair) {
-                if (isset($row[$col]) && isset($pair[$row[$col]])) {
-                    $data[$key][$col . '_text'] = $pair[$row[$col]];
-                }
-            }
-        }
-        return $data;
+        return Arr::intToString($data, $map);
     }
 }
 
@@ -264,30 +187,7 @@ if (!function_exists('lake_list_sort_by')) {
      */
     function lake_list_sort_by($list, $field, $sortby = 'asc')
     {
-        if (is_array($list)) {
-            $refer = $resultSet = array();
-            foreach ($list as $i => $data) {
-                $refer[$i] = &$data[$field];
-            }
-
-            switch ($sortby) {
-                case 'asc': // 正向排序
-                    asort($refer);
-                    break;
-                case 'desc': // 逆向排序
-                    arsort($refer);
-                    break;
-                case 'nat': // 自然排序
-                    natcasesort($refer);
-                    break;
-            }
-            foreach ($refer as $key => $val) {
-                $resultSet[] = &$list[$key];
-            }
-
-            return $resultSet;
-        }
-        return false;
+        return Arr::sort($list, $field, $sortby);
     }
 }
 
@@ -306,27 +206,7 @@ if (!function_exists('lake_list_to_tree')) {
         $child = '_child', 
         $root = 0
     ) {
-        // 创建Tree
-        $tree = [];
-        if (is_array($list)) {
-            // 创建基于主键的数组引用
-            $refer = [];
-            foreach ($list as $key => $data) {
-                $refer[$data[$pk]] = &$list[$key];
-            }
-            foreach ($list as $key => $data) {
-                // 判断是否存在parent
-                $parentId = $data[$pid];
-                if ($root == $parentId) {
-                    $tree[] = &$list[$key];
-                } else {
-                    if (isset($refer[$parentId])) {
-                        $parent = &$refer[$parentId];
-                        $parent[$child][] = &$list[$key];
-                    }
-                }
-            }
-        }
+        $tree = Arr::listToTree($list, $pk, $pid, $child, $root);
         return $tree;
     }
 }
@@ -420,22 +300,7 @@ if (!function_exists('lake_get_random_string')) {
      */
     function lake_get_random_string($len = 6)
     {
-        $chars = [
-            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
-            "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
-            "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G",
-            "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-            "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2",
-            "3", "4", "5", "6", "7", "8", "9",
-        ];
-        $charsLen = count($chars) - 1;
-        // 将数组打乱
-        shuffle($chars);
-        $output = "";
-        for ($i = 0; $i < $len; $i++) {
-            $output .= $chars[mt_rand(0, $charsLen)];
-        }
-        return $output;
+        return Random::alnum($len);
     }
 }
 

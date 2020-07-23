@@ -6,9 +6,9 @@ layui.define(['table', 'element', 'layer', 'form', 'notice', 'msg', 'lakeform'],
         form = layui.form,
         lakeform = layui.lakeform,
         notice = layui.notice;
-
-	window.$body = $('body');
-
+    
+    window.$body = $('body');
+    
     /*! 注册 data-lake-load 事件行为 */
     $body.on('click', '[data-lake-load]', function () {
         var url = $(this).attr('data-lake-load'), tips = $(this).attr('data-lake-tips'), time = $(this).attr('data-lake-time');

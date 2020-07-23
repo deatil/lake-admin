@@ -6,6 +6,7 @@ use think\facade\Db;
 use think\facade\Env;
 
 use app\admin\controller\Base;
+use app\admin\facade\Module as ModuleFacade;
 
 /**
  * 插件后台
@@ -53,7 +54,7 @@ class AdminBase extends Base
                     'status' => 1,
                 ])->find();
                 if (!empty($moduleInfo) && !empty($moduleInfo['path'])) {
-                    $modulePath = $moduleInfo['path'];
+                    $modulePath = ModuleFacade::getModuleRealPath($moduleInfo['path']);
                 }
             }
             

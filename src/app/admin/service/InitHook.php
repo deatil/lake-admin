@@ -11,6 +11,8 @@ use think\facade\Cache;
 use think\facade\Event;
 use think\facade\Env;
 
+use app\admin\facade\Module as ModuleFacade;
+
 /**
  * 初始化钩子信息
  *
@@ -66,7 +68,7 @@ class InitHook
         if (!empty($modules)) {
             foreach ($modules as $module) {
                 if (!empty($module['path'])) {
-                    $namespace_module_path = $module['path'];
+                    $namespace_module_path = ModuleFacade::getModuleRealPath($module['path']);
                 } else {
                     $namespace_module_path = $module_path . $module['module'];
                 }

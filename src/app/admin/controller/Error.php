@@ -5,7 +5,7 @@ namespace app\admin\controller;
 /**
  * 错误
  *
- * @create 2019-8-12
+ * @create 2019-10-10
  * @author deatil
  */
 class Error
@@ -18,6 +18,6 @@ class Error
      */
     public function index()
     {
-        abort(404, '控制器不存在~');
+        abort(404, '该页面不存在！');
     }
 }

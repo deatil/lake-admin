@@ -5,6 +5,8 @@ namespace app\admin\Model;
 use think\facade\Db;
 use think\Model;
 
+use lake\Arr;
+
 use app\admin\service\Auth as AuthService;
 use app\admin\service\Admin as AdminService;
 
@@ -157,7 +159,7 @@ class AuthRule extends Model
 
     /**
      * 返回后台节点数据
-     * @param boolean $tree    是否返回多维数组结构(生成菜单时用到),为false返回一维数组(生成权限节点时用到)
+     * @param boolean $tree 是否返回多维数组结构(生成菜单时用到),为false返回一维数组(生成权限节点时用到)
      * @retrun array
      *
      * 注意,返回的主菜单节点数组中有'controller'元素,以供区分子节点和主节点
@@ -174,7 +176,7 @@ class AuthRule extends Model
             foreach ($list as $key => $value) {
                 $list[$key]['url'] = $value['name'];
             }
-            $nodes = lake_list_to_tree($list, $pk = 'id', $pid = 'parentid', $child = 'operator', $root = 0);
+            $nodes = Arr::listToTree($list, $pk = 'id', $pid = 'parentid', $child = 'operator', $root = 0);
             foreach ($nodes as $key => $value) {
                 if (!empty($value['operator'])) {
                     $nodes[$key]['child'] = $value['operator'];

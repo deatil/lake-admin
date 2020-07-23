@@ -48,7 +48,7 @@ class Config extends Base
                     'field_type.name=config.type', 
                     'LEFT'
                 )
-                ->order('listorder,create_time desc')
+                ->order('config.listorder,config.create_time desc')
                 ->select()
                 ->toArray();
                 
@@ -421,15 +421,15 @@ class Config extends Base
         }
         
         $listorder = $this->request->param('value/d', 0);
-        if (empty($id)) {
+        if (empty($listorder)) {
             $listorder = 100;
         }
         
-        $rs = ConfigModel::update([
-            'listorder' => $listorder,
-        ], [
+        $rs = ConfigModel::where([
             'id' => $id,
-        ], true);
+        ])->update([
+            'listorder' => $listorder,
+        ]);
         
         if ($rs === false) {
             $this->error("排序失败！");
@@ -461,12 +461,12 @@ class Config extends Base
             $status = 0;
         }
         
-        $status = ConfigModel::update([
-            'status' => $status,
-        ], [
+        $rs = ConfigModel::where([
             'id' => $id,
+        ])->update([
+            'status' => $status,
         ]);
-        if ($status === false) {
+        if ($rs === false) {
             $this->error('操作失败！');
         }
         

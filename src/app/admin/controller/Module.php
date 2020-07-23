@@ -181,7 +181,7 @@ class Module extends Base
         if ($this->request->isPost()) {
             $module = $this->request->param('module');
             if (empty($module)) {
-                $this->error('请选择需要安装的模块！');
+                $this->error('请选择需要卸载的模块！');
             }
             if (ModuleFacade::uninstall($module)) {
                 $this->success("模块卸载成功！一键清理缓存后生效！", url("Module/index"));
@@ -192,7 +192,7 @@ class Module extends Base
         } else {
             $module = $this->request->param('module', '');
             if (empty($module)) {
-                $this->error('请选择需要安装的模块！');
+                $this->error('请选择需要卸载的模块！');
             }
             $config = ModuleFacade::getInfoFromFile($module);
             View::assign('config', $config);
@@ -223,7 +223,7 @@ class Module extends Base
         } else {
             $module = $this->request->param('module', '');
             if (empty($module)) {
-                $this->error('请选择需要安装的模块！');
+                $this->error('请选择需要更新的模块！');
             }
             
             $config = ModuleFacade::getInfoFromFile($module);

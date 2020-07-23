@@ -40,6 +40,21 @@ var date_format = function (timestamp, format) {
    }
    return format;
 };
+
+// 格式化文件大小的JS方法
+function renderSize(filesize) {
+    if (null == filesize || filesize == '') {
+        return "0 B";
+    }
+    var unitArr = new Array("B","KB","MB","GB","TB","PB","EB","ZB","YB");
+    var index = 0;
+    var srcsize = parseFloat(filesize);
+    index = Math.floor(Math.log(srcsize)/Math.log(1024));
+    var size = srcsize/Math.pow(1024,index);
+    size = size.toFixed(2);//保留的小数位数
+    return size + unitArr[index];
+}
+
 layui.define(["layer"], function (exprots) {
    var $ = layui.jquery;
    var utils = {
@@ -190,12 +205,10 @@ layui.define(["layer"], function (exprots) {
          }
       },
       /**
-       * 获取父窗体的okTab
+       * 格式化文件大小
        * @returns {string}
        */
-      getOkTab: function () {
-         return parent.objOkTab;
-      },
+      renderSize: renderSize,
       /**
        * 格式化当前日期
        * @param date

@@ -100,8 +100,6 @@ class Passport extends Base
             
             $this->success('恭喜您，登陆成功', url('Index/index'));
         } else {
-            $session = session('admin_user_auth');
-            
             return View::fetch();
         }
     }
