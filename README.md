@@ -30,3 +30,10 @@
 *  模块插件目录：`addons` 文件夹 及 自定义包模块插件
 *  自定义包模块插件可以查看：`lake-admin-addon-lmenu` 插件 及 `lake-admin-addon-lroute` 插件
 *  如果项目搬迁移，可以执行 `php think lake-admin:repair` 修复静态文件失效问题，已安装模块请升级更新一次
+
+
+### 截图预览
+
+[![LakeAdmin1](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin1.png)](https://github.com/deatil)
+[![LakeAdmin2](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin2.png)](https://github.com/deatil)
+[![LakeAdmin3](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin3.png)](https://github.com/deatil)
