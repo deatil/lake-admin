@@ -71,14 +71,14 @@ abstract class Base extends BaseController
         $search_field = $this->request->param('search_field/s', '', 'trim');
         $keyword = $this->request->param('keyword/s', '', 'trim');
        
-        View::assign("search_field", $search_field);
-        View::assign("keyword", $keyword);
+        $this->assign("search_field", $search_field);
+        $this->assign("keyword", $keyword);
 
         $filter_time = $this->request->param('filter_time/s', '', 'trim');
         $filter_time_range = $this->request->param('filter_time_range/s', '', 'trim');
        
-        View::assign("filter_time", $filter_time);
-        View::assign("filter_time_range", $filter_time_range);
+        $this->assign("filter_time", $filter_time);
+        $this->assign("filter_time_range", $filter_time_range);
 
         $map = [];
         // 关键词搜索

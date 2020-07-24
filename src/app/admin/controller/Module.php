@@ -53,12 +53,12 @@ class Module extends Base
                 }
             }
             
-            return json([
+            return $this->json([
                 "code" => 0, 
                 "data" => $list,
             ]);
         } else {
-            return View::fetch();
+            return $this->fetch();
         }
     }
 
@@ -73,7 +73,7 @@ class Module extends Base
         if ($this->request->isAjax()) {
             $list = ModuleFacade::getAll();
             if ($list === false) {
-                return json([
+                return $this->json([
                     "code" => 1, 
                     "msg" => ModuleFacade::getError(),
                 ]);
@@ -85,12 +85,12 @@ class Module extends Base
                 }
             }
 
-            return json([
+            return $this->json([
                 "code" => 0, 
                 "data" => $list,
             ]);
         } else {
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
@@ -160,12 +160,12 @@ class Module extends Base
 
             }
             
-            View::assign('need_module', $needModule);
-            View::assign('version_check', $versionCheck);
-            View::assign('table_check', $tableCheck);
-            View::assign('config', $config);
+            $this->assign('need_module', $needModule);
+            $this->assign('version_check', $versionCheck);
+            $this->assign('table_check', $tableCheck);
+            $this->assign('config', $config);
             
-            return View::fetch();
+            return $this->fetch();
             
         }
     }
@@ -195,8 +195,8 @@ class Module extends Base
                 $this->error('请选择需要卸载的模块！');
             }
             $config = ModuleFacade::getInfoFromFile($module);
-            View::assign('config', $config);
-            return View::fetch();
+            $this->assign('config', $config);
+            return $this->fetch();
             
         }
     }
@@ -271,12 +271,12 @@ class Module extends Base
             
             }
             
-            View::assign('need_module', $needModule);
-            View::assign('version_check', $versionCheck);
-            View::assign('table_check', $tableCheck);
-            View::assign('config', $config);
+            $this->assign('need_module', $needModule);
+            $this->assign('version_check', $versionCheck);
+            $this->assign('table_check', $tableCheck);
+            $this->assign('config', $config);
             
-            return View::fetch();
+            return $this->fetch();
         
         }
     }
@@ -402,9 +402,9 @@ class Module extends Base
             }
         }
         
-        View::assign('data', $module);
+        $this->assign('data', $module);
         
-        return View::fetch();
+        return $this->fetch();
     }
     
     /**
@@ -467,8 +467,8 @@ class Module extends Base
             $this->error('信息不存在！');
         }
         
-        View::assign("data", $data);
-        return View::fetch();
+        $this->assign("data", $data);
+        return $this->fetch();
     }
     
     /**

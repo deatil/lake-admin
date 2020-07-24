@@ -100,9 +100,9 @@ class AuthManager extends Base
             
             Event::trigger('AuthManagerIndexAjax', $result);
             
-            return json($result);
+            return $this->json($result);
         } else {
-            return View::fetch();
+            return $this->fetch();
         }
     }
 
@@ -119,7 +119,7 @@ class AuthManager extends Base
         }
         
         // 清除编辑权限的值
-        View::assign('auth_group', [
+        $this->assign('auth_group', [
             'title' => null, 
             'id' => null, 
             'description' => null, 
@@ -149,9 +149,9 @@ class AuthManager extends Base
             $groupData = $tree->getTree(0, $str, 0);
         }
         
-        View::assign("group_data", $groupData);
+        $this->assign("group_data", $groupData);
         
-        return View::fetch('edit_group');
+        return $this->fetch('edit_group');
     }
     
     /**
@@ -221,10 +221,10 @@ class AuthManager extends Base
             $groupData = $tree->getTree(0, $str, $authGroup['parentid']);
         }
         
-        View::assign("group_data", $groupData);
-        View::assign('auth_group', $authGroup);
+        $this->assign("group_data", $groupData);
+        $this->assign('auth_group', $authGroup);
         
-        return View::fetch();
+        return $this->fetch();
     }
     
     /**
@@ -450,16 +450,16 @@ class AuthManager extends Base
         
         Event::trigger('AuthManagerAccess', $json);
         
-        View::assign('group_id', $groupId);
-        View::assign('json', json_encode($json));
+        $this->assign('group_id', $groupId);
+        $this->assign('json', json_encode($json));
         
         $authGroup = Db::name('AuthGroup')->where([
             'type' => AuthGroupModel::TYPE_ADMIN,
             'id' => $groupId,
         ])->find();
-        View::assign('auth_group', $authGroup);
+        $this->assign('auth_group', $authGroup);
         
-        return View::fetch('access');
+        return $this->fetch('access');
     }
     
 }

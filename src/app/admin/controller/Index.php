@@ -30,11 +30,11 @@ class Index extends Base
     public function index()
     {
         // 用户信息
-        View::assign('user_info', env('admin_info'));
+        $this->assign('user_info', env('admin_info'));
 
         // 左侧菜单
         $menus = (new AuthRuleModel())->getMenuList();
-        View::assign("menus", $menus);
+        $this->assign("menus", $menus);
         
         // 默认后台首页
         $defaultMainUrl = (string) url('index/main');
@@ -45,9 +45,9 @@ class Index extends Base
             $mainUrl = $defaultMainUrl;
         }
         
-        View::assign("main_url", $mainUrl);
+        $this->assign("main_url", $mainUrl);
         
-        return View::fetch();
+        return $this->fetch();
     }
     
     /**
@@ -58,19 +58,19 @@ class Index extends Base
      */
     public function main()
     {
-        View::assign('user_info', env('admin_info'));
+        $this->assign('user_info', env('admin_info'));
         
         // 模型数量
         $moduleCount = Db::name('module')->count();
-        View::assign('module_count', $moduleCount);
+        $this->assign('module_count', $moduleCount);
         
         // 附件数量
         $attachmentCount = Db::name('attachment')->count();
-        View::assign('attachment_count', $attachmentCount);
+        $this->assign('attachment_count', $attachmentCount);
         
-        View::assign('sys_info', $this->getSysInfo());
+        $this->assign('sys_info', $this->getSysInfo());
         
-        return View::fetch();
+        return $this->fetch();
     }
 
     /**

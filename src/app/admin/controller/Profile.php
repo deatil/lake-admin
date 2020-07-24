@@ -54,8 +54,8 @@ class Profile extends Base
             if (empty($data)) {
                 $this->error('该信息不存在！');
             }
-            View::assign("data", $data);
-            return View::fetch();
+            $this->assign("data", $data);
+            return $this->fetch();
         }
     }
 
@@ -135,8 +135,8 @@ class Profile extends Base
             if (empty($data)) {
                 $this->error('信息不存在！');
             }
-            View::assign("data", $data);
-            return View::fetch();
+            $this->assign("data", $data);
+            return $this->fetch();
         }
     }
 

@@ -47,10 +47,10 @@ class Menu extends Base
                 "count" => $total, 
                 "data" => $list
             ];
-            return json($result);
+            return $this->json($result);
         }
         
-        return View::fetch();
+        return $this->fetch();
 
     }
 
@@ -86,9 +86,9 @@ class Menu extends Base
                 "count" => $total, 
                 "data" => $data,
             ];
-            return json($result);
+            return $this->json($result);
         } else {
-            return View::fetch();
+            return $this->fetch();
         }
     }
 
@@ -156,13 +156,13 @@ class Menu extends Base
             $str = "<option value='\$id' \$selected>\$spacer \$title</option>";
             $tree->init($array);
             $selectCategorys = $tree->getTree(0, $str);
-            View::assign("select_categorys", $selectCategorys);
+            $this->assign("select_categorys", $selectCategorys);
             
             // 模块列表
             $modules = ModuleFacade::getAll();
-            View::assign("modules", $modules);
+            $this->assign("modules", $modules);
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
 
@@ -255,14 +255,14 @@ class Menu extends Base
             $str = "<option value='\$id' \$selected>\$spacer \$title</option>";
             $tree->init($array);
             $selectCategorys = $tree->getTree(0, $str);
-            View::assign("data", $rs);
-            View::assign("select_categorys", $selectCategorys);
+            $this->assign("data", $rs);
+            $this->assign("select_categorys", $selectCategorys);
             
             // 模块列表
             $modules = ModuleFacade::getAll();
-            View::assign("modules", $modules);
+            $this->assign("modules", $modules);
             
-            return View::fetch();
+            return $this->fetch();
         }
 
     }

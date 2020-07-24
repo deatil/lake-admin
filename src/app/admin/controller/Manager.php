@@ -91,9 +91,9 @@ class Manager extends Base
                 "count" => $total, 
                 "data" => $list
             ];
-            return json($result);
+            return $this->json($result);
         }
-        return View::fetch();
+        return $this->fetch();
     }
 
     /**
@@ -151,9 +151,9 @@ class Manager extends Base
             } else {
                 $roles = (new AuthGroupModel)->getGroups();
             }
-            View::assign("roles", $roles);
+            $this->assign("roles", $roles);
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
 
@@ -251,7 +251,7 @@ class Manager extends Base
                 ])
                 ->column('group_id');
             
-            View::assign("data", $data);
+            $this->assign("data", $data);
             
             if (!env('admin_is_root')) {
                 $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
@@ -262,9 +262,9 @@ class Manager extends Base
             } else {
                 $roles = (new AuthGroupModel)->getGroups();
             }
-            View::assign("roles", $roles);
+            $this->assign("roles", $roles);
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
@@ -349,8 +349,8 @@ class Manager extends Base
         
         $data['groups'] = implode(',', $groups);
         
-        View::assign("data", $data);
-        return View::fetch();
+        $this->assign("data", $data);
+        return $this->fetch();
     }
     
     /**
@@ -403,9 +403,9 @@ class Manager extends Base
                 $this->error('该信息不存在！');
             }
             
-            View::assign("data", $data);
+            $this->assign("data", $data);
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
     

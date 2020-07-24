@@ -56,11 +56,11 @@ class Hook extends Base
                 "count" => $total, 
                 "data" => $data,
             ];
-            return json($result);
+            return $this->json($result);
         } else {
             $this->buildparams();
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
 
@@ -102,9 +102,9 @@ class Hook extends Base
         } else {
             // 模块列表
             $modules = ModuleFacade::getAll();
-            View::assign("modules", $modules);
+            $this->assign("modules", $modules);
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
@@ -148,13 +148,13 @@ class Hook extends Base
                 $this->error('信息不存在！');
             }
             
-            View::assign("data", $data);
+            $this->assign("data", $data);
             
             // 模块列表
             $modules = ModuleFacade::getAll();
-            View::assign("modules", $modules);
+            $this->assign("modules", $modules);
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
@@ -260,11 +260,11 @@ class Hook extends Base
                 "count" => $total, 
                 "data" => $data,
             ];
-            return json($result);
+            return $this->json($result);
         } else {
             $this->buildparams();
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
@@ -299,11 +299,11 @@ class Hook extends Base
                 "count" => $total, 
                 "data" => $data,
             ];
-            return json($result);
+            return $this->json($result);
         } else {
             $this->buildparams();
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
     

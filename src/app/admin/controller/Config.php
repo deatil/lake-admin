@@ -41,16 +41,16 @@ class Config extends Base
                 ->select()
                 ->toArray();
                 
-            return json([
+            return $this->json([
                 "code" => 0, 
                 "data" => $list
             ]);
         } else {
-            View::assign([
+            $this->assign([
                 'groupArray' => config('app.config_group'),
                 'group' => $group,
             ]);
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
@@ -97,13 +97,13 @@ class Config extends Base
                 "count" => $total, 
                 "data" => $data,
             ];
-            return json($result);
+            return $this->json($result);
         } else {
-            View::assign([
+            $this->assign([
                 'groupArray' => config('app.config_group'),
                 'group' => 'all',
             ]);
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
@@ -214,12 +214,12 @@ class Config extends Base
                 }
                 $value['fieldArr'] = 'modelField';
             }
-            View::assign([
+            $this->assign([
                 'groupArray' => config('app.config_group'),
                 'fieldList' => $configList,
                 'group' => $group,
             ]);
-            return View::fetch();
+            return $this->fetch();
         }
 
     }
@@ -265,14 +265,14 @@ class Config extends Base
             // 模块列表
             $modules = ModuleFacade::getAll();
             
-            View::assign([
+            $this->assign([
                 'modules' => $modules,
                 'groupArray' => config('app.config_group'),
                 'fieldType' => $fieldType,
                 'group' => $group,
             ]);
     
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
@@ -338,14 +338,14 @@ class Config extends Base
             // 模块列表
             $modules = ModuleFacade::getAll();
             
-            View::assign([
+            $this->assign([
                 'modules' => $modules,
                 'groupArray' => config('app.config_group'),
                 'fieldType' => $fieldType,
                 'info' => $info,
             ]);
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
     

@@ -77,9 +77,9 @@ class Attachments extends Base
             
             Event::trigger('AttachmentsIndexAjax', $result);
             
-            return json($result);
+            return $this->json($result);
         } else {
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
@@ -107,9 +107,9 @@ class Attachments extends Base
         
         Event::trigger('AttachmentsView', $data);
         
-        View::assign('data', $data);
+        $this->assign('data', $data);
         
-        return View::fetch();
+        return $this->fetch();
     }
     
     /**

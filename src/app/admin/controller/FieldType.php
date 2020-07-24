@@ -167,9 +167,9 @@ class FieldType extends Base
                 "data" => $data
             ];
             
-            return json($result);
+            return $this->json($result);
         }
-        return View::fetch();
+        return $this->fetch();
     }
 
     /**
@@ -213,12 +213,12 @@ class FieldType extends Base
 
         } else {
             // 类型列表
-            View::assign("types", $this->types);
+            $this->assign("types", $this->types);
             
             // 验证规则列表
-            View::assign("vrules", $this->vrules);
+            $this->assign("vrules", $this->vrules);
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
 
@@ -267,15 +267,15 @@ class FieldType extends Base
                 $this->error('信息不存在！');
             }
             
-            View::assign("data", $data);
+            $this->assign("data", $data);
             
             // 类型列表
-            View::assign("types", $this->types);
+            $this->assign("types", $this->types);
             
             // 验证规则列表
-            View::assign("vrules", $this->vrules);
+            $this->assign("vrules", $this->vrules);
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
 

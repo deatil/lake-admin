@@ -67,9 +67,9 @@ class AdminLog extends Base
                 "data" => $data,
             ];
             
-            return json($result);
+            return $this->json($result);
         } else {
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
@@ -99,8 +99,8 @@ class AdminLog extends Base
             $this->error('信息不存在！');
         }
         
-        View::assign("data", $data);
-        return View::fetch();
+        $this->assign("data", $data);
+        return $this->fetch();
     }
     
     /**

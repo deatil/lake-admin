@@ -63,9 +63,9 @@ class RuleExtend extends Base
                 "data" => $data
             ];
             
-            return json($result);
+            return $this->json($result);
         }
-        return View::fetch();
+        return $this->fetch();
     }
     
     /**
@@ -93,13 +93,13 @@ class RuleExtend extends Base
             return $this->success("添加成功！");
             
         } else {
-            View::assign("roles", (new AuthGroupModel)->getGroups());
+            $this->assign("roles", (new AuthGroupModel)->getGroups());
             
             // 模块列表
             $modules = ModuleFacade::getAll();
-            View::assign("modules", $modules);
+            $this->assign("modules", $modules);
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
@@ -135,14 +135,14 @@ class RuleExtend extends Base
                 $this->error('信息不存在！');
             }
             
-            View::assign("data", $data);
-            View::assign("roles", (new AuthGroupModel)->getGroups());
+            $this->assign("data", $data);
+            $this->assign("roles", (new AuthGroupModel)->getGroups());
             
             // 模块列表
             $modules = ModuleFacade::getAll();
-            View::assign("modules", $modules);
+            $this->assign("modules", $modules);
             
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
@@ -207,8 +207,8 @@ class RuleExtend extends Base
             $this->error('信息不存在！');
         }
         
-        View::assign("data", $data);
-        return View::fetch();
+        $this->assign("data", $data);
+        return $this->fetch();
     }
     
 }

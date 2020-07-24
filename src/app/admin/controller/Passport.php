@@ -98,9 +98,9 @@ class Passport extends Base
                 $this->error("用户名或者密码错误，登陆失败！", url('index/login'));
             }
             
-            $this->success('恭喜您，登陆成功', url('Index/index'));
+            $this->success('登陆成功', url('Index/index'));
         } else {
-            return View::fetch();
+            return $this->fetch();
         }
     }
     
