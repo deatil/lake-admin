@@ -5,6 +5,8 @@ namespace app\admin\controller;
 use think\facade\Db;
 use think\facade\View;
 
+use app\admin\model\Hook as HookModel;
+use app\admin\model\AuthGroup as AuthGroupModel;
 use app\admin\facade\Module as ModuleFacade;
 
 /**
@@ -40,14 +42,12 @@ class Hook extends Base
             $page = $this->request->param('page/d', 1);
             $map = $this->buildparams();
             
-            $data = Db::name('hook')
-                ->page($page, $limit)
+            $data = HookModel::page($page, $limit)
                 ->where($map)
                 ->order('listorder ASC, module ASC')
                 ->select()
                 ->toArray();
-            $total = Db::name('hook')
-                ->where($map)
+            $total = HookModel::where($map)
                 ->order('listorder ASC, module ASC')
                 ->count();
             
@@ -91,7 +91,7 @@ class Hook extends Base
             $data['add_time'] = time();
             $data['add_ip'] = request()->ip(1);
             
-            $status = Db::name('hook')->data($data)->insert();
+            $status = HookModel::data($data)->insert();
        
             if ($status === false) {
                 $this->error("添加失败！");
@@ -131,8 +131,11 @@ class Hook extends Base
                 $data['status'] = 0;
             }
             
-            $rs = Db::name('hook')
-                ->update($data);
+            $id = $data['id'];
+            unset($data['id']);
+            $rs = HookModel::where([
+                'id' => $id,
+            ])->update($data);
             
             if ($rs === false) {
                 $this->error("修改失败！");
@@ -141,7 +144,7 @@ class Hook extends Base
             $this->success("修改成功！");
         } else {
             $id = $this->request->param('id/s');
-            $data = Db::name('hook')->where([
+            $data = HookModel::where([
                 "id" => $id,
             ])->find();
             if (empty($data)) {
@@ -175,15 +178,14 @@ class Hook extends Base
             $this->error('参数不能为空！');
         }
         
-        $data = Db::name('hook')->where([
+        $data = HookModel::where([
             "id" => $id,
         ])->find();
         if (empty($data)) {
             $this->error('信息不存在！');
         }
         
-        $rs = Db::name('hook')
-            ->where([
+        $rs = HookModel::where([
                 'id' => $id, 
             ])
             ->delete();
@@ -214,8 +216,7 @@ class Hook extends Base
         
         $listorder = $this->request->param('value/d', 100);
         
-        $rs = Db::name('hook')
-            ->where([
+        $rs = HookModel::where([
                 'id' => $id, 
             ])
             ->update([
@@ -242,16 +243,14 @@ class Hook extends Base
             $page = $this->request->param('page/d', 1);
             $map = $this->buildparams();
             
-            $data = Db::name('hook')
-                ->page($page, $limit)
+            $data = HookModel::page($page, $limit)
                 ->where($map)
                 ->field("module, count(module) as num")
                 ->group("module")
                 ->order('module ASC')
                 ->select()
                 ->toArray();
-            $total = Db::name('hook')
-                ->where($map)
+            $total = HookModel::where($map)
                 ->group("module")
                 ->count();
             
@@ -281,16 +280,14 @@ class Hook extends Base
             $page = $this->request->param('page/d', 1);
             $map = $this->buildparams();
             
-            $data = Db::name('hook')
-                ->page($page, $limit)
+            $data = HookModel::page($page, $limit)
                 ->where($map)
                 ->field("name, count(name) as num")
                 ->group("name")
                 ->order('name ASC')
                 ->select()
                 ->toArray();
-            $total = Db::name('hook')
-                ->where($map)
+            $total = HookModel::where($map)
                 ->group("name")
                 ->count();
             

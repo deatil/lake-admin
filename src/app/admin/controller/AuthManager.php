@@ -10,6 +10,7 @@ use lake\Tree;
 
 use app\admin\model\AuthGroup as AuthGroupModel;
 use app\admin\model\AuthRule as AuthRuleModel;
+use app\admin\model\AuthRuleAccess as AuthRuleAccessModel;
 
 use app\admin\service\Auth as AuthService;
 use app\admin\service\AuthManager as AuthManagerService;
@@ -56,16 +57,14 @@ class AuthManager extends Base
             
             $map = $this->buildparams();
             
-            $list = Db::name('auth_group')
-                ->where($map)
+            $list = AuthGroupModel::where($map)
                 ->page($page, $limit)
                 ->order([
                     'add_time' => 'ASC',
                 ])
                 ->select()
                 ->toArray();
-            $total = Db::name('auth_group')
-                ->where($map)
+            $total = AuthGroupModel::where($map)
                 ->count();
             
             $result = [];
@@ -129,8 +128,7 @@ class AuthManager extends Base
         
         $tree = new Tree();
         $str = "'<option value='\$id' \$selected>\$spacer\$title</option>";
-        $list = Db::name('AuthGroup')
-            ->order(['id' => 'ASC'])
+        $list = AuthGroupModel::order(['id' => 'ASC'])
             ->column('*', 'id');
         
         Event::trigger('AuthManagerCreateGroup', $list);
@@ -167,8 +165,7 @@ class AuthManager extends Base
             $this->error('角色组不存在！');
         }
         
-        $authGroup = Db::name('AuthGroup')
-            ->where([
+        $authGroup = AuthGroupModel::where([
                 'type' => AuthGroupModel::TYPE_ADMIN,
             ])
             ->find($id);
@@ -188,8 +185,7 @@ class AuthManager extends Base
         $tree = new Tree();
         
         $str = "'<option value='\$id' \$selected>\$spacer\$title</option>";
-        $list = Db::name('AuthGroup')
-            ->order([
+        $list = AuthGroupModel::order([
                 'id' => 'ASC',
             ])
             ->column('*', 'id');
@@ -266,8 +262,7 @@ class AuthManager extends Base
         $rules = $this->AuthManagerService->getUserRightAuth($rules);
         
         if (isset($data['id']) && !empty($data['id'])) {
-            $authGroup = Db::name('AuthGroup')
-                ->where([
+            $authGroup = AuthGroupModel::where([
                     'type' => AuthGroupModel::TYPE_ADMIN,
                 ])
                 ->find($data['id']);
@@ -292,7 +287,7 @@ class AuthManager extends Base
                 ->update($data);
             
             // 删除权限
-            Db::name('auth_rule_access')->where([
+            AuthRuleAccessModel::where([
                 'group_id' => $data['id'],
             ])->delete();
             
@@ -310,7 +305,7 @@ class AuthManager extends Base
                 
                 Event::trigger('AuthManagerWriteUpdateGroup', $ruleAccess);
                 
-                Db::name('auth_rule_access')->insertAll($ruleAccess);
+                AuthRuleAccessModel::insertAll($ruleAccess);
             }
             
         } else {
@@ -336,7 +331,7 @@ class AuthManager extends Base
                 
                 Event::trigger('AuthManagerWriteInsertGroup', $ruleAccess);
                 
-                Db::name('auth_rule_access')->insertAll($ruleAccess);
+                AuthRuleAccessModel::insertAll($ruleAccess);
             }
         }
         
@@ -364,8 +359,7 @@ class AuthManager extends Base
             $this->error('角色组不存在！');
         }
         
-        $authGroup = Db::name('AuthGroup')
-            ->where([
+        $authGroup = AuthGroupModel::where([
                 'type' => AuthGroupModel::TYPE_ADMIN,
                 'id' => $groupId,
             ])
@@ -413,8 +407,7 @@ class AuthManager extends Base
             $this->error($check['msg']);
         }
         
-        $rules = Db::name('AuthGroup')
-            ->alias('ag')
+        $rules = AuthGroupModel::alias('ag')
             ->leftJoin('auth_rule_access ara ', 'ara.group_id = ag.id')
             ->where([
                 'ag.id' => $groupId,
@@ -453,7 +446,7 @@ class AuthManager extends Base
         $this->assign('group_id', $groupId);
         $this->assign('json', json_encode($json));
         
-        $authGroup = Db::name('AuthGroup')->where([
+        $authGroup = AuthGroupModel::where([
             'type' => AuthGroupModel::TYPE_ADMIN,
             'id' => $groupId,
         ])->find();

@@ -7,6 +7,7 @@ use think\facade\View;
 
 use app\admin\model\Admin as AdminModel;
 use app\admin\model\AuthGroup as AuthGroupModel;
+use app\admin\model\AuthGroupAccess as AuthGroupAccessModel;
 
 use app\admin\service\AuthManager as AuthManagerService;
 
@@ -52,8 +53,7 @@ class Manager extends Base
             
             if (!env('admin_is_root')) {
                 $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
-                $adminIds = Db::name('auth_group_access')
-                    ->where([
+                $adminIds = AuthGroupAccessModel::where([
                         ['group_id', 'in', $userChildGroupIds],
                     ])
                     ->column('admin_id');
@@ -71,8 +71,7 @@ class Manager extends Base
             
             if (!empty($list)) {
                 foreach ($list as $k => $v) {
-                    $groups = Db::name('auth_group')
-                        ->alias('ag')
+                    $groups = AuthGroupModel::alias('ag')
                         ->join('auth_group_access aga', "aga.group_id = ag.id")
                         ->where([
                             'aga.admin_id' => $v['id'],
@@ -244,8 +243,7 @@ class Manager extends Base
                 $this->error('系统默认账户不可操作！');
             }
             
-            $data['gids'] = Db::name('auth_group_access')
-                ->where([
+            $data['gids'] = AuthGroupAccessModel::where([
                     'module' => 'admin',
                     'admin_id' => $id,
                 ])
@@ -330,8 +328,7 @@ class Manager extends Base
             $this->error('该信息不存在！');
         }
         
-        $gids = Db::name('auth_group_access')
-            ->where([
+        $gids = AuthGroupAccessModel::where([
                 'module' => 'admin',
                 'admin_id' => $id,
             ])

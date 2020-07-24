@@ -2,8 +2,6 @@
 
 namespace app\admin\controller;
 
-use think\facade\Db;
-use think\facade\View;
 use think\facade\Event;
 
 use app\admin\model\Attachment as AttachmentModel;
@@ -36,7 +34,6 @@ class Attachments extends Base
     {
         parent::initialize();
         
-        $this->AttachmentModel = new AttachmentModel;
         $this->uploadUrl = config('app.upload_url');
         $this->uploadPath = config('app.upload_path');
     }
@@ -137,7 +134,7 @@ class Attachments extends Base
         
         foreach ($ids as $id) {
             try {
-                $this->AttachmentModel->deleteFile($id);
+                (new AttachmentService)->deleteFile($id);
             } catch (\Exception $ex) {
                 $this->error($ex->getMessage());
             }

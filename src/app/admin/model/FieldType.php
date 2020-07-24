@@ -2,16 +2,16 @@
 
 namespace app\admin\model;
 
-use think\Model;
-
 /**
  * 字段类型模型
  *
  * @create 2019-8-5
  * @author deatil
  */
-class FieldType extends Model
+class FieldType extends ModelBase
 {
+    // 设置当前模型对应的数据表名称
+    protected $name = 'field_type';
 
     /**
      * 获取字段类型列表

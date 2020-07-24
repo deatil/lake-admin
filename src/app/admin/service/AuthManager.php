@@ -6,6 +6,7 @@ use think\facade\Db;
 
 use lake\Tree;
 
+use app\admin\model\AuthGroup as AuthGroupModel;
 use app\admin\service\Auth;
 
 /**
@@ -82,7 +83,7 @@ class AuthManager
         
         $Auth = new Auth();
         
-        $group = Db::name('auth_group')->where([
+        $group = AuthGroupModel::where([
             'id' => $groupId,
         ])->find();
         if (empty($group)) {
@@ -134,7 +135,7 @@ class AuthManager
         
         $Auth = new Auth();
         
-        $group = Db::name('auth_group')->where([
+        $group = AuthGroupModel::where([
             'id' => $groupId,
         ])->find();
         if (empty($group)) {
@@ -153,8 +154,7 @@ class AuthManager
         }
         
         // 用户组列表
-        $authGroupList = Db::name('AuthGroup')
-            ->where([
+        $authGroupList = AuthGroupModel::where([
                 'module' => 'admin',
             ])
             ->order([
@@ -210,8 +210,7 @@ class AuthManager
         $Auth = new Auth();
         
         // 用户组列表
-        $authGroupList = Db::name('AuthGroup')
-            ->where([
+        $authGroupList = AuthGroupModel::where([
                 'module' => 'admin',
             ])
             ->order([
@@ -289,8 +288,7 @@ class AuthManager
         $Auth = new Auth();
         
         // 用户组列表
-        $authGroupList = Db::name('AuthGroup')
-            ->where([
+        $authGroupList = AuthGroupModel::where([
                 'module' => 'admin',
             ])
             ->order([

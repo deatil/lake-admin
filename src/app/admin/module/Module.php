@@ -14,8 +14,10 @@ use lake\File;
 use lake\Sql;
 use lake\Symlink;
 
-use app\admin\model\AuthRule as AuthRuleModel;
+use app\admin\model\Hook as HookModel;
 use app\admin\model\Module as ModuleModel;
+use app\admin\model\AuthRule as AuthRuleModel;
+use app\admin\service\Module as ModuleService;
 
 /**
  * 模块管理
@@ -116,7 +118,7 @@ class Module
         $list = $this->getLocalList();
         
         // 读取数据库已经安装模块表
-        $moduleList = (new ModuleModel())->getModuleList();
+        $moduleList = (new ModuleService())->getList();
         
         if (!empty($list)) {
             foreach ($list as $name => $config) {
@@ -513,7 +515,7 @@ class Module
         $this->uninstallMenu($name);
         
         // 去除对应行为
-        Db::name('hook')->where([
+        HookModel::where([
             'module' => $name,
         ])->delete();
         
@@ -579,7 +581,7 @@ class Module
         }
         
         // 安装行为
-        Db::name('hook')->where([
+        HookModel::where([
             'module' => $name,
         ])->delete();
         if (isset($config['hooks']) && !empty($config['hooks'])) {
@@ -728,7 +730,7 @@ class Module
         }
         
         foreach ($hooks as $hook) {
-            Db::name('hook')->insert([
+            HookModel::insert([
                 'id' => md5(time().lake_to_guid_string(time()).mt_rand(0, 100000)),
                 'module' => $name,
                 'name' => $hook['name'],
@@ -758,7 +760,7 @@ class Module
             return false;
         }
         
-        Db::name('hook')->where([
+        HookModel::where([
             'module' => $name,
         ])->delete();
         
@@ -932,7 +934,7 @@ class Module
         $this->uninstallMenu($name);
         
         // 去除对应行为
-        Db::name('hook')->where([
+        HookModel::where([
             'module' => $name,
         ])->delete();
         
@@ -955,7 +957,7 @@ class Module
             return false;
         }
         
-        $moduleList = (new ModuleModel())->getModuleList();
+        $moduleList = (new ModuleService())->getList();
         return (isset($moduleList[$name]) && $moduleList[$name]) ? true : false;
     }
     
@@ -977,7 +979,7 @@ class Module
             return false;
         }
         
-        $status = Db::name('module')->where([
+        $status = ModuleModel::where([
             'module' => $name,
         ])->update([
             'status' => 1,
@@ -988,13 +990,13 @@ class Module
             return false;
         }
         
-        $status = Db::name('hook')->where([
+        $status = HookModel::where([
             'module' => $name,
         ])->update([
             'status' => 1,
         ]);
         
-        $status = Db::name('auth_rule')->where([
+        $status = AuthRuleModel::where([
             'module' => $name,
         ])->update([
             'status' => 1,
@@ -1024,7 +1026,7 @@ class Module
             return false;
         }
         
-        $status = Db::name('module')->where([
+        $status = ModuleModel::where([
             'module' => $name,
         ])->update([
             'status' => 0,
@@ -1035,13 +1037,13 @@ class Module
             return false;
         }
         
-        $status = Db::name('hook')->where([
+        $status = HookModel::where([
             'module' => $name,
         ])->update([
             'status' => 0,
         ]);
         
-        $status = Db::name('auth_rule')->where([
+        $status = AuthRuleModel::where([
             'module' => $name,
         ])->update([
             'status' => 0,
@@ -1300,7 +1302,7 @@ class Module
             return true;
         }
         
-        $module = Db::name('module')->where([
+        $module = ModuleModel::where([
             'module' => $name,
         ])->find();
         if (empty($module)) {

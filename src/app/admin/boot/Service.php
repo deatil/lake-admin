@@ -3,7 +3,6 @@
 namespace app\admin\boot;
 
 use think\Service as BaseService;
-use think\facade\Db;
 use think\facade\View;
 use think\facade\Cache;
 use think\console\Input;
@@ -12,6 +11,7 @@ use app\admin\middleware\LakeAdminAppMap;
 use app\admin\middleware\LoadModule;
 use app\admin\middleware\CheckModule;
 
+use app\admin\model\Hook as HookModel;
 use app\admin\service\InitHook as InitHookService;
 
 /**
@@ -147,8 +147,7 @@ class Service extends BaseService
     {
         $hooks = Cache::get("lake_admin_hooks");
         if (empty($hooks)) {
-            $hooks = Db::name('hook')
-                ->field('name,class')
+            $hooks = HookModel::field('name,class')
                 ->where([
                     ['status', '=', 1],
                 ])

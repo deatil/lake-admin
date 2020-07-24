@@ -2,9 +2,6 @@
 
 namespace app\admin\Model;
 
-use think\facade\Db;
-use think\Model;
-
 use lake\Arr;
 
 use app\admin\service\Auth as AuthService;
@@ -16,8 +13,11 @@ use app\admin\service\Admin as AdminService;
  * @create 2019-7-9
  * @author deatil
  */
-class AuthRule extends Model
+class AuthRule extends ModelBase
 {
+    // 设置当前模型对应的数据表名称
+    protected $name = 'auth_rule';
+    
     const RULE_URL = 1;
     const RULE_MAIN = 2; //主菜单
     

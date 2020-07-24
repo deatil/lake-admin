@@ -2,8 +2,6 @@
 
 namespace app\admin\model;
 
-use think\Model;
-
 use app\admin\service\Admin as AdminService;
 
 /**
@@ -12,8 +10,11 @@ use app\admin\service\Admin as AdminService;
  * @create 2019-7-9
  * @author deatil
  */
-class AdminLog extends Model
+class AdminLog extends ModelBase
 {
+    // 设置当前模型对应的数据表名称
+    protected $name = 'admin_log';
+    
     protected $autoWriteTimestamp = true;
     protected $updateTime = false;
 

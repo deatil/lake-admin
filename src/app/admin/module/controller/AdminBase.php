@@ -8,6 +8,8 @@ use think\facade\Env;
 use app\admin\controller\Base;
 use app\admin\facade\Module as ModuleFacade;
 
+use app\admin\model\Module as ModuleModel;
+
 /**
  * 插件后台
  *
@@ -49,7 +51,7 @@ class AdminBase extends Base
             
             // 模块信息
             if (!empty($module)) {
-                $moduleInfo = Db::name('module')->where([
+                $moduleInfo = ModuleModel::where([
                     'module' => $module,
                     'status' => 1,
                 ])->find();

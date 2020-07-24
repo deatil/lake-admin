@@ -7,6 +7,7 @@ use think\facade\View;
 
 use app\admin\model\Admin as AdminUserModel;
 use app\admin\model\AuthGroup as AuthGroupModel;
+use app\admin\model\FieldType as FieldTypeModel;
 
 /**
  * 字段类型表
@@ -149,15 +150,13 @@ class FieldType extends Base
             
             $map = $this->buildparams();
             
-            $data = Db::name('field_type')
-                ->where($map)
+            $data = FieldTypeModel::where($map)
                 ->page($page, $limit)
                 ->order('listorder ASC')
                 ->select()
                 ->toArray();
             
-            $total = Db::name('field_type')
-                ->where($map)
+            $total = FieldTypeModel::where($map)
                 ->order('listorder ASC')
                 ->count();
         
@@ -203,7 +202,7 @@ class FieldType extends Base
             $data['is_system'] = 0;
             $data['id'] = md5(mt_rand(100000, 999999).microtime().mt_rand(10000, 999999));
             
-            $rs = Db::name('field_type')->data($data)->insert();
+            $rs = FieldTypeModel::data($data)->insert();
        
             if ($rs === false) {
                 $this->error("添加失败！");
@@ -249,8 +248,11 @@ class FieldType extends Base
                 $data['ifstring'] = 0;
             }
             
-            $rs = Db::name('field_type')
-                ->update($data);
+            $id = $data['id'];
+            unset($data['id']);
+            $rs = FieldTypeModel::where([
+                'id' => $id,
+            ])->update($data);
             
             if ($rs === false) {
                 $this->error("修改失败！");
@@ -260,7 +262,7 @@ class FieldType extends Base
         } else {
             $id = $this->request->param('id');
             
-            $data = Db::name('field_type')->where([
+            $data = FieldTypeModel::where([
                 "id" => $id,
             ])->find();
             if (empty($data)) {
@@ -296,7 +298,7 @@ class FieldType extends Base
             $this->error('参数不能为空！');
         }
         
-        $data = Db::name('field_type')->where([
+        $data = FieldTypeModel::where([
             "id" => $id,
         ])->find();
         if (empty($data)) {
@@ -307,8 +309,7 @@ class FieldType extends Base
             $this->error('系统字段类型不能被删除！');
         }
         
-        $rs = Db::name('field_type')
-            ->where([
+        $rs = FieldTypeModel::where([
                 'id' => $id, 
             ])
             ->delete();
@@ -339,8 +340,7 @@ class FieldType extends Base
         
         $listorder = $this->request->param('value/d', 100);
         
-        $rs = Db::name('field_type')
-            ->where([
+        $rs = FieldTypeModel::where([
                 'id' => $id, 
             ])
             ->update([

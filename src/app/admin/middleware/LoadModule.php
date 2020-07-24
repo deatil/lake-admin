@@ -7,6 +7,7 @@ use think\App;
 use think\Event;
 use think\facade\Db;
 
+use app\admin\model\Module as ModuleModel;
 use app\admin\facade\Module as ModuleFacade;
 
 /**
@@ -60,8 +61,7 @@ class LoadModule
             // 应用路径
             $appPath = dirname(__DIR__) . DIRECTORY_SEPARATOR;
         } else {
-            $moduleInfo = Db::name('module')
-                ->field('module, path')
+            $moduleInfo = ModuleModel::field('module, path')
                 ->where([
                     'module' => $appName,
                     'status' => 1,

@@ -7,6 +7,7 @@ use think\facade\View;
 
 use app\admin\facade\Module as ModuleFacade;
 use app\admin\model\AuthGroup as AuthGroupModel;
+use app\admin\model\AuthRuleExtend as AuthRuleExtendModel;
 
 /**
  * 扩展权限
@@ -41,8 +42,7 @@ class RuleExtend extends Base
                 $map[] = [$searchField, 'like', "%$keyword%"];
             }
             
-            $data = Db::name('auth_rule_extend')
-                ->alias('are')
+            $data = AuthRuleExtendModel::alias('are')
                 ->leftJoin('auth_group ag ', 'are.group_id = ag.id')
                 ->field('are.*, ag.title as group_title ')
                 ->where($map)
@@ -51,8 +51,7 @@ class RuleExtend extends Base
                 ->select()
                 ->toArray();
             
-            $total = Db::name('auth_rule_extend')
-                ->alias('are')
+            $total = AuthRuleExtendModel::alias('are')
                 ->leftJoin('auth_group ag ', 'are.group_id = ag.id')
                 ->where($map)
                 ->count();
@@ -84,7 +83,7 @@ class RuleExtend extends Base
             }
             
             $data['id'] = md5(mt_rand(100000, 999999).microtime().mt_rand(100000, 999999));
-            $rs = Db::name('auth_rule_extend')->data($data)->insert();
+            $rs = AuthRuleExtendModel::data($data)->insert();
        
             if ($rs === false) {
                 return $this->error("添加失败！");
@@ -118,8 +117,11 @@ class RuleExtend extends Base
                 return $this->error($result);
             }
             
-            $rs = Db::name('auth_rule_extend')
-                ->update($data);
+            $id = $data['id'];
+            unset($data['id']);
+            $rs = AuthRuleExtendModel::where([
+                "id" => $id,
+            ])->update($data);
             
             if ($rs === false) {
                 $this->error("修改失败！");
@@ -128,7 +130,7 @@ class RuleExtend extends Base
             $this->success("修改成功！");
         } else {
             $id = $this->request->param('id');
-            $data = Db::name('auth_rule_extend')->where([
+            $data = AuthRuleExtendModel::where([
                 "id" => $id,
             ])->find();
             if (empty($data)) {
@@ -163,15 +165,14 @@ class RuleExtend extends Base
             $this->error('参数不能为空！');
         }
         
-        $data = Db::name('auth_rule_extend')->where([
+        $data = AuthRuleExtendModel::where([
             "id" => $id,
         ])->find();
         if (empty($data)) {
             $this->error('信息不存在！');
         }
         
-        $rs = Db::name('auth_rule_extend')
-            ->where([
+        $rs = AuthRuleExtendModel::where([
                 'id' => $id, 
             ])
             ->delete();
@@ -200,7 +201,7 @@ class RuleExtend extends Base
             $this->error('参数不能为空！');
         }
         
-        $data = Db::name('auth_rule_extend')->where([
+        $data = AuthRuleExtendModel::where([
             "id" => $id,
         ])->find();
         if (empty($data)) {

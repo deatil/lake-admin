@@ -8,6 +8,7 @@ use think\facade\Validate;
 
 use app\admin\facade\Module as ModuleFacade;
 use app\admin\model\Config as ConfigModel;
+use app\admin\model\FieldType as FieldTypeModel;
 
 /**
  * 系统配置
@@ -75,8 +76,7 @@ class Config extends Base
                 $map[] = [$searchField, 'like', "%$keyword%"];
             }
             
-            $data = Db::name('config')
-                ->alias('c')
+            $data = ConfigModel::alias('c')
                 ->leftJoin('field_type ft ', 'ft.name=c.type')
                 ->field('
                     c.*,
@@ -87,8 +87,7 @@ class Config extends Base
                 ->order('c.group ASC, c.listorder ASC, c.name ASC, c.id DESC')
                 ->select()
                 ->toArray();
-            $total = Db::name('config')
-                ->alias('c')
+            $total = ConfigModel::alias('c')
                 ->where($map)
                 ->count();
             
@@ -119,8 +118,7 @@ class Config extends Base
             $data = $this->request->post('modelField/a');
             
             // 字段规则
-            $fieldRule = Db::name('field_type')
-                ->column('vrule,pattern', 'name');
+            $fieldRule = FieldTypeModel::column('vrule,pattern', 'name');
             
             // 查询该分组下所有的配置项名和类型
             $items = ConfigModel::where([
@@ -256,8 +254,7 @@ class Config extends Base
             cache('lake_admin_config', null); //清空缓存配置
             $this->success('配置添加成功~');
         } else {
-            $fieldType = Db::name('field_type')
-                ->order('listorder')
+            $fieldType = FieldTypeModel::order('listorder')
                 ->column('name,title,ifoption,ifstring');
             
             $group = $this->request->param('group');
@@ -324,8 +321,7 @@ class Config extends Base
                 $this->error('参数错误！');
             }
             
-            $fieldType = Db::name('field_type')
-                ->order('listorder')
+            $fieldType = FieldTypeModel::order('listorder')
                 ->column('name,title,ifoption,ifstring');
             
             $info = ConfigModel::where([

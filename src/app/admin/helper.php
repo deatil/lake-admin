@@ -4,14 +4,16 @@ use think\facade\Db;
 use think\facade\Event;
 
 use lake\Arr;
+use lake\Str;
+use lake\Http;
 use lake\Random;
 
 use app\admin\facade\Password as PasswordFacade;
 
-use app\admin\model\Attachment as AttachmentModel;
-use app\admin\model\Module as ModuleModel;
-
 use app\admin\service\Auth as AuthService;
+use app\admin\service\Module as ModuleService;
+use app\admin\service\Config as ConfigService;
+use app\admin\service\Attachment as AttachmentService;
 
 if (!function_exists('lake_app')) {
     /**
@@ -39,8 +41,7 @@ if (!function_exists('lake_p')) {
         if (is_null($file)) {
             $file = runtime_path() . date('Ymd') . '.txt';
         }
-        $str = (is_string($data) ? $data : (is_array($data) || is_object($data)) ? print_r($data, true) : var_export($data, true)) . PHP_EOL;
-        $force ? file_put_contents($file, $str) : file_put_contents($file, $str, FILE_APPEND);
+        Arr::printr($data, $force, $file);
     }
 }
 
@@ -102,7 +103,7 @@ if (!function_exists('lake_str2arr')) {
      */
     function lake_str2arr($str, $glue = ',')
     {
-        return explode($glue, $str);
+        return Str::str2arr($str, $glue);
     }
 }
 
@@ -115,11 +116,7 @@ if (!function_exists('lake_arr2str')) {
      */
     function lake_arr2str($arr, $glue = ',')
     {
-        if (is_string($arr)) {
-            return $arr;
-        }
-
-        return implode($glue, $arr);
+        return Str::arr2str($arr, $glue);
     }
 }
 
@@ -164,14 +161,7 @@ if (!function_exists('lake_to_guid_string')) {
      */
     function lake_to_guid_string($mix)
     {
-        if (is_object($mix)) {
-            return spl_object_hash($mix);
-        } elseif (is_resource($mix)) {
-            $mix = get_resource_type($mix) . strval($mix);
-        } else {
-            $mix = serialize($mix);
-        }
-        return md5($mix);
+        return Str::toGuidString($mix);
     }
 }
 
@@ -219,17 +209,7 @@ if (!function_exists('lake_parse_attr')) {
      */
     function lake_parse_attr($value = '')
     {
-        $array = preg_split('/[,;\r\n ]+/', trim($value, ",;\r\n"));
-        if (strpos($value, ':')) {
-            $value = [];
-            foreach ($array as $val) {
-                list($k, $v) = explode(':', $val);
-                $value[$k] = $v;
-            }
-        } else {
-            $value = $array;
-        }
-        return $value;
+        return Arr::parseAttr($value);
     }
 }
     
@@ -242,21 +222,7 @@ if (!function_exists('lake_parse_fieldlist')) {
      */
     function lake_parse_fieldlist($data = '')
     {
-        if (empty($data)) {
-            return [];
-        }
-        
-        $json = json_decode($data, true);
-        if (empty($json)) {
-            return [];
-        }
-        
-        $res = [];
-        foreach ($json as $v) {
-            $res[$v['key']] = $v['value'];
-        }
-        
-        return $res;
+        return Arr::parseFieldList($data);
     }
 }
 
@@ -313,31 +279,7 @@ if (!function_exists('lake_is_serialized')) {
      */
     function lake_is_serialized($data) 
     {
-        $data = trim( $data );
-        if ('N;' == $data) {
-            return true;
-        }
-        if (!preg_match( '/^([adObis]):/', $data, $badions )) {
-            return false;
-        }
-        
-        switch ($badions[1]) {
-            case 'a':
-            case 'O':
-            case 's':
-                if (preg_match( "/^{$badions[1]}:[0-9]+:.*[;}]\$/s", $data)) {
-                    return true;
-                }
-                break;
-            case 'b':
-            case 'i':
-            case 'd':
-                if (preg_match( "/^{$badions[1]}:[0-9.E-]+;\$/", $data )) {
-                    return true;
-                }
-            break;
-        }
-        return false;
+        return Str::isSerialized($data);
     }
 }
 
@@ -350,37 +292,7 @@ if (!function_exists('lake_str_cut')) {
      */
     function lake_str_cut($sourcestr, $length, $dot = '...')
     {
-        $returnstr = '';
-        $i = 0;
-        $n = 0;
-        $str_length = strlen($sourcestr); //字符串的字节数
-        while (($n < $length) && ($i <= $str_length)) {
-            $temp_str = substr($sourcestr, $i, 1);
-            $ascnum = Ord($temp_str); //得到字符串中第$i位字符的ascii码
-            if ($ascnum >= 224) { //如果ASCII位高与224，
-                $returnstr = $returnstr . substr($sourcestr, $i, 3); //根据UTF-8编码规范，将3个连续的字符计为单个字符
-                $i = $i + 3; //实际Byte计为3
-                $n++; //字串长度计1
-            } elseif ($ascnum >= 192) { //如果ASCII位高与192，
-                $returnstr = $returnstr . substr($sourcestr, $i, 2); //根据UTF-8编码规范，将2个连续的字符计为单个字符
-                $i = $i + 2; //实际Byte计为2
-                $n++; //字串长度计1
-            } elseif ($ascnum >= 65 && $ascnum <= 90) {
-                //如果是大写字母，
-                $returnstr = $returnstr . substr($sourcestr, $i, 1);
-                $i = $i + 1; //实际的Byte数仍计1个
-                $n++; //但考虑整体美观，大写字母计成一个高位字符
-            } else {
-                //其他情况下，包括小写字母和半角标点符号，
-                $returnstr = $returnstr . substr($sourcestr, $i, 1);
-                $i = $i + 1; //实际的Byte数计1个
-                $n = $n + 0.5; //小写字母和半角标点等与半个高位字符宽...
-            }
-        }
-        if ($str_length > strlen($returnstr)) {
-            $returnstr = $returnstr . $dot; //超过长度时在尾处加上省略号
-        }
-        return $returnstr;
+        return Str::wordCut($sourcestr, $length, $dot);
     }
 }
 
@@ -392,20 +304,7 @@ if (!function_exists('lake_safe_replace')) {
      */
     function lake_safe_replace($string)
     {
-        $string = str_replace('%20', '', $string);
-        $string = str_replace('%27', '', $string);
-        $string = str_replace('%2527', '', $string);
-        $string = str_replace('*', '', $string);
-        $string = str_replace('"', '&quot;', $string);
-        $string = str_replace("'", '', $string);
-        $string = str_replace('"', '', $string);
-        $string = str_replace(';', '', $string);
-        $string = str_replace('<', '&lt;', $string);
-        $string = str_replace('>', '&gt;', $string);
-        $string = str_replace("{", '', $string);
-        $string = str_replace('}', '', $string);
-        $string = str_replace('\\', '', $string);
-        return $string;
+        return Str::safeReplace($string);
     }
 }
 
@@ -430,22 +329,23 @@ if (!function_exists('lake_http_down')) {
         }
         $url = str_replace(" ", "%20", $url);
         if (function_exists('curl_init')) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            // curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
-            // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-            if ('https' == substr($url, 0, 5)) {
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            }
-            $temp = curl_exec($ch);
-            if (file_put_contents($filename, $temp) && !curl_error($ch)) {
-                return $filename;
-            } else {
+            $options = [
+                CURLOPT_TIMEOUT => $timeout,
+                CURLOPT_RETURNTRANSFER => true,
+                // CURLOPT_MAXREDIRS => 2,
+                // CURLOPT_FOLLOWLOCATION => 1,
+            ];
+            
+            $temp = Http::get($url, [], $options);
+            if (empty($temp)) {
                 return false;
             }
+            
+            if (!file_put_contents($filename, $temp)) {
+                return false;
+            }
+            
+            return $filename;
         } else {
             $opts = [
                 "http" => [
@@ -487,7 +387,7 @@ if (!function_exists('lake_get_file_name')) {
      */
     function lake_get_file_name($id = '')
     {
-        $name = (new AttachmentModel())->getFileName($id);
+        $name = (new AttachmentService())->getFileName($id);
         return $name ? $name : '没有找到文件';
     }
 }
@@ -500,7 +400,7 @@ if (!function_exists('lake_get_file_path')) {
      */
     function lake_get_file_path($id)
     {
-        $path = (new AttachmentModel())->getFilePath($id);
+        $path = (new AttachmentService())->getFilePath($id);
         return ($path !== false) ? $path : "";
     }
 }
@@ -513,7 +413,7 @@ if (!function_exists('lake_get_attachment_path')) {
      */
     function lake_get_attachment_path($id, $domain = false)
     {
-        $path = (new AttachmentModel())->getFilePath($id);
+        $path = (new AttachmentService())->getFilePath($id);
         return ($path !== false) ? 
             ($domain ? request()->domain() . $path : $path)
             : "";
@@ -590,7 +490,7 @@ if (!function_exists('lake_thumb')) {
             return $img;
         }
         
-        (new AttachmentModel())->createThumb($img, $newImgPath, $newImgName, "{$width},{$height}", $thumbType);
+        (new AttachmentService())->createThumb($img, $newImgPath, $newImgName, "{$width},{$height}", $thumbType);
         $thumbCache[$key] = $newImgPath;
         return $thumbCache[$key];
 
@@ -664,11 +564,7 @@ if (!function_exists('lake_is_module_install')) {
      */
     function lake_is_module_install($moduleName)
     {
-        $appCache = (new ModuleModel)->getModuleList();
-        if (isset($appCache[$moduleName])) {
-            return true;
-        }
-        return false;
+        return (new ModuleService)->isInstall($moduleName);
     }
 }
 
@@ -683,44 +579,7 @@ if (!function_exists('lake_get_module_config')) {
      */
     function lake_get_module_config($name)
     {
-        static $_config = [];
-        
-        if (empty($name)) {
-            return [];
-        }
-        if (isset($_config[$name])) {
-            return $_config[$name];
-        }    
-
-        $setting = Db::name('module')
-            ->where([
-                'module' => $name,
-                'status' => 1,
-            ])
-            ->field('setting, setting_data')
-            ->find();
-            
-        $config = [];
-        if (!empty($setting['setting_data'])) {
-            $config = json_decode($setting['setting_data'], true);
-        } elseif (!empty($setting['setting'])) {
-            $temp_arr = json_decode($setting['setting'], true);
-            foreach ($temp_arr as $key => $value) {
-                if ($value['type'] == 'group') {
-                    foreach ($value['options'] as $gkey => $gvalue) {
-                        foreach ($gvalue['options'] as $ikey => $ivalue) {
-                            $config[$ikey] = $ivalue['value'];
-                        }
-                    }
-                } else {
-                    $config[$key] = $temp_arr[$key]['value'];
-                }
-            }
-        }
-        
-        $_config[$name] = $config;
-        
-        return $config;
+        return (new ModuleService)->getConfig($name);
     }
 }
 
@@ -735,27 +594,7 @@ if (!function_exists('lake_get_module_path')) {
      */
     function lake_get_module_path($name)
     {
-        static $modules = [];
-        
-        if (empty($name)) {
-            return '';
-        }
-        if (isset($modules[$name])) {
-            return $modules[$name];
-        }
-        
-        $module = Db::name('module')->where([
-            'module' => $name,
-            'status' => 1,
-        ])
-        ->field('path')
-        ->find();
-        if (empty($module)) {
-            return '';
-        }
-        
-        $modules[$name] = $module;
-        return $module;
+        return (new ModuleService)->getPath($name);
     }
 }
 
@@ -768,15 +607,7 @@ if (!function_exists('lake_config_update')) {
      */
     function lake_config_update($name, $value)
     {
-        if (empty($name)) {
-            return false;
-        }
-        
-        return Db::name('config')->where([
-            'name' => $name,
-        ])->data([
-            'value' => $value,
-        ])->update();
+        return (new ConfigService)->updateValue($name, $value);
     }
 }
 

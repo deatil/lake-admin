@@ -11,6 +11,8 @@ use think\captcha\Captcha;
 use lake\File;
 
 use app\admin\model\AuthRule as AuthRuleModel;
+use app\admin\model\Module as ModuleModel;
+use app\admin\model\Attachment as AttachmentModel;
 
 /**
  * 后台首页
@@ -61,11 +63,11 @@ class Index extends Base
         $this->assign('user_info', env('admin_info'));
         
         // 模型数量
-        $moduleCount = Db::name('module')->count();
+        $moduleCount = ModuleModel::count();
         $this->assign('module_count', $moduleCount);
         
         // 附件数量
-        $attachmentCount = Db::name('attachment')->count();
+        $attachmentCount = AttachmentModel::count();
         $this->assign('attachment_count', $attachmentCount);
         
         $this->assign('sys_info', $this->getSysInfo());

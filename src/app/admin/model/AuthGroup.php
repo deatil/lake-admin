@@ -3,7 +3,6 @@
 namespace app\admin\model;
 
 use think\facade\Db;
-use think\Model;
 
 /**
  * 用户组模型类
@@ -11,16 +10,19 @@ use think\Model;
  * @create 2019-7-9
  * @author deatil
  */
-class AuthGroup extends Model
+class AuthGroup extends ModelBase
 {
+    // 设置当前模型对应的数据表名称
+    protected $name = 'auth_group';
+
+    protected $resultSetType = 'collection';
+    
     const TYPE_ADMIN = 1; // 管理员用户组类型标识
     const MEMBER = 'admin';
     const AUTH_EXTEND = 'auth_extend'; // 动态权限扩展信息表
     const AUTH_GROUP = 'auth_group'; // 用户组表名
     const AUTH_EXTEND_CATEGORY_TYPE = 1; // 分类权限标识
     const AUTH_EXTEND_MODEL_TYPE = 2; //分类权限标识
-
-    protected $resultSetType = 'collection';
 
     /**
      * 返回用户组列表
@@ -100,7 +102,7 @@ class AuthGroup extends Model
         
         $status = $this->where(['id' => $Groupid])->delete();
         if ($status !== false) {
-            Db::name('auth_rule_access')->where([
+            AuthRuleAccess::where([
                 'module' => 'admin',
                 'group_id' => $Groupid,
             ])->delete();

@@ -11,6 +11,8 @@ use think\facade\Cache;
 use think\facade\Event;
 use think\facade\Env;
 
+use app\admin\model\Hook as HookModel;
+use app\admin\model\Module as ModuleModel;
 use app\admin\facade\Module as ModuleFacade;
 
 /**
@@ -54,8 +56,7 @@ class InitHook
         
         $modules = Cache::get('lake_admin_modules');
         if (empty($modules)) {
-            $modules = Db::name('module')
-                ->field('module, path')
+            $modules = ModuleModel::field('module, path')
                 ->where([
                     'status' => 1,
                 ])
@@ -166,8 +167,7 @@ class InitHook
         $hooks = Cache::get('lake_admin_hooks');
         if (empty($hooks)) {
             // 所有模块钩子
-            $hooks = Db::name('Hook')
-                ->field('name, class')
+            $hooks = HookModel::field('name, class')
                 ->order('listorder ASC')
                 ->select()
                 ->toArray();

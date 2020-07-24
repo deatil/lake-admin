@@ -8,6 +8,7 @@ use think\facade\View;
 use lake\PclZip;
 
 use app\admin\facade\Module as ModuleFacade;
+use app\admin\model\Module as ModuleModel;
 
 /**
  * 模型管理
@@ -41,8 +42,7 @@ class Module extends Base
             $limit = $this->request->param('limit/d', 10);
             $page = $this->request->param('page/d', 1);
             
-            $list = Db::name('module')
-                ->page($page, $limit)
+            $list = ModuleModel::page($page, $limit)
                 ->order('listorder ASC, module ASC')
                 ->select()
                 ->toArray();
@@ -300,7 +300,7 @@ class Module extends Base
             }
             
             // 当前版本
-            $currVersion = Db::name('Module')->where('module', $value[0])->value('version');
+            $currVersion = ModuleModel::where('module', $value[0])->value('version');
             
             $result = version_compare($currVersion, $value[1], $value[2]);
             $need[$key] = [
@@ -373,7 +373,7 @@ class Module extends Base
         }
         
         // 获取插件信息
-        $module = Db::name('module')->where([
+        $module = ModuleModel::where([
             'module' => $moduleId,
             'status' => 1,
         ])->find();
@@ -424,8 +424,8 @@ class Module extends Base
             $this->error('请选择需要操作的模块！');
         }
         
-        //获取插件信息
-        $module = Db::name('module')->where([
+        // 获取模块信息
+        $module = ModuleModel::where([
             'module' => $moduleId,
             'status' => 1,
         ])->find();
@@ -434,7 +434,7 @@ class Module extends Base
         }
         
         $config = $this->request->param('config/a');
-        $flag = Db::name('module')->where([
+        $flag = ModuleModel::where([
             'module' => $moduleId,
         ])->data([
             'setting_data' => json_encode($config),
@@ -460,7 +460,7 @@ class Module extends Base
         }
         
         $module = $this->request->param('module/s');
-        $data = Db::name('module')->where([
+        $data = ModuleModel::where([
             "module" => $module,
         ])->find();
         if (empty($data)) {

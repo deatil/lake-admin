@@ -5,6 +5,7 @@ namespace app\admin\service;
 use think\facade\Filesystem;
 
 use app\admin\model\Attachment as AttachmentModel;
+use app\admin\service\Attachment as AttachmentService;
 
 /**
  * 附件上传处理类
@@ -302,7 +303,7 @@ class Upload
             // 水印功能
             if ($watermark == '') {
                 if ($dir == 'images' && config('app.upload_thumb_water') == 1 && config('app.upload_thumb_water_pic') > 0) {
-                    (new AttachmentModel)->createWater(realpath('.' . $this->uploadUrl . $savename), config('app.upload_thumb_water_pic'));
+                    (new AttachmentService)->createWater(realpath('.' . $this->uploadUrl . $savename), config('app.upload_thumb_water_pic'));
                 }
             }
 

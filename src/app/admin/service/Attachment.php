@@ -1,29 +1,106 @@
 <?php
 
-namespace app\admin\model;
+namespace app\admin\service;
 
 use think\Image;
 
+use app\admin\model\Attachment as AttachmentModel;
+
 /**
- * 附件模型
+ * 附件处理
  *
  * @create 2019-8-5
  * @author deatil
  */
-class Attachment extends ModelBase
+class Attachment
 {
-    // 设置当前模型对应的数据表名称
-    protected $name = 'attachment';
-    
-    // 自动写入时间戳
-    protected $autoWriteTimestamp = true;
-    protected $insert = ['status' => 1];
+    public $type = '';
+    public $typeId = 0;
 
-    public function getSizeAttr($value)
+    private $uploadUrl = '';
+    private $uploadPath = '';
+
+    public function __construct()
     {
-        return lake_format_bytes($value);
+        $this->uploadUrl = config('app.upload_url');
+        $this->uploadPath = config('app.upload_path');
+    }
+    
+    /**
+     * 设置类型数据
+     *
+     * @create 2019-7-18
+     * @author deatil
+     */
+    public function setTypeInfo($type, $typeId)
+    {
+        $this->type = $type;
+        $this->typeId = $typeId;
+        
+        return $this;
     }
 
+    /**
+     * html代码远程图片本地化
+     * @param string $content html代码
+     * @param string $type 文件类型
+     */
+    public function getUrlFile()
+    {
+        $content = $this->request->post('content');
+        $type = $this->request->post('type');
+        $urls = [];
+        preg_match_all("/(src|SRC)=[\"|'| ]{0,}((http|https):\/\/(.*)\.(gif|jpg|jpeg|bmp|png|tiff))/isU", $content, $urls);
+        $urls = array_unique($urls[2]);
+
+        $file_info = [
+            'module' => 'admin',
+            'type' => $this->type,
+            'type_id' => $this->typeId,
+            'thumb' => '',
+        ];
+        foreach ($urls as $vo) {
+            $vo = trim(urldecode($vo));
+            $host = parse_url($vo, PHP_URL_HOST);
+            if ($host != $_SERVER['HTTP_HOST']) {
+                //当前域名下的文件不下载
+                $fileExt = strrchr($vo, '.');
+                if (!in_array($fileExt, ['.jpg', '.gif', '.png', '.bmp', '.jpeg', '.tiff'])) {
+                    exit($content);
+                }
+                $filename = $this->uploadPath . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR . md5($vo) . $fileExt;
+                if (lake_http_down($vo, $filename) !== false) {
+                    $file_info['md5'] = hash_file('md5', $filename);
+                    if ($file_exists = AttachmentModel::get(['md5' => $file_info['md5']])) {
+                        unlink($filename);
+                        $localpath = $this->uploadUrl . $file_exists['path'];
+                    } else {
+                        $file_info['sha1'] = hash_file('sha1', $filename);
+                        $file_info['size'] = filesize($filename);
+                        $file_info['mime'] = mime_content_type($filename);
+
+                        $fpath = $type . DIRECTORY_SEPARATOR . date('Ymd');
+                        $savePath = $this->uploadPath . DIRECTORY_SEPARATOR . $fpath;
+                        if (!is_dir($savePath)) {
+                            mkdir($savePath, 0755, true);
+                        }
+                        $fname = DIRECTORY_SEPARATOR . md5(microtime(true)) . $fileExt;
+                        $file_info['name'] = $vo;
+                        $file_info['path'] = str_replace(DIRECTORY_SEPARATOR, '/', $fpath . $fname);
+                        $file_info['ext'] = ltrim($fileExt, ".");
+
+                        if (rename($filename, $savePath . $fname)) {
+                            AttachmentModel::create($file_info);
+                            $localpath = $this->uploadUrl . $file_info['path'];
+                        }
+                    }
+                    $content = str_replace($vo, $localpath, $content);
+                }
+            }
+        }
+        exit($content);
+    }
+    
     /**
      * 创建缩略图
      * @param string $file 目标文件，可以是文件对象或文件路径
@@ -101,7 +178,7 @@ class Attachment extends ModelBase
                 $ids = $id;
             }
             
-            $dataList = $this->where([
+            $dataList = AttachmentModel::where([
                     ['id', 'in', $ids],
                 ])
                 ->field('path,driver,thumb')
@@ -120,7 +197,7 @@ class Attachment extends ModelBase
             
             return $paths;
         } else {
-            $data = $this->where([
+            $data = AttachmentModel::where([
                     ['id', '=', $id],
                 ])
                 ->field('path,driver,thumb')
@@ -144,7 +221,7 @@ class Attachment extends ModelBase
      */
     public function getFileName($id = '')
     {
-        return $this->where('id', $id)->value('name');
+        return AttachmentModel::where('id', $id)->value('name');
     }
 
     /**
@@ -155,7 +232,7 @@ class Attachment extends ModelBase
      */
     public function deleteFile($id)
     {
-        $filePath = self::where('id', $id)->field('path,thumb')->find();
+        $filePath = AttachmentModel::where('id', $id)->field('path,thumb')->find();
         if (!isset($filePath['path'])) {
             throw new \Exception("文件数据库记录已不存在~");
         }
@@ -165,7 +242,7 @@ class Attachment extends ModelBase
             throw new \Exception("删除" . $filePath['path'] . "失败");
         }
         
-        $status = self::where('id', $id)->delete();
+        $status = AttachmentModel::where('id', $id)->delete();
         if ($status === false) {
             throw new \Exception("删除" . $filePath['path'] . "失败");
         }

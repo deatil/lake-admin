@@ -6,7 +6,11 @@ use think\facade\Db;
 use think\facade\Session;
 use think\facade\Cookie;
 
+use lake\Arr;
+
 use app\admin\model\Admin as AdminModel;
+use app\admin\model\AuthGroup as AuthGroupModel;
+use app\admin\facade\Password as PasswordFacade;
 
 /**
  * 管理员服务
@@ -17,7 +21,7 @@ use app\admin\model\Admin as AdminModel;
 class Admin
 {
     // 当前登录会员详细信息
-    private static $userInfo = array();
+    protected static $userInfo = array();
 
     protected static $instance = null;
 
@@ -59,7 +63,7 @@ class Admin
             return null;
         }
     }
-
+    
     /**
      * 获取当前登录用户资料
      * @return array
@@ -73,6 +77,94 @@ class Admin
             self::$userInfo = $this->getUserInfo($this->isLogin());
         }
         return !empty(self::$userInfo) ? self::$userInfo : false;
+    }
+    
+    /**
+     * 用户登录
+     * @param string $username 用户名
+     * @param string $password (md5值) 密码
+     * @return bool|mixed
+     */
+    public function login($username = '', $password = '')
+    {
+        $username = trim($username);
+        $password = trim($password);
+        $userInfo = $this->getUserInfo($username, $password);
+        if (false == $userInfo) {
+            return false;
+        }
+        
+        $this->autoLogin($userInfo);
+        return true;
+    }
+
+    /**
+     * 自动登录用户
+     */
+    public function autoLogin($userInfo)
+    {
+        /* 更新登录信息 */
+        $data = [
+            'uid' => $userInfo['id'],
+            'last_login_time' => time(),
+            'last_login_ip' => request()->ip(1),
+        ];
+        $this->loginStatus($userInfo['id']);
+        
+        /* 记录登录SESSION和COOKIES */
+        $auth = [
+            'uid' => $userInfo['id'],
+            'username' => $userInfo['username'],
+            'last_login_time' => $userInfo['last_login_time'],
+        ];
+        Session::set('admin_user_auth', $auth);
+        Session::set('admin_user_auth_sign', Arr::dataAuthSign($auth));
+    }
+
+    /**
+     * 获取用户信息
+     * @param type $identifier 用户名或者用户ID
+     * @return boolean|array
+     */
+    public function getUserInfo($identifier, $password = null)
+    {
+        if (empty($identifier)) {
+            return false;
+        }
+
+        $userInfo = AdminModel::where([
+            'id' => $identifier,
+        ])->whereOr([
+            'username' => $identifier,
+        ])->find();
+        if (empty($userInfo)) {
+            return false;
+        }
+        
+        // 密码验证
+        if (!empty($password) 
+            && $this->encryptPassword($password, $userInfo['encrypt']) != $userInfo['password']
+        ) {
+            return false;
+        }
+        
+        return $userInfo;
+    }
+
+    /**
+     * 更新登录状态信息
+     * @param type $id
+     * @return type
+     */
+    public function loginStatus($id)
+    {
+        $data = [
+            'last_login_time' => time(), 
+            'last_login_ip' => request()->ip(1)
+        ];
+        return AdminModel::where([
+            'id' => $id,
+        ])->update($data);
     }
 
     /**
@@ -89,7 +181,7 @@ class Admin
             return 0;
         }
  
-        return Session::get('admin_user_auth_sign') == lake_data_auth_sign($user) ? $user['uid'] : 0;
+        return Session::get('admin_user_auth_sign') == Arr::dataAuthSign($user) ? $user['uid'] : 0;
     }
 
     /**
@@ -110,8 +202,7 @@ class Admin
         }
         
         if (!empty($uid)) {
-            $gids = Db::name('auth_group')
-                ->alias('ag')
+            $gids = AuthGroupModel::alias('ag')
                 ->join('auth_group_access aga', "aga.group_id = ag.id")
                 ->where([
                     'aga.admin_id' => $uid,
@@ -139,34 +230,17 @@ class Admin
         Session::clear();
         return true;
     }
-
+    
     /**
-     * 获取用户信息
-     * @param type $identifier 用户名或者用户ID
-     * @return boolean|array
-     *
-     * @create 2019-7-9
-     * @author deatil
+     * 管理员密码加密
+     * @param $password
+     * @param $encrypt //传入加密串，在修改密码时做认证
+     * @return array/password
      */
-    private function getUserInfo($identifier, $password = null)
+    protected function encryptPassword($password, $encrypt = '')
     {
-        if (empty($identifier)) {
-            return false;
-        }
-        return (new AdminModel())->getUserInfo($identifier, $password);
-    }
-
-    /**
-     * 获取错误信息
-     * @access public
-     * @return mixed
-     *
-     * @create 2019-7-9
-     * @author deatil
-     */
-    public function getError()
-    {
-        return $this->error;
+        $pwd = PasswordFacade::setSalt(config("app.admin_salt"))->encrypt($password, $encrypt);
+        return $pwd;
     }
 
 }

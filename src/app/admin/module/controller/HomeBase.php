@@ -9,6 +9,8 @@ use app\admin\boot\Jump as JumpTrait;
 use app\admin\boot\View as ViewTrait;
 use app\admin\boot\BaseController;
 
+use app\admin\model\Module as ModuleModel;
+
 /**
  * 插件前台基础类
  *
@@ -54,7 +56,7 @@ class HomeBase extends BaseController
             
             // 模块信息
             if (!empty($module)) {
-                $moduleInfo = Db::name('module')->where([
+                $moduleInfo = ModuleModel::where([
                     'module' => $module,
                     'status' => 1,
                 ])->find();

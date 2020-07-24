@@ -2,16 +2,17 @@
 
 namespace app\admin\model;
 
-use think\Model;
-
 /**
  * 模块模型
  *
  * @create 2019-7-9
  * @author deatil
  */
-class Module extends Model
+class Module extends ModelBase
 {
+    // 设置当前模型对应的数据表名称
+    protected $name = 'module';
+    
     // 自动完成
     protected $auto = [];
     
@@ -30,32 +31,6 @@ class Module extends Model
     protected function setUpdatetimeAttr($value)
     {
         return time();
-    }
-
-    /**
-     * 更新缓存
-     * @return type
-     */
-    public function getModuleList()
-    {
-        $module = cache('lake_admin_module_list');
-        if (!$module) {
-            $module = [];
-            
-            $data = $this->column('*', 'module');
-            if (!empty($data)) {
-                foreach ($data as &$v) {
-                    lake_to_time($v, 'installtime');
-                    $module[$v['module']] = $v;
-                }
-                
-                unset($v);
-            }
-            
-            cache('lake_admin_module_list', $module);
-        }
-        
-        return $module;
     }
 
 }

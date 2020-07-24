@@ -2,16 +2,17 @@
 
 namespace app\admin\model;
 
-use think\Model;
-
 /**
  * 后台配置模型
  *
  * @create 2019-7-9
  * @author deatil
  */
-class Config extends Model
+class Config extends ModelBase
 {
+    // 设置当前模型对应的数据表名称
+    protected $name = 'config';
+    
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
 

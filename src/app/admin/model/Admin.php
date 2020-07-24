@@ -2,23 +2,19 @@
 
 namespace app\admin\model;
 
-use think\facade\Db;
-use think\Model;
-use think\facade\Session;
-
-use app\admin\facade\Password as PasswordFacade;
-
 /**
  * 管理员
  *
  * @create 2019-7-9
  * @author deatil
  */
-class Admin extends Model
+class Admin extends ModelBase
 {
     // 设置当前模型对应的完整数据表名称
     protected $name = 'admin';
-    protected $insert = ['status' => 1];
+    protected $insert = [
+        'status' => 1,
+    ];
     
     /**
      * 设置ID信息
@@ -54,50 +50,8 @@ class Admin extends Model
     }
 
     /**
-     * 用户登录
-     * @param string $username 用户名
-     * @param string $password (md5值) 密码
-     * @return bool|mixed
-     */
-    public function login($username = '', $password = '')
-    {
-        $username = trim($username);
-        $password = trim($password);
-        $userInfo = $this->getUserInfo($username, $password);
-        if (false == $userInfo) {
-            return false;
-        }
-        
-        $this->autoLogin($userInfo);
-        return true;
-    }
-
-    /**
-     * 自动登录用户
-     */
-    public function autoLogin($userInfo)
-    {
-        /* 更新登录信息 */
-        $data = [
-            'uid' => $userInfo['id'],
-            'last_login_time' => time(),
-            'last_login_ip' => request()->ip(1),
-        ];
-        $this->loginStatus($userInfo['id']);
-        
-        /* 记录登录SESSION和COOKIES */
-        $auth = [
-            'uid' => $userInfo['id'],
-            'username' => $userInfo['username'],
-            'last_login_time' => $userInfo['last_login_time'],
-        ];
-        Session::set('admin_user_auth', $auth);
-        Session::set('admin_user_auth_sign', lake_data_auth_sign($auth));
-    }
-
-    /**
      * 创建管理员
-     * @param type $data
+     * @param array $data
      * @return boolean
      */
     public function createManager($data)
@@ -111,31 +65,32 @@ class Admin extends Model
         $data['add_ip'] = request()->ip(1);
         
         $id = $this->save($data);
-        if ($id !== false) {
-            if (isset($data['roleid']) && !empty($data['roleid'])) {
-                $roles = explode(',', $data['roleid']);
-                unset($data['roleid']);
-                
-                $groupAccess = [];
-                foreach ($roles as $role) {
-                    $groupAccess[] = [
-                        'module' => 'admin',
-                        'admin_id' => $this->id,
-                        'group_id' => $role,
-                    ];
-                }
-                Db::name('auth_group_access')->insertAll($groupAccess);
-            }
-            
-            return $id;
+        if ($id === false) {
+            $this->error = '入库失败！';
+            return false;
         }
-        $this->error = '入库失败！';
-        return false;
+        
+        if (isset($data['roleid']) && !empty($data['roleid'])) {
+            $roles = explode(',', $data['roleid']);
+            unset($data['roleid']);
+            
+            $groupAccess = [];
+            foreach ($roles as $role) {
+                $groupAccess[] = [
+                    'module' => 'admin',
+                    'admin_id' => $this->id,
+                    'group_id' => $role,
+                ];
+            }
+            AuthGroupAccess::insertAll($groupAccess);
+        }
+        
+        return $id;
     }
 
     /**
      * 编辑管理员
-     * @param [type] $data [修改数据]
+     * @param array $data [修改数据]
      * @return boolean
      */
     public function editManager($data)
@@ -169,8 +124,8 @@ class Admin extends Model
         
         if (isset($data['roleid']) && !empty($data['roleid'])) {
             $roleid = $data['roleid'];
-            unset($data['roleid']);
         }
+        unset($data['roleid']);
         
         /*
         $status = $this->allowField(true)
@@ -193,7 +148,7 @@ class Admin extends Model
         if (isset($roleid) && !empty($roleid)) {
             $roles = explode(',', $roleid);
             
-            Db::name('auth_group_access')->where([
+            AuthGroupAccess::where([
                 'module' => 'admin',
                 'admin_id' => $data['id'],
             ])->delete();
@@ -206,7 +161,7 @@ class Admin extends Model
                     'group_id' => $role,
                 ];
             }
-            Db::name('auth_group_access')->insertAll($groupAccess);
+            AuthGroupAccess::insertAll($groupAccess);
         }
         
         return true;
@@ -234,7 +189,7 @@ class Admin extends Model
         ])->delete();
         
         if (false !== $status) {
-            Db::name('auth_group_access')->where([
+            AuthGroupAccess::where([
                 'module' => 'admin',
                 'admin_id' => $id,
             ])->delete();
@@ -245,63 +200,18 @@ class Admin extends Model
             return false;
         }
     }
-
+    
     /**
-     * 获取用户信息
-     * @param type $identifier 用户名或者用户ID
-     * @return boolean|array
+     * 获取错误信息
+     * @access public
+     * @return mixed
+     *
+     * @create 2019-7-9
+     * @author deatil
      */
-    public function getUserInfo($identifier, $password = null)
+    public function getError()
     {
-        if (empty($identifier)) {
-            return false;
-        }
-
-        $userInfo = $this->where([
-            'id' => $identifier,
-        ])->whereOr([
-            'username' => $identifier,
-        ])->find();
-        if (empty($userInfo)) {
-            return false;
-        }
-        
-        // 密码验证
-        if (!empty($password) 
-            && $this->encryptPassword($password, $userInfo['encrypt']) != $userInfo['password']
-        ) {
-            return false;
-        }
-        
-        return $userInfo;
-    }
-
-    /**
-     * 更新登录状态信息
-     * @param type $id
-     * @return type
-     */
-    public function loginStatus($id)
-    {
-        $data = [
-            'last_login_time' => time(), 
-            'last_login_ip' => request()->ip(1)
-        ];
-        return $this->where([
-            'id' => $id,
-        ])->save($data);
-    }
-
-    /**
-     * 管理员密码加密
-     * @param $password
-     * @param $encrypt //传入加密串，在修改密码时做认证
-     * @return array/password
-     */
-    protected function encryptPassword($password, $encrypt = '')
-    {
-        $pwd = PasswordFacade::setSalt(config("app.admin_salt"))->encrypt($password, $encrypt);
-        return $pwd;
+        return $this->error;
     }
     
 }
