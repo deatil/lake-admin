@@ -2,6 +2,8 @@
 
 namespace app\admin\model;
 
+use app\admin\facade\Password as PasswordFacade;
+
 /**
  * 管理员
  *
@@ -199,6 +201,18 @@ class Admin extends ModelBase
             $this->error = '删除失败！';
             return false;
         }
+    }
+    
+    /**
+     * 管理员密码加密
+     * @param $password
+     * @param $encrypt //传入加密串，在修改密码时做认证
+     * @return array/password
+     */
+    protected function encryptPassword($password, $encrypt = '')
+    {
+        $pwd = PasswordFacade::setSalt(config("app.admin_salt"))->encrypt($password, $encrypt);
+        return $pwd;
     }
     
     /**

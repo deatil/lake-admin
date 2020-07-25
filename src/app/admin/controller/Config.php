@@ -76,8 +76,9 @@ class Config extends Base
                 $map[] = [$searchField, 'like', "%$keyword%"];
             }
             
+            $ftTable = (new FieldTypeModel)->getName();
             $data = ConfigModel::alias('c')
-                ->leftJoin('field_type ft ', 'ft.name=c.type')
+                ->leftJoin($ftTable . ' ft ', 'ft.name=c.type')
                 ->field('
                     c.*,
                     ft.title as ftitle

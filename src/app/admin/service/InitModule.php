@@ -16,12 +16,12 @@ use app\admin\model\Module as ModuleModel;
 use app\admin\facade\Module as ModuleFacade;
 
 /**
- * 初始化钩子信息
+ * 初始化模块
  *
  * @create 2020-4-15
  * @author deatil
  */
-class InitHook
+class InitModule
 {
     /** @var App */
     protected $app;
@@ -51,15 +51,15 @@ class InitHook
      */
     private function addModuleNamespace()
     {
-        $app_namespace = config('app.module_namespace');
-        $module_path = config('app.module_path');
+        $appNamespace = config('app.module_namespace');
+        $modulePath = config('app.module_path');
         
         $modules = Cache::get('lake_admin_modules');
         if (empty($modules)) {
-            $modules = ModuleModel::field('module, path')
-                ->where([
+            $modules = ModuleModel::where([
                     'status' => 1,
                 ])
+                ->field('module, path')
                 ->select()
                 ->toArray();
             
@@ -69,40 +69,40 @@ class InitHook
         if (!empty($modules)) {
             foreach ($modules as $module) {
                 if (!empty($module['path'])) {
-                    $namespace_module_path = ModuleFacade::getModuleRealPath($module['path']);
+                    $namespaceModulePath = ModuleFacade::getModuleRealPath($module['path']);
                 } else {
-                    $namespace_module_path = $module_path . $module['module'];
+                    $namespaceModulePath = $modulePath . $module['module'];
                 }
                 
-                $namespace_module_path = rtrim($namespace_module_path, DIRECTORY_SEPARATOR);
+                $namespaceModulePath = rtrim($namespaceModulePath, DIRECTORY_SEPARATOR);
                 
-                $module_namespace = [
-                    $app_namespace . '\\' . $module['module'] . '\\' => $namespace_module_path . DIRECTORY_SEPARATOR,
-                    $app_namespace . '\\api\\' => $namespace_module_path . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR,
-                    $app_namespace . '\\admin\\' => $namespace_module_path . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR,
+                $moduleNamespaces = [
+                    $appNamespace . '\\' . $module['module'] . '\\' => $namespaceModulePath . DIRECTORY_SEPARATOR,
+                    $appNamespace . '\\api\\' => $namespaceModulePath . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR,
+                    $appNamespace . '\\admin\\' => $namespaceModulePath . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR,
                 ];
                 
                 $loader = new ClassLoader();
-                foreach ($module_namespace as $namespace => $path) {
+                foreach ($moduleNamespaces as $namespace => $path) {
                     $loader->addPsr4($namespace, $path);
                 }
                 $loader->register();
                 unset($loader);
                 
                 // 设置模块地址
-                $app_maps = $this->app->config->get('app.app_map');
-                $app_maps = array_merge($app_maps, [
-                    $module['module'] => function($app) use($namespace_module_path) {
-                        $app->http->path($namespace_module_path);
+                $appMaps = $this->app->config->get('app.app_map');
+                $appMaps = array_merge($appMaps, [
+                    $module['module'] => function($app) use($namespaceModulePath) {
+                        $app->http->path($namespaceModulePath);
                     },
                 ]);
                 $this->app->config->set([
-                    'app_map' => $app_maps,
+                    'app_map' => $appMaps,
                 ], 'app');
                 
-                // 引入公共文件
-                $global = $namespace_module_path . DIRECTORY_SEPARATOR . 'global' . DIRECTORY_SEPARATOR;
-                $this->loadModuleConfigAndFile($global);
+                // 引入模块公共文件
+                $moduleGlobal = $namespaceModulePath . DIRECTORY_SEPARATOR . 'global' . DIRECTORY_SEPARATOR;
+                $this->loadModuleConfigAndFile($moduleGlobal);
                 
                 // 注册模块指令
                 $commands = app()->config->get('app.command');
@@ -125,17 +125,17 @@ class InitHook
     {
         // 自动加载公用文件
         if (is_dir($path)) {
-            $path_dir = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            $pathDir = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         }
         
-        $path_files = isset($path_dir) ? scandir($path_dir) : [];
+        $pathFiles = isset($pathDir) ? scandir($pathDir) : [];
         
-        foreach ($path_files as $path_file) {
-            if ('.' . pathinfo($path_file, PATHINFO_EXTENSION) === '.php' 
-                && file_exists($path_dir . $path_file)
-                && is_file($path_dir . $path_file)
+        foreach ($pathFiles as $pathFile) {
+            if ('.' . pathinfo($pathFile, PATHINFO_EXTENSION) === '.php' 
+                && file_exists($pathDir . $pathFile)
+                && is_file($pathDir . $pathFile)
             ) {
-                include_once $path_dir . $path_file;
+                include_once $pathDir . $pathFile;
             }
         }
         

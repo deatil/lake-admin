@@ -18,6 +18,9 @@ use think\facade\Request;
  *
  * 4，支持规则表达式。
  *      在think_auth_rule 表中定义一条规则时，如果type为1， condition字段就可以定义规则表达式。 如定义{score}>5  and {score}<100  表示用户的分数在5-100之间时这条规则才会通过。
+ *
+ * @create 2019-7-9
+ * @author deatil
  */
 class Auth
 {
@@ -27,16 +30,16 @@ class Auth
      */
     protected $request;
     
-    //默认配置
+    // 默认配置
     protected $_config = [
         'AUTH_ON' => true, // 认证开关
         'AUTH_TYPE' => 1, // 认证方式，1为实时认证；2为登录认证。
-        'AUTH_USER' => 'admin', // 用户信息表
-        'AUTH_GROUP' => 'auth_group', // 用户组数据表名
-        'AUTH_GROUP_ACCESS' => 'auth_group_access',
-        'AUTH_RULE' => 'auth_rule', // 权限规则表
-        'AUTH_RULE_ACCESS' => 'auth_rule_access', // 权限规则关系表
-        'AUTH_RULE_EXTEND' => 'auth_rule_extend', // 扩展表
+        'AUTH_USER' => '', // 用户信息表 admin
+        'AUTH_GROUP' => '', // 用户组数据表名 auth_group
+        'AUTH_GROUP_ACCESS' => '', // 授权表 auth_group_access
+        'AUTH_RULE' => '', // 权限规则表 auth_rule
+        'AUTH_RULE_ACCESS' => '', // 权限规则关系表 auth_rule_access
+        'AUTH_RULE_EXTEND' => '', // 扩展表 auth_rule_extend
     ];
 
     /**
@@ -46,11 +49,11 @@ class Auth
      * @create 2019-7-9
      * @author deatil
      */
-    public function __construct()
+    public function __construct($config = [])
     {
         //可设置配置项 auth, 此配置项为数组。
-        if ($auth = Config::get('auth')) {
-            $this->config = array_merge($this->_config, $auth);
+        if (!empty($config) && is_array($config)) {
+            $this->_config = array_merge($this->_config, $config);
         }
         
         // 初始化request

@@ -12,7 +12,7 @@ use app\admin\middleware\LoadModule;
 use app\admin\middleware\CheckModule;
 
 use app\admin\model\Hook as HookModel;
-use app\admin\service\InitHook as InitHookService;
+use app\admin\service\InitModule as InitModuleService;
 
 /**
  * lake-admin 服务
@@ -38,8 +38,8 @@ class Service extends BaseService
         $this->setSystemConfig();
         
         if ($this->isLakeAdminInstallCli() !== true) {
-            // 初始化钩子信息
-            (new InitHookService())->handle();
+            // 初始化模块
+            (new InitModuleService())->handle();
         }
     }
     

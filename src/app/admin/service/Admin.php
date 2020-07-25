@@ -10,6 +10,7 @@ use lake\Arr;
 
 use app\admin\model\Admin as AdminModel;
 use app\admin\model\AuthGroup as AuthGroupModel;
+use app\admin\model\AuthGroupAccess as AuthGroupAccessModel;
 use app\admin\facade\Password as PasswordFacade;
 
 /**
@@ -202,8 +203,9 @@ class Admin
         }
         
         if (!empty($uid)) {
+            $agaTable = (new AuthGroupAccessModel)->getName();
             $gids = AuthGroupModel::alias('ag')
-                ->join('auth_group_access aga', "aga.group_id = ag.id")
+                ->join($agaTable . ' aga', "aga.group_id = ag.id")
                 ->where([
                     'aga.admin_id' => $uid,
                     'ag.is_system' => 1,

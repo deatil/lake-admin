@@ -70,9 +70,10 @@ class Manager extends Base
                 ->count();
             
             if (!empty($list)) {
+                $agaTable = (new AuthGroupAccessModel)->getName();
                 foreach ($list as $k => $v) {
                     $groups = AuthGroupModel::alias('ag')
-                        ->join('auth_group_access aga', "aga.group_id = ag.id")
+                        ->join($agaTable . ' aga', "aga.group_id = ag.id")
                         ->where([
                             'aga.admin_id' => $v['id'],
                         ])
@@ -206,7 +207,7 @@ class Manager extends Base
                 $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
                 $isAllow = true;
                 foreach ($roleids as $roleid) {
-                    if (!in_array($roleid, $roleids)) {
+                    if (!in_array($roleid, $userChildGroupIds)) {
                         $isAllow = false;
                         break;
                     }

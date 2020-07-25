@@ -34,15 +34,15 @@ class LakeAdminAppMap
      */
     public function handle($request, Closure $next)
     {
-        $app_maps = app()->config->get('app.app_map');
-        $app_maps = array_merge($app_maps, [
+        $appMaps = app()->config->get('app.app_map');
+        $appMaps = array_merge($appMaps, [
             'admin' => function($app) {
                 $app->http->path(dirname(__DIR__));
             },
             'api' => 'api',
         ]);
         $this->app->config->set([
-            'app_map' => $app_maps,
+            'app_map' => $appMaps,
         ], 'app');
         
         return $next($request);

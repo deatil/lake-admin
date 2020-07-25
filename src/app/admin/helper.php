@@ -10,7 +10,7 @@ use lake\Random;
 
 use app\admin\facade\Password as PasswordFacade;
 
-use app\admin\service\Auth as AuthService;
+use app\admin\service\AdminAuth as AdminAuthService;
 use app\admin\service\Module as ModuleService;
 use app\admin\service\Config as ConfigService;
 use app\admin\service\Attachment as AttachmentService;
@@ -514,14 +514,11 @@ if (!function_exists('lake_check_auth')) {
             return true;
         }
         
-        static $Auth = null;
-        if (!$Auth) {
-            $Auth = new AuthService();
+        if (AdminAuthService::checkRule($rule, $type, $mode)) {
+            return true;
         }
-        if (!$Auth->check($rule, env('admin_id'), $type, $mode)) {
-            return false;
-        }
-        return true;
+        
+        return false;
     }
 }
 

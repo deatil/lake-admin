@@ -4,8 +4,8 @@ namespace app\admin\Model;
 
 use lake\Arr;
 
-use app\admin\service\Auth as AuthService;
 use app\admin\service\Admin as AdminService;
+use app\admin\service\AdminAuth as AdminAuthService;
 
 /**
  * 权限规则模型
@@ -151,7 +151,7 @@ class AuthRule extends ModelBase
             return $authIdList;
         }
         
-        $Auth = new AuthService();
+        $Auth = AdminAuthService::instance();
         $authIdList = $Auth->getAuthIdList(env('admin_id'), [1, 2]);
         
         return $authIdList;

@@ -7,9 +7,8 @@ use think\App;
 use think\facade\Env;
 
 use app\admin\boot\Jump;
-use app\admin\Model\AuthRule as AuthRuleModel;
-use app\admin\service\Auth as AuthService;
 use app\admin\service\Admin as AdminService;
+use app\admin\service\AdminAuth as AdminAuthService;
 
 /**
  * 登陆检测
@@ -167,12 +166,7 @@ class AdminAuthCheck
      */
     final private function checkRule($rule, $type = AuthRule::RULE_URL, $mode = 'url', $relation = 'or')
     {
-        static $Auth = null;
-        if (!$Auth) {
-            $Auth = new AuthService();
-        }
-        
-        if (!$Auth->check($rule, Env::get('admin_id'), $type, $mode, $relation)) {
+        if (!AdminAuthService::checkRule($rule, $type, $mode, $relation)) {
             return false;
         }
         return true;

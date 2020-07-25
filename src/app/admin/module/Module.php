@@ -169,6 +169,7 @@ class Module
             foreach ($dirsArr as $module) {
                 $moduleInfo = $this->getInfoFromLocalFile($module);
                 if ($moduleInfo !== false) {
+                    $moduleInfo = $this->parseModuleConfig($moduleInfo);
                     $list[$module] = $moduleInfo;
                 }
             }
@@ -179,6 +180,7 @@ class Module
         if (!empty($composerModules)) {
             foreach ($composerModules as $composerModule) {
                 if (isset($composerModule['module']) && !empty($composerModule['module'])) {
+                    $composerModule = $this->parseModuleConfig($composerModule);
                     $list[$composerModule['module']] = $composerModule;
                 }
             }
@@ -287,41 +289,6 @@ class Module
             return false;
         }
         
-        $config = [
-            // 模块目录
-            'module' => $name,
-            // 模块名称
-            'name' => $name,
-            // 模块简介
-            'introduce' => '',
-            // 模块作者
-            'author' => '',
-            // 作者地址
-            'authorsite' => '',
-            // 作者邮箱
-            'authoremail' => '',
-            // 版本号，请不要带除数字外的其他字符
-            'version' => '',
-            // 适配最低lake-admin版本，
-            'adaptation' => '',
-            // 模块路径，默认为空，自定义包插件可填写
-            'path' => '',
-            // 签名
-            'sign' => '',
-            // 依赖模块
-            'need_module' => [],
-            // 设置
-            'setting' => [],
-            // 嵌入点
-            'hooks' => [],
-            // 菜单
-            'menus' => [],
-            // 数据表，不用加表前缀
-            'tables' => [],
-            // 演示数据
-            'demo' => 0,
-        ];
-
         // 从配置文件获取
         if (!is_file($this->modulePath . $name . DIRECTORY_SEPARATOR . 'info.php')) {
             return false;
@@ -329,7 +296,7 @@ class Module
         
         $moduleConfig = include $this->modulePath . $name . DIRECTORY_SEPARATOR . 'info.php';
         
-        $config = array_merge($config, $moduleConfig);
+        $config = $this->parseModuleConfig($moduleConfig);
         
         if (empty($config['path'])) {
             $config['path'] = $this->modulePath . $name;
@@ -378,6 +345,56 @@ class Module
             $this->error = '模块信息错误！';
             return false;
         }
+        
+        return $config;
+    }
+
+    /**
+     * 解析格式化模块配置为正确配置
+     * @param type $name 模块名(目录名)
+     * @return array
+     *
+     * @create 2020-7-25
+     * @author deatil
+     */
+    public function parseModuleConfig($moduleConfig = [])
+    {
+        $defaultConfig = [
+            // 模块目录
+            'module' => '',
+            // 模块名称
+            'name' => '',
+            // 模块简介
+            'introduce' => '',
+            // 模块作者
+            'author' => '',
+            // 作者地址
+            'authorsite' => '',
+            // 作者邮箱
+            'authoremail' => '',
+            // 版本号，请不要带除数字外的其他字符
+            'version' => '',
+            // 适配最低lake-admin版本，
+            'adaptation' => '',
+            // 模块路径，默认为空，自定义包插件可填写
+            'path' => '',
+            // 签名
+            'sign' => '',
+            // 依赖模块
+            'need_module' => [],
+            // 设置
+            'setting' => [],
+            // 嵌入点
+            'hooks' => [],
+            // 菜单
+            'menus' => [],
+            // 数据表，不用加表前缀
+            'tables' => [],
+            // 演示数据
+            'demo' => 0,
+        ];
+        
+        $config = array_merge($defaultConfig, $moduleConfig);
         
         return $config;
     }

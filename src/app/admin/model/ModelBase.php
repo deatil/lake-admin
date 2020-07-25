@@ -43,11 +43,21 @@ abstract class ModelBase extends Model
     // 数据表废弃字段（数组）
     // protected $disuse = [];
     
-    
     // 模型初始化
     protected static function init()
     {
         // TODO:初始化内容
+    }
+
+    /**
+     * 获取当前模型名称
+     * @access public
+     * @return string
+     */
+    public static function getModelName()
+    {
+        $model = new static();
+        return $model->getName();
     }
     
     /**

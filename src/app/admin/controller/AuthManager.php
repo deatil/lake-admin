@@ -12,7 +12,7 @@ use app\admin\model\AuthGroup as AuthGroupModel;
 use app\admin\model\AuthRule as AuthRuleModel;
 use app\admin\model\AuthRuleAccess as AuthRuleAccessModel;
 
-use app\admin\service\Auth as AuthService;
+use app\admin\service\AdminAuth as AdminAuthService;
 use app\admin\service\AuthManager as AuthManagerService;
 
 /**
@@ -407,8 +407,9 @@ class AuthManager extends Base
             $this->error($check['msg']);
         }
         
+        $araTable = (new AuthRuleAccessModel)->getName();
         $rules = AuthGroupModel::alias('ag')
-            ->leftJoin('auth_rule_access ara ', 'ara.group_id = ag.id')
+            ->leftJoin($araTable . ' ara ', 'ara.group_id = ag.id')
             ->where([
                 'ag.id' => $groupId,
                 'ag.type' => AuthGroupModel::TYPE_ADMIN,
@@ -422,7 +423,7 @@ class AuthManager extends Base
         ]);
         
         // 当前用户权限ID列表
-        $userAuthIds = (new AuthService())->getUserAuthIdList(env('admin_id'));
+        $userAuthIds = AdminAuthService::instance()->getUserAuthIdList(env('admin_id'));
     
         $result = (new AuthRuleModel)->returnNodes(false);
         

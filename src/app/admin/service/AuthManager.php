@@ -7,7 +7,7 @@ use think\facade\Db;
 use lake\Tree;
 
 use app\admin\model\AuthGroup as AuthGroupModel;
-use app\admin\service\Auth;
+use app\admin\service\AdminAuth as AdminAuthService;
 
 /**
  * 权限管理服务
@@ -49,7 +49,7 @@ class AuthManager
         $uid = env('admin_id');
         
         // 当前用户权限ID列表
-        $userAuthIds = (new Auth())->getUserAuthIdList($uid);
+        $userAuthIds = AdminAuthService::instance()->getUserAuthIdList($uid);
         
         $isRoot = env('admin_is_root');
         if ($isRoot) {
@@ -81,7 +81,7 @@ class AuthManager
             ];
         }
         
-        $Auth = new Auth();
+        $Auth = AdminAuthService::instance();
         
         $group = AuthGroupModel::where([
             'id' => $groupId,
@@ -133,7 +133,7 @@ class AuthManager
             ];
         }
         
-        $Auth = new Auth();
+        $Auth = AdminAuthService::instance();
         
         $group = AuthGroupModel::where([
             'id' => $groupId,
@@ -207,7 +207,7 @@ class AuthManager
             return $list;
         }
         
-        $Auth = new Auth();
+        $Auth = AdminAuthService::instance();
         
         // 用户组列表
         $authGroupList = AuthGroupModel::where([
@@ -251,7 +251,7 @@ class AuthManager
      */
     public function getUserGroupIds($uid)
     {
-        $Auth = new Auth();
+        $Auth = AdminAuthService::instance();
         // 当前用户组ID列表
         $userGroupIds = $Auth->getUserGroupIdList($uid);
         return $userGroupIds;
@@ -265,7 +265,7 @@ class AuthManager
      */
     public function getUserParentGroupIds($uid)
     {
-        $Auth = new Auth();
+        $Auth = AdminAuthService::instance();
         // 当前用户组ID列表
         $userGroupIds = $Auth->getUserGroupIdList($uid);
         $userParentGroupIds = $Auth->getParentGroupIdList($userGroupIds);
@@ -285,8 +285,6 @@ class AuthManager
             return [];
         }
         
-        $Auth = new Auth();
-        
         // 用户组列表
         $authGroupList = AuthGroupModel::where([
                 'module' => 'admin',
@@ -295,7 +293,9 @@ class AuthManager
                 'id' => 'ASC',
             ])
             ->select();
-    
+            
+        $Auth = AdminAuthService::instance();
+        
         // 当前用户组ID列表
         $userGroupIds = $Auth->getUserGroupIdList($uid);
         
@@ -309,7 +309,7 @@ class AuthManager
             }
         }
         
-        return  $userChildGroupIds;
+        return $userChildGroupIds;
     }
     
 }

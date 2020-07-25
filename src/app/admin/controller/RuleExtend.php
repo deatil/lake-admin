@@ -42,8 +42,9 @@ class RuleExtend extends Base
                 $map[] = [$searchField, 'like', "%$keyword%"];
             }
             
+            $agTable = (new AuthGroupModel)->getName();
             $data = AuthRuleExtendModel::alias('are')
-                ->leftJoin('auth_group ag ', 'are.group_id = ag.id')
+                ->leftJoin($agTable . ' ag ', 'are.group_id = ag.id')
                 ->field('are.*, ag.title as group_title ')
                 ->where($map)
                 ->page($page, $limit)
@@ -51,8 +52,9 @@ class RuleExtend extends Base
                 ->select()
                 ->toArray();
             
+            $agTable = (new AuthGroupModel)->getName();
             $total = AuthRuleExtendModel::alias('are')
-                ->leftJoin('auth_group ag ', 'are.group_id = ag.id')
+                ->leftJoin($agTable . ' ag ', 'are.group_id = ag.id')
                 ->where($map)
                 ->count();
         
