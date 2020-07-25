@@ -17,18 +17,6 @@ use app\admin\facade\Module as ModuleFacade;
  */
 class Hook extends Base
 {
-    
-    /**
-     * 框架构造函数
-     *
-     * @create 2019-8-5
-     * @author deatil
-     */
-    protected function initialize()
-    {
-        parent::initialize();
-    }
-
     /**
      * 列表
      *
@@ -91,7 +79,7 @@ class Hook extends Base
             $data['add_time'] = time();
             $data['add_ip'] = request()->ip(1);
             
-            $status = HookModel::data($data)->insert();
+            $status = HookModel::insert($data);
        
             if ($status === false) {
                 $this->error("添加失败！");

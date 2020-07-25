@@ -433,7 +433,7 @@ class AuthManager extends Base
                 $data = [
                     'nid' => $rs['id'],
                     'parentid' => $rs['parentid'],
-                    'name' => $rs['title'],
+                    'name' => (empty($rs['method']) ? $rs['title'] : ($rs['title'] . '[' . strtoupper($rs['method']) . ']')),
                     'id' => $rs['id'],
                     'chkDisabled' => $this->AuthManagerService->checkUserAuth($rs['id'], $userAuthIds),
                     'checked' => in_array($rs['id'], $rules) ? true : false,

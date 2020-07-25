@@ -33,7 +33,10 @@ class Service extends BaseService
         class_alias('app\\admin\\module\\Module', 'lake\\Module');
         class_alias('app\\admin\\module\\controller\\AdminBase', 'lake\\module\\controller\\AdminBase');
         class_alias('app\\admin\\module\\controller\\HomeBase', 'lake\\module\\controller\\HomeBase');
-        
+    }
+    
+    public function boot()
+    {
         // 系统配置
         $this->setSystemConfig();
         
@@ -41,10 +44,7 @@ class Service extends BaseService
             // 初始化模块
             (new InitModuleService())->handle();
         }
-    }
-    
-    public function boot()
-    {
+        
         $this->app->event->listen('HttpRun', function () {
             $this->app->middleware->add(LakeAdminAppMap::class);
         }, true);

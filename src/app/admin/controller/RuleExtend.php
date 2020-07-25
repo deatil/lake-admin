@@ -85,7 +85,7 @@ class RuleExtend extends Base
             }
             
             $data['id'] = md5(mt_rand(100000, 999999).microtime().mt_rand(100000, 999999));
-            $rs = AuthRuleExtendModel::data($data)->insert();
+            $rs = AuthRuleExtendModel::insert($data);
        
             if ($rs === false) {
                 return $this->error("添加失败！");

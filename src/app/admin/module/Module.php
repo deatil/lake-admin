@@ -1073,6 +1073,39 @@ class Module
     }
     
     /**
+     * 检查依赖
+     * @param string $type 类型：module
+     * @param array $data 检查数据
+     * @return array
+     */
+    public function checkDependence($data = [])
+    {
+        $need = [];
+        if (empty($data) || !is_array($data)) {
+            return $need;
+        }
+        
+        foreach ($data as $key => $value) {
+            if (!isset($value[2])) {
+                $value[2] = '=';
+            }
+            
+            // 当前版本
+            $currVersion = ModuleModel::where('module', $value[0])->value('version');
+            
+            $result = version_compare($currVersion, $value[1], $value[2]);
+            $need[$key] = [
+                'module' => $value[0],
+                'version' => $currVersion ? $currVersion : '未安装',
+                'version_need' => $value[2] . $value[1],
+                'result' => $result ? '<i class="iconfont icon-success text-success"></i>' : '<i class="iconfont icon-delete text-danger"></i>',
+            ];
+        }
+        
+        return $need;
+    }
+    
+    /**
      * 获取模块内文件
      * @param string $file 模块内文件
      * @return string

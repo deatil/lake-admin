@@ -202,7 +202,7 @@ class FieldType extends Base
             $data['is_system'] = 0;
             $data['id'] = md5(mt_rand(100000, 999999).microtime().mt_rand(10000, 999999));
             
-            $rs = FieldTypeModel::data($data)->insert();
+            $rs = FieldTypeModel::insert($data);
        
             if ($rs === false) {
                 $this->error("添加失败！");

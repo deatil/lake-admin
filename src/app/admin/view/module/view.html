@@ -52,7 +52,31 @@
                     </tr>
                     <tr>
                         <td>依赖模块</td>
-                        <td>{$data.need_module}</td>
+                        <td>
+                            {if !empty($data['need_module'])}
+                            <table class="layui-table">
+                                <colgroup>
+                                    <col width="200">
+                                    <col>
+                                </colgroup>
+                          
+                                <thead>
+                                    <tr>
+                                        <td>模块</td>
+                                        <td>版本</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {foreach $data['need_module'] as $key => $vo}
+                                    <tr>
+                                        <td>{$vo[0]}</td>
+                                        <td>{$vo[2]}{$vo[1]}</td>
+                                    </tr>
+                                    {/foreach}
+                                </tbody>
+                            </table>
+                            {/if}
+                        </td>
                     </tr>
                     <tr>
                         <td>排序</td>

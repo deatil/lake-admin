@@ -35,6 +35,12 @@
     </a>
 </script>
 
+<script type="text/html" id="idTpl">
+    <a class="layui-iframe" href="{:url('view')}?module={{ d.module }}" title="模块详情">
+        {{ d.module }}
+    </a>
+</script>
+
 <script type="text/html" id="versionTpl">
     <div>
         {{#  if(d.upgrade){ }} 

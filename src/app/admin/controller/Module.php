@@ -18,18 +18,6 @@ use app\admin\model\Module as ModuleModel;
  */
 class Module extends Base
 {
-    
-    /**
-     * 框架构造函数
-     *
-     * @create 2019-8-5
-     * @author deatil
-     */
-    protected function initialize()
-    {
-        parent::initialize();
-    }
-    
     /**
      * 已安装
      *
@@ -136,7 +124,7 @@ class Module extends Base
             
             // 检查模块依赖
             if (isset($config['need_module']) && !empty($config['need_module'])) {
-                $needModule = $this->checkDependence($config['need_module']);
+                $needModule = ModuleFacade::checkDependence($config['need_module']);
             }
             
             $dbPrefix = app()->db->connect()->getConfig('prefix');
@@ -243,7 +231,7 @@ class Module extends Base
             
             // 检查模块依赖
             if (isset($config['need_module']) && !empty($config['need_module'])) {
-                $needModule = $this->checkDependence($config['need_module']);
+                $needModule = ModuleFacade::checkDependence($config['need_module']);
             }
             
             $dbPrefix = app()->db->connect()->getConfig('prefix');
@@ -279,39 +267,6 @@ class Module extends Base
             return $this->fetch();
         
         }
-    }
-    
-    /**
-     * 检查依赖
-     * @param string $type 类型：module
-     * @param array $data 检查数据
-     * @return array
-     */
-    private function checkDependence($data = [])
-    {
-        $need = [];
-        if (empty($data) || !is_array($data)) {
-            return $need;
-        }
-        
-        foreach ($data as $key => $value) {
-            if (!isset($value[2])) {
-                $value[2] = '=';
-            }
-            
-            // 当前版本
-            $currVersion = ModuleModel::where('module', $value[0])->value('version');
-            
-            $result = version_compare($currVersion, $value[1], $value[2]);
-            $need[$key] = [
-                'module' => $value[0],
-                'version' => $currVersion ? $currVersion : '未安装',
-                'version_need' => $value[2] . $value[1],
-                'result' => $result ? '<i class="iconfont icon-success text-success"></i>' : '<i class="iconfont icon-delete text-danger"></i>',
-            ];
-        }
-        
-        return $need;
     }
     
     /**
@@ -363,88 +318,74 @@ class Module extends Base
      */
     public function config()
     {
-        if (!$this->request->isGet()) {
-            $this->error("请求错误！");
-        }
-        
-        $moduleId = $this->request->param('module/s');
-        if (empty($moduleId)) {
-            $this->error('请选择需要操作的模块！');
-        }
-        
-        // 获取插件信息
-        $module = ModuleModel::where([
-            'module' => $moduleId,
-            'status' => 1,
-        ])->find();
-        if (empty($module)) {
-            $this->error('该模块没有安装或者被禁用！');
-        }
-        
-        $module['setting'] = json_decode($module['setting'], true);
-        $settingData = $module['setting_data'];
-        
-        // 载入插件配置数组
-        if (!empty($settingData)) {
-            $settingData = json_decode($settingData, true);
+        if ($this->request->isGet()) {
+            $moduleId = $this->request->param('module/s');
+            if (empty($moduleId)) {
+                $this->error('请选择需要操作的模块！');
+            }
+            
+            // 获取插件信息
+            $module = ModuleModel::where([
+                'module' => $moduleId,
+                'status' => 1,
+            ])->find();
+            if (empty($module)) {
+                $this->error('该模块没有安装或者被禁用！');
+            }
+            
+            $setting = json_decode($module['setting'], true);
+            $settingData = $module['setting_data'];
+            
+            // 载入插件配置数组
             if (!empty($settingData)) {
-                foreach ($module['setting'] as $key => $value) {
-                    if ($value['type'] != 'group') {
-                        $module['setting'][$key]['value'] = isset($settingData[$key]) ? $settingData[$key] : '';
-                    } else {
-                        foreach ($value['options'] as $gourp => $options) {
-                            foreach ($options['options'] as $gkey => $value) {
-                                $module['setting'][$key]['options'][$gourp]['options'][$gkey]['value'] = $settingData[$gkey];
+                $settingData = json_decode($settingData, true);
+                if (!empty($settingData)) {
+                    foreach ($setting as $key => $value) {
+                        if ($value['type'] != 'group') {
+                            $setting[$key]['value'] = isset($settingData[$key]) ? $settingData[$key] : '';
+                        } else {
+                            foreach ($value['options'] as $gourp => $options) {
+                                foreach ($options['options'] as $gkey => $gvalue) {
+                                    $setting[$key]['options'][$gourp]['options'][$gkey]['value'] = $settingData[$gkey];
+                                }
                             }
                         }
                     }
                 }
             }
+            
+            $module['setting'] = $setting;
+            $this->assign('data', $module);
+            
+            return $this->fetch();
+        } else {
+            $moduleId = $this->request->param('module/s');
+            if (empty($moduleId)) {
+                $this->error('请选择需要操作的模块！');
+            }
+            
+            // 获取模块信息
+            $module = ModuleModel::where([
+                'module' => $moduleId,
+                'status' => 1,
+            ])->find();
+            if (empty($module)) {
+                $this->error('该模块没有安装或者被禁用！');
+            }
+            
+            $config = $this->request->param('config/a');
+            $flag = ModuleModel::where([
+                'module' => $moduleId,
+            ])->data([
+                'setting_data' => json_encode($config),
+            ])->update();
+            
+            if ($flag === false) {
+                $this->error('保存失败');
+            }
+            
+            $this->success('保存成功');
         }
-        
-        $this->assign('data', $module);
-        
-        return $this->fetch();
-    }
-    
-    /**
-     * 保存模块设置
-     *
-     * @create 2019-7-24
-     * @author deatil
-     */
-    public function saveConfig()
-    {
-        if (!$this->request->isPost()) {
-            $this->error('访问错误！');
-        }
-        
-        $moduleId = $this->request->param('module/s');
-        if (empty($moduleId)) {
-            $this->error('请选择需要操作的模块！');
-        }
-        
-        // 获取模块信息
-        $module = ModuleModel::where([
-            'module' => $moduleId,
-            'status' => 1,
-        ])->find();
-        if (empty($module)) {
-            $this->error('该模块没有安装或者被禁用！');
-        }
-        
-        $config = $this->request->param('config/a');
-        $flag = ModuleModel::where([
-            'module' => $moduleId,
-        ])->data([
-            'setting_data' => json_encode($config),
-        ])->update();
-        
-        if ($flag === false) {
-            $this->error('保存失败');
-        }
-        
-        $this->success('保存成功');
     }
     
     /**
@@ -466,6 +407,8 @@ class Module extends Base
         if (empty($data)) {
             $this->error('信息不存在！');
         }
+        
+        $data['need_module'] = json_decode($data['need_module'], true);
         
         $this->assign("data", $data);
         return $this->fetch();
