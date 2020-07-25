@@ -33,7 +33,7 @@ class AdminAuth
     {
         static $authList = [];
         
-        $defaultConfig = [
+        $config = [
             'AUTH_ON' => true, // 认证开关
             'AUTH_TYPE' => 1, // 认证方式，1为实时认证；2为登录认证。
             'AUTH_USER' => (new AdminModel)->getName(), // 用户信息表
@@ -43,7 +43,9 @@ class AdminAuth
             'AUTH_RULE_ACCESS' => (new AuthRuleAccessModel)->getName(), // 权限规则关系表
             'AUTH_RULE_EXTEND' => (new AuthRuleExtendModel)->getName(), // 扩展表
         ];
-        $config = array_merge($defaultConfig, $userConfig);
+        if (!empty($userConfig) && is_array($userConfig)) {
+            $config = array_merge($config, $userConfig);
+        }
         
         $authId = Str::toGuidString($config);
         if (isset($authList[$authId])) {

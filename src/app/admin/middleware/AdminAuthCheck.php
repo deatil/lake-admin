@@ -7,6 +7,7 @@ use think\App;
 use think\facade\Env;
 
 use app\admin\boot\Jump;
+use app\admin\model\AuthRule as AuthRuleModel;
 use app\admin\service\Admin as AdminService;
 use app\admin\service\AdminAuth as AdminAuthService;
 

@@ -286,7 +286,7 @@ class Auth
         // 读取用户组所有权限规则
         $rules = Db::name($this->_config['AUTH_RULE'])
             ->where($map)
-            ->field('condition,name')
+            ->field('condition,name,method')
             ->select();
             
         // 循环规则，判断结果。

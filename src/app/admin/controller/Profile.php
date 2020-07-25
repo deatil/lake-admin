@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use think\facade\View;
 
 use app\admin\model\Admin as AdminModel;
+use app\admin\service\Admin as AdminService;
 
 /**
  * 账号信息
@@ -70,6 +71,7 @@ class Profile extends Base
         $adminInfo = env('admin_info');
         
         $AdminModel = new AdminModel;
+        $AdminService = new AdminService;
         if ($this->request->isPost()) {
             $post = $this->request->post();
             
@@ -108,7 +110,7 @@ class Profile extends Base
                 $this->error('请确保新密码与旧密码不同');
             }
             
-            if (!$AdminModel->login($adminInfo['username'], $post['password'])) {
+            if (!$AdminService->getUserInfo($adminInfo['username'], $post['password'])) {
                 $this->error('旧密码错误！');
             }
 
