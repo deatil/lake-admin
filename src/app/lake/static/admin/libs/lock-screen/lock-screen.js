@@ -21,7 +21,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
                         expires: 0,
                     });
                 } else {
-                    layer.alert("锁定账户失败！");
+                    layer.alert(res.msg);
                 }
             });
         });

@@ -15,7 +15,9 @@
                     </h3>
                     
                     <div class="lake-admin-module-author">
-                        {$config.author}
+                        <a href="{$config.authorsite|default='javascript:;'}" target="_blank">
+                            {$config.author}
+                        </a>
                         <span class="lake-admin-module-authoremail text-gray">({$config.authoremail})</span>
                     </div>
                     

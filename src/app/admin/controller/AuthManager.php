@@ -149,7 +149,51 @@ class AuthManager extends Base
         
         $this->assign("group_data", $groupData);
         
-        return $this->fetch('edit_group');
+        return $this->fetch();
+    }
+    
+    /**
+     * 管理员角色数据写入
+     *
+     * @create 2019-7-7
+     * @author deatil
+     */
+    public function writeGroup()
+    {
+        if (!$this->request->isPost()) {
+            $this->error('请求错误！');
+        }
+        
+        $data = $this->request->post();
+        if (empty($data['parentid'])) {
+            $this->error('父角色组不能为空');
+        }
+        
+        $check = $this->AuthManagerService->checkGroupForUser($data['parentid']);
+        if ($check['status'] === false) {
+            $this->error($check['msg']);
+        }
+        
+        $data['type'] = AuthGroupModel::TYPE_ADMIN;
+        
+        Event::trigger('AuthManagerWriteGroup', $data);
+        
+        $result = $this->validate($data, 'AuthGroup');
+        if (true !== $result) {
+            return $this->error($result);
+        }
+        
+        $data['id'] = md5(microtime().mt_rand(100000, 999999));
+        $data['add_time'] = time();
+        $data['add_ip'] = request()->ip(1);
+        
+        $r = $this->AuthGroupModel->save($data);
+        
+        if ($r === false) {
+            $this->error('操作失败' . $this->AuthGroupModel->getError());
+        }
+        
+        $this->success('操作成功!');
     }
     
     /**
@@ -224,12 +268,12 @@ class AuthManager extends Base
     }
     
     /**
-     * 管理员角色数据写入/更新
+     * 管理员角色数据更新
      *
-     * @create 2019-7-7
+     * @create 2020-7-26
      * @author deatil
      */
-    public function writeGroup()
+    public function updateGroup()
     {
         if (!$this->request->isPost()) {
             $this->error('请求错误！');
@@ -247,93 +291,35 @@ class AuthManager extends Base
         
         $data['type'] = AuthGroupModel::TYPE_ADMIN;
         
-        Event::trigger('AuthManagerWriteGroup', $data);
+        Event::trigger('AuthManagerUpdateGroup', $data);
         
-        $rules = [];
-        if (isset($data['rules']) && !empty($data['rules'])) {
-            $rules = explode(',', $data['rules']);
+        if (!isset($data['id']) || empty($data['id'])) {
+            $this->error('角色组ID不存在！');
         }
-        unset($data['rules']);
         
-        // 监听权限
-        Event::trigger('AuthManagerWriteGroupRules', $rules);
-        
-        // 获取提交的正确权限
-        $rules = $this->AuthManagerService->getUserRightAuth($rules);
-        
-        if (isset($data['id']) && !empty($data['id'])) {
-            $authGroup = AuthGroupModel::where([
-                    'type' => AuthGroupModel::TYPE_ADMIN,
-                ])
-                ->find($data['id']);
-            if (empty($authGroup)) {
-                $this->error('角色组不存在！');
-            }
-            
-            if ($authGroup['is_system'] == 1) {
-                $this->error('系统默认角色不可操作！');
-            }
-            
-            $check = $this->AuthManagerService->checkUserGroup($data['id']);
-            if ($check['status'] === false) {
-                $this->error($check['msg']);
-            }
-        
-            // 更新
-            $r = $this->AuthGroupModel
-                ->where([
-                    'id' => $data['id'],
-                ])
-                ->update($data);
-            
-            // 删除权限
-            AuthRuleAccessModel::where([
-                'group_id' => $data['id'],
-            ])->delete();
-            
-            // 有权限就添加
-            if (isset($rules) && !empty($rules)) {
-                $ruleAccess = [];
-                if (!empty($rules)) {
-                    foreach ($rules as $rule) {
-                        $ruleAccess[] = [
-                            'group_id' => $data['id'],
-                            'rule_id' => $rule,
-                        ];
-                    }
-                }
-                
-                Event::trigger('AuthManagerWriteUpdateGroup', $ruleAccess);
-                
-                AuthRuleAccessModel::insertAll($ruleAccess);
-            }
-            
-        } else {
-            $result = $this->validate($data, 'AuthGroup');
-            if (true !== $result) {
-                return $this->error($result);
-            }
-            
-            $data['id'] = md5(microtime().mt_rand(100000, 999999));
-            $data['add_time'] = time();
-            $data['add_ip'] = request()->ip(1);
-            
-            $r = $this->AuthGroupModel->save($data);
-        
-            if (isset($rules) && !empty($rules)) {
-                $ruleAccess = [];
-                foreach ($rules as $rule) {
-                    $ruleAccess[] = [
-                        'group_id' => $this->id,
-                        'rule_id' => $rule,
-                    ];
-                }
-                
-                Event::trigger('AuthManagerWriteInsertGroup', $ruleAccess);
-                
-                AuthRuleAccessModel::insertAll($ruleAccess);
-            }
+        $authGroup = AuthGroupModel::where([
+                'type' => AuthGroupModel::TYPE_ADMIN,
+            ])
+            ->find($data['id']);
+        if (empty($authGroup)) {
+            $this->error('角色组不存在！');
         }
+        
+        if ($authGroup['is_system'] == 1) {
+            $this->error('系统默认角色不可操作！');
+        }
+        
+        $check = $this->AuthManagerService->checkUserGroup($data['id']);
+        if ($check['status'] === false) {
+            $this->error($check['msg']);
+        }
+    
+        // 更新
+        $r = $this->AuthGroupModel
+            ->where([
+                'id' => $data['id'],
+            ])
+            ->update($data);
         
         if ($r === false) {
             $this->error('操作失败' . $this->AuthGroupModel->getError());
@@ -379,7 +365,7 @@ class AuthManager extends Base
         
         Event::trigger('AuthManagerDeleteGroup', $groupId);
         
-        $rs = $this->AuthGroupModel->GroupDelete($groupId);
+        $rs = $this->AuthGroupModel->groupDelete($groupId);
         
         if ($rs === false) {
             $error = $this->AuthGroupModel->getError();
@@ -397,63 +383,165 @@ class AuthManager extends Base
      */
     public function access()
     {
-        $groupId = $this->request->param('group_id');
-        if (empty($groupId)) {
-            $this->error('角色组ID不能为空');
-        }
-        
-        $check = $this->AuthManagerService->checkUserGroup($groupId);
-        if ($check['status'] === false) {
-            $this->error($check['msg']);
-        }
-        
-        $araTable = (new AuthRuleAccessModel)->getName();
-        $rules = AuthGroupModel::alias('ag')
-            ->leftJoin($araTable . ' ara ', 'ara.group_id = ag.id')
-            ->where([
-                'ag.id' => $groupId,
-                'ag.type' => AuthGroupModel::TYPE_ADMIN,
-            ])
-            ->column('ara.rule_id');
-            
-        // 监听权限
-        Event::trigger('AuthManagerAccessRules', [
-            'group_id' => $groupId,
-            'rules' => $rules,
-        ]);
-        
-        // 当前用户权限ID列表
-        $userAuthIds = AdminAuthService::instance()->getUserAuthIdList(env('admin_id'));
-    
-        $result = (new AuthRuleModel)->returnNodes(false);
-        
-        $json = [];
-        if (!empty($result)) {
-            foreach ($result as $rs) {
-                $data = [
-                    'nid' => $rs['id'],
-                    'parentid' => $rs['parentid'],
-                    'name' => (empty($rs['method']) ? $rs['title'] : ($rs['title'] . '[' . strtoupper($rs['method']) . ']')),
-                    'id' => $rs['id'],
-                    'chkDisabled' => $this->AuthManagerService->checkUserAuth($rs['id'], $userAuthIds),
-                    'checked' => in_array($rs['id'], $rules) ? true : false,
-                ];
-                $json[] = $data;
+        if ($this->request->isPost()) {
+            $groupId = $this->request->post('id');
+            if (empty($groupId)) {
+                $this->error('角色组不存在！');
             }
+        
+            $authGroup = AuthGroupModel::where([
+                    'type' => AuthGroupModel::TYPE_ADMIN,
+                    'id' => $groupId,
+                ])
+                ->find();
+            if (empty($authGroup)) {
+                $this->error('角色组不存在');
+            }
+            
+            $check = $this->AuthManagerService->checkGroupForUser($authGroup['parentid']);
+            if ($check['status'] === false) {
+                $this->error($check['msg']);
+            }
+            
+            $newRules = $this->request->post('rules');
+            
+            $rules = [];
+            if (!empty($newRules)) {
+                $rules = explode(',', $newRules);
+            }
+            
+            // 监听权限
+            Event::trigger('AuthManagerUpdateGroupRules', $rules);
+            
+            // 获取提交的正确权限
+            $rules = $this->AuthManagerService->getUserRightAuth($rules);
+            
+            if ($authGroup['is_system'] == 1) {
+                $this->error('系统默认角色不可操作！');
+            }
+            
+            $check = $this->AuthManagerService->checkUserGroup($groupId);
+            if ($check['status'] === false) {
+                $this->error($check['msg']);
+            }
+            
+            // 删除权限
+            AuthRuleAccessModel::where([
+                'group_id' => $groupId,
+            ])->delete();
+            
+            // 有权限就添加
+            if (isset($rules) && !empty($rules)) {
+                $ruleAccess = [];
+                if (!empty($rules)) {
+                    foreach ($rules as $rule) {
+                        $ruleAccess[] = [
+                            'group_id' => $groupId,
+                            'rule_id' => $rule,
+                        ];
+                    }
+                }
+                
+                Event::trigger('AuthManagerAccessUpdate', $ruleAccess);
+                
+                $r = AuthRuleAccessModel::insertAll($ruleAccess);
+            
+                if ($r === false) {
+                    $this->error('授权失败');
+                }
+            }
+            
+            $this->success('授权成功!');
+        } else {
+            $groupId = $this->request->param('group_id');
+            if (empty($groupId)) {
+                $this->error('角色组ID不能为空');
+            }
+            
+            $check = $this->AuthManagerService->checkUserGroup($groupId);
+            if ($check['status'] === false) {
+                $this->error($check['msg']);
+            }
+            
+            $araTable = (new AuthRuleAccessModel)->getName();
+            $rules = AuthGroupModel::alias('ag')
+                ->leftJoin($araTable . ' ara ', 'ara.group_id = ag.id')
+                ->where([
+                    'ag.id' => $groupId,
+                    'ag.type' => AuthGroupModel::TYPE_ADMIN,
+                ])
+                ->column('ara.rule_id');
+                
+            // 监听权限
+            Event::trigger('AuthManagerAccessRules', [
+                'group_id' => $groupId,
+                'rules' => $rules,
+            ]);
+            
+            // 当前用户权限ID列表
+            $userAuthIds = AdminAuthService::instance()->getUserAuthIdList(env('admin_id'));
+        
+            $result = (new AuthRuleModel)->returnNodes(false);
+            
+            $json = [];
+            if (!empty($result)) {
+                foreach ($result as $rs) {
+                    $data = [
+                        'nid' => $rs['id'],
+                        'parentid' => $rs['parentid'],
+                        'name' => (empty($rs['method']) ? $rs['title'] : ($rs['title'] . '[' . strtoupper($rs['method']) . ']')),
+                        'id' => $rs['id'],
+                        'chkDisabled' => $this->AuthManagerService->checkUserAuth($rs['id'], $userAuthIds),
+                        'checked' => in_array($rs['id'], $rules) ? true : false,
+                    ];
+                    $json[] = $data;
+                }
+            }
+            
+            Event::trigger('AuthManagerAccessData', $json);
+            
+            $this->assign('group_id', $groupId);
+            $this->assign('json', json_encode($json));
+            
+            $authGroup = AuthGroupModel::where([
+                'type' => AuthGroupModel::TYPE_ADMIN,
+                'id' => $groupId,
+            ])->find();
+            $this->assign('auth_group', $authGroup);
+            
+            return $this->fetch('access');
+        }
+    }
+
+    /**
+     * 菜单排序
+     *
+     * @create 2020-7-26
+     * @author deatil
+     */
+    public function listorder()
+    {
+        if (!$this->request->isPost()) {
+            $this->error('请求错误！');
         }
         
-        Event::trigger('AuthManagerAccess', $json);
+        $id = $this->request->param('id/s', 0);
+        if (empty($id)) {
+            $this->error('参数不能为空！');
+        }
         
-        $this->assign('group_id', $groupId);
-        $this->assign('json', json_encode($json));
+        $listorder = $this->request->param('value/d', 100);
         
-        $authGroup = AuthGroupModel::where([
-            'type' => AuthGroupModel::TYPE_ADMIN,
-            'id' => $groupId,
-        ])->find();
-        $this->assign('auth_group', $authGroup);
+        $rs = AuthGroupModel::update([
+            'listorder' => $listorder,
+        ], [
+            'id' => $id,
+        ]);
+        if ($rs === false) {
+            $this->error("排序失败！");
+        }
         
-        return $this->fetch('access');
+        $this->success("排序成功！");
     }
     
 }

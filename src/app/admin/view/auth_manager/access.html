@@ -4,10 +4,9 @@
 <div class="layui-card">
     <div class="layui-card-header layui-bg-cyan">编辑访问权限</div>
     <div class="layui-card-body">
-        <form class="layui-form form-horizontal" action="{:url('writeGroup')}" method="post">
+        <form class="layui-form form-horizontal" action="{:url('access')}" method="post">
             <input type="hidden" name="rules" value="" />
             <input type="hidden" name="id" value="{$group_id}" />
-            <input type="hidden" name="parentid" value="{$auth_group.parentid}" />
             
             <div class="layui-form-item">
                 <label class="layui-form-label">角色</label>

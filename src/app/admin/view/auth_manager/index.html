@@ -11,7 +11,7 @@
                         <select name="field" class="lake-admin-search-field">
                             <option value="">全部类型</option>
                             <option value="title">权限组</option>
-                        </select>                    
+                        </select>
                     </div>
                     <div class="layui-input-inline">
                         <input type="text" name="keyword" class="layui-input lake-admin-search-val" placeholder="请输入关键字">
@@ -30,7 +30,7 @@
 {/block}
 
 {block name="script"}
-<script type="text/html" id="toolbarDemo">
+<script type="text/html" id="toolbarTop">
     <div class="layui-btn-container">
         <a class="layui-btn layui-btn-sm layui-iframe" href="{:url('createGroup')}" title="添加角色">添加角色</a>
     </div>
@@ -69,10 +69,11 @@ layui.use('table', function() {
         $ = layui.$;
     table.render({
         elem: '#table',
-        toolbar: '#toolbarDemo',
+        toolbar: '#toolbarTop',
         url: '{:url("index")}',
         cols: [
             [
+                { field: 'listorder', align: 'center', width: 70, title: '排序', edit: 'text' },
                 { field: 'title', width: 200, title: '权限组'},
                 { field: 'description', title: '描述' },
                 { title: '授权', width: 100, templet: "#access" },
@@ -82,6 +83,27 @@ layui.use('table', function() {
         ],
         page: {},
         limit: 10,
+    });
+    
+    // 监听单元格编辑
+    table.on('edit(table)', function(obj) {
+        var value = obj.value,
+            field = obj.field,
+            data = obj.data;
+        
+        if (field == 'listorder') {
+            $.post('{:url("listorder")}', { 
+                'id': data.id, 
+                'value': value 
+            }, function(data) {
+                if (data.code == 1) {
+                    layer.msg(data.msg);
+                    table.render();
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        }
     });
     
     // 搜索

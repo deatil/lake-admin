@@ -421,7 +421,10 @@ class Module
             $this->error = '模块已经安装，无法重复安装！';
             return false;
         }
-
+        
+        // 设置脚本最大执行时间
+        @set_time_limit(0);
+        
         // 加载模块基本配置
         $config = $this->getInfoFromFile($name);
         if ($config === false) {
@@ -570,7 +573,10 @@ class Module
             $this->error = '模块没有安装，不需要更新！';
             return false;
         }
-
+        
+        // 设置脚本最大执行时间
+        @set_time_limit(0);
+        
         // 加载模块基本配置
         $config = $this->getInfoFromInstall($name);
         if ($config === false) {
@@ -804,11 +810,12 @@ class Module
             return false;
         }
         
-        $status = (new AuthRuleModel)->installModuleMenu($menu, $this->getInfoFromFile($name));
+        $AuthRuleModel = new AuthRuleModel;
+        $status = $AuthRuleModel->installModuleMenu($menu, $this->getInfoFromFile($name));
         if ($status === true) {
             return true;
         } else {
-            $this->error = (new AuthRuleModel)->getError() ?: '安装菜单项出现错误！';
+            $this->error = $AuthRuleModel->getError() ?: '安装菜单项出现错误！';
             return false;
         }
     }

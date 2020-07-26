@@ -77,7 +77,6 @@ class Auth
             return true;
         }
         
-        $authList = $this->getAuthList($uid, $type); //获取用户需要验证的所有有效规则列表
         if (is_string($name)) {
             $name = strtolower($name);
             if (strpos($name, ',') !== false) {
@@ -87,11 +86,12 @@ class Auth
             }
         }
         
-        $list = []; //保存验证通过的规则名
+        $list = []; // 保存验证通过的规则名
         if ('url' == $mode) {
             $REQUEST = unserialize(strtolower(serialize($this->request->param())));
         }
         
+        $authList = $this->getAuthList($uid, $type); //获取用户需要验证的所有有效规则列表
         if (!empty($authList)) {
             foreach ($authList as $auth) {
                 $query = preg_replace('/^.+\?/U', '', $auth);
@@ -216,9 +216,15 @@ class Auth
     /**
      * 根据用户id获取用户组,返回值为数组
      * @param  uid int     用户id
-     * @return array       用户所属的用户组 array(
-     *                                         array('uid'=>'用户id','group_id'=>'用户组id','title'=>'用户组名称'),
-     *                                         ...)
+     * @return array       用户所属的用户组 
+     *  array(
+     *      array(
+     *          'id' => '用户组id',
+     *          'title' => '用户组名称',
+     *          'uid' => '用户id',
+     *      ),
+     *      ...
+     *   )
      *
      * @create 2019-7-9
      * @author deatil
@@ -236,7 +242,7 @@ class Auth
             ->join($this->_config['AUTH_GROUP'] . ' ag', "aga.group_id = ag.id")
             ->where('au.id', $uid)
             ->where('ag.status', 1)
-            ->field('au.id, ag.id, ag.title')
+            ->field('ag.id, ag.title')
             ->select();
         $groups[$uid] = $userGroups ?: [];
         
@@ -266,8 +272,10 @@ class Auth
         // 读取用户所属用户组
         $groups = $this->getGroups($uid);
         $gids = [];
-        foreach ($groups as $g) {
-            $gids[] = $g['id'];
+        if (!empty($groups)) {
+            foreach ($groups as $g) {
+                $gids[] = $g['id'];
+            }
         }
         
         $ids = $this->getGroupRuleidList($gids); //保存用户所属用户组设置的所有权限规则id
@@ -286,20 +294,26 @@ class Auth
         // 读取用户组所有权限规则
         $rules = Db::name($this->_config['AUTH_RULE'])
             ->where($map)
-            ->field('condition,name,method')
+            ->field('name,condition,method')
             ->select();
             
         // 循环规则，判断结果。
         $authList = [];
-        foreach ($rules as $rule) {
-            $authList[] = strtolower($rule['name']);
+        if (!empty($rules)) {
+            foreach ($rules as $rule) {
+                if (!empty($rule['name'])) {
+                    $authList[] = strtolower($rule['method'].':'.$rule['name']);
+                }
+            }
         }
         
         // 扩展规则
-        $extend_rules = $this->getRuleExtendList($gids);
-        if (!empty($extend_rules)) {
-            foreach ($extend_rules as $extend_rule) {
-                $authList[] = strtolower($extend_rule);
+        $extendRules = $this->getRuleExtendList($gids);
+        if (!empty($extendRules)) {
+            foreach ($extendRules as $extendRule) {
+                if (!empty($extendRule['rule'])) {
+                    $authList[] = strtolower($extendRule['method'].':'.$extendRule['rule']);
+                }
             }
         }
         
@@ -326,7 +340,8 @@ class Auth
         
         $rules = Db::name($this->_config['AUTH_RULE_EXTEND'])
             ->where($map)
-            ->column('rule');
+            ->field('rule,condition,method')
+            ->select();
         
         return $rules;
     }

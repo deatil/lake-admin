@@ -5,6 +5,7 @@ namespace app\admin\service;
 use think\facade\Db;
 use think\facade\Session;
 use think\facade\Cookie;
+use think\facade\Config;
 
 use lake\Arr;
 
@@ -212,7 +213,7 @@ class Admin
                     'ag.is_root' => 1,
                 ])
                 ->column('ag.id');
-            if (!empty($gids)) {
+            if (!empty($gids) && (Config::get('app.administrator_id') == $uid)) {
                 return true;
             }
         }

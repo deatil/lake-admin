@@ -34,5 +34,7 @@ return [
     'static_path' => root_path() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'static',
     // 模块资源文件路径
     'module_static_path' => root_path() . 'public' . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR,
-
+    
+    // 超级管理员ID
+    'administrator_id' => env('administrator_id', 1),
 ];

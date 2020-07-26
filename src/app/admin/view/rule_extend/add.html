@@ -54,12 +54,29 @@
             </div>
             
             <div class="layui-form-item">
+                <label class="layui-form-label">请求方式</label>
+                <div class="layui-input-inline w300">
+                    <select name="method" lay-verify="required">
+                        <option value="">选择请求方式</option>
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="PATCH">PATCH</option>
+                        <option value="DELETE">DELETE</option>
+                        <option value="HEAD">HEAD</option>
+                        <option value="PATCH">PATCH</option>
+                        <option value="OPTIONS">OPTIONS</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
                 <label class="layui-form-label">规则数据</label>
                 <div class="layui-input-block w300">
                     <textarea name="rule_data" placeholder="规则数据" class="layui-textarea"></textarea>
                 </div>
             </div>
-
+            
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="formSubmit">立即提交</button>

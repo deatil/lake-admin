@@ -31,7 +31,13 @@ class AuthGroup extends ModelBase
             'type' => self::TYPE_ADMIN, 
             'module' => 'admin'
         ];
-        return $this->where($map)->where($where)->select()->toArray();
+        
+        $data = $this->where($map)
+            ->where($where)
+            ->order('listorder ASC')
+            ->select()
+            ->toArray();
+        return $data;
     }
 
     /**
@@ -74,7 +80,7 @@ class AuthGroup extends ModelBase
      * @param int $Groupid 角色ID
      * @return boolean
      */
-    public function GroupDelete($Groupid)
+    public function groupDelete($Groupid)
     {
         if (empty($Groupid) || $Groupid == 1) {
             $this->error = '超级管理员角色不能被删除！';

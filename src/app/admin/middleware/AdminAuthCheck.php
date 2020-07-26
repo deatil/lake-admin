@@ -54,13 +54,15 @@ class AdminAuthCheck
     {
         // 过滤不需要登陆的行为
         $allowUrl = [
-            'admin/passport/captcha',
-            'admin/passport/login',
-            'admin/passport/logout',
+            'get:admin/passport/captcha',
+            'get:admin/passport/login',
+            'post:admin/passport/login',
+            'get:admin/passport/logout',
         ];
         
         $rule = strtolower(
-            app()->http->getName() . 
+            request()->method() . 
+            ':' . app()->http->getName() . 
             '/' . request()->controller() . 
             '/' . request()->action()
         );
@@ -143,7 +145,7 @@ class AdminAuthCheck
             $this->error('您的帐号已经被锁定！', $this->loginUrl);
             return false;
         }
-            
+        
         // 是否是超级管理员
         $adminIsRoot = $AdminService->isAdministrator();
         

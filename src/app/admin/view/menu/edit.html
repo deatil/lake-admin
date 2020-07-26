@@ -73,6 +73,23 @@
             </div>
             
             <div class="layui-form-item">
+                <label class="layui-form-label">请求方式</label>
+                <div class="layui-input-inline w300">
+                    <select name="method" lay-verify="required">
+                        <option value="">选择请求方式</option>
+                        <option value="GET" {if $data['method'] == 'GET'}selected="selected"{/if}>GET</option>
+                        <option value="POST" {if $data['method'] == 'POST'}selected="selected"{/if}>POST</option>
+                        <option value="PUT" {if $data['method'] == 'PUT'}selected="selected"{/if}>PUT</option>
+                        <option value="PATCH" {if $data['method'] == 'PATCH'}selected="selected"{/if}>PATCH</option>
+                        <option value="DELETE" {if $data['method'] == 'DELETE'}selected="selected"{/if}>DELETE</option>
+                        <option value="HEAD" {if $data['method'] == 'HEAD'}selected="selected"{/if}>HEAD</option>
+                        <option value="PATCH" {if $data['method'] == 'PATCH'}selected="selected"{/if}>PATCH</option>
+                        <option value="OPTIONS" {if $data['method'] == 'OPTIONS'}selected="selected"{/if}>OPTIONS</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
                 <label class="layui-form-label">验证类型</label>
                 <div class="w300">
                     <input type="radio" name="type" value="2" title="主菜单" {eq name="data.type" value="2" }checked{/eq}>

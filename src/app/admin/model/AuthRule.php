@@ -242,8 +242,9 @@ class AuthRule extends ModelBase
                 'parameter' => isset($rs['parameter']) ? $rs['parameter'] : '',
                 'fields' => isset($rs['fields']) ? $rs['fields'] : '',
                 'condition' => isset($rs['condition']) ? $rs['condition'] : '',
+                'method' => isset($rs['method']) ? $rs['method'] : '',
                 'type' => (isset($rs['type']) && $rs['type'] == 2) ? $rs['type'] : 1,
-                'listorder' => isset($rs['listorder']) ? $rs['listorder'] : 0,
+                'listorder' => isset($rs['listorder']) ? $rs['listorder'] : 100,
                 'is_menu' => isset($rs['is_menu']) ? $rs['is_menu'] : 0,
                 'status' => 1,
             ];
@@ -324,6 +325,18 @@ class AuthRule extends ModelBase
         }
         
         return $menus;
+    }
+    
+    /**
+     * 获取错误信息
+     * @return string
+     *
+     * @create 2020-7-26
+     * @author deatil
+     */
+    public function getError()
+    {
+        return $this->error;
     }
     
 }
