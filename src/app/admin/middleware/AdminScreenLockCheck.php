@@ -49,12 +49,12 @@ class AdminScreenLockCheck
             }
         }
         
-        $request = app()->middleware->pipeline('app')
+        $response = app()->middleware->pipeline('app')
             ->send($request)
             ->then(function ($request) use ($next) {
                 return $next($request);
             });
         
-        return $request;
+        return $response;
     }
 }

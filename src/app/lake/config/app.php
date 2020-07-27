@@ -36,5 +36,5 @@ return [
     'module_static_path' => root_path() . 'public' . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR,
     
     // 超级管理员ID
-    'administrator_id' => env('administrator_id', 1),
+    'admin_super_id' => env('admin_super_id', 1),
 ];

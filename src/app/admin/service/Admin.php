@@ -213,7 +213,7 @@ class Admin
                     'ag.is_root' => 1,
                 ])
                 ->column('ag.id');
-            if (!empty($gids) && (Config::get('app.administrator_id') == $uid)) {
+            if (!empty($gids) && (Config::get('app.admin_super_id') == $uid)) {
                 return true;
             }
         }

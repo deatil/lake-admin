@@ -25,18 +25,11 @@ abstract class Base extends BaseController
      */
     protected $middleware = [
         // 权限检测
-        '\\app\\admin\\middleware\\AdminAuthCheck',
+        \app\admin\middleware\AdminAuthCheck::class,
+
         // 锁屏检测
-        '\\app\\admin\\middleware\\AdminScreenLockCheck',
+        \app\admin\middleware\AdminScreenLockCheck::class,
     ];
-    
-    /**
-     * 当前登录账号信息
-     *
-     * @create 2019-10-10
-     * @author deatil
-     */
-    protected $adminInfo;
     
     /**
      * 空操作
