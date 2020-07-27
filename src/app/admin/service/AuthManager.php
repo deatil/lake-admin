@@ -2,8 +2,6 @@
 
 namespace app\admin\service;
 
-use think\facade\Db;
-
 use lake\Tree;
 
 use app\admin\model\AuthGroup as AuthGroupModel;

@@ -2,8 +2,6 @@
 
 namespace app\admin\controller;
 
-use think\facade\View;
-
 use app\admin\model\AdminLog as AdminlogModel;
 
 /**

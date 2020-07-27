@@ -1,6 +1,5 @@
 <?php
 
-use think\facade\Db;
 use think\facade\Event;
 
 use lake\Arr;

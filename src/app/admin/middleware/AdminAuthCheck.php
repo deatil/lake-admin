@@ -4,7 +4,6 @@ namespace app\admin\middleware;
 
 use Closure;
 use think\App;
-use think\facade\Env;
 
 use app\admin\boot\Jump;
 use app\admin\model\AuthRule as AuthRuleModel;
@@ -21,7 +20,15 @@ class AdminAuthCheck
 {
     use Jump;
     
+    /** @var App */
+    protected $app;
+    
     protected $loginUrl = '';
+    
+    public function __construct(App $app)
+    {
+        $this->app  = $app;
+    }
     
     /**
      * 行为扩展的执行入口必须是run
@@ -35,7 +42,7 @@ class AdminAuthCheck
         
         $this->checkAdminLogin();
         
-        $response = app()->middleware->pipeline('app')
+        $response = $this->app->middleware->pipeline('app')
             ->send($request)
             ->then(function ($request) use ($next) {
                 return $next($request);
@@ -61,15 +68,15 @@ class AdminAuthCheck
         ];
         
         $rule = strtolower(
-            request()->method() . 
-            ':' . app()->http->getName() . 
-            '/' . request()->controller() . 
-            '/' . request()->action()
+            $this->app->request->method() . 
+            ':' . $this->app->http->getName() . 
+            '/' . $this->app->request->controller() . 
+            '/' . $this->app->request->action()
         );
         
         if (!in_array($rule, $allowUrl)) {
             // 重复检测跳过
-            if (Env::get('admin_id')) {
+            if ($this->app->env->get('admin_id')) {
                 return;
             }
             
@@ -80,7 +87,7 @@ class AdminAuthCheck
             }
             
             // 是否是超级管理员
-            $adminIsRoot = Env::get('admin_is_root');
+            $adminIsRoot = $this->app->env->get('admin_is_root');
 
             // 超级管理员跳过
             if ($adminIsRoot) {
@@ -93,12 +100,12 @@ class AdminAuthCheck
                 foreach ($arr as $val) {
                     // 是否是IP段
                     if (strpos($val, '*')) {
-                        if (strpos(request()->ip(), str_replace('.*', '', $val)) !== false) {
+                        if (strpos($this->app->request->ip(), str_replace('.*', '', $val)) !== false) {
                             $this->error('403:你在IP禁止段内,禁止访问！');
                         }
                     } else {
                         // 不是IP段,用绝对匹配
-                        if (request()->ip() == $val) {
+                        if ($this->app->request->ip() == $val) {
                             $this->error('403:IP地址绝对匹配,禁止访问！');
                         }
                     }
@@ -149,7 +156,7 @@ class AdminAuthCheck
         // 是否是超级管理员
         $adminIsRoot = $AdminService->isAdministrator();
         
-        Env::set([
+        $this->app->env->set([
             'admin_id' => $adminId,
             'admin_is_root' => $adminIsRoot,
             'admin_info' => $adminInfo,

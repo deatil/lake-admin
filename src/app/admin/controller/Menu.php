@@ -2,9 +2,6 @@
 
 namespace app\admin\controller;
 
-use think\facade\Db;
-use think\facade\View;
-
 use lake\Tree;
 
 use app\admin\facade\Module as ModuleFacade;

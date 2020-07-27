@@ -2,7 +2,6 @@
 
 namespace app\admin\service;
 
-use think\facade\Db;
 use think\facade\Session;
 use think\facade\Cookie;
 use think\facade\Config;

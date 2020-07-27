@@ -2,7 +2,6 @@
 
 namespace app\admin\module\controller;
 
-use think\facade\Db;
 use think\facade\Env;
 
 use app\admin\boot\Jump as JumpTrait;

@@ -2,8 +2,6 @@
 
 namespace app\admin\model;
 
-use think\facade\Db;
-
 /**
  * 用户组模型类
  *

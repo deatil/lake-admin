@@ -2,8 +2,6 @@
 
 namespace app\admin\controller;
 
-use think\facade\View;
-
 use app\admin\service\Admin as AdminService;
 use app\admin\service\Screen as ScreenService;
 

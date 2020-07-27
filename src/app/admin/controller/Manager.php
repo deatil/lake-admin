@@ -2,9 +2,6 @@
 
 namespace app\admin\controller;
 
-use think\facade\Db;
-use think\facade\View;
-
 use app\admin\model\Admin as AdminModel;
 use app\admin\model\AuthGroup as AuthGroupModel;
 use app\admin\model\AuthGroupAccess as AuthGroupAccessModel;

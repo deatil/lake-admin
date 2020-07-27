@@ -6,14 +6,11 @@ use Composer\Autoload\ClassLoader;
 
 use think\App;
 use think\Console;
-use think\facade\Db;
-use think\facade\Cache;
-use think\facade\Event;
-use think\facade\Env;
 
 use app\admin\model\Hook as HookModel;
 use app\admin\model\Module as ModuleModel;
 use app\admin\facade\Module as ModuleFacade;
+use app\admin\service\ModuleLoad as ModuleLoadService;
 
 /**
  * 初始化模块
@@ -51,10 +48,10 @@ class InitModule
      */
     private function addModuleNamespace()
     {
-        $appNamespace = config('app.module_namespace');
-        $modulePath = config('app.module_path');
+        $appNamespace = $this->app->config->get('app.module_namespace');
+        $modulePath = $this->app->config->get('app.module_path');
         
-        $modules = Cache::get('lake_admin_modules');
+        $modules = $this->app->cache->get('lake_admin_modules');
         if (empty($modules)) {
             $modules = ModuleModel::where([
                     'status' => 1,
@@ -63,7 +60,7 @@ class InitModule
                 ->select()
                 ->toArray();
             
-            Cache::set('lake_admin_modules', $modules);
+            $this->app->cache->set('lake_admin_modules', $modules);
         }
         
         if (!empty($modules)) {
@@ -105,7 +102,7 @@ class InitModule
                 $this->loadModuleConfigAndFile($moduleGlobal);
                 
                 // 注册模块指令
-                $commands = app()->config->get('app.command');
+                $commands = $this->app->config->get('app.command');
                 if (!empty($commands) && is_array($commands)) {
                     Console::starting(function (Console $console) use ($commands) {
                         $console->addCommands($commands);
@@ -123,37 +120,7 @@ class InitModule
      */
     private function loadModuleConfigAndFile($path)
     {
-        // 自动加载公用文件
-        if (is_dir($path)) {
-            $pathDir = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-        }
-        
-        $pathFiles = isset($pathDir) ? scandir($pathDir) : [];
-        
-        foreach ($pathFiles as $pathFile) {
-            if ('.' . pathinfo($pathFile, PATHINFO_EXTENSION) === '.php' 
-                && file_exists($pathDir . $pathFile)
-                && is_file($pathDir . $pathFile)
-            ) {
-                include_once $pathDir . $pathFile;
-            }
-        }
-        
-        // 自动读取配置文件
-        if (is_dir($path . 'config')) {
-            $dir = $path . 'config' . DIRECTORY_SEPARATOR;
-        }
-        
-        $files = isset($dir) ? scandir($dir) : [];
-        
-        foreach ($files as $file) {
-            if ('.' . pathinfo($file, PATHINFO_EXTENSION) === env('config_ext', '.php')) {
-                app()->config->load($dir . $file, pathinfo($file, PATHINFO_FILENAME));
-            }
-        }
-        
-        // 加载语言包
-        app()->loadLangPack(app()->lang->defaultLangSet());
+        (new ModuleLoadService($this->app))->loadApp($path);
     }
     
     /**
@@ -164,7 +131,7 @@ class InitModule
      */
     private function addModuleHooks()
     {
-        $hooks = Cache::get('lake_admin_hooks');
+        $hooks = $this->app->cache->get('lake_admin_hooks');
         if (empty($hooks)) {
             // 所有模块钩子
             $hooks = HookModel::field('name, class')
@@ -172,12 +139,12 @@ class InitModule
                 ->select()
                 ->toArray();
             
-            Cache::set('lake_admin_hooks', $hooks);
+            $this->app->cache->set('lake_admin_hooks', $hooks);
         }
         
         if (!empty($hooks)) {
             foreach ($hooks as $key => $value) {
-                Event::listen($value['name'], $value['class']);
+                $this->app->event->listen($value['name'], $value['class']);
             }
         }
     }

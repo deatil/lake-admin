@@ -13,7 +13,6 @@ use think\App;
  */
 class LakeAdminAppMap
 {
-    
     /** @var App */
     protected $app;
     
@@ -34,7 +33,7 @@ class LakeAdminAppMap
      */
     public function handle($request, Closure $next)
     {
-        $appMaps = app()->config->get('app.app_map');
+        $appMaps = $this->app->config->get('app.app_map');
         $appMaps = array_merge($appMaps, [
             'admin' => function($app) {
                 $app->http->path(dirname(__DIR__));

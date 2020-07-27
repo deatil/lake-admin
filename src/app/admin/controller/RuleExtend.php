@@ -2,9 +2,6 @@
 
 namespace app\admin\controller;
 
-use think\facade\Db;
-use think\facade\View;
-
 use app\admin\facade\Module as ModuleFacade;
 use app\admin\model\AuthGroup as AuthGroupModel;
 use app\admin\model\AuthRuleExtend as AuthRuleExtendModel;

@@ -29,6 +29,9 @@ class Service extends BaseService
             'lake_admin_app_path' => rtrim(dirname(dirname(__DIR__)), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR,
         ]);
         
+        // 系统配置
+        $this->setSystemConfig();
+        
         // 设置模块基础别名
         class_alias('app\\admin\\module\\Module', 'lake\\Module');
         class_alias('app\\admin\\module\\controller\\AdminBase', 'lake\\module\\controller\\AdminBase');
@@ -37,9 +40,6 @@ class Service extends BaseService
     
     public function boot()
     {
-        // 系统配置
-        $this->setSystemConfig();
-        
         if ($this->isLakeAdminInstallCli() !== true) {
             // 初始化模块
             (new InitModuleService())->handle();
@@ -51,7 +51,7 @@ class Service extends BaseService
         
         // app初始化，全部模块
         $this->app->event->listen('HttpRun', function ($params) {    
-            $path = env('lake_admin_app_path');
+            $path = $this->app->env->get('lake_admin_app_path');
             
             $lake_admin_layout = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'layout.html';
             $lake_admin_input_item = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'inputItem.html';
@@ -121,7 +121,7 @@ class Service extends BaseService
      */
     protected function setSystemConfig()
     {
-        $path = env('lake_admin_app_path') . 'lake' . DIRECTORY_SEPARATOR;
+        $path = $this->app->env->get('lake_admin_app_path') . 'lake' . DIRECTORY_SEPARATOR;
         
         // 自动读取配置文件
         if (is_dir($path . 'config')) {
@@ -131,7 +131,7 @@ class Service extends BaseService
         $files = isset($dir) ? scandir($dir) : [];
 
         foreach ($files as $file) {
-            if ('.' . pathinfo($file, PATHINFO_EXTENSION) === env('config_ext', '.php')) {
+            if ('.' . pathinfo($file, PATHINFO_EXTENSION) === $this->app->env->get('config_ext', '.php')) {
                 $this->app->config->load($dir . $file, pathinfo($file, PATHINFO_FILENAME));
             }
         }

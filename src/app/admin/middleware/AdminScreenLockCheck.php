@@ -3,6 +3,7 @@
 namespace app\admin\middleware;
 
 use Closure;
+use think\App;
 
 use app\admin\boot\Jump as JumpTrait;
 use app\admin\service\Screen as ScreenService;
@@ -16,6 +17,14 @@ use app\admin\service\Screen as ScreenService;
 class AdminScreenLockCheck
 {
     use JumpTrait;
+    
+    /** @var App */
+    protected $app;
+    
+    public function __construct(App $app)
+    {
+        $this->app  = $app;
+    }
     
     /**
      * 入口
@@ -36,9 +45,9 @@ class AdminScreenLockCheck
         ];
         
         $rule = strtolower(
-            app()->http->getName() . 
-            '/' . request()->controller() . 
-            '/' . request()->action()
+            $this->app->http->getName() . 
+            '/' . $this->app->request->controller() . 
+            '/' . $this->app->request->action()
         );
         
         if (!in_array($rule, $allowUrl)) {
@@ -49,7 +58,7 @@ class AdminScreenLockCheck
             }
         }
         
-        $response = app()->middleware->pipeline('app')
+        $response = $this->app->middleware->pipeline('app')
             ->send($request)
             ->then(function ($request) use ($next) {
                 return $next($request);

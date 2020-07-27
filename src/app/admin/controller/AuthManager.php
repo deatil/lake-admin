@@ -2,8 +2,6 @@
 
 namespace app\admin\Controller;
 
-use think\facade\Db;
-use think\facade\View;
 use think\facade\Event;
 
 use lake\Tree;

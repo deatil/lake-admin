@@ -5,10 +5,11 @@ namespace app\admin\middleware;
 use Closure;
 use think\App;
 use think\Event;
-use think\facade\Db;
 
 use app\admin\model\Module as ModuleModel;
 use app\admin\facade\Module as ModuleFacade;
+use app\admin\service\ModuleLoad as ModuleLoadService;
+use app\admin\service\ModuleEvent as ModuleEventService;
 
 /**
  * lake-admin 中间件
@@ -54,7 +55,7 @@ class LoadModule
      * @create 2020-4-8
      * @author deatil
      */
-    protected function loadModule($params = [])
+    protected function loadModule()
     {
         $appName = $this->app->http->getName();
         if ($appName == 'admin') {
@@ -82,79 +83,25 @@ class LoadModule
             'lake_admin_module_path' => $appPath,
         ]);
         
-        $this->loadApp($appPath, $params);
+        (new ModuleLoadService($this->app))->loadApp($appPath);
+        
+        // 事件兼容性处理
+        $this->triggerEvent($appPath);
     }
-    
+
     /**
-     * 加载应用配置文件
-     * @param string $appPath 应用路径
+     * HttpRun 事件兼容性处理
+     * @param string $langset 语言
      * @return void
-     *
-     * @create 2020-4-7
-     * @author deatil
      */
-    protected function loadApp($appPath, $params = [])
+    protected function triggerEvent($appPath)
     {
-        if (is_file($appPath . 'common.php')) {
-            include_once $appPath . 'common.php';
-        }
-        
-        $files = [];
-        
-        $files = array_merge($files, glob($appPath . 'config' . DIRECTORY_SEPARATOR . '*' . $this->app->getConfigExt()));
-        
-        foreach ($files as $file) {
-            $this->app->config->load($file, pathinfo($file, PATHINFO_FILENAME));
-        }
-        
         if (is_file($appPath . 'event.php')) {
             $events = include $appPath . 'event.php';
             if (is_array($events)) {
-                $this->app->loadEvent($events);
+                (new ModuleEventService($this->app))->load($events)->trigger('HttpRun');
             }
         }
-        
-        if (is_file($appPath . 'middleware.php')) {
-            $this->app->middleware->import(include $appPath . 'middleware.php', 'app');
-        }
-        
-        if (is_file($appPath . 'provider.php')) {
-            $this->app->bind(include $appPath . 'provider.php');
-        }
-        
-        // 加载应用默认语言包
-        $this->app->loadLangPack($this->app->lang->defaultLangSet());
-        
-        // 行为扩展 HttpRun 兼容性处理
-        if (isset($events) && is_array($events)) {
-            if (isset($events['listen']['HttpRun'])) {
-                $this->triggerEvent('HttpRun', $events['listen']['HttpRun'], $params);
-            }
-        }
-    }
-    
-    /**
-     * 触发事件
-     *
-     * @create 2020-4-7
-     * @author deatil
-     */
-    protected function triggerEvent($event, $listeners, $params = null) 
-    {
-        if (empty($event) || empty($listeners)) {
-            return false;
-        }
-        
-        $EventObj = new Event($this->app);
-        if (is_array($listeners)) {
-            foreach ($listeners as $listener) {
-                $EventObj->listen($event, $listener);
-            }
-        } else {
-            $EventObj->listen($event, $listeners);
-        }
-        
-        $EventObj->trigger($event, $params);
     }
     
 }

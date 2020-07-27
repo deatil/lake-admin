@@ -3,7 +3,6 @@
 namespace app\admin\controller;
 
 use think\facade\Db;
-use think\facade\View;
 use think\facade\Event;
 use think\facade\Cache;
 use think\captcha\Captcha;

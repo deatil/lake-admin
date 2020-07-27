@@ -2,8 +2,6 @@
 
 namespace app\admin\controller;
 
-use think\facade\View;
-
 use app\admin\boot\Jump as JumpTrait;
 use app\admin\boot\View as ViewTrait;
 use app\admin\boot\BaseController;
