@@ -84,6 +84,7 @@ class Index extends Base
     {
         //$sys_info['os'] = PHP_OS; //操作系统
         $sys_info['ip'] = GetHostByName($_SERVER['SERVER_NAME']); //服务器IP
+        $sys_info['php_uname'] = php_uname();
         $sys_info['web_server'] = $_SERVER['SERVER_SOFTWARE']; //服务器环境
         $sys_info['phpv'] = phpversion(); //php版本
         $sys_info['fileupload'] = @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknown'; //文件上传限制

@@ -1,5 +1,8 @@
 @charset "utf-8";
 
+::selection{color:#fff !important;background-color:#009688 !important}
+::-moz-selection{color:#fff !important;background-color:#009688 !important}
+
 .w50{width:50px!important;}
 .w100{width:100px!important;}
 .w120{width:120px!important;}

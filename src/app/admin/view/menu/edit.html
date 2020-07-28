@@ -160,9 +160,7 @@ layui.use(['iconPicker', 'form', 'layer'], function() {
             $('input[name=icon]').val(data.icon);
         },
         // 渲染成功后的回调
-        success: function(d) {
-            // console.log(d);
-        }
+        success: function(d) {}
     });
     
     var module = $('#module_select').val();
@@ -176,6 +174,7 @@ layui.use(['iconPicker', 'form', 'layer'], function() {
     $('input[name=icon]').change(function() {
         var val = $(this).val();
         $('#iconPicker').val(val).attr('value', val);
+        iconPicker.checkIcon('iconPicker', val);
     });
 });
 </script>

@@ -59,19 +59,23 @@
                             <td class="version">v{$Think.config.lake.version}</td>
                         </tr>
                         <tr>
-                            <td>PHP 版本</td>
-                            <td class="phpv">{$sys_info.phpv}</td>
-                        </tr>
-                        <tr>
                             <td>服务器域名/IP</td>
                             <td class="domains">{$sys_info.domain} [ {$sys_info.ip} ]</td>
+                        </tr>
+                        <tr>
+                            <td>服务器信息</td>
+                            <td class="server">{$sys_info.php_uname}</td>
                         </tr>
                         <tr>
                             <td>服务器环境</td>
                             <td class="server">{$sys_info.web_server}</td>
                         </tr>
                         <tr>
-                            <td>数据库版本</td>
+                            <td>PHP 版本</td>
+                            <td class="phpv">{$sys_info.phpv}</td>
+                        </tr>
+                        <tr>
+                            <td>MySQL 版本</td>
                             <td class="dataBase">{$sys_info.mysql_version}</td>
                         </tr>
                         <tr>

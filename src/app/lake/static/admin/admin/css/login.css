@@ -1,11 +1,15 @@
 @charset "utf-8";
 
+::selection{color:#fff !important;background-color:#009688 !important}
+::-moz-selection{color:#fff !important;background-color:#009688 !important}
+
 /* login */
 body {
     display: block;
     height: 100%;
     background-color: #2D2D2D !important;
 }
+
 .lake-admin-login {
     display: block;
 }
