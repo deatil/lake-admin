@@ -262,14 +262,20 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
         var _form = '',
             that = $(this),
             text = that.text(),
-            options = { pop: false, refresh: true, jump: false, callback: null };
-        if ($(this).attr('data-form')) {
+            options = { 
+                pop: false, 
+                refresh: true, 
+                jump: false, 
+                callback: null 
+            };
+        if (that.attr('data-form')) {
             _form = $(that.attr('data-form'));
         } else {
             _form = that.parents('form');
         }
         if (that.attr('lay-data')) {
-            options = new Function('return ' + that.attr('lay-data'))();
+            data_options = new Function('return ' + that.attr('lay-data'))();
+            options = $.extend(options, data_options);
         }
         that.prop('disabled', true);
         fly.json(_form.attr('action'), _form.serialize(), function(res) {
@@ -298,6 +304,13 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
                             location.reload();
                         }
                     }
+                    
+                    var lay_close = that.attr('lay-close');
+                    if (lay_close == 'self') {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    }
+
                 }, 3000);
             }
         }, {

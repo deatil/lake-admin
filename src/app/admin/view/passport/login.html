@@ -29,7 +29,7 @@
                     <div class="layui-input-inline input-item verify-box">
                         <label for="verify">验证码</label>
                         <input type="text" name="verify" lay-verify="required" placeholder="验证码" autocomplete="off" class="layui-input lake-admin-login-verify">
-                        <img id="verify" src="{:url('captcha')}" alt="验证码" class="captcha" style="cursor: pointer;">
+                        <img id="verify" src="{:url('captcha')}" alt="验证码" title="点击刷新验证码" class="captcha" style="cursor: pointer;">
                     </div>
                     <div class="layui-input-inline login-btn">
                         <button class="layui-btn" lay-filter="login" lay-submit>登录</button>

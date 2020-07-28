@@ -3,8 +3,6 @@
 namespace app\admin\service;
 
 use think\facade\Db;
-use think\facade\Config;
-use think\facade\Request;
 
 /**
  * 权限认证类
@@ -23,13 +21,7 @@ use think\facade\Request;
  * @author deatil
  */
 class Auth
-{
-    /**
-     * 当前请求实例
-     * @var Request
-     */
-    protected $request;
-    
+{    
     // 默认配置
     protected $_config = [
         'AUTH_ON' => true, // 认证开关
@@ -55,9 +47,6 @@ class Auth
         if (!empty($config) && is_array($config)) {
             $this->_config = array_merge($this->_config, $config);
         }
-        
-        // 初始化request
-        $this->request = Request::instance();
     }
 
     /**
@@ -88,21 +77,25 @@ class Auth
         
         $list = []; // 保存验证通过的规则名
         if ('url' == $mode) {
-            $REQUEST = unserialize(strtolower(serialize($this->request->param())));
+            $nameParam = [];
+            $nameQuery = preg_replace('/^.+\?/U', '', $name);
+            if ($nameQuery != $name) {
+                parse_str($nameQuery, $nameParam);
+            }
         }
         
-        $authList = $this->getAuthList($uid, $type); //获取用户需要验证的所有有效规则列表
+        $authList = $this->getAuthList($uid, $type); // 获取用户需要验证的所有有效规则列表
         if (!empty($authList)) {
             foreach ($authList as $auth) {
                 $query = preg_replace('/^.+\?/U', '', $auth);
                 if ($mode == 'url' && $query != $auth) {
-                    parse_str($query, $param); //解析规则中的param
-                    $intersect = array_intersect_assoc($REQUEST, $param);
+                    parse_str($query, $param); // 解析规则中的param
+                    $intersect = array_intersect_assoc($nameParam, $param);
                     $auth = preg_replace('/\?.*$/U', '', $auth);
                     if (in_array($auth, $name) 
                         && serialize($intersect) == serialize($param)
                     ) {
-                        //如果节点相符且url参数满足
+                        // 如果节点相符且url参数满足
                         $list[] = $auth;
                     }
                 } elseif (in_array($auth, $name)) {

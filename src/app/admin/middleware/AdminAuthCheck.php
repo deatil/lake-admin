@@ -7,8 +7,8 @@ use think\App;
 
 use app\admin\boot\Jump;
 use app\admin\model\AuthRule as AuthRuleModel;
-use app\admin\service\Admin as AdminService;
 use app\admin\service\AdminAuth as AdminAuthService;
+use app\admin\facade\Admin as AdminFacade;
 
 /**
  * 登陆检测
@@ -131,30 +131,28 @@ class AdminAuthCheck
      */
     final private function competence()
     {
-        $AdminService = AdminService::instance();
-        
         // 检查是否登录
-        $adminId = $AdminService->isLogin();
+        $adminId = AdminFacade::isLogin();
         if (empty($adminId)) {
             return false;
         }
         
         // 获取当前登录用户信息
-        $adminInfo = $AdminService->getInfo();
+        $adminInfo = AdminFacade::getLoginUserInfo();
         if (empty($adminInfo)) {
-            $AdminService->logout();
+            AdminFacade::logout();
             return false;
         }
         
         // 是否锁定
         if (!$adminInfo['status']) {
-            $AdminService->logout();
+            AdminFacade::logout();
             $this->error('您的帐号已经被锁定！', $this->loginUrl);
             return false;
         }
         
         // 是否是超级管理员
-        $adminIsRoot = $AdminService->isAdministrator();
+        $adminIsRoot = AdminFacade::isAdministrator();
         
         $this->app->env->set([
             'admin_id' => $adminId,

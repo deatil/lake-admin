@@ -3,8 +3,6 @@
 namespace app\admin\boot;
 
 use think\Service as BaseService;
-use think\facade\View;
-use think\facade\Cache;
 use think\console\Input;
 
 use app\admin\middleware\LakeAdminAppMap;
@@ -63,7 +61,7 @@ class Service extends BaseService
             ]);
             
             // 设置公用参数
-            View::assign([
+            $this->app->view->assign([
                 'lake_admin_layout' => $lake_admin_layout,
                 'lake_admin_input_item' => $lake_admin_input_item,
             ]);
@@ -145,7 +143,7 @@ class Service extends BaseService
      */
     protected function setSystemHooks() 
     {
-        $hooks = Cache::get("lake_admin_hooks");
+        $hooks = $this->app->cache->get("lake_admin_hooks");
         if (empty($hooks)) {
             $hooks = HookModel::field('name,class')
                 ->where([
@@ -154,7 +152,7 @@ class Service extends BaseService
                 ->order('listorder ASC, id ASC')
                 ->select()
                 ->toArray();
-            Cache::set("lake_admin_hooks", $hooks);
+            $this->app->cache->set("lake_admin_hooks", $hooks);
         }
             
         if (!empty($hooks)) {

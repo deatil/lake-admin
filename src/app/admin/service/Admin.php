@@ -3,7 +3,6 @@
 namespace app\admin\service;
 
 use think\facade\Session;
-use think\facade\Cookie;
 use think\facade\Config;
 
 use lake\Arr;
@@ -16,54 +15,13 @@ use app\admin\facade\Password as PasswordFacade;
 /**
  * 管理员服务
  *
- * @create 2019-7-9
+ * @create 2020-7-28
  * @author deatil
  */
 class Admin
 {
-    // 当前登录会员详细信息
-    protected static $userInfo = array();
-
-    protected static $instance = null;
-
-    /**
-     * 获取示例
-     * @param array $options 实例配置
-     * @return static
-     *
-     * @create 2019-7-9
-     * @author deatil
-     */
-    public static function instance($options = [])
-    {
-        if (is_null(self::$instance)) {
-            self::$instance = new self($options);
-        }
-
-        return self::$instance;
-    }
-
-    /**
-     * 魔术方法
-     * @param type $name
-     * @return null
-     *
-     * @create 2019-7-9
-     * @author deatil
-     */
-    public function __get($name)
-    {
-        //从缓存中获取
-        if (isset(self::$userInfo[$name])) {
-            return self::$userInfo[$name];
-        } else {
-            $userInfo = $this->getInfo();
-            if (!empty($userInfo)) {
-                return $userInfo[$name];
-            }
-            return null;
-        }
-    }
+    // 用户信息
+    protected $userInfo = [];
     
     /**
      * 获取当前登录用户资料
@@ -72,12 +30,21 @@ class Admin
      * @create 2019-7-9
      * @author deatil
      */
-    public function getInfo()
+    public function getLoginUserInfo($name = '')
     {
-        if (empty(self::$userInfo)) {
-            self::$userInfo = $this->getUserInfo($this->isLogin());
+        if (empty($this->userInfo)) {
+            $this->userInfo = $this->getUserInfo($this->isLogin());
         }
-        return !empty(self::$userInfo) ? self::$userInfo : false;
+        
+        if (empty($name)) {
+            return !empty($this->userInfo) ? $this->userInfo : false;
+        }
+        
+        if (!empty($this->userInfo) && isset($this->userInfo[$name])) {
+            return $this->userInfo[$name];
+        }
+        
+        return false;
     }
     
     /**
@@ -90,12 +57,14 @@ class Admin
     {
         $username = trim($username);
         $password = trim($password);
-        $userInfo = $this->getUserInfo($username, $password);
-        if (false == $userInfo) {
+        $passwordPass = $this->checkPassword($username, $password);
+        if ($passwordPass === false) {
             return false;
         }
         
+        $userInfo = $this->getUserInfo($username);
         $this->autoLogin($userInfo);
+        
         return true;
     }
 
@@ -105,51 +74,16 @@ class Admin
     public function autoLogin($userInfo)
     {
         /* 更新登录信息 */
-        $data = [
-            'uid' => $userInfo['id'],
-            'last_login_time' => time(),
-            'last_login_ip' => request()->ip(1),
-        ];
         $this->loginStatus($userInfo['id']);
         
-        /* 记录登录SESSION和COOKIES */
-        $auth = [
+        /* 记录登录信息 */
+        $user = [
             'uid' => $userInfo['id'],
             'username' => $userInfo['username'],
             'last_login_time' => $userInfo['last_login_time'],
         ];
-        Session::set('admin_user_auth', $auth);
-        Session::set('admin_user_auth_sign', Arr::dataAuthSign($auth));
-    }
-
-    /**
-     * 获取用户信息
-     * @param type $identifier 用户名或者用户ID
-     * @return boolean|array
-     */
-    public function getUserInfo($identifier, $password = null)
-    {
-        if (empty($identifier)) {
-            return false;
-        }
-
-        $userInfo = AdminModel::where([
-            'id' => $identifier,
-        ])->whereOr([
-            'username' => $identifier,
-        ])->find();
-        if (empty($userInfo)) {
-            return false;
-        }
-        
-        // 密码验证
-        if (!empty($password) 
-            && $this->encryptPassword($password, $userInfo['encrypt']) != $userInfo['password']
-        ) {
-            return false;
-        }
-        
-        return $userInfo;
+        Session::set('lake_admin_user_auth', $user);
+        Session::set('lake_admin_user_auth_sign', Arr::dataAuthSign($user));
     }
 
     /**
@@ -169,6 +103,55 @@ class Admin
     }
 
     /**
+     * 获取用户信息
+     * @param type $identifier 用户名或者用户ID
+     * @return array
+     */
+    public function getUserInfo($identifier)
+    {
+        if (empty($identifier)) {
+            return false;
+        }
+
+        $userInfo = AdminModel::where([
+            'id' => $identifier,
+        ])->whereOr([
+            'username' => $identifier,
+        ])->find();
+        if (empty($userInfo)) {
+            return false;
+        }
+        
+        return $userInfo;
+    }
+
+    /**
+     * 检测密码
+     * @param type $identifier 用户名或者用户ID
+     * @param type $password 密码
+     * @return boolean
+     */
+    public function checkPassword($identifier, $password)
+    {
+        if (empty($identifier) || empty($password)) {
+            return false;
+        }
+
+        $userInfo = $this->getUserInfo($identifier);
+        if ($userInfo === false) {
+            return false;
+        }
+        
+        // 密码验证
+        $encryptPassword = $this->encryptPassword($password, $userInfo['encrypt']);
+        if ($encryptPassword != $userInfo['password']) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
      * 检验用户是否已经登陆
      * @return boolean 失败返回false，成功返回当前登陆用户基本信息
      *
@@ -177,12 +160,21 @@ class Admin
      */
     public function isLogin()
     {
-        $user = Session::get('admin_user_auth');
+        $user = Session::get('lake_admin_user_auth');
         if (empty($user)) {
             return 0;
         }
- 
-        return Session::get('admin_user_auth_sign') == Arr::dataAuthSign($user) ? $user['uid'] : 0;
+        
+        $sign = Session::get('lake_admin_user_auth_sign');
+        if (empty($sign)) {
+            return 0;
+        }
+        
+        if ($sign == Arr::dataAuthSign($user)) {
+            return $user['uid'];
+        }
+        
+        return 0;
     }
 
     /**
@@ -195,11 +187,7 @@ class Admin
     public function isAdministrator($uid = null)
     {
         if (empty($uid)) {
-            $userInfo = $this->getInfo();
-            
-            if (!empty($userInfo)) {
-                $uid = $userInfo['id'];
-            }
+            $uid = $this->getLoginUserInfo('id');
         }
         
         if (!empty($uid)) {
@@ -241,7 +229,7 @@ class Admin
      */
     protected function encryptPassword($password, $encrypt = '')
     {
-        $pwd = PasswordFacade::setSalt(config("app.admin_salt"))->encrypt($password, $encrypt);
+        $pwd = PasswordFacade::setSalt(Config::get("app.admin_salt"))->encrypt($password, $encrypt);
         return $pwd;
     }
 

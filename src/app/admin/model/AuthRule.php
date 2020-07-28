@@ -4,8 +4,8 @@ namespace app\admin\Model;
 
 use lake\Arr;
 
-use app\admin\service\Admin as AdminService;
 use app\admin\service\AdminAuth as AdminAuthService;
+use app\admin\facade\Admin as AdminFacade;
 
 /**
  * 权限规则模型
@@ -120,7 +120,7 @@ class AuthRule extends ModelBase
         }
         
         // 是否超级管理员
-        if (AdminService::instance()->isAdministrator()) {
+        if (AdminFacade::isAdministrator()) {
             return $result;
         }
         

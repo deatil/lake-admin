@@ -1,7 +1,6 @@
 <?php
 
 namespace app\admin\controller;
-use think\facade\View;
 
 use app\admin\model\Admin as AdminUserModel;
 use app\admin\model\AuthGroup as AuthGroupModel;

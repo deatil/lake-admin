@@ -8,7 +8,7 @@ use app\admin\model\Attachment as AttachmentModel;
 
 use app\admin\service\Attachment as AttachmentService;
 use app\admin\service\Upload as UploadService;
-use app\admin\service\Admin as AdminService;
+use app\admin\facade\Admin as AdminFacade;
 
 /**
  * 附件管理
@@ -162,7 +162,7 @@ class Attachments extends Base
     ) {
         $UploadService = new UploadService();
         
-        $admin_id = AdminService::instance()->id;
+        $admin_id = AdminFacade::getLoginUserInfo('id');
         return $UploadService->setTypeInfo('admin', $admin_id)
             ->save($dir, $from, $module, $thumb, $thumbsize, $thumbtype, $watermark, $sizelimit, $extlimit);
     }
@@ -177,7 +177,7 @@ class Attachments extends Base
     {
         $AttachmentService = new AttachmentService();
         
-        $admin_id = AdminService::instance()->id;
+        $admin_id = AdminFacade::getLoginUserInfo('id');
         return $AttachmentService->setTypeInfo('admin', $admin_id)
             ->getUrlFile();
     }

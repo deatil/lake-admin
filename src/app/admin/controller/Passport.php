@@ -2,8 +2,8 @@
 
 namespace app\admin\controller;
 
-use app\admin\service\Admin as AdminService;
 use app\admin\service\Screen as ScreenService;
+use app\admin\facade\Admin as AdminFacade;
 
 /**
  * 登陆
@@ -34,7 +34,7 @@ class Passport extends Base
      */
     public function login()
     {
-        if (AdminService::instance()->isLogin()) {
+        if (AdminFacade::isLogin()) {
             return $this->redirect(url('index/index'));
         }
         
@@ -60,8 +60,7 @@ class Passport extends Base
                 return $this->error($result);
             }
             
-            $AdminService = new AdminService;
-            if (!$AdminService->login($data['username'], $data['password'])) {
+            if (!AdminFacade::login($data['username'], $data['password'])) {
                 $this->error("用户名或者密码错误，登陆失败！", url('index/login'));
             }
             
@@ -79,7 +78,7 @@ class Passport extends Base
      */
     public function logout()
     {
-        if (AdminService::instance()->logout()) {
+        if (AdminFacade::logout()) {
             $this->success('注销成功！', url("passport/login"));
         }
     }
@@ -118,8 +117,7 @@ class Passport extends Base
         $adminInfo = env('admin_info');
         $password = request()->post('password');
         
-        $AdminService = new AdminService;
-        if (!$AdminService->getUserInfo($adminInfo['username'], $password)) {
+        if (!AdminFacade::checkPassword($adminInfo['username'], $password)) {
             $this->error("密码错误，解除锁定失败！");
         }
         
@@ -136,24 +134,17 @@ class Passport extends Base
      */
     protected function setCaptchaConfig()
     {
-        $captcha = [];
+        $captchaConfig = app()->config->get('captcha');
         
-        $captcha['length'] = 4;
-        
-        // 设置验证码字体大小
-        $captcha['fontSize'] = 18;
-        
-        // 设置验证码图片宽度
-        $captcha['imageW'] = 130;
-        
-        // 设置验证码图片高度
-        $captcha['imageH'] = 36;
-        
-        // 设置背景颜色
-        //$checkcode['background'] = '#fff';
-        
-        // 设置字体颜色
-        //$checkcode['fontcolor'] = '#000';
+        $captcha = array_merge($captchaConfig, [
+            'length' => 4,
+            'math' => false,
+            'expire' => 1800,
+            'useImgBg' => false,
+            'fontSize' => 17,
+            'imageW' => 130,
+            'imageH' => 36,
+        ]);
         
         app()->config->set($captcha, 'captcha');
     }

@@ -2,7 +2,7 @@
 
 namespace app\admin\model;
 
-use app\admin\service\Admin as AdminService;
+use app\admin\facade\Admin as AdminFacade;
 
 /**
  * 操作日志
@@ -30,7 +30,7 @@ class AdminLog extends ModelBase
      */
     public function record($message, $status = 0)
     {
-        $adminId = AdminService::instance()->isLogin();
+        $adminId = AdminFacade::isLogin();
         if ($adminId > 0) {
             $adminInfo = env("admin_info");
             $adminUsername = $adminInfo['username'];

@@ -52,6 +52,28 @@ class LakeAdminInstall extends Command
      */
     protected function execute(Input $input, Output $output)
     {
+        $output->writeln('');
+        $this->output->highlight('lake-admin version v' . app()->config->get('lake.version') . "\n");
+        $isStart = $this->output->ask($input, '> You will install lake-admin (Y/n)?') ?: 'y';
+
+        if ($isStart === 'y') {
+            $this->lakeAdminInstall($input, $output);
+        } else {
+            $output->info('> You not install!');
+        }
+    }
+
+    /**
+     * 执行
+     *
+     * @create 2019-10-5
+     * @author deatil
+     */
+    protected function lakeAdminInstall(Input $input, Output $output)
+    {
+        $output->info("> lake-admin is installing...");
+        $output->writeln('');
+        
         $installLockFile = root_path() . 'install.lock';
         if (file_exists($installLockFile)) {
             $output->info("<info>lake-admin tip:</info> lake-admin is installed!");
