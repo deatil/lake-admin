@@ -172,7 +172,7 @@ class AdminAuthCheck
      * @create 2019-7-15
      * @author deatil
      */
-    final private function checkRule($rule, $type = AuthRule::RULE_URL, $mode = 'url', $relation = 'or')
+    final private function checkRule($rule, $type = AuthRule::RULE_MENU, $mode = 'url', $relation = 'or')
     {
         if (!AdminAuthService::checkRule($rule, $type, $mode, $relation)) {
             return false;

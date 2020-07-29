@@ -18,8 +18,8 @@ class AuthRule extends ModelBase
     // 设置当前模型对应的数据表名称
     protected $name = 'auth_rule';
     
-    const RULE_URL = 1;
-    const RULE_MAIN = 2; //主菜单
+    const RULE_MENU = 1; // 菜单
+    const RULE_URL = 2;
     
     /**
      * 获取不需要鉴权的菜单
@@ -87,7 +87,7 @@ class AuthRule extends ModelBase
                 $ret[$id . $module] = $array;
                 $child = $this->getTree($a['id'], $id, $Level);
                 // 由于后台管理界面只支持三层，超出的层级的不显示
-                if ($child && $Level <= 3) {
+                if ($child && $Level <= 4) {
                     $ret[$id . $module]['items'] = $child;
                 }
             }

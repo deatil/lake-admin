@@ -114,6 +114,9 @@
 .lake-admin .layui-nav-itemed .layui-nav-child a {
     padding-left: 40px;
 }
+.lake-admin .layui-nav-itemed .layui-nav-child .layui-nav-child a {
+    padding-left: 60px;
+}
 .lake-admin .layui-nav-tree .layui-nav-item > a {
     position: relative;
 }

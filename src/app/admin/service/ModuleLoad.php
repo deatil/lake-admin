@@ -65,6 +65,30 @@ class ModuleLoad
         
         // 加载应用默认语言包
         $this->loadLangPack($this->app->lang->defaultLangSet(), $appPath);
+        
+        // 检测并且导入语言包
+        $this->checkLoadLangPack($appPath);
+    }
+
+    /**
+     * 检测并且导入语言包
+     *
+     * @create 2020-7-29
+     * @author deatil
+     */
+    public function checkLoadLangPack($appPath)
+    {
+        $loadLangPack = $this->app->config->get('app.load_lang_pack', 0);
+        if (!$loadLangPack) {
+            return false;
+        }
+        
+        // 自动侦测当前语言
+        $langset = $this->app->lang->detect($this->app->request);
+
+        if ($this->app->lang->defaultLangSet() != $langset) {
+            $this->LoadLangPack($langset, $appPath);
+        }
     }
 
     /**

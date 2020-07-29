@@ -37,4 +37,7 @@ return [
     
     // 超级管理员ID
     'admin_super_id' => env('admin_super_id', 1),
+    
+    // 如果启用了自动加载语言包，需要开启该配置
+    'load_lang_pack' => env('load_lang_pack', 0),
 ];
