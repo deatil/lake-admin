@@ -526,7 +526,7 @@ class Module
         }
         
         // 执行卸载脚本
-        $installScript = $this->runScript($name, 'run', 'uninstall');
+        $installScript = $this->runScript($name, 'run', 'Uninstall');
         if ($installScript === false) {
             return false;
         }
@@ -540,7 +540,7 @@ class Module
         ])->delete();
         
         // 卸载结束，最后调用卸载脚本完成
-        $installScript = $this->runScript($name, 'end', 'uninstall');
+        $installScript = $this->runScript($name, 'end', 'Uninstall');
         if ($installScript === false) {
             return false;
         }
@@ -590,7 +590,7 @@ class Module
         }
         
         // 执行更新脚本
-        $installScript = $this->runScript($name, 'run', 'upgrade');
+        $installScript = $this->runScript($name, 'run', 'Upgrade');
         if ($installScript === false) {
             return false;
         }
@@ -612,7 +612,7 @@ class Module
         }
         
         // 更新结束，最后调用安装脚本完成
-        $installScript = $this->runScript($name, 'end', 'upgrade');
+        $installScript = $this->runScript($name, 'end', 'Upgrade');
         if ($installScript === false) {
             return false;
         }
@@ -906,7 +906,7 @@ class Module
     private function runScript(
         $name = '', 
         $type = 'run', 
-        $dir = 'install'
+        $dir = 'Install'
     ) {
         if (empty($name)) {
             $this->error = '模块名不嫩为空';
@@ -914,7 +914,7 @@ class Module
         }
         
         // 检查是否有安装脚本
-        $class = "\\app\\{$name}\\{$dir}\\".ucwords($dir);
+        $class = "\\app\\{$name}\\{$dir}";
         if (!class_exists($class)) {
             return true;
         }
