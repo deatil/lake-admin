@@ -56,7 +56,12 @@
                     <tbody>
                         <tr>
                             <td>当前版本</td>
-                            <td class="version">v{$Think.config.lake.version}</td>
+                            <td class="version">
+                                {$Think.config.lake.name} 
+                                <span class="text-success">
+                                    v{$Think.config.lake.version}
+                                </span>
+                            </td>
                         </tr>
                         <tr>
                             <td>服务器域名/IP</td>
