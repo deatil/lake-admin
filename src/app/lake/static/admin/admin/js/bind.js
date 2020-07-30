@@ -9,6 +9,22 @@ layui.define(['table', 'element', 'layer', 'form', 'notice', 'msg', 'lakeform'],
     
     window.$body = $('body');
     
+    /*! 顶部鼠标移上显示 */
+    var layer_tip;
+    $(document).on('mouseenter', '[data-lake-tip]', function() {
+        var title = $(this).attr("lay-title");
+        if (title) {
+            layer_tip = layer.tips(title, this, {
+                tips: [1, '#009688'],
+            });
+        }
+    });
+    $(document).on('mouseleave', '[data-lake-tip]', function() {
+        if (layer_tip) {
+            layer.close(layer_tip);
+        }
+    });
+    
     /*! 注册 data-lake-load 事件行为 */
     $body.on('click', '[data-lake-load]', function () {
         var url = $(this).attr('data-lake-load'), tips = $(this).attr('data-lake-tips'), time = $(this).attr('data-lake-time');

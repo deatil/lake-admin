@@ -37,7 +37,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
         },
         buildChild: function(object) {
             var thiz = this;
-            var menu_html = '<dl class="layui-nav-child">';
+            var menu_dd_html = '';
             
             $.each(object, function(i, data) {
                 var menu_icon = '';
@@ -45,20 +45,23 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
                     menu_icon = '<i class="iconfont ' + data.icon + '"></i>&nbsp;';
                 }
                 
-                menu_html += '<dd>'
-                    +'<a href="' + data.url + '" class="lay-tip-title" lay-id="' + data.menuid + '" data-id="' + data.id + '" lay-icon="iconfont ' + data.icon + '" lay-title="' + data.title + '">'
-                        + menu_icon
-                        + '<span class="layui-nav-title">' + data.title + '</span>'
-                    +'</a>';
-                    
+                var menu_child_html = '';
                 if (data.items && typeof(data.items) === 'object') {
-                    menu_html += thiz.buildChild(data.items);
+                    menu_child_html = thiz.buildChild(data.items);
                 }
                 
-                menu_html += '</dd>';
+                menu_dd_html += '<dd>'
+                    + '<a href="' + data.url + '" class="lay-tip-title" lay-id="' + data.menuid + '" data-id="' + data.id + '" lay-icon="iconfont ' + data.icon + '" lay-title="' + data.title + '">'
+                        + menu_icon
+                        + '<span class="layui-nav-title">' + data.title + '</span>'
+                    + '</a>'
+                    + menu_child_html
+                + '</dd>';
             });
             
-            menu_html += '</dl>';
+            var menu_html = '<dl class="layui-nav-child">' 
+                + menu_dd_html 
+                + '</dl>';
             
             return menu_html;
         },
@@ -203,7 +206,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
         
     };
 
-    var menus = SUBMENU_CONFIG;
+    var menus = lake_menus;
     var nowTabMenuid = ''; // 当前tab的ID
     var openTabNum = 10; // 最大可打开窗口数量
     
@@ -286,7 +289,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
         }
 
         // 显示左侧菜单
-        html = leftMenu.build(data_list['items']);
+        var html = leftMenu.build(data_list['items']);
         side_menus_bar.html(html).attr('lay-id', data_id);
         element.render(); //重新渲染
         

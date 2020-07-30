@@ -9,6 +9,9 @@
         </div>
     </div>
 </div>
+{/block}
+
+{block name="script"}
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
         <a class="layui-btn layui-btn-sm layui-iframe" title="新增菜单" href="{:url('add')}">新增菜单</a>
@@ -21,6 +24,9 @@
     <a href='{:url("add")}?parentid={{ d.id }}' class="layui-btn layui-btn-xs layui-btn-normal layui-iframe" title="新增菜单">添加</a>
     <a href='{:url("delete")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
 </script>
+<script type="text/html" id="titleTpl">
+    <span data-lake-tip="" lay-title="{{ d.tip }}">{{ d.title }}</span>
+</script>
 <script type="text/html" id="authTpl">
     <input type="checkbox" name="is_need_auth" data-href="{:url('setauth')}?id={{d.id}}" value="{{d.id}}" lay-skin="switch" lay-text="启用|关闭" lay-filter="switchStatus" {{ d.is_need_auth==1 ? 'checked' : '' }}>
 </script>
@@ -30,9 +36,7 @@
 <script type="text/html" id="switchTpl">
     <input type="checkbox" name="status" data-href="{:url('setstate')}?id={{d.id}}" value="{{d.id}}" lay-skin="switch" lay-text="启用|关闭" lay-filter="switchStatus" {{ d.status==1 ? 'checked' : '' }}>
 </script>
-{/block}
 
-{block name="script"}
 <script>
 var treeGrid = null;
 layui.use(['table', 'treeGrid'], function() {
@@ -60,11 +64,11 @@ layui.use(['table', 'treeGrid'], function() {
             [
                 { field: 'listorder', align: 'center', width: 60, title: '排序', edit: 'text' },
                 { field: 'id', align: 'center', width: 60, title: 'ID' },
-                { field: 'title', title: '菜单名称', },
+                { field: 'title', title: '菜单名称', templet: '#titleTpl' },
                 { width: 80,title: '图标',align: 'center',templet:"<div><i class='iconfont {{d.icon}}'></i></div>" },
                 { width: 200,title: '模块/控制器/方法',templet:"<div>{{d.name}}</div>"},
-                /* 
-                { field: 'is_need_auth', align: 'center', width: 100, title: '权限验证', templet: '#authTpl', unresize: true },
+                /*
+                { field: 'is_need_auth', align: 'center', hide: 'true', width: 100, title: '权限验证', templet: '#authTpl', unresize: true },
                 */
                 { field: 'method', align: 'center', width: 90, title: '请求方式' },
                 { field: 'is_menu', align: 'center', width: 90, title: '菜单', templet: '#menuTpl', unresize: true },

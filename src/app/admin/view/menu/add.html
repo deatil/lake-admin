@@ -90,6 +90,14 @@
             </div>
             
             <div class="layui-form-item">
+                <label class="layui-form-label">提示信息</label>
+                <div class="layui-input-block w300">
+                    <textarea name="tip" placeholder="提示信息" class="layui-textarea"></textarea>
+                    <div class="layui-form-mid layui-word-aux">在权限列表滑动到标题上显示</div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
                 <label class="layui-form-label">验证类型</label>
                 <div class="w300">
                     <input type="radio" name="type" value="1" title="主菜单" checked="">
@@ -134,6 +142,7 @@
     </div>
 </div>
 {/block}
+
 {block name="script"}
 <script type="text/javascript">
 layui.use(['iconPicker', 'form', 'layer'], function() {
