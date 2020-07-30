@@ -1,4 +1,4 @@
-layui.define(['table', 'element', 'layer', 'form', 'notice', 'msg', 'lakeform'], function(exports) {
+layui.define(['table', 'element', 'layer', 'form', 'notice', 'msg', 'lakeform', 'fieldlist'], function(exports) {
     var element = layui.element,
         table = layui.table,
         layer = layui.layer,
@@ -24,6 +24,9 @@ layui.define(['table', 'element', 'layer', 'form', 'notice', 'msg', 'lakeform'],
             layer.close(layer_tip);
         }
     });
+    
+    /*! 多参数表单 */
+    $('.layui-form-fieldlist').fieldlist();
     
     /*! 注册 data-lake-load 事件行为 */
     $body.on('click', '[data-lake-load]', function () {

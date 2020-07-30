@@ -67,22 +67,40 @@
                 <div class="layui-input-inline w300">
                     <textarea name="value" placeholder="未指定值时默认插入字段的值" class="layui-textarea"></textarea>
                 </div>
-                <div class="layui-form-mid layui-word-aux">配置类型为<code>数组</code>时请按如下格式填写：
-                    <br>键值:键名
-                    <br>键值:键名</div>
+                <div class="layui-form-mid layui-word-aux">
+                    配置类型为<code>数组</code>时内容为JSON字符
+                </div>
             </div>
             
-            <div class="layui-form-item layui-form-text" id="options">
+            <div class="layui-form-item layui-form-text layui-form-fieldlist" id="options">
                 <label class="layui-form-label">配置项</label>
                 <div class="layui-input-inline w300">
-                    <textarea name="options" placeholder="键值:键名
-键值:键名
-键值:键名
-....." class="layui-textarea"></textarea>
+                    <dl class="fieldlist" data-template="optionstpl" data-name="options">
+                        <dd>
+                            <ins>字段</ins>
+                            <ins>内容</ins>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-success btn-append">
+                                <i class="iconfont icon-add"></i> 添加
+                            </a>
+                        </dd>
+
+                        <textarea name="options" placeholder="" class="layui-hide"></textarea>
+                    </dl>
+                    <script id="optionstpl" type="text/html">
+                        <dd class="form-inline">
+                            <ins><input type="text" name="{{d.name}}[{{d.index}}][key]" class="form-control" value="{{d.row.key?d.row.key:''}}" placeholder="填写字段"/></ins>
+                            <ins><input type="text" name="{{d.name}}[{{d.index}}][value]" class="form-control" value="{{d.row.value?d.row.value:''}}" placeholder="填写内容"/></ins>
+                            
+                            <span class="layui-btn layui-btn-xs layui-btn-danger btn-remove"><i class="iconfont icon-close1"></i></span>
+                            <span class="layui-btn layui-btn-xs layui-btn-primary btn-dragsort"><i class="iconfont icon-yidong"></i></span>
+                        </dd>
+                    </script>
                 </div>
-                <div class="layui-form-mid layui-word-aux">配置类型为<code>单选按钮,下拉框,复选框</code>时请按如下格式填写：
-                    <br>键值:键名
-                    <br>键值:键名</div>
+                <div class="layui-form-mid layui-word-aux">
+                    配置类型为<code>单选按钮,下拉框,复选框</code>时请填写
+                </div>
             </div>
             
             <div class="layui-form-item layui-form-text">
@@ -117,8 +135,7 @@
             
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="formSubmit">立即提交</button>
-                    <button class="layui-btn layui-btn-normal layui-close" type="button" style="display:none;" onclick="javascript:history.back(-1);">返回</button>
+                    <button class="layui-btn" lay-close="self" lay-submit="" lay-filter="formSubmit">立即提交</button>
                 </div>
             </div>
         </form>

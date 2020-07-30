@@ -23,9 +23,14 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
                     menu_icon = '<i class="iconfont ' + data.icon + '"></i>&nbsp;';
                 }
                 
+                var url = 'javascript:;';
+                if (data.url) {
+                    url = data.url;
+                }
+                
                 menu_html += 
                     '<li class="layui-nav-item layui-nav-itemed">'
-                        + '<a href="' + data.url + '" class="lay-tip-title" lay-id="' + data.menuid + '" data-id="' + data.id + '" lay-icon="iconfont ' + data.icon + '" lay-title="' + data.title + '">'
+                        + '<a href="' + url + '" class="lay-tip-title" lay-id="' + data.menuid + '" data-id="' + data.id + '" lay-icon="iconfont ' + data.icon + '" lay-title="' + data.title + '">'
                             + menu_icon
                             + '<span class="layui-nav-title"><b>' + data.title + '</b></span>'
                         + '</a>'
@@ -50,8 +55,13 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
                     menu_child_html = thiz.buildChild(data.items);
                 }
                 
+                var url = 'javascript:;';
+                if (data.url) {
+                    url = data.url;
+                }
+                
                 menu_dd_html += '<dd>'
-                    + '<a href="' + data.url + '" class="lay-tip-title" lay-id="' + data.menuid + '" data-id="' + data.id + '" lay-icon="iconfont ' + data.icon + '" lay-title="' + data.title + '">'
+                    + '<a href="' + url + '" class="lay-tip-title" lay-id="' + data.menuid + '" data-id="' + data.id + '" lay-icon="iconfont ' + data.icon + '" lay-title="' + data.title + '">'
                         + menu_icon
                         + '<span class="layui-nav-title">' + data.title + '</span>'
                     + '</a>'

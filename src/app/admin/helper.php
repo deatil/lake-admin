@@ -58,6 +58,18 @@ if (!function_exists('lake_var_export')) {
     }
 }
 
+if (!function_exists('lake_json_encode')) {
+    /**
+     * 返回数组
+     * @param array $data 输出的数据
+     * @return string
+     */
+    function lake_json_encode($data = [])
+    {
+        return json_encode($data, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
+    }
+}
+
 if (!function_exists('lake_data_auth_sign')) {
     /**
      * 数据签名认证

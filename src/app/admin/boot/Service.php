@@ -10,7 +10,7 @@ use app\admin\middleware\LoadModule;
 use app\admin\middleware\CheckModule;
 
 use app\admin\model\Hook as HookModel;
-use app\admin\service\InitModule as InitModuleService;
+use app\admin\service\ModuleInit as ModuleInitService;
 
 /**
  * lake-admin 服务
@@ -40,7 +40,7 @@ class Service extends BaseService
     {
         if ($this->isLakeAdminInstallCli() !== true) {
             // 初始化模块
-            (new InitModuleService())->handle();
+            (new ModuleInitService())->handle();
         }
         
         $this->app->event->listen('HttpRun', function () {

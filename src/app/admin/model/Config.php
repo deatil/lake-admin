@@ -32,11 +32,11 @@ class Config extends ModelBase
         $newConfigs = [];
         foreach ($configs as $key => $value) {
             if ($value['options'] != '') {
-                $value['options'] = lake_parse_attr($value['options']);
+                $value['options'] = lake_parse_fieldlist($value['options']);
             }
             switch ($value['type']) {
                 case 'array':
-                    $newConfigs[$value['name']] = lake_parse_attr($value['value']);
+                    $newConfigs[$value['name']] = lake_parse_fieldlist($value['value']);
                     break;
                 case 'radio':
                     $newConfigs[$value['name']] = isset($value['options'][$value['value']]) ? ['key' => $value['value'], 'value' => $value['options'][$value['value']]] : ['key' => $value['value'], 'value' => $value['value']];

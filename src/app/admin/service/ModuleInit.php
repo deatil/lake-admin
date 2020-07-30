@@ -18,7 +18,7 @@ use app\admin\service\ModuleLoad as ModuleLoadService;
  * @create 2020-4-15
  * @author deatil
  */
-class InitModule
+class ModuleInit
 {
     /** @var App */
     protected $app;
@@ -35,9 +35,6 @@ class InitModule
         
         // 后台命名空间
         $this->addModuleNamespace();
-        
-        // 嵌入点
-        $this->addModuleHooks();
     }
     
     /**
@@ -102,13 +99,21 @@ class InitModule
                 $this->loadModuleConfigAndFile($moduleGlobal);
                 
                 // 注册模块指令
-                $commands = $this->app->config->get('app.command');
-                if (!empty($commands) && is_array($commands)) {
-                    Console::starting(function (Console $console) use ($commands) {
-                        $console->addCommands($commands);
+                $moduleCommand = $this->app->config->get($module['module'] . '.command');
+                if (!empty($moduleCommand) && is_array($moduleCommand)) {
+                    Console::starting(function (Console $console) use ($moduleCommand) {
+                        $console->addCommands($moduleCommand);
                     });
                 }
             }
+        }
+        
+        // 注册全局指令
+        $command = $this->app->config->get('command');
+        if (!empty($command) && is_array($command)) {
+            Console::starting(function (Console $console) use ($command) {
+                $console->addCommands($command);
+            });
         }
     }
 
@@ -121,32 +126,6 @@ class InitModule
     private function loadModuleConfigAndFile($path)
     {
         (new ModuleLoadService($this->app))->loadApp($path);
-    }
-    
-    /**
-     * 添加嵌入点
-     *
-     * @create 2019-7-18
-     * @author deatil
-     */
-    private function addModuleHooks()
-    {
-        $hooks = $this->app->cache->get('lake_admin_hooks');
-        if (empty($hooks)) {
-            // 所有模块钩子
-            $hooks = HookModel::field('name, class')
-                ->order('listorder ASC')
-                ->select()
-                ->toArray();
-            
-            $this->app->cache->set('lake_admin_hooks', $hooks);
-        }
-        
-        if (!empty($hooks)) {
-            foreach ($hooks as $key => $value) {
-                $this->app->event->listen($value['name'], $value['class']);
-            }
-        }
     }
 
 }
