@@ -3,6 +3,6 @@
 return [
     "name" => "LakeAdmin",
     "name_mini" => "Lake",
-    "release" => 20200723,
-    "version" => "2.1.29.20200723",
+    "release" => 20200731,
+    "version" => "2.1.29.20200731",
 ];

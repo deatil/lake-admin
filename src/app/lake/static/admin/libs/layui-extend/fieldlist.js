@@ -1,21 +1,14 @@
 !(function(a){
-    if ("function" == typeof define&&define.amd) {
-        define(["layui", "laytpl", "jquery_dragsort"], a);
-    } else if ("object" == typeof exports) {
-        a(require("jquery"), require("laytpl"), require("jquery_dragsort"));
-    } else if (layui && layui.define) {
-        layui.define(['jquery', "laytpl", "jquery_dragsort"], function (exports) {
-            var laytpl = layui.laytpl,
-                jquery = layui.$;
-            a(jquery, laytpl);
+    layui.define(['jquery', "laytpl", "jquery_dragsort"], function (exports) {
+        var laytpl = layui.laytpl,
+            jquery = layui.$;
             
-            exports('fieldlist', {});
-        });
-    } else {
-        a(jQuery);
-    }
-})(function($, laytpl) {
+        a(jquery, laytpl);
         
+        exports('fieldlist', {});
+    });
+})(function($, laytpl) {
+    
     var cssStyle = '\
 <style type="text/css" class="lake-admin-fieldlist">\
 .fieldlist dd:first-child {\
@@ -60,7 +53,7 @@
                 return ;
             }
             
-            var fieldlisttpl = '<dd class="form-inline">\
+            var fieldlistTpl = '<dd class="form-inline">\
                 <input type="text" name="{{name}}[{{index}}][key]" class="form-control" value="{{row.key}}" size="10" />\
                 <input type="text" name="{{name}}[{{index}}][value]" class="form-control" value="{{row.value}}" />\
                 <span class="btn btn-sm btn-danger btn-remove">\
@@ -72,21 +65,25 @@
             </dd>';
 
             // 刷新隐藏textarea的值
-            var refresh = function (name) {
+            var refresh = function (container) {
                 var data = {};
+                var name = container.data("name");
                 var textarea = $("textarea[name='" + name + "']", form);
-                var container = textarea.closest("dl");
-                var template = container.attr("data-template");
-                $.each($("input,select,textarea", container).serializeArray(), function (i, j) {
+                var template = container.data("template");
+                $("input,select,textarea", container).each(function () {
+                    var name = $(this).attr('data-name');
+                    var value = $(this).prop('value');
+                    
                     var reg = /\[(\w+)\]\[(\w+)\]$/g;
-                    var match = reg.exec(j.name);
-                    if (!match)
+                    var match = reg.exec(name);
+                    if (!match) {
                         return true;
+                    }
                     match[1] = "x" + parseInt(match[1]);
                     if (typeof data[match[1]] == 'undefined') {
                         data[match[1]] = {};
                     }
-                    data[match[1]][match[2]] = j.value;
+                    data[match[1]][match[2]] = value;
                 });
                 var result = template ? [] : {};
                 $.each(data, function (i, j) {
@@ -102,63 +99,69 @@
                 });
                 textarea.val(JSON.stringify(result));
             };
+            
             // 监听文本框改变事件
-            $(document).on('change keyup', ".fieldlist input,.fieldlist textarea,.fieldlist select", function () {
-                refresh($(this).closest("dl").attr("data-name"));
+            $(".fieldlist", form).on('change keyup', "input,textarea,select", function () {
+                refresh($(this).closest("dl"));
             });
+            
             // 追加控制
-            $(".fieldlist", form).on("click", ".btn-append,.append", function (e, row) {
+            $(".fieldlist", form).on("click", ".btn-append,.js-append", function (e, row) {
                 var container = $(this).closest("dl");
-                var index = container.attr("data-index");
-                var name = container.attr("data-name");
-                var template = container.attr("data-template");
+                var index = container.data("index");
+                var name = container.data("name");
+                var template = container.data("template");
                 var data = container.data();
                 index = index ? parseInt(index) : 0;
-                container.attr("data-index", index + 1);
+                container.data("index", index + 1);
                 var row = row ? row : {};
                 var vars = {index: index, name: name, data: data, row: row};
-                console.log(vars);
                 
                 var tpl = '';
                 if (template) {
                     tpl = $('#' + template).html();
                 } else {
-                    tpl = fieldlisttpl;
+                    tpl = fieldlistTpl;
                 }
 
                 var html = laytpl(tpl || '').render(vars);
                 $(html).insertBefore($(this).closest("dd"));
             });
+            
             // 移除控制
-            $(".fieldlist", form).on("click", "dd .btn-remove", function () {
+            $(".fieldlist", form).on("click", ".btn-remove,.js-remove", function () {
                 var container = $(this).closest("dl");
                 $(this).closest("dd").remove();
-                refresh(container.attr("data-name"));
+                refresh(container);
             });
+            
             // 拖拽排序
             $("dl.fieldlist", form).dragsort({
                 itemSelector: 'dd',
-                dragSelector: ".btn-dragsort",
+                dragSelector: ".btn-dragsort,js-dragsort",
                 dragEnd: function () {
-                    refresh($(this).closest("dl").attr("data-name"));
+                    refresh($(this).closest("dl"));
                 },
                 placeHolderTemplate: "<dd></dd>"
             });
+            
             // 渲染数据
             $(".fieldlist", form).each(function () {
-                var container = this;
-                var textarea = $("textarea[name='" + $(this).attr("data-name") + "']", form);
+                var thiz = this;
+                var container = $(this).closest("dl");
+                var name = container.data("name");
+                var textarea = $("textarea[name='" + name + "']", form);
                 if (textarea.val() == '') {
                     return true;
                 }
-                var template = $(this).attr("data-template");
+                var template = container.data("template");
                 var json = {};
                 try {
                     json = JSON.parse(textarea.val());
                 } catch (e) {
                 }
                 $.each(json, function (i, j) {
-                    $(".btn-append,.append", container).trigger('click', template ? j : {
+                    $(".btn-append,.js-append", thiz).trigger('click', template ? j : {
                         key: i,
                         value: j
                     });

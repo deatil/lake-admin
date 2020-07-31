@@ -90,8 +90,8 @@
                     </dl>
                     <script id="optionstpl" type="text/html">
                         <dd class="form-inline">
-                            <ins><input type="text" name="{{d.name}}[{{d.index}}][key]" class="form-control" value="{{d.row.key?d.row.key:''}}" placeholder="填写字段"/></ins>
-                            <ins><input type="text" name="{{d.name}}[{{d.index}}][value]" class="form-control" value="{{d.row.value?d.row.value:''}}" placeholder="填写内容"/></ins>
+                            <ins><input type="text" data-name="{{d.name}}[{{d.index}}][key]" value="{{d.row.key?d.row.key:''}}" placeholder="填写字段" class="form-control"/></ins>
+                            <ins><input type="text" data-name="{{d.name}}[{{d.index}}][value]" value="{{d.row.value?d.row.value:''}}" placeholder="填写内容" class="form-control"/></ins>
                             
                             <span class="layui-btn layui-btn-xs layui-btn-danger btn-remove"><i class="iconfont icon-close1"></i></span>
                             <span class="layui-btn layui-btn-xs layui-btn-primary btn-dragsort"><i class="iconfont icon-yidong"></i></span>

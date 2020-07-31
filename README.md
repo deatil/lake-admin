@@ -3,9 +3,9 @@
 
 ### 项目介绍
 
-*  `lake-admin` 基于ThinkPHP6.0最新版，后台页面基于layui搭建
-*  本项目开发理念为“提供更为精简完善的后台管理系统”，友好的模型开发方案，更接近Thinkphp相关APP开发，为更好更快的开发项目提供更大的帮助
-*  更新ThinkPHP版本到6.0.3版本
+*  `lake-admin` 基于 `ThinkPHP` 框架，后台页面基于 `layui` 搭建
+*  更新 `ThinkPHP` 版本到 v6.0.3 版本
+*  更新 `layui` 版本到 v2.5.6 版本
 
 
 ### 开源协议
@@ -29,11 +29,11 @@
 *  后台admin登陆，超级管理员账号及密码：`admin/123456`
 *  模块插件目录：`addons` 文件夹 及 自定义包模块插件
 *  自定义包模块插件可以查看：`lake-admin-addon-lmenu` 插件 及 `lake-admin-addon-lroute` 插件
-*  如果项目搬迁移，可以执行 `php think lake-admin:repair` 修复静态文件失效问题，已安装模块请升级更新一次
+*  如果项目迁移，可以执行 `php think lake-admin:repair` 修复静态文件失效问题，已安装模块请根据模块相关文档更新静态文件链接
 
 
 ### 截图预览
 
-[![LakeAdmin1](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin1.png)](https://github.com/deatil)
-[![LakeAdmin2](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin2.png)](https://github.com/deatil)
-[![LakeAdmin3](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin3.png)](https://github.com/deatil)
+[![LakeAdmin1](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin1.png)](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin1.png)
+[![LakeAdmin2](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin2.png)](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin2.png)
+[![LakeAdmin3](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin3.png)](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin3.png)

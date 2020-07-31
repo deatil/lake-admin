@@ -87,18 +87,17 @@
                     <i class="iconfont icon-add"></i> 添加
                 </a>
             </dd>
-
-            <textarea name="{$vo.fieldArr}[{$vo.name}]" placeholder="" class="layui-hide">{$vo.value}</textarea>
         </dl>
         <script id="{$vo.name}_tpl" type="text/html">
             <dd class="form-inline">
-                <ins><input type="text" name="{{d.name}}[{{d.index}}][key]" class="layui-input" value="{{d.row.key?d.row.key:''}}" placeholder="填写字段"/></ins>
-                <ins><input type="text" name="{{d.name}}[{{d.index}}][value]" class="layui-input" value="{{d.row.value?d.row.value:''}}" placeholder="填写内容"/></ins>
+                <ins><input type="text" class="layui-input" data-name="{{d.name}}[{{d.index}}][key]" value="{{d.row.key?d.row.key:''}}" placeholder="填写字段"/></ins>
+                <ins><input type="text" class="layui-input" data-name="{{d.name}}[{{d.index}}][value]" value="{{d.row.value?d.row.value:''}}" placeholder="填写内容"/></ins>
                 
                 <span class="layui-btn layui-btn-sm layui-btn-danger btn-remove"><i class="iconfont icon-close1"></i></span>
                 <span class="layui-btn layui-btn-sm layui-btn-primary btn-dragsort"><i class="iconfont icon-yidong"></i></span>
             </dd>
         </script>
+        <textarea name="{$vo.fieldArr}[{$vo.name}]" class="layui-hide">{$vo.value}</textarea>
     </div>
     {if $vo.remark}
         <div class="layui-form-mid layui-word-aux">{$vo.remark|raw}</div>
