@@ -199,7 +199,7 @@ class Config extends Base
                 ->column('name,title,remark,type,value,options');
             foreach ($configList as &$value) {
                 if ($value['options'] != '') {
-                    $value['options'] = lake_parse_fieldlist($value['options']);
+                    $value['options'] = json_decode($value['options'], true);
                 }
                 if ($value['type'] == 'checkbox') {
                     $value['value'] = empty($value['value']) ? [] : explode(',', $value['value']);

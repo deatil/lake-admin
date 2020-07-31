@@ -153,7 +153,7 @@ class Attachment
             // 读取图片
             $image = Image::open($file);
             // 添加水印
-            $watermarkPos = $watermarkPos == '' ? config('app.upload_thumb_water_position')['key'] : $watermarkPos;
+            $watermarkPos = $watermarkPos == '' ? config('app.upload_thumb_water_position') : $watermarkPos;
             $watermarkAlpha = $watermarkAlpha == '' ? config('app.upload_thumb_water_alpha') : $watermarkAlpha;
             $image->water($thumbWaterPic, $watermarkPos, $watermarkAlpha);
             // 保存水印图片，覆盖原图
@@ -238,8 +238,8 @@ class Attachment
         }
         
         $realPath = realpath('.' . $filePath['path']);
-        if (!is_file($realPath) || !unlink($realPath)) {
-            throw new \Exception("删除" . $filePath['path'] . "失败");
+        if (is_file($realPath)) {
+            unlink($realPath);
         }
         
         $status = AttachmentModel::where('id', $id)->delete();

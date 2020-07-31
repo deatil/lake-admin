@@ -37,15 +37,6 @@ layui.define(['table', 'element', 'layer', 'form', 'notice', 'msg', 'lakeform', 
         lakeform.load(url, {}, 'get', null, true, tips, time);
     });
 
-    /*! 注册 data-lake-serach 表单搜索行为 */
-    $body.on('submit', 'form.form-search', function () {
-        var url = $(this).attr('action').replace(/&?page=\d+/g, ''), split = url.indexOf('?') === -1 ? '?' : '&';
-        if ((this.method || 'get').toLowerCase() === 'get') {
-            return window.location.href = '#' + $.menu.parseUri(url + split + $(this).serialize());
-        }
-        lakeform.load(url, this, 'post');
-    });
-
     /*! 注册 data-lake-modal 事件行为 */
     $body.on('click', '[data-lake-modal]', function () {
         return lakeform.modal($(this).attr('data-lake-modal'), 'open_type=modal', $(this).attr('data-lake-title') || $(this).text() || '编辑');
@@ -198,6 +189,6 @@ layui.define(['table', 'element', 'layer', 'form', 'notice', 'msg', 'lakeform', 
         fiexd = this.getAttribute('data-lake-blur-number') || 0;
         this.value = (parseFloat(this.value) || 0).toFixed(fiexd);
     });
-	
+    
     exports('bind', {});
 });

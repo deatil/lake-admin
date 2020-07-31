@@ -71,23 +71,20 @@ class ModuleLoad
     }
 
     /**
-     * 检测并且导入语言包
+     * 加载服务
      *
-     * @create 2020-7-29
+     * @create 2020-7-31
      * @author deatil
      */
-    public function checkLoadLangPack($appPath)
+    public function loadService($appPath)
     {
-        $loadLangPack = $this->app->config->get('app.load_lang_pack', 0);
-        if (!$loadLangPack) {
-            return false;
-        }
-        
-        // 自动侦测当前语言
-        $langset = $this->app->lang->detect($this->app->request);
-
-        if ($this->app->lang->defaultLangSet() != $langset) {
-            $this->LoadLangPack($langset, $appPath);
+        if (is_file($appPath . 'service.php')) {
+            $services = include $appPath . 'service.php';
+            if (!empty($services) && is_array($services)) {
+                foreach ($services as $service) {
+                    $this->app->register($service);
+                }
+            }
         }
     }
 
@@ -105,6 +102,27 @@ class ModuleLoad
         // 加载系统语言包
         $files = glob($appPath . 'lang' . DIRECTORY_SEPARATOR . $langset . '.*');
         $this->app->lang->load($files);
+    }
+
+    /**
+     * 检测并且导入语言包
+     *
+     * @create 2020-7-29
+     * @author deatil
+     */
+    protected function checkLoadLangPack($appPath)
+    {
+        $loadLangPack = $this->app->config->get('app.load_lang_pack', 0);
+        if (!$loadLangPack) {
+            return false;
+        }
+        
+        // 自动侦测当前语言
+        $langset = $this->app->lang->detect($this->app->request);
+
+        if ($this->app->lang->defaultLangSet() != $langset) {
+            $this->LoadLangPack($langset, $appPath);
+        }
     }
 
 }

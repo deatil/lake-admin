@@ -10,8 +10,13 @@
 })(function($, laytpl) {
     
     var cssStyle = '\
-<style type="text/css" class="lake-admin-fieldlist">\
-.fieldlist dd:first-child {\
+<style type="text/css" class="lake-admin-fieldlist-css">\
+.fieldlist {\
+  margin-top: 5px;\
+}\
+.fieldlist .fieldlist-head span {\
+  width: 110px;\
+  display: inline-block;\
   font-weight: bold;\
   font-size: 13px;\
 }\
@@ -38,38 +43,61 @@
     padding: 0 6px;\
     font-size: 13px;\
 }\
+.fieldlist .fieldlist-btns {\
+    padding: 6px 0;\
+}\
 </style>';
-    if ($(".lake-admin-fieldlist").length <= 0) {
-        $("body").append(cssStyle);
+    if ($(".lake-admin-fieldlist-css").length <= 0) {
+        $("head").append(cssStyle);
     }
     
     $.fn.fieldlist = function() {
         
-        this.each(function(i, form) {
-
-            form = typeof form === 'object' ? form : $(form);
-        
-            if ($(".fieldlist", form).size() <= 0) {
-                return ;
+        this.each(function() {
+            var thiz = this;
+            
+            var el = $(this).data("el");
+            var main = $(this).data("main");
+            var template = $(this).data("template");
+            
+            var mainTpl = '<dl class="fieldlist">\
+                <dd class="fieldlist-head">\
+                    <span>字段</span>\
+                    <span>内容</span>\
+                </dd>\
+                <dd class="fieldlist-btns">\
+                    <a href="javascript:;" class="layui-btn layui-btn-sm layui-btn-success btn-append">\
+                        <i class="iconfont icon-add"></i> 添加\
+                    </a>\
+                </dd>\
+            </dl>';
+            
+            var fieldlistTpl = '<dd class="fieldlist-item">\
+                <ins><input type="text" class="layui-input" data-name="{{d.name}}[{{d.index}}][key]" value="{{d.row.key?d.row.key:""}}" placeholder="填写字段"/></ins>\
+                <ins><input type="text" class="layui-input" data-name="{{d.name}}[{{d.index}}][value]" value="{{d.row.value?d.row.value:""}}" placeholder="填写内容"/></ins>\
+                <span class="layui-btn layui-btn-sm layui-btn-danger btn-remove"><i class="iconfont icon-close1"></i></span>\
+                <span class="layui-btn layui-btn-sm layui-btn-primary btn-dragsort"><i class="iconfont icon-yidong"></i></span>\
+            </dd>';
+            
+            if (main) {
+                mainTpl = $(main).html();
             }
             
-            var fieldlistTpl = '<dd class="form-inline">\
-                <input type="text" name="{{name}}[{{index}}][key]" class="form-control" value="{{row.key}}" size="10" />\
-                <input type="text" name="{{name}}[{{index}}][value]" class="form-control" value="{{row.value}}" />\
-                <span class="btn btn-sm btn-danger btn-remove">\
-                    <i class="fa fa-times"></i>\
-                </span>\
-                <span class="btn btn-sm btn-primary btn-dragsort">\
-                    <i class="fa fa-arrows"></i>\
-                </span>\
-            </dd>';
+            var fieldlistClass = 'lake-admin-fieldlist-' + (new Date()).valueOf();
+            mainTpl = $(mainTpl).addClass(fieldlistClass).prop("outerHTML");
+            
+            if (el) {
+                $(el).html(mainTpl);
+            } else {
+                $(mainTpl).insertBefore($(thiz));
+            }
+            
+            var container = $('.' + fieldlistClass);
 
             // 刷新隐藏textarea的值
-            var refresh = function (container) {
+            var refresh = function () {
                 var data = {};
-                var name = container.data("name");
-                var textarea = $("textarea[name='" + name + "']", form);
-                var template = container.data("template");
+                var textarea = $(thiz);
                 $("input,select,textarea", container).each(function () {
                     var name = $(this).attr('data-name');
                     var value = $(this).prop('value');
@@ -85,15 +113,11 @@
                     }
                     data[match[1]][match[2]] = value;
                 });
-                var result = template ? [] : {};
+                var result = {};
                 $.each(data, function (i, j) {
                     if (j) {
-                        if (!template) {
-                            if (j.key != '') {
-                                result[j.key] = j.value;
-                            }
-                        } else {
-                            result.push(j);
+                        if (j.key != '') {
+                            result[j.key] = j.value;
                         }
                     }
                 });
@@ -101,72 +125,69 @@
             };
             
             // 监听文本框改变事件
-            $(".fieldlist", form).on('change keyup', "input,textarea,select", function () {
-                refresh($(this).closest("dl"));
+            container.on('change keyup', "input,textarea,select", function () {
+                refresh();
             });
             
             // 追加控制
-            $(".fieldlist", form).on("click", ".btn-append,.js-append", function (e, row) {
-                var container = $(this).closest("dl");
-                var index = container.data("index");
-                var name = container.data("name");
-                var template = container.data("template");
-                var data = container.data();
+            container.on("click", ".btn-append,.js-append", function (e, row) {
+                var index = $(thiz).data("index");
+                var name = $(thiz).attr("name");
+                var template = $(thiz).data("template");
+                var data = $(thiz).data();
+                
                 index = index ? parseInt(index) : 0;
-                container.data("index", index + 1);
+                $(thiz).data("index", index + 1);
                 var row = row ? row : {};
                 var vars = {index: index, name: name, data: data, row: row};
                 
                 var tpl = '';
                 if (template) {
-                    tpl = $('#' + template).html();
+                    tpl = $(template).html();
                 } else {
                     tpl = fieldlistTpl;
                 }
 
                 var html = laytpl(tpl || '').render(vars);
-                $(html).insertBefore($(this).closest("dd"));
+                $(html).insertBefore($(this).parent());
             });
             
             // 移除控制
-            $(".fieldlist", form).on("click", ".btn-remove,.js-remove", function () {
-                var container = $(this).closest("dl");
+            container.on("click", ".btn-remove,.js-remove", function () {
                 $(this).closest("dd").remove();
-                refresh(container);
+                refresh();
             });
             
             // 拖拽排序
-            $("dl.fieldlist", form).dragsort({
-                itemSelector: 'dd',
+            container.dragsort({
+                itemSelector: 'dd.fieldlist-item',
                 dragSelector: ".btn-dragsort,js-dragsort",
                 dragEnd: function () {
-                    refresh($(this).closest("dl"));
+                    refresh();
                 },
-                placeHolderTemplate: "<dd></dd>"
+                placeHolderTemplate: "<dd class='fieldlist-item'></dd>",
+                scrollSpeed: 15
             });
             
             // 渲染数据
-            $(".fieldlist", form).each(function () {
-                var thiz = this;
-                var container = $(this).closest("dl");
-                var name = container.data("name");
-                var textarea = $("textarea[name='" + name + "']", form);
+            var render = function () {
+                var textarea = $(thiz);
                 if (textarea.val() == '') {
                     return true;
                 }
-                var template = container.data("template");
                 var json = {};
                 try {
                     json = JSON.parse(textarea.val());
                 } catch (e) {
                 }
                 $.each(json, function (i, j) {
-                    $(".btn-append,.js-append", thiz).trigger('click', template ? j : {
+                    $(".btn-append,.js-append", container).trigger('click', {
                         key: i,
                         value: j
                     });
                 });
-            });
+            };
+            render();
         });
         
         return this;

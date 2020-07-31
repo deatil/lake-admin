@@ -47,7 +47,7 @@
     <script type="text/javascript" src="admin/libs/layui/layui.js"></script>
     <script type="text/javascript">
     if (self.location != top.location) {
-        window.location.href = '{:url("index/index")}';
+        top.location.href = '{:url("index/index")}';
     }
     
     layui.use(['form', 'layer', 'jquery'], function() {

@@ -55,21 +55,7 @@
 </div>
 {/case}
 {case value="array"}
-<style>
-.{$vo.name}-fieldlist .fieldlist dd {
-    margin: 10px 0 !important;
-}
-.{$vo.name}-fieldlist .fieldlist dd:first-child {
-    font-size: 15px !important;
-}
-.{$vo.name}-fieldlist .fieldlist dd ins {
-    width: 220px !important;
-}
-.{$vo.name}-fieldlist .fieldlist dd input:first-child {
-    width: 215px !important;
-}
-</style>
-<div class="layui-form-item layui-form-text layui-form-fieldlist {$vo.name}-fieldlist">
+<div class="layui-form-item layui-form-text layui-fieldlist">
     <label class="">
         {$vo.title} 
         {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
@@ -77,19 +63,22 @@
         {/if}
     </label>
     <div class="layui-form-field-label">
-        <dl class="fieldlist" data-template="{$vo.name}_tpl" data-name="{$vo.fieldArr}[{$vo.name}]">
-            <dd>
-                <ins>字段</ins>
-                <ins>内容</ins>
-            </dd>
-            <dd>
-                <a href="javascript:;" class="layui-btn layui-btn-sm layui-btn-success btn-append">
-                    <i class="iconfont icon-add"></i> 添加
-                </a>
-            </dd>
-        </dl>
+        <div id="{$vo.name}_con"></div>
+        <script id="{$vo.name}_main" type="text/html">
+            <dl class="fieldlist">
+                <dd class="fieldlist-head">
+                    <span>字段</span>
+                    <span>内容</span>
+                </dd>
+                <dd class="fieldlist-btns">
+                    <a href="javascript:;" class="layui-btn layui-btn-sm layui-btn-success btn-append">
+                        <i class="iconfont icon-add"></i> 添加
+                    </a>
+                </dd>
+            </dl>
+        </script>
         <script id="{$vo.name}_tpl" type="text/html">
-            <dd class="form-inline">
+            <dd class="fieldlist-item">
                 <ins><input type="text" class="layui-input" data-name="{{d.name}}[{{d.index}}][key]" value="{{d.row.key?d.row.key:''}}" placeholder="填写字段"/></ins>
                 <ins><input type="text" class="layui-input" data-name="{{d.name}}[{{d.index}}][value]" value="{{d.row.value?d.row.value:''}}" placeholder="填写内容"/></ins>
                 
@@ -97,7 +86,11 @@
                 <span class="layui-btn layui-btn-sm layui-btn-primary btn-dragsort"><i class="iconfont icon-yidong"></i></span>
             </dd>
         </script>
-        <textarea name="{$vo.fieldArr}[{$vo.name}]" class="layui-hide">{$vo.value}</textarea>
+        <textarea name="{$vo.fieldArr}[{$vo.name}]" 
+            data-el="#{$vo.name}_con" 
+            data-main="#{$vo.name}_main" 
+            data-template="#{$vo.name}_tpl" 
+            class="layui-form-fieldlist layui-hide">{$vo.value}</textarea>
     </div>
     {if $vo.remark}
         <div class="layui-form-mid layui-word-aux">{$vo.remark|raw}</div>

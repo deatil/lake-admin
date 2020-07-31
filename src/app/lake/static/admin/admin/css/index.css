@@ -580,6 +580,17 @@
 @media screen and (max-width: 720px){
     .lake-admin .lake-admin-hide-menu {display: none !important; }
     .lake-admin .lake-admin-winner-hide {display: none !important; }
+    .lake-admin .lake-admin-tab-action {display: none !important; }
+    .lake-admin .lake-admin-top-tabs-box .tab-right {
+        width: 106px !important;
+    }
+    .lake-admin .lake-admin-close-box {
+        padding: 0 5px;
+    }
+    .lake-admin .lake-admin-close-box .layui-nav-child {
+        top: 42px;
+        left: -65px;
+    }
     
     .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus {display: block !important; float: left;z-index:1100;position: absolute;left: -20px;top: 60px;width: 150px;}
     .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item {background-color: #23262e; }

@@ -72,24 +72,25 @@
                 </div>
             </div>
             
-            <div class="layui-form-item layui-form-text layui-form-fieldlist" id="options">
+            <div class="layui-form-item layui-form-text" id="options">
                 <label class="layui-form-label">配置项</label>
                 <div class="layui-input-inline w300">
-                    <dl class="fieldlist" data-template="optionstpl" data-name="options">
-                        <dd>
-                            <ins>字段</ins>
-                            <ins>内容</ins>
-                        </dd>
-                        <dd>
-                            <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-success btn-append">
-                                <i class="iconfont icon-add"></i> 添加
-                            </a>
-                        </dd>
-
-                        <textarea name="options" placeholder="" class="layui-hide"></textarea>
-                    </dl>
+                    <div id="options_con"></div>
+                    <script id="options_main" type="text/html">
+                        <dl class="fieldlist">
+                            <dd class="fieldlist-head">
+                                <span>字段</span>
+                                <span>内容</span>
+                            </dd>
+                            <dd class="fieldlist-btns">
+                                <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-success btn-append">
+                                    <i class="iconfont icon-add"></i> 添加
+                                </a>
+                            </dd>
+                        </dl>
+                    </script>
                     <script id="optionstpl" type="text/html">
-                        <dd class="form-inline">
+                        <dd class="fieldlist-item">
                             <ins><input type="text" data-name="{{d.name}}[{{d.index}}][key]" value="{{d.row.key?d.row.key:''}}" placeholder="填写字段" class="form-control"/></ins>
                             <ins><input type="text" data-name="{{d.name}}[{{d.index}}][value]" value="{{d.row.value?d.row.value:''}}" placeholder="填写内容" class="form-control"/></ins>
                             
@@ -97,6 +98,11 @@
                             <span class="layui-btn layui-btn-xs layui-btn-primary btn-dragsort"><i class="iconfont icon-yidong"></i></span>
                         </dd>
                     </script>
+                    <textarea name="options" 
+                        data-el="#options_con" 
+                        data-main="#options_main" 
+                        data-template="#optionstpl" 
+                        class="layui-form-fieldlist layui-hide"></textarea>
                 </div>
                 <div class="layui-form-mid layui-word-aux">
                     配置类型为<code>单选按钮,下拉框,复选框</code>时请填写

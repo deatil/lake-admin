@@ -3,6 +3,14 @@
 ::selection{color:#fff !important;background-color:#009688 !important}
 ::-moz-selection{color:#fff !important;background-color:#009688 !important}
 
+code {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 4px;
+}
+
 .w50{width:50px!important;}
 .w100{width:100px!important;}
 .w120{width:120px!important;}
@@ -132,13 +140,53 @@
   text-align: center !important;
 }
 
-code {
-    padding: 2px 4px;
-    font-size: 90%;
-    color: #c7254e;
-    background-color: #f9f2f4;
-    border-radius: 4px;
+@media screen and (max-width: 450px) {
+    .layui-form-item .layui-form-label {
+        display: block;
+        float: left;
+        width: 100%;
+        text-align: left;
+        padding: 10px 0;
+    }
+    .layui-form-item .layui-input-block {
+        display: block;
+        float: left;
+        width: 100%;
+        margin-left: 0;
+    }
+    .layui-form-item .layui-inline {
+        margin-bottom: 5px;
+    }
 }
+
+.fieldlist .fieldlist-head span {
+    width: 220px !important;
+}
+.layui-fieldlist .fieldlist dd {
+    margin: 10px 0 !important;
+}
+.layui-fieldlist .fieldlist dd:first-child {
+    font-size: 15px !important;
+}
+.layui-fieldlist .fieldlist dd ins {
+    width: 220px !important;
+}
+.layui-fieldlist .fieldlist dd input:first-child {
+    width: 215px !important;
+}
+@media screen and (max-width: 450px) {
+    .fieldlist .fieldlist-head span {
+        width: 100% !important;
+    }
+    .layui-fieldlist .fieldlist dd input:first-child {
+        width: 100% !important;
+    }
+    .layui-fieldlist .fieldlist dd.fieldlist-item ins {
+        width: 100% !important;
+        margin-bottom: 5px !important;
+    }
+}
+
 .lake-admin-container {padding: 15px;background-color: #F2F2F2; }
 
 .panel_box{ margin-bottom:5px;}

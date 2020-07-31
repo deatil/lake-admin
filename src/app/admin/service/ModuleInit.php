@@ -94,27 +94,21 @@ class ModuleInit
                     'app_map' => $appMaps,
                 ], 'app');
                 
+                // 模块全局加载文件夹
+                $moduleGlobalPath = $namespaceModulePath . DIRECTORY_SEPARATOR . 'global' . DIRECTORY_SEPARATOR;
+                
                 // 引入模块公共文件
-                $moduleGlobal = $namespaceModulePath . DIRECTORY_SEPARATOR . 'global' . DIRECTORY_SEPARATOR;
-                $this->loadModuleConfigAndFile($moduleGlobal);
+                $this->loadModule($moduleGlobalPath);
                 
                 // 注册模块指令
                 $moduleCommand = $this->app->config->get($module['module'] . '.command');
-                if (!empty($moduleCommand) && is_array($moduleCommand)) {
-                    Console::starting(function (Console $console) use ($moduleCommand) {
-                        $console->addCommands($moduleCommand);
-                    });
-                }
+                $this->addCommands($moduleCommand);
             }
         }
         
         // 注册全局指令
         $command = $this->app->config->get('command');
-        if (!empty($command) && is_array($command)) {
-            Console::starting(function (Console $console) use ($command) {
-                $console->addCommands($command);
-            });
-        }
+        $this->addCommands($command);
     }
 
     /**
@@ -123,9 +117,30 @@ class ModuleInit
      * @create 2019-10-9
      * @author deatil
      */
-    private function loadModuleConfigAndFile($path)
+    private function loadModule($appPath)
     {
-        (new ModuleLoadService($this->app))->loadApp($path);
+        $ModuleLoadService = new ModuleLoadService($this->app);
+        
+        // 加载应用配置文件
+        $ModuleLoadService->loadApp($appPath);
+        
+        // 加载服务
+        $ModuleLoadService->loadService($appPath);
+    }
+
+    /**
+     * 注册指令
+     *
+     * @create 2020-7-31
+     * @author deatil
+     */
+    private function addCommands($command)
+    {
+        if (!empty($command) && is_array($command)) {
+            Console::starting(function (Console $console) use ($command) {
+                $console->addCommands($command);
+            });
+        }
     }
 
 }
