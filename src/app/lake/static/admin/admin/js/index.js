@@ -1,13 +1,38 @@
-layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], function(exports) {
+layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "jquery_dragsort", "utils"], function(exports) {
     var $ = layui.jquery,
         element = layui.element,
         form = layui.form,
         utils = layui.utils,
         layer = layui.layer;
     
-    // 左侧菜单
-    var leftMenu = {
-        build: function(object) {
+    // 生成菜单
+    var menuMake = {
+        buildTop: function(object) {
+            var html = '';
+            $.each(object, function(i, o) {
+                if ((typeof o.items) != 'undefined') {
+                    var url = 'javascript:;';
+                    if (o.url) {
+                        url = o.url;
+                    }
+                    
+                    var icon = '';
+                    if (o.icon) {
+                        icon = '<i class="iconfont ' + o.icon + '"></i>&nbsp;';
+                    }
+                    
+                    html += '<li class="layui-nav-item">'
+                        + '<a href="' + url + '" title="' + o.title + '" lay-id="' + o.menuid + '" data-id="' + o.id + '">'
+                            + icon
+                            + '<span class="layui-nav-title">' + o.title + '</span>'
+                        + '</a>'
+                    + '</li>';
+                }
+            });
+            
+            return html;
+        },
+        buildLeft: function(object) {
             var thiz = this;
             var menu_html = '';
             
@@ -15,7 +40,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
                 var child_html = '';
                 
                 if (data.items && typeof(data.items) === 'object') {
-                    child_html = thiz.buildChild(data.items);
+                    child_html = thiz.buildLeftChild(data.items);
                 }
                 
                 var menu_icon = '';
@@ -40,7 +65,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
             
             return menu_html;
         },
-        buildChild: function(object) {
+        buildLeftChild: function(object) {
             var thiz = this;
             var menu_dd_html = '';
             
@@ -52,7 +77,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
                 
                 var menu_child_html = '';
                 if (data.items && typeof(data.items) === 'object') {
-                    menu_child_html = thiz.buildChild(data.items);
+                    menu_child_html = thiz.buildLeftChild(data.items);
                 }
                 
                 var url = 'javascript:;';
@@ -76,7 +101,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
             return menu_html;
         },
         // 选择左边菜单
-        selectMenu: function(data_id) {
+        selectLeftMenu: function(data_id) {
             // 选择左边菜单
             $("#side_menus_bar").find(".layui-this").removeClass('layui-this');
             $("#side_menus_bar").find("a[lay-id=" + data_id + "]").parent().addClass('layui-this');
@@ -91,6 +116,31 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
     };
     
     var lake = {
+        config: {
+            menus: lake_menus,
+            nowTabMenuid: '', // 当前tab的ID
+            openTabNum: 10, // 最大可打开窗口数量
+        },
+        
+        renderHtml: function() {
+            $('#top_nav_menus').html(menuMake.buildTop(this.config.menus));
+            element.render(); //重新渲染
+            
+            // iframe 加载事件
+            var iframeDefault = document.getElementById('iframe_default');
+            $(iframeDefault.contentWindow.document).ready(function() {
+                $(iframeDefault).show();
+            });
+            
+            // 拖拽排序
+            $(".lake-admin-top-tab").dragsort({
+                itemSelector: 'li.lake-admin-tab-item',
+                dragSelector: ".item-dragsort,.js-dragsort",
+                placeHolderTemplate: "<li class='lake-admin-tab-item'></li>",
+                scrollSpeed: 5
+            });
+        },
+        
         // 重新刷新页面，使用location.reload()有可能导致重新提交
         reloadPage: function(win) {
             var location = win.location;
@@ -102,7 +152,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
             var thiz = this;
             var ret = {};
             if (!menugroup) {
-                menugroup = menus;
+                menugroup = thiz.config.menus;
             }
             if (!mid) {
                 ret = menugroup['default'];
@@ -137,6 +187,22 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
                 }
             }
             return ret;
+        },
+        
+        topMenuClick: function(curid) {
+            if (curid == "default") {
+                var objtopmenu = $('#top_nav_menus li:first-child').find("a");
+            } else {
+                var topmenu = this.getTopMenuByID(curid);
+                var objtopmenu = $('#top_nav_menus').find("a[lay-id=" + topmenu.menuid + "]");
+            }
+            
+            if (objtopmenu.parent().attr("class") != "layui-this") {
+                //选中当前顶部菜单
+                objtopmenu.parent().addClass('layui-this').siblings().removeClass('layui-this');
+                //触发事件
+                objtopmenu.click();
+            }
         },
 
         // 判断显示或创建iframe
@@ -177,8 +243,15 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
                     setTimeout(function() {
                         $('#loading').hide();
                     }, 500);
-                    var tpl = '<i class="' + options.icon + '"></i>&nbsp;<span class="layui-nav-title">' + options.title + '</span>';
-                    var li = $('<li>' + tpl + '<i class="layui-icon layui-unselect layui-tab-close">&#x1006;</i></li>').attr('lay-id', id);
+                    
+                    if (options.icon) {
+                        var icon = '<i class="item-dragsort ' + options.icon + '"></i>&nbsp;';
+                    } else {
+                        var icon = '';
+                    }
+                    
+                    var title = icon + '<span class="layui-nav-title">' + options.title + '</span>';
+                    var li = $('<li class="layui-tab-item lake-admin-tab-item">' + title + '<i class="layui-icon layui-unselect layui-tab-close">&#x1006;</i></li>').attr('lay-id', id);
                     li.appendTo('#body_history');
                     thiz.showTab(li); //计算此tab的位置，如果不在屏幕内，则移动导航位置
                 });
@@ -215,25 +288,9 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
         }
         
     };
-
-    var menus = lake_menus;
-    var nowTabMenuid = ''; // 当前tab的ID
-    var openTabNum = 10; // 最大可打开窗口数量
     
-    // iframe 加载事件
-    var iframe_default = document.getElementById('iframe_default');
-    var def_iframe_height = 0;
-    $(iframe_default.contentWindow.document).ready(function() {
-        $(iframe_default).show();
-    });
-    var html = [];
-    $.each(menus, function(i, o) {
-        if ((typeof o.items) != 'undefined') {
-            html.push('<li class="layui-nav-item"><a href="javascript:;" title="' + o.title + '" lay-id="' + o.menuid + '" data-id="' + o.id + '"><i class="iconfont ' + o.icon + '"></i>&nbsp;<span class="layui-nav-title">' + o.title + '</span></a></li>');
-        }
-    });
-    $('#top_nav_menus').html(html.join(''));
-    element.render(); //重新渲染
+    // 构建页面
+    lake.renderHtml();
     
     $('.admin-side-full').on('click', function () {
         if (localStorage.full == 0) {
@@ -280,36 +337,37 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
         e.preventDefault();
         // 终止事件 不再派发事件
         e.stopPropagation();
+        
         $(this).parent().addClass('current')
             .siblings().removeClass('current');
         var data_id = $(this).attr('lay-id'),
             menu_data_id = $(this).attr('data-id'),
-            data_list = menus[menu_data_id],
-            side_menus_bar = $('#side_menus_bar');
+            data_list = lake.config.menus[menu_data_id],
+            sideMenusBar = $('#side_menus_bar');
 
-        if (side_menus_bar.attr('lay-id') == data_id) {
+        if (sideMenusBar.attr('lay-id') == data_id) {
             return false;
         };
         
         var index = $(this).parent().index();
         if (index > 0) {
-            side_menus_bar.addClass("lake-admin-module");
+            sideMenusBar.addClass("lake-admin-module");
         } else {
-            side_menus_bar.removeClass("lake-admin-module");
+            sideMenusBar.removeClass("lake-admin-module");
         }
 
         // 显示左侧菜单
-        var html = leftMenu.build(data_list['items']);
-        side_menus_bar.html(html).attr('lay-id', data_id);
+        var html = menuMake.buildLeft(data_list['items']);
+        sideMenusBar.html(html).attr('lay-id', data_id);
         element.render(); //重新渲染
         
         $(".lake-admin-module > li").removeClass("layui-nav-itemed");
         $('.lake-admin-module > li:first').addClass("layui-nav-itemed");
         
         // 左侧选择高亮
-        var topmenu = lake.getTopMenuByID(nowTabMenuid);
+        var topmenu = lake.getTopMenuByID(lake.config.nowTabMenuid);
         if (topmenu && topmenu.menuid == data_id) {
-            leftMenu.selectMenu(nowTabMenuid);
+            menuMake.selectLeftMenu(lake.config.nowTabMenuid);
         }
     });
 
@@ -332,7 +390,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
             _dt = $this.parent(),
             _dl = $this.next('dl');
             
-        //子菜单显示&隐藏
+        // 子菜单显示&隐藏
         if (_dl.length) {
             return false;
         };
@@ -340,8 +398,8 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
         var body_history_id = $(this).attr('lay-id');
         var body_history_li = $('#body_history li[lay-id=' + body_history_id + ']');
         if (body_history_li.length <= 0) {
-            if ($("#body_history li").length >= openTabNum) {
-                layer.msg('只能同时打开' + openTabNum + '个选项卡哦。不然系统会卡的！');
+            if ($("#body_history li").length >= lake.config.openTabNum) {
+                layer.msg('只能同时打开' + lake.config.openTabNum + '个选项卡哦。不然系统会卡的！');
                 return;
             }
         }
@@ -364,7 +422,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
             li = $('#body_history li[lay-id=' + data_id + ']');
         var href = this.href;
         
-        nowTabMenuid = data_id;
+        lake.config.nowTabMenuid = data_id;
 
         lake.iframeJudge({
             elem: $this,
@@ -383,20 +441,8 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
         var data_id = $(this).attr('lay-id');
         if (data_id) {
             // 选择顶部菜单
-            var curid = data_id;
-            if (curid == "default") {
-                var objtopmenu = $('#top_nav_menus li:first-child').find("a");
-            } else {
-                var topmenu = lake.getTopMenuByID(curid);
-                var objtopmenu = $('#top_nav_menus').find("a[lay-id=" + topmenu.menuid + "]");
-            }
-            if (objtopmenu.parent().attr("class") != "layui-this") {
-                // 选中当前顶部菜单
-                objtopmenu.parent().addClass('layui-this').siblings().removeClass('layui-this');
-                // 触发事件
-                objtopmenu.click();
-            }
-
+            lake.topMenuClick(data_id);
+            
             // 选择左边菜单
             $("#side_menus_bar").find(".layui-this").removeClass('layui-this');
             $("#side_menus_bar").find("a[lay-id=" + data_id + "]").parent().addClass('layui-this');
@@ -408,7 +454,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
                     .siblings().removeClass('layui-nav-itemed');
             }
             
-            nowTabMenuid = data_id;
+            lake.config.nowTabMenuid = data_id;
         }
 
         $(this).addClass('layui-this').siblings('li').removeClass('layui-this');
@@ -442,15 +488,6 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
             current_li = current_li.length ? current_li : prev_li;
             
             lake.showTab(current_li);
-            
-            try {
-                var menuid = cur_data_id;
-                if (menuid) {
-                    $.cookie('lake-admin-menuid', menuid, {
-                        expires: 1,
-                    });
-                }
-            } catch (err) {}
         });
     });
 
@@ -479,21 +516,10 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
         var lake_admin_menuid = $.cookie('lake-admin-menuid');
         
         // 选择顶部菜单
-        var curid = lake_admin_menuid;
-        if (curid == "default") curid = "default";
-        var topmenu = lake.getTopMenuByID(curid);
-        var objtopmenu = $('#top_nav_menus').find("a[lay-id=" + topmenu.menuid + "]");
-        if (objtopmenu.parent().attr("class") != "layui-this") {
-            //选中当前顶部菜单
-            objtopmenu.parent().addClass('layui-this').siblings().removeClass('layui-this');
-            //触发事件
-            objtopmenu.click();
-        }
+        lake.topMenuClick(lake_admin_menuid);
         
         // 点击左侧菜单
         $("#side_menus_bar a[lay-id="+lake_admin_menuid+"], .js-menu-nav a[lay-id="+lake_admin_menuid+"]").trigger('click');
-        
-        nowTabMenuid = lake_admin_menuid;
     }
 
     // 右键
@@ -775,21 +801,15 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
     $(document).on('mouseleave', ".layui-layout-admin-collapse .lay-tip-title", function() {
         layer.close(left_nav_layer_tips);
     });
-
-    // 用于维持在线
-    function online() {}
-    
-    //维持在线
-    /*setInterval(function() {
-        online();
-    }, 60000);*/
     
     // 清除缓存
-    $(document).on('click', "dl#deletecache dd a", function() {
+    $(document).on('click', ".js-lake-admin-clearcache dd a", function() {
         $.ajax({
             url: clear_cache_url,
             dataType: 'json',
-            data: { type: $(this).data("type") },
+            data: { 
+                type: $(this).data("type") 
+            },
             cache: false,
             success: function(res) {
                 if (res.code == 1) {

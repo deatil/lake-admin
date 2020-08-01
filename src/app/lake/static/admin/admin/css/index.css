@@ -8,6 +8,10 @@
 .lake-admin .mag0 { margin:0 !important; }
 .lake-admin .pad0 { padding:0 !important; }
 
+.lake-admin .lake-admin-tab-item[data-origstyle] {
+    border-bottom: 1px solid #009688;
+}
+
 .lake-admin .admin-menu-toggle {float: left; width: 20px; height: 20px; margin-top: 15px; font-size: 17px; line-height: 20px; text-align: center; padding: 5px 5px; color: #fff; background-color: #1AA094; }
 .lake-admin .admin-menu-toggle:hover { color:#fff; }
 

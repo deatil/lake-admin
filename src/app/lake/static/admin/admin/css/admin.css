@@ -159,14 +159,14 @@ code {
     }
 }
 
-.fieldlist .fieldlist-head span {
-    width: 220px !important;
-}
 .layui-fieldlist .fieldlist dd {
     margin: 10px 0 !important;
 }
 .layui-fieldlist .fieldlist dd:first-child {
     font-size: 15px !important;
+}
+.layui-fieldlist .fieldlist .fieldlist-head span {
+    width: 220px !important;
 }
 .layui-fieldlist .fieldlist dd ins {
     width: 220px !important;
