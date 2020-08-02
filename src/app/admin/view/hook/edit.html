@@ -9,31 +9,35 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">所属模块</label>
-                <div class="layui-input-inline w300">
-                    <input type="text" name="module" value="{$data.module}" lay-verify="required" autocomplete="off" placeholder="所属模块" class="layui-input" id="module_select">
+                <div class="layui-input-block">
+                    <div class="layui-inline w300">
+                        <input type="text" name="module" value="{$data.module}" lay-verify="required" autocomplete="off" placeholder="所属模块" class="layui-input" id="module_select">
+                    </div>
+                    <div class="layui-inline">
+                        <select lay-filter="module_select" class="module-select-list">
+                            <option data-module=""></option>
+                            <option data-module="admin">lake-admin</option>
+                            {volist name="modules" id="module"}
+                                <option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
+                            {/volist}
+                        </select>
+                    </div>
                 </div>
-                <div class="layui-input-inline">
-                    <select lay-filter="module_select" class="module-select-list">
-                        <option data-module=""></option>
-                        <option data-module="admin">lake-admin</option>
-                        {volist name="modules" id="module"}
-                            <option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
-                        {/volist}
-                    </select>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">嵌入点及类所属模块</div>
                 </div>
-                <div class="layui-form-mid layui-word-aux">嵌入点及类所属模块</div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">嵌入点</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="text" name="name" value="{$data.name}" lay-verify="required" autocomplete="off" placeholder="嵌入点" class="layui-input">
                 </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">Hook类</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="text" name="class" value="{$data.class}" lay-verify="required" autocomplete="off" placeholder="Hook类" class="layui-input">
                 </div>
             </div>
@@ -47,14 +51,14 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">排序</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="text" name="listorder" value="{$data.listorder}" autocomplete="off" placeholder="排序" class="layui-input">
                 </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">状态</label>
-                <div class="w300">
+                <div class="layui-input-block w300">
                     <input type="radio" name="status" value="1" title="启用" {eq name="data.status" value="1" }checked{/eq}>
                     <input type="radio" name="status" value="0" title="禁用" {eq name="data.status" value="0" }checked{/eq}>
                 </div>
@@ -62,8 +66,7 @@
             
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="formSubmit">立即提交</button>
-                    <button class="layui-btn layui-btn-normal layui-close" type="button" onclick="javascript:history.back(-1);">返回</button>
+                    <button class="layui-btn" lay-submit="" lay-close="self" lay-filter="formSubmit">立即提交</button>
                 </div>
             </div>
         </form>

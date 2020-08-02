@@ -76,11 +76,11 @@ class Service extends BaseService
                 // 后台系统配置
                 $this->setSystemHooks();
                 
-                // 导入模块
-                $this->app->middleware->add(LoadModule::class);
-                
                 // 模块检测
                 $this->app->middleware->add(CheckModule::class);
+                
+                // 导入模块
+                $this->app->middleware->add(LoadModule::class);
             });
         }
         

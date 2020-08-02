@@ -9,31 +9,35 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">所属模块</label>
-                <div class="layui-input-inline w300">
-                    <input type="text" name="module" value="{$data.module}" lay-verify="required" autocomplete="off" placeholder="所属模块" class="layui-input" id="module_select">
+                <div class="layui-input-block">
+                    <div class="layui-inline w300">
+                        <input type="text" name="module" value="{$data.module}" lay-verify="required" autocomplete="off" placeholder="所属模块" class="layui-input" id="module_select">
+                    </div>
+                    <div class="layui-inline">
+                        <select lay-filter="module_select" class="module-select-list">
+                            <option data-module=""></option>
+                            <option data-module="admin">lake-admin</option>
+                            {volist name="modules" id="module"}
+                                <option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
+                            {/volist}
+                        </select>
+                    </div>
                 </div>
-                <div class="layui-input-inline">
-                    <select lay-filter="module_select" class="module-select-list">
-                        <option data-module=""></option>
-                        <option data-module="admin">lake-admin</option>
-                        {volist name="modules" id="module"}
-                            <option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
-                        {/volist}
-                    </select>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">扩展权限所属模块</div>
                 </div>
-                <div class="layui-form-mid layui-word-aux">扩展权限所属模块</div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">扩展标识</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="text" name="type" value="{$data.type}" lay-verify="required" autocomplete="off" placeholder="扩展标识" class="layui-input">
                 </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">权限组</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <select name="group_id" lay-verify="required">
                         {volist name="roles" id="vo"}
                             <option value="{$vo['id']}" {if $vo['id'] == $data['group_id'] }selected{/if}>{$vo['title']}</option>
@@ -44,7 +48,7 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">扩展规则</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="text" name="rule" value="{$data.rule}" lay-verify="required" autocomplete="off" placeholder="扩展规则" class="layui-input">
                 </div>
             </div>
@@ -58,7 +62,7 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">请求方式</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <select name="method" lay-verify="required">
                         <option value="">选择请求方式</option>
                         <option value="GET" {if $data['method'] == 'GET'}selected="selected"{/if}>GET</option>

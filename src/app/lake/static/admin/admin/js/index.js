@@ -115,30 +115,47 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "jquery_dra
         }
     };
     
+    // 主题
+    var lakeSkin = {
+        // 皮肤
+        change: function() {
+            var arr = $.cookie('lake-admin-skin');
+            var skin = (arr != null) ? arr : "black";
+            var body = $('body');
+            body.removeClass('lake-admin-skin-black');
+            body.removeClass('lake-admin-skin-white');
+            body.removeClass('lake-admin-skin-blue');
+            body.addClass('lake-admin-skin-' + skin);
+            
+            $(".lake-admin-skin dd")
+                .removeClass("lake-admin-skin-active");
+            $(".lake-admin-skin dd[data-skin="+skin+"]")
+                .addClass("lake-admin-skin-active");
+        },
+        
+        listen: function() {
+            var thiz = this;
+            this.change();
+            
+            // 监听顶部右侧皮肤
+            $(document).on('click', '.lake-admin-skin dd a', function (elem) {
+                // 修改skin
+                if ($(this).parent('dd').attr('data-skin')) {
+                    $.cookie('lake-admin-skin', $(this).parent('dd').attr('data-skin'), {
+                        expires: 10,
+                    });
+                    
+                    thiz.change();
+                }
+            });
+        }
+    };
+    
     var lake = {
         config: {
             menus: lake_menus,
             nowTabMenuid: '', // 当前tab的ID
             openTabNum: 10, // 最大可打开窗口数量
-        },
-        
-        renderHtml: function() {
-            $('#top_nav_menus').html(menuMake.buildTop(this.config.menus));
-            element.render(); //重新渲染
-            
-            // iframe 加载事件
-            var iframeDefault = document.getElementById('iframe_default');
-            $(iframeDefault.contentWindow.document).ready(function() {
-                $(iframeDefault).show();
-            });
-            
-            // 拖拽排序
-            $(".lake-admin-top-tab").dragsort({
-                itemSelector: 'li.lake-admin-tab-item',
-                dragSelector: ".item-dragsort,.js-dragsort",
-                placeHolderTemplate: "<li class='lake-admin-tab-item'></li>",
-                scrollSpeed: 5
-            });
         },
         
         // 重新刷新页面，使用location.reload()有可能导致重新提交
@@ -289,9 +306,6 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "jquery_dra
         
     };
     
-    // 构建页面
-    lake.renderHtml();
-    
     $('.admin-side-full').on('click', function () {
         if (localStorage.full == 0) {
             localStorage.full=1;
@@ -330,6 +344,51 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "jquery_dra
                 .addClass('icon-fullscreen');
         }
     });
+
+    var lakeAdmin = {
+        
+        renderHtml: function() {
+            $('#top_nav_menus').html(menuMake.buildTop(lake.config.menus));
+            element.render(); //重新渲染
+            
+            // iframe 加载事件
+            var iframeDefault = document.getElementById('iframe_default');
+            $(iframeDefault.contentWindow.document).ready(function() {
+                $(iframeDefault).show();
+            });
+            
+            // 后台位在第一个导航
+            $('#top_nav_menus li:first > a').trigger("click");
+            
+            // 监听主题
+            lakeSkin.listen();
+            
+            // 刷新打开当前页面
+            if ($.cookie('lake-admin-menuid') != undefined) {
+                var lake_admin_menuid = $.cookie('lake-admin-menuid');
+                
+                // 选择顶部菜单
+                lake.topMenuClick(lake_admin_menuid);
+                
+                // 点击左侧菜单
+                $("#side_menus_bar a[lay-id="+lake_admin_menuid+"], .js-menu-nav a[lay-id="+lake_admin_menuid+"]").trigger('click');
+            }
+            
+            // 设置默认状态
+            if ($.cookie('admin-collapse') == 'collapse') {
+                $(".layui-layout-admin").addClass("layui-layout-admin-collapse");
+            }
+            
+            // 拖拽排序
+            $(".lake-admin-top-tab").dragsort({
+                itemSelector: 'li.lake-admin-tab-item',
+                dragSelector: ".item-dragsort,.js-dragsort",
+                placeHolderTemplate: "<li class='lake-admin-tab-item'></li>",
+                scrollSpeed: 5
+            });
+            
+        }
+    }
 
     // 顶部导航点击
     $('#top_nav_menus').on('click', 'a', function(e) {
@@ -370,9 +429,6 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "jquery_dra
             menuMake.selectLeftMenu(lake.config.nowTabMenuid);
         }
     });
-
-    // 后台位在第一个导航
-    $('#top_nav_menus li:first > a').trigger("click");
 
     // 模型左侧点击
     $(document).on('click', '.lake-admin-module > li > a', function() {
@@ -510,17 +566,6 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "jquery_dra
             li = current.next('li');
         lake.showTab(li);
     });
-    
-    // 刷新打开当前页面
-    if ($.cookie('lake-admin-menuid') != undefined) {
-        var lake_admin_menuid = $.cookie('lake-admin-menuid');
-        
-        // 选择顶部菜单
-        lake.topMenuClick(lake_admin_menuid);
-        
-        // 点击左侧菜单
-        $("#side_menus_bar a[lay-id="+lake_admin_menuid+"], .js-menu-nav a[lay-id="+lake_admin_menuid+"]").trigger('click');
-    }
 
     // 右键
     $(document).on('contextmenu', ".lake-admin-top-tab li", function (e) {
@@ -773,11 +818,6 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "jquery_dra
         }
     });
     
-    // 设置默认状态
-    if ($.cookie('admin-collapse') == 'collapse') {
-        $(".layui-layout-admin").addClass("layui-layout-admin-collapse");
-    }
-    
     // 顶部鼠标移上显示
     var top_nav_layer_tips;
     $(document).on('mouseenter', ".lake-admin-top-tip", function() {
@@ -828,34 +868,6 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "jquery_dra
         });
     });
     
-    // 监听顶部右侧皮肤
-    $(document).on('click', '.lake-admin-skin dd a', function (elem) {
-        // 修改skin
-        if ($(this).parent('dd').attr('data-skin')) {
-            $.cookie('lake-admin-skin', $(this).parent('dd').attr('data-skin'), {
-                expires: 10,
-            });
-            skin();
-        }
-    });
-    
-    // 皮肤
-    function skin() {
-        var arr = $.cookie('lake-admin-skin');
-        var skin = (arr != null) ? arr : "black";
-        var body = $('body');
-        body.removeClass('lake-admin-skin-black');
-        body.removeClass('lake-admin-skin-white');
-        body.removeClass('lake-admin-skin-blue');
-        body.addClass('lake-admin-skin-' + skin);
-        
-        $(".lake-admin-skin dd")
-            .removeClass("lake-admin-skin-active");
-        $(".lake-admin-skin dd[data-skin="+skin+"]")
-            .addClass("lake-admin-skin-active");
-    }
-    skin();
-    
     // 退出登陆
     $(document).on('click', '.js-lake-admin-logout', function (e) {
         // 取消事件的默认动作
@@ -885,6 +897,9 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "jquery_dra
     shadeMobile.on('click', function() {
         $('body').removeClass('lake-admin-site-mobile');
     });
+    
+    // 构建页面
+    lakeAdmin.renderHtml();
 
     exports('index', {});
 })

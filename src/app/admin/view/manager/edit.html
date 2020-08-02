@@ -8,31 +8,37 @@
             <input type="hidden" name="id" value="{$data.id}" />
             <div class="layui-form-item">
                 <label class="layui-form-label">用户名</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="text" name="username" lay-verify="required" autocomplete="off" placeholder="用户名" class="layui-input" value="{$data.username}">
                 </div>
-                <div class="layui-form-mid layui-word-aux">3-20位字符，可由字母和数字，下划线"_"及破折号"-"组成。</div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">3-20位字符，可由字母和数字，下划线"_"及破折号"-"组成。</div>
+                </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">E-mail</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="text" name="email" lay-verify="required|email" autocomplete="off" placeholder="E-mail" class="layui-input" value="{$data.email}">
                 </div>
-                <div class="layui-form-mid layui-word-aux">填写完整邮箱，如 xxx@163.com</div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">填写完整邮箱，如 xxx@163.com</div>
+                </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">昵称</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="text" name="nickname" lay-verify="required" autocomplete="off" placeholder="请输入昵称" class="layui-input" value="{$data.nickname}">
                 </div>
-                <div class="layui-form-mid layui-word-aux">昵称不能为空</div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">昵称不能为空</div>
+                </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">权限组</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <select name="roleid" xm-select="roleid" xm-select-search="" lay-filter="roleid" lay-verify="required">
                         {volist name="roles" id="vo"}
                             <option value="{$vo['id']}" {if in_array($vo['id'], $data['gids']) }selected{/if}>{$vo['title']}</option>
@@ -43,7 +49,7 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">头像</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <div class="js-upload-image">
                         {php}echo \app\admin\service\Form::images('avatar','',$data['avatar']){/php}
                     </div>
@@ -52,7 +58,7 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">状态</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="checkbox" name="status" lay-skin="switch" lay-text="启用|禁用" value="{$data.status}" {eq name="data.status" value="1" }checked{/eq}>
                 </div>
             </div>

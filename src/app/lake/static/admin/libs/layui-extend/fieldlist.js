@@ -9,7 +9,9 @@
     });
 })(function($, laytpl) {
     
-    var cssStyle = '\
+    $.fn.fieldlist = function(options) {
+    
+        var cssStyle = '\
 <style type="text/css" class="lake-admin-fieldlist-css">\
 .fieldlist {\
   margin-top: 5px;\
@@ -46,19 +48,47 @@
 .fieldlist .fieldlist-btns {\
     padding: 6px 0;\
 }\
+.layui-fieldlist .fieldlist dd {\
+    margin: 10px 0 !important;\
+}\
+.layui-fieldlist .fieldlist dd:first-child {\
+    font-size: 15px !important;\
+}\
+.layui-fieldlist .fieldlist .fieldlist-head span {\
+    width: 220px !important;\
+}\
+.layui-fieldlist .fieldlist dd ins {\
+    width: 220px !important;\
+}\
+.layui-fieldlist .fieldlist dd input:first-child {\
+    width: 215px !important;\
+}\
+@media screen and (max-width: 450px) {\
+    .fieldlist .fieldlist-head span {\
+        width: 100% !important;\
+    }\
+    .layui-fieldlist .fieldlist dd input:first-child {\
+        width: 100% !important;\
+    }\
+    .layui-fieldlist .fieldlist dd.fieldlist-item ins {\
+        width: 100% !important;\
+        margin-bottom: 5px !important;\
+    }\
+}\
 </style>';
-    if ($(".lake-admin-fieldlist-css").length <= 0) {
-        $("head").append(cssStyle);
-    }
-    
-    $.fn.fieldlist = function() {
+        if ($(".lake-admin-fieldlist-css").length <= 0) {
+            $("head").append(cssStyle);
+        }
+        
+        var opts = $.extend({}, $.fn.fieldlist.defaults, options);
         
         this.each(function() {
             var thiz = this;
             
-            var el = $(this).data("el");
-            var main = $(this).data("main");
-            var template = $(this).data("template");
+            var el = $(this).data("el") || opts.el;
+            var main = $(this).data("main") || opts.main;
+            var template = $(this).data("template") || opts.template;
+            var textarea = $(this).data("textarea") || opts.textarea;
             
             var mainTpl = '<dl class="fieldlist">\
                 <dd class="fieldlist-head">\
@@ -80,16 +110,32 @@
             </dd>';
             
             if (main) {
-                mainTpl = $(main).html();
+                main = (typeof main === 'object') ? main : $(main);
+                mainTpl = main.html();
             }
             
             var fieldlistClass = 'lake-admin-fieldlist-' + (new Date()).valueOf();
             mainTpl = $(mainTpl).addClass(fieldlistClass).prop("outerHTML");
             
             if (el) {
-                $(el).html(mainTpl);
+                el = (typeof el === 'object') ? el : $(el);
+                el.html(mainTpl);
             } else {
                 $(mainTpl).insertBefore($(thiz));
+            }
+            
+            var tpl = '';
+            if (template) {
+                template = (typeof template === 'object') ? template : $(template);
+                tpl = template.html();
+            } else {
+                tpl = fieldlistTpl;
+            }
+            
+            if (textarea) {
+                textarea = (typeof textarea === 'object') ? textarea : $(textarea);
+            } else {
+                textarea = $(thiz);
             }
             
             var container = $('.' + fieldlistClass);
@@ -97,7 +143,6 @@
             // 刷新隐藏textarea的值
             var refresh = function () {
                 var data = {};
-                var textarea = $(thiz);
                 $("input,select,textarea", container).each(function () {
                     var name = $(this).attr('data-name');
                     var value = $(this).prop('value');
@@ -132,7 +177,7 @@
             // 追加控制
             container.on("click", ".btn-append,.js-append", function (e, row) {
                 var index = $(thiz).data("index");
-                var name = $(thiz).attr("name");
+                var name = textarea.attr("name");
                 var template = $(thiz).data("template");
                 var data = $(thiz).data();
                 
@@ -140,13 +185,6 @@
                 $(thiz).data("index", index + 1);
                 var row = row ? row : {};
                 var vars = {index: index, name: name, data: data, row: row};
-                
-                var tpl = '';
-                if (template) {
-                    tpl = $(template).html();
-                } else {
-                    tpl = fieldlistTpl;
-                }
 
                 var html = laytpl(tpl || '').render(vars);
                 $(html).insertBefore($(this).parent());
@@ -161,7 +199,7 @@
             // 拖拽排序
             container.dragsort({
                 itemSelector: 'dd.fieldlist-item',
-                dragSelector: ".btn-dragsort,js-dragsort",
+                dragSelector: ".btn-dragsort,.js-dragsort",
                 dragEnd: function () {
                     refresh();
                 },
@@ -171,7 +209,6 @@
             
             // 渲染数据
             var render = function () {
-                var textarea = $(thiz);
                 if (textarea.val() == '') {
                     return true;
                 }
@@ -191,5 +228,13 @@
         });
         
         return this;
-    }
+    };
+    
+    $.fn.fieldlist.defaults = {
+        el:"",
+        main: "",
+        template: "",
+        textarea: "",
+    };
+    
 });

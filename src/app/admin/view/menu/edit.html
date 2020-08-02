@@ -7,60 +7,70 @@
         <form class="layui-form" method="post">
             <div class="layui-form-item">
                 <label class="layui-form-label">上级菜单</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <select name="parentid" lay-verify="required">
                         <option value="0">作为一级菜单</option>
                         {$select_categorys|raw}
                     </select>
                 </div>
-                <div class="layui-form-mid layui-word-aux">如果选择上级分类，那么新增的分类则为被选择上级分类的子分类</div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">如果选择上级分类，那么新增的分类则为被选择上级分类的子分类</div>
+                </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">所属模块 </label>
-                <div class="layui-input-inline w300">
-                    <input type="text" name="module" lay-verify="required" autocomplete="off" placeholder="菜单所属模块" class="layui-input" id="module_select" value="{$data.module}">
+                <div class="layui-input-block">
+                    <div class="layui-inline w300">
+                        <input type="text" name="module" lay-verify="required" autocomplete="off" placeholder="菜单所属模块" class="layui-input" id="module_select" value="{$data.module}">
+                    </div>
+                    <div class="layui-inline">
+                        <select lay-filter="module_select" class="module-select-list">
+                            <option data-module=""></option>
+                            <option data-module="admin">lake-admin</option>
+                            {volist name="modules" id="module"}
+                                <option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
+                            {/volist}
+                        </select>
+                    </div>
                 </div>
-                <div class="layui-input-inline">
-                    <select lay-filter="module_select" class="module-select-list">
-                        <option data-module=""></option>
-                        <option data-module="admin">lake-admin</option>
-                        {volist name="modules" id="module"}
-                            <option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
-                        {/volist}
-                    </select>
+                <div class="layui-input-block w300">
+                    <div class="layui-form-mid layui-word-aux">菜单关联的模块</div>
                 </div>
-                <div class="layui-form-mid layui-word-aux">菜单关联的模块</div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">名称 </label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="名称" class="layui-input" value="{$data.title}">
                 </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">图标</label>
-                <div class="layui-input-inline w200">
-                    <input type="text" name="icon" autocomplete="off" placeholder="图标" class="layui-input" value="{$data.icon}">
-                </div>
-                <div class="layui-input-inline w300">
-                    <input type="text" id="iconPicker" lay-filter="iconPicker" class="hide" value="{$data.icon}">
+                <div class="layui-input-block">
+                    <div class="layui-inline w200">
+                        <input type="text" name="icon" autocomplete="off" placeholder="图标" class="layui-input" value="{$data.icon}">
+                    </div>
+                    <div class="layui-inline">
+                        <input type="text" id="iconPicker" lay-filter="iconPicker" class="hide" value="{$data.icon}">
+                    </div>
                 </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">后台菜单</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="text" name="name" autocomplete="off" placeholder="模块/控制器/方法" class="layui-input" value="{$data.name}">
                 </div>
-                <div class="layui-form-mid layui-word-aux">后台菜单通常格式为 “模块/控制器/方法”</div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">后台菜单通常格式为 “模块/控制器/方法”</div>
+                </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">附加参数</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="text" name="parameter" autocomplete="off" placeholder="附加参数" class="layui-input" value="{$data.parameter}">
                 </div>
             </div>
@@ -74,7 +84,7 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">请求方式</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <select name="method" lay-verify="required">
                         <option value="">选择请求方式</option>
                         <option value="GET" {if $data['method'] == 'GET'}selected="selected"{/if}>GET</option>
@@ -99,7 +109,7 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">验证类型</label>
-                <div class="w300">
+                <div class="layui-input-block w300">
                     <input type="radio" name="type" value="1" title="主菜单" {eq name="data.type" value="1" }checked{/eq}>
                     <input type="radio" name="type" value="2" title="链接" {eq name="data.type" value="2" }checked{/eq}>
                 </div>
@@ -107,28 +117,28 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label">菜单</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="checkbox" name="is_menu" lay-skin="switch" lay-text="显示|隐藏" value="{$data.is_menu}" {eq name="data.is_menu" value="1" }checked{/eq}>
                 </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">验证权限</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="checkbox" name="is_need_auth" lay-skin="switch" lay-text="是|否" value="1" checked="{$data.is_need_auth}" {eq name="data.is_need_auth" value="1" }checked{/eq}>
                 </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">排序</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="text" name="listorder" lay-verify="required" autocomplete="off" placeholder="菜单排序" class="layui-input" value="{$data.listorder}">
                 </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label">状态</label>
-                <div class="layui-input-inline w300">
+                <div class="layui-input-block w300">
                     <input type="checkbox" name="status" lay-skin="switch" lay-text="启用|禁用" value="{$data.status}" {eq name="data.status" value="1" }checked{/eq}>
                 </div>
             </div>

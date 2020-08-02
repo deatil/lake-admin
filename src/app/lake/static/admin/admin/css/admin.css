@@ -140,55 +140,6 @@ code {
   text-align: center !important;
 }
 
-@media screen and (max-width: 450px) {
-    .layui-form-item .layui-form-label {
-        display: block;
-        float: left;
-        width: 100%;
-        text-align: left;
-        padding: 10px 0;
-    }
-    .layui-form-item .layui-input-block {
-        display: block;
-        float: left;
-        width: 100%;
-        margin-left: 0;
-    }
-    .layui-form-item .layui-inline {
-        margin-bottom: 5px;
-    }
-}
-
-.layui-fieldlist .fieldlist dd {
-    margin: 10px 0 !important;
-}
-.layui-fieldlist .fieldlist dd:first-child {
-    font-size: 15px !important;
-}
-.layui-fieldlist .fieldlist .fieldlist-head span {
-    width: 220px !important;
-}
-.layui-fieldlist .fieldlist dd ins {
-    width: 220px !important;
-}
-.layui-fieldlist .fieldlist dd input:first-child {
-    width: 215px !important;
-}
-@media screen and (max-width: 450px) {
-    .fieldlist .fieldlist-head span {
-        width: 100% !important;
-    }
-    .layui-fieldlist .fieldlist dd input:first-child {
-        width: 100% !important;
-    }
-    .layui-fieldlist .fieldlist dd.fieldlist-item ins {
-        width: 100% !important;
-        margin-bottom: 5px !important;
-    }
-}
-
-.lake-admin-container {padding: 15px;background-color: #F2F2F2; }
-
 .panel_box{ margin-bottom:5px;}
 .panel{ text-align:center; height:90px;}
 .panel_box a{display:block;overflow:hidden; height:80px; background-color:#f2f2f2 !important; }
@@ -198,9 +149,6 @@ code {
 .panel_word span{ font-size:25px; display:block; height:34px; }
 .panel .admin-login-time{ font-size:15px; color:#1E9FFF; line-height:34px;}
 .panel em{ font-style:normal;}
-
-.layui-table-view{overflow: auto;}
-.layui-form-field-label{display: block; padding:3px 0px; font-weight: 400; line-height: 20px; }
 
 /*百度上传*/
 .thumbnail {
@@ -376,4 +324,50 @@ code {
     padding: 5px 0 5px 3px;
     max-height: 500px;
     overflow-y: scroll;
+}
+
+.lake-admin-container {padding: 15px;background-color: #F2F2F2; }
+
+.layui-table-view{overflow: auto;}
+.layui-form-field-label{display: block; padding:3px 0px; font-weight: 400; line-height: 20px; }
+
+@media screen and (max-width: 750px) {
+    .lake-admin-search-form .layui-btn,
+    .lake-admin-search-form .layui-btn+.layui-btn,
+    .layui-elem-quote .layui-btn {
+        width: 100% !important;
+        margin-bottom: 5px !important;
+        margin-left: 0 !important;
+        float: none !important;
+    }
+    .lake-admin-search-form .layui-btn:last-child,
+    .lake-admin-search-form .layui-btn+.layui-btn:last-child,
+    .layui-elem-quote .layui-btn:last-child {
+        margin-bottom: 0 !important;
+    }
+    .lake-admin-search-form .layui-inline {
+        width: 100% !important;
+        margin-bottom: 5px !important;
+    }
+    .lake-admin-search-form .layui-inline:last-child {
+        margin-bottom: 0 !important;
+    }
+    
+    .layui-form-item .layui-form-label {
+        display: block !important;
+        float: left !important;
+        width: 100% !important;
+        text-align: left !important;
+        padding: 10px 0 !important;
+    }
+    .layui-form-item .layui-input-block {
+        display: block !important;
+        float: left !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+    .layui-form-item .layui-inline {
+        width: 100% !important;
+        margin-bottom: 5px !important;
+    }
 }

@@ -55,14 +55,14 @@
 </div>
 {/case}
 {case value="array"}
-<div class="layui-form-item layui-form-text layui-fieldlist">
+<div class="layui-form-item layui-form-text">
     <label class="">
         {$vo.title} 
         {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
             &nbsp;<font color="red">*</font>
         {/if}
     </label>
-    <div class="layui-form-field-label">
+    <div class="layui-form-field-label layui-fieldlist">
         <div id="{$vo.name}_con"></div>
         <script id="{$vo.name}_main" type="text/html">
             <dl class="fieldlist">
