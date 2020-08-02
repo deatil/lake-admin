@@ -1,3 +1,9 @@
+/*!
+ * fieldlist.js v1.0.2
+ * https://github.com/deatil/lake-admin
+ * 
+ * Apache License 2.0 © Deatil
+ */
 !(function(a){
     layui.define(['jquery', "laytpl", "jquery_dragsort"], function (exports) {
         var laytpl = layui.laytpl,
@@ -48,29 +54,29 @@
 .fieldlist .fieldlist-btns {\
     padding: 6px 0;\
 }\
-.layui-fieldlist .fieldlist dd {\
+.layui-fieldlist.fieldlist dd {\
     margin: 10px 0 !important;\
 }\
-.layui-fieldlist .fieldlist dd:first-child {\
+.layui-fieldlist.fieldlist dd:first-child {\
     font-size: 15px !important;\
 }\
-.layui-fieldlist .fieldlist .fieldlist-head span {\
+.layui-fieldlist.fieldlist .fieldlist-head span {\
     width: 220px !important;\
 }\
-.layui-fieldlist .fieldlist dd ins {\
+.layui-fieldlist.fieldlist dd ins {\
     width: 220px !important;\
 }\
-.layui-fieldlist .fieldlist dd input:first-child {\
+.layui-fieldlist.fieldlist dd input:first-child {\
     width: 215px !important;\
 }\
 @media screen and (max-width: 450px) {\
     .fieldlist .fieldlist-head span {\
         width: 100% !important;\
     }\
-    .layui-fieldlist .fieldlist dd input:first-child {\
+    .layui-fieldlist.fieldlist dd input:first-child {\
         width: 100% !important;\
     }\
-    .layui-fieldlist .fieldlist dd.fieldlist-item ins {\
+    .layui-fieldlist.fieldlist dd.fieldlist-item ins {\
         width: 100% !important;\
         margin-bottom: 5px !important;\
     }\

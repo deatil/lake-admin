@@ -390,6 +390,58 @@
     border-color: #333 transparent transparent;
 }
 
+/* 左侧菜单放大 */
+.lake-admin .layui-layer-tips.popup-tips .layui-layer-TipsG{
+    display: none;
+}
+.lake-admin .layui-layer-tips.popup-tips.layui-layer-tips .layui-layer-content{
+    padding: 0;
+}
+.lake-admin .layui-layer-tips.popup-tips .layui-nav-tree{
+    width: 150px;
+    border-radius: 10px;
+}
+.lake-admin .lake-admin-menu-left-zoom .layui-nav-more {
+    font-family: layui-icon !important;
+    font-size: 12px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    width: auto;
+    height: auto;
+    line-height: normal;
+    border: none;
+    display: inline-block;
+    margin-top: -6px !important;
+}
+.lake-admin .lake-admin-menu-left-zoom.layui-nav .layui-nav-mored,
+.lake-admin .lake-admin-menu-left-zoom.layui-nav-itemed>a .layui-nav-more{
+    margin-top: -9px!important;
+}
+.lake-admin .lake-admin-menu-left-zoom .layui-nav-more:before {
+    content: "\e61a";
+}
+.lake-admin .lake-admin-menu-left-zoom .layui-nav-itemed > a > .layui-nav-more {
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    width: 12px;
+    text-align: center;
+    border-style:none;
+}
+.lake-admin .lake-admin-menu-left-zoom .layui-nav-itemed > a > .layui-nav-more:before {
+    content: '\e61a';
+    background-color: transparent;
+    display: inline-block;
+    vertical-align: middle;
+}
+.lake-admin .lake-admin-menu-left-zoom .layui-nav-itemed .layui-nav-child a {
+    padding-left: 25px !important;
+}
+
 @media (min-width: 768px) {
     .lake-admin .layui-layout-admin .lake-admin-logo {
         width: 150px;
@@ -582,6 +634,10 @@
     }
 }
 @media screen and (max-width: 720px){
+    .lake-admin .lake-admin-logo {width: 60px !important; }
+    .lake-admin .lake-admin-logo-name {display: none !important; }
+    .lake-admin .lake-admin-logo-name-mini {display: block !important; }
+    
     .lake-admin .lake-admin-hide-menu {display: none !important; }
     .lake-admin .lake-admin-winner-hide {display: none !important; }
     .lake-admin .lake-admin-tab-action {display: none !important; }

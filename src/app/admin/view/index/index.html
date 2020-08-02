@@ -50,10 +50,22 @@
                         <i class="iconfont icon-richangqingli"></i>
                         <span class="lake-admin-winner-hide">&nbsp;清理缓存</span>
                     </a>
-                    <dl class="layui-nav-child lake-admin-clearcache js-lake-admin-clearcache">
-                        <dd><a href="javascript:;" data-type="all">一键清理缓存<span class="layui-badge-dot"></span></a></dd>
-                        <dd><a href="javascript:;" data-type="data">清理数据缓存</a></dd>
-                        <dd><a href="javascript:;" data-type="template">清理模板缓存</a></dd>
+                    <dl class="layui-nav-child lake-admin-clearcache js-lake-admin-clearcache" data-url="{:url('index/clear')}">
+                        <dd>
+                            <a href="javascript:;" data-type="all">
+                                一键清理缓存<span class="layui-badge-dot"></span>
+                            </a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" data-type="data">
+                                清理数据缓存
+                            </a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" data-type="template">
+                                清理模板缓存
+                            </a>
+                        </dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item lake-admin-skin">
@@ -189,13 +201,18 @@
     {include file="index/lockscreen" /}
     <script type="text/javascript">
     var lake_menus = <?php echo json_encode($menus); ?>;
-    var clear_cache_url = '{:url("index/clear")}';
     
     layui.config({
-        version: '2020072023015895',
+        version: '2020080223015895',
         base: 'admin/libs/layui-extend/'
     }).extend({
         index: '{/}admin/admin/js/index',
+        lake: '{/}admin/libs/lake-admin/lake',
+        lakeMenu: '{/}admin/libs/lake-admin/lakeMenu',
+        lakeSkin: '{/}admin/libs/lake-admin/lakeSkin',
+        lakeFullscreen: '{/}admin/libs/lake-admin/lakeFullscreen',
+        lakeContextmenu: '{/}admin/libs/lake-admin/lakeContextmenu',
+        lakeMenuLeftZoom: '{/}admin/libs/lake-admin/lakeMenuLeftZoom',
         lock_screen: '{/}admin/libs/lock-screen/lock-screen',
     }).use(['index', 'lock_screen']);
     </script>
