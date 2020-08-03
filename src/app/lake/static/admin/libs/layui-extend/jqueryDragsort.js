@@ -12,7 +12,7 @@
             var jquery = layui.$;
             a(jquery);
             
-            exports('jquery_dragsort', {});
+            exports('jqueryDragsort', {});
         });
     } else {
         a(jQuery);

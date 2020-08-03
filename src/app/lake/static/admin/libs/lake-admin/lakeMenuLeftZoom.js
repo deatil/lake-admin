@@ -1,11 +1,11 @@
 /*!
- * fieldlist.js v1.0.2
+ * lakeMenuLeftZoom.js v1.0.2
  * https://github.com/deatil/lake-admin
  * 
  * Apache License 2.0 © Deatil
  */
 !(function(a){
-    layui.define(['jquery', 'jquery_cookie'], function (exports) {
+    layui.define(['jquery', 'jqueryCookie'], function (exports) {
         var element = layui.element,
             jquery = layui.$;
         

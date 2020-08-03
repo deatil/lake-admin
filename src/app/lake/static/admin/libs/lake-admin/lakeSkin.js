@@ -1,11 +1,11 @@
 /*!
- * fieldlist.js v1.0.2
+ * lakeSkin.js v1.0.2
  * https://github.com/deatil/lake-admin
  * 
  * Apache License 2.0 © Deatil
  */
 !(function(a){
-    layui.define(['jquery', 'jquery_cookie'], function (exports) {
+    layui.define(['jquery', 'jqueryCookie'], function (exports) {
         var jquery = layui.$;
         
         exports('lakeSkin', a(jquery));

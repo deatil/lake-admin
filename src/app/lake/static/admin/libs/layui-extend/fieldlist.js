@@ -5,7 +5,7 @@
  * Apache License 2.0 © Deatil
  */
 !(function(a){
-    layui.define(['jquery', "laytpl", "jquery_dragsort"], function (exports) {
+    layui.define(['jquery', "laytpl", "jqueryDragsort"], function (exports) {
         var laytpl = layui.laytpl,
             jquery = layui.$;
             

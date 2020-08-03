@@ -9,7 +9,7 @@
             var jquery = layui.$;
             a(jquery);
         
-            exports('jquery_cookie', {});
+            exports('jqueryCookie', {});
         });
     } else {
         a(jQuery);

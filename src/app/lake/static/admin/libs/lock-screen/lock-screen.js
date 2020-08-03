@@ -1,4 +1,4 @@
-layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], function(exports) {
+layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "utils"], function(exports) {
     var $ = layui.jquery,
         element = layui.element,
         form = layui.form,
@@ -17,9 +17,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
                     utils.local("isLock", '1');//设置锁屏缓存防止刷新失效
                     lockShowInit(utils);//锁屏
                     
-                    $.cookie('lake-admin-menuid', '', {
-                        expires: 0,
-                    });
+                    $.cookie('lake-admin-menuid', null);
                 } else {
                     layer.alert(res.msg);
                 }
@@ -86,5 +84,5 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jquery_cookie', "utils"], f
         window.location.replace(logout_url);
     });
     
-    exports('lock_screen', {});
+    exports('lockScreen', {});
 })
