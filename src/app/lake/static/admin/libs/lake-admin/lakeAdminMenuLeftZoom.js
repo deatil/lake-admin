@@ -1,5 +1,5 @@
 /*!
- * lakeMenuLeftZoom.js v1.0.2
+ * lakeAdminMenuLeftZoom.js v1.0.2
  * https://github.com/deatil/lake-admin
  * 
  * Apache License 2.0 © Deatil
@@ -9,12 +9,12 @@
         var element = layui.element,
             jquery = layui.$;
         
-        exports('lakeMenuLeftZoom', a(jquery, element));
+        exports('lakeAdminMenuLeftZoom', a(jquery, element));
     });
 })(function($, element) {
     
     // 左侧放大
-    var lakeMenuLeftZoom = {
+    var lakeAdminMenuLeftZoom = {
         
         list: function () {
             var thiz = this;
@@ -94,5 +94,5 @@
         }
     };
     
-    return lakeMenuLeftZoom;
+    return lakeAdminMenuLeftZoom;
 });

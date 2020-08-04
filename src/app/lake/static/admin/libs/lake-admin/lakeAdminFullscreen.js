@@ -1,5 +1,5 @@
 /*!
- * lakeFullscreen.js v1.0.2
+ * lakeAdminFullscreen.js v1.0.2
  * https://github.com/deatil/lake-admin
  * 
  * Apache License 2.0 © Deatil
@@ -11,12 +11,12 @@
         
         a(jquery, layer);
         
-        exports('lakeFullscreen', {});
+        exports('lakeAdminFullscreen', {});
     });
 })(function($, layer) {
     
     // 全屏
-    $.fn.lakeFullscreen = function() {
+    $.fn.lakeAdminFullscreen = function() {
         var fullScreen = {
             // 全屏
             full: function() {

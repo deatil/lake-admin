@@ -1,5 +1,5 @@
 /*!
- * lakeMenu.js v1.0.2
+ * lakeAdminMenu.js v1.0.2
  * https://github.com/deatil/lake-admin
  * 
  * Apache License 2.0 © Deatil
@@ -8,12 +8,12 @@
     layui.define(['jquery'], function (exports) {
         var jquery = layui.$;
         
-        exports('lakeMenu', a(jquery));
+        exports('lakeAdminMenu', a(jquery));
     });
 })(function($) {
     
     // 生成菜单
-    var lakeMenu = {
+    var lakeAdminMenu = {
         buildTop: function(object) {
             var html = '';
             $.each(object, function(i, o) {
@@ -150,5 +150,5 @@
         
     };
     
-    return lakeMenu;
+    return lakeAdminMenu;
 });

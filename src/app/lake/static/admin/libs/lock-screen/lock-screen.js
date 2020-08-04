@@ -90,5 +90,5 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "utils"], fu
         window.location.replace(logout_url);
     });
     
-    exports('lockScreen', {});
+    exports('lakeAdminLockScreen', {});
 })

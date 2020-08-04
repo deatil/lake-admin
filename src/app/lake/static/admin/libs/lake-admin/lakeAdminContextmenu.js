@@ -1,5 +1,5 @@
 /*!
- * lakeContextmenu.js v1.0.2
+ * lakeAdminContextmenu.js v1.0.2
  * https://github.com/deatil/lake-admin
  * 
  * Apache License 2.0 © Deatil
@@ -8,17 +8,23 @@
     layui.define(['jquery', 'jqueryCookie'], function (exports) {
         var jquery = layui.$;
         
-        exports('lakeContextmenu', a(jquery));
+        exports('lakeAdminContextmenu', a(jquery));
     });
 })(function($) {
     
     // 右键
-    var lakeContextmenu = {
+    var lakeAdminContextmenu = {
         
         // 重新刷新页面，使用location.reload()有可能导致重新提交
         reloadPage: function(win) {
             var location = win.location;
             location.href = location.pathname + location.search;
+        },
+        
+        close: function(el) {
+            el = (typeof el === 'object') ? el : $(el);
+            
+            el.find('div.lake-admin-contextmenu').remove();
         },
         
         listen: function() {
@@ -28,23 +34,15 @@
             $(document).on('contextmenu', ".lake-admin-top-tab li", function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-            
-                var $that = $(e.target);
 
                 var $target = e.target.nodeName === 'LI' ? e.target : e.target.parentElement;
                 //判断，如果存在右键菜单的div，则移除，保存页面上只存在一个
                 if ($(document).find('div.lake-admin-contextmenu').length > 0) {
                     $(document).find('div.lake-admin-contextmenu').remove();
                 }
-                //创建一个div
-                var div = document.createElement('div');
-                //设置一些属性
-                div.className = 'lake-admin-contextmenu';
-                div.style.width = '130px';
-                div.style.backgroundColor = 'white';
 
-                var this_data_id = $(this).attr('lay-id');
-                if (!(this_data_id != '' && this_data_id != 'default')) {
+                var thisDataId = $(this).attr('lay-id');
+                if (!(thisDataId != '' && thisDataId != 'default')) {
                     var ul = '<ul>';
                     ul += '<li data-target="lake-admin-contextmenu-refresh-page" title="刷新当前选项卡"><i class="iconfont icon-shuaxin" aria-hidden="true"></i> 刷新</li>';
                     ul += '<li data-target="lake-admin-contextmenu-close-other-page" title="关闭其他选项卡"><i class="layui-icon layui-icon-radio" aria-hidden="true"></i> 关闭其他</li>';
@@ -59,28 +57,46 @@
                     ul += '</ul>';
                 }
                 
-                div.innerHTML = ul;
-                div.style.top = e.pageY + 'px';
-                div.style.left = e.pageX + 'px';
+                var contextmenuHtml = '<div class="lake-admin-contextmenu">' + ul + '</div>';
+                contextmenuHtml = $(contextmenuHtml).css({
+                    "top": e.pageY + 'px',
+                    "left": e.pageX + 'px',
+                    "width": "130px",
+                    "background-color": "white",
+                    "z-index": 999999,
+                });
+                
+                var contextmenuHtmlMask = '<div class="lake-admin-contextmenu-mask"></div>';
+                contextmenuHtmlMask = $(contextmenuHtmlMask).css({
+                    "position": "absolute",
+                    "top": 0,
+                    "bottom": 0,
+                    "width": "100%",
+                    "background-color": "rgb(255, 255, 255,0)",
+                    "padding": "0",
+                    "overflow": "hidden",
+                    "z-index": 900000,
+                });
+                
                 // 将dom添加到body的末尾
-                document.getElementsByTagName('body')[0].appendChild(div);
+                $('body').append(contextmenuHtml)
+                    .append(contextmenuHtmlMask);
             
-                var top_nav = $(".lake-admin-top-tab");
+                var topNav = $(".lake-admin-top-tab");
                 // 获取当前点击选项卡的id值
                 var id = $($target).attr('lay-id');
-                // 获取当前点击选项卡的索引值
-                var clickIndex = $($target).attr('lay-id');
-                var top_tab_ul = $('#body_history');
-                var top_tab_prev_with = $('#layui_iframe_refresh').outerWidth(true) + $('#page-prev').outerWidth(true);
+                var topTabUl = $('#body_history');
+                var topTabPrevWith = $('#layui_iframe_refresh').outerWidth(true) + $('#page-prev').outerWidth(true);
                 var $context = $(document).find('div.lake-admin-contextmenu');
+                var $maskContext = $(document).find('div.lake-admin-contextmenu-mask');
                 if ($context.length > 0) {
                     $context.eq(0).children('ul').children('li').each(function () {
                         var $that = $(this);
-                        //绑定菜单的点击事件
+                        // 绑定菜单的点击事件
                         $that.on('click', function () {
                             //获取点击的target值
                             var target = $that.data('target');
-                            //
+                            
                             switch (target) {
                                 case 'lake-admin-contextmenu-refresh-page': //刷新当前
                                     var index = layer.load();
@@ -96,7 +112,7 @@
                                     }
                                     break;
                                 case 'lake-admin-contextmenu-close-other-page': //关闭其他
-                                    top_nav.children('li').each(function () {
+                                    topNav.children('li').each(function () {
                                         if ($(this).attr('lay-id') == id) {
                                             return;
                                         }
@@ -106,22 +122,22 @@
                                         }
                                     });
                                     
-                                    top_tab_ul.animate({
-                                        left: top_tab_prev_with
+                                    topTabUl.animate({
+                                        left: topTabPrevWith
                                     }, 200, 'swing');
                                     
                                     $('li[lay-id="'+id+'"]').trigger('click');
                                     
                                     break;
                                 case 'lake-admin-contextmenu-close-all-page': //全部关闭
-                                    top_nav.children('li').each(function () {
+                                    topNav.children('li').each(function () {
                                         if ($(this).find(".layui-tab-close").length > 0) {
                                             $(this).find(".layui-tab-close").trigger('click');
                                         }
                                     });
                                     
-                                    top_tab_ul.animate({
-                                        left: top_tab_prev_with
+                                    topTabUl.animate({
+                                        left: topTabPrevWith
                                     }, 200, 'swing');
                                     
                                     $('li[lay-id="default"]').trigger('click');
@@ -129,13 +145,14 @@
                                     break;
                             }
                             
-                            //处理完后移除右键菜单的dom
-                            $context.remove();
+                            // 处理完后移除右键菜单的dom
+                            $maskContext.trigger('click');
                         });
                     });
 
-                    $(document).on('click', function () {
+                    $maskContext.on('click', function () {
                         $context.remove();
+                        $maskContext.remove();
                     });
                 }
                 return false;
@@ -144,5 +161,5 @@
         }
     };
     
-    return lakeContextmenu;
+    return lakeAdminContextmenu;
 });

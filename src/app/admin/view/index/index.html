@@ -202,19 +202,23 @@
     <script type="text/javascript">
     var lake_menus = <?php echo json_encode($menus); ?>;
     
+    if (self.location != top.location) {
+        top.location.href = '{:url("index/index")}';
+    }
+    
     layui.config({
-        version: '2020080223015895',
+        version: '2020080510355895',
         base: 'admin/libs/layui-extend/'
     }).extend({
-        index: '{/}admin/admin/js/index',
-        lake: '{/}admin/libs/lake-admin/lake',
-        lakeMenu: '{/}admin/libs/lake-admin/lakeMenu',
-        lakeSkin: '{/}admin/libs/lake-admin/lakeSkin',
-        lakeFullscreen: '{/}admin/libs/lake-admin/lakeFullscreen',
-        lakeContextmenu: '{/}admin/libs/lake-admin/lakeContextmenu',
-        lakeMenuLeftZoom: '{/}admin/libs/lake-admin/lakeMenuLeftZoom',
-        lockScreen: '{/}admin/libs/lock-screen/lock-screen',
-    }).use(['index']);
+        lakeAdmin: '{/}admin/libs/lake-admin/lakeAdmin',
+        lakeAdminMenu: '{/}admin/libs/lake-admin/lakeAdminMenu',
+        lakeAdminSkin: '{/}admin/libs/lake-admin/lakeAdminSkin',
+        lakeAdminTool: '{/}admin/libs/lake-admin/lakeAdminTool',
+        lakeAdminFullscreen: '{/}admin/libs/lake-admin/lakeAdminFullscreen',
+        lakeAdminContextmenu: '{/}admin/libs/lake-admin/lakeAdminContextmenu',
+        lakeAdminMenuLeftZoom: '{/}admin/libs/lake-admin/lakeAdminMenuLeftZoom',
+        lakeAdminLockScreen: '{/}admin/libs/lock-screen/lock-screen',
+    }).use(['lakeAdmin']);
     </script>
 </body>
 

@@ -43,18 +43,6 @@
         lakeBind: '{/}admin/libs/lake-admin/lakeBind',
         tagsinput: '{/}admin/libs/layui-extend-tagsinput/tagsinput',
     }).use(['lakeTool', 'lakeBind']);
-
-    layui.define(['table', 'layer'], function(exports) {
-        $ = layui.jquery;
-
-        // iframe内点击 隐藏菜单
-        $(document).on('click', function () { 
-            try {
-                $(top.window.document).find('div.lake-admin-contextmenu').remove();
-            } catch (e) {
-            }
-        });
-    });
     </script>
     {/block}
     {block name="script"}{/block}

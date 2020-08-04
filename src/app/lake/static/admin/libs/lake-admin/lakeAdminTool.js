@@ -1,14 +1,14 @@
 /*!
- * lake.js v1.0.2
+ * lakeAdminTool.js v1.0.2
  * https://github.com/deatil/lake-admin
  * 
  * Apache License 2.0 © Deatil
  */
-layui.define(['jquery', 'jqueryCookie', 'lakeMenu'], function (exports) {
-    var lakeMenu = layui.lakeMenu,
+layui.define(['jquery', 'jqueryCookie', 'lakeAdminMenu'], function (exports) {
+    var lakeAdminMenu = layui.lakeAdminMenu,
         $ = layui.$;
     
-    var lake = {
+    var lakeAdminTool = {
         
         // 选择左边菜单
         selectLeftMenu: function(data_id) {
@@ -28,7 +28,7 @@ layui.define(['jquery', 'jqueryCookie', 'lakeMenu'], function (exports) {
             if (curid == "default") {
                 var objtopmenu = $('#top_nav_menus li:first-child').find("a");
             } else {
-                var topmenu = lakeMenu.getTopMenuByID(curid);
+                var topmenu = lakeAdminMenu.getTopMenuByID(curid);
                 var objtopmenu = $('#top_nav_menus').find("a[lay-id=" + topmenu.menuid + "]");
             }
             
@@ -130,5 +130,5 @@ layui.define(['jquery', 'jqueryCookie', 'lakeMenu'], function (exports) {
         
     };
     
-    exports('lake', lake);
+    exports('lakeAdminTool', lakeAdminTool);
 });

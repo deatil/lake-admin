@@ -1,5 +1,5 @@
 /*!
- * lakeSkin.js v1.0.2
+ * lakeAdminSkin.js v1.0.2
  * https://github.com/deatil/lake-admin
  * 
  * Apache License 2.0 © Deatil
@@ -8,12 +8,12 @@
     layui.define(['jquery', 'jqueryCookie'], function (exports) {
         var jquery = layui.$;
         
-        exports('lakeSkin', a(jquery));
+        exports('lakeAdminSkin', a(jquery));
     });
 })(function($) {
     
     // 主题
-    var lakeSkin = {
+    var lakeAdminSkin = {
         // 皮肤
         change: function() {
             var arr = $.cookie('lake-admin-skin');
@@ -48,5 +48,5 @@
         }
     };
     
-    return lakeSkin;
+    return lakeAdminSkin;
 });
