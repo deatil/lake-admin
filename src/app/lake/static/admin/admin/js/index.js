@@ -24,17 +24,14 @@ layui.define([
         lakeSkin = layui.lakeSkin,
         lakeMenuLeftZoom = layui.lakeMenuLeftZoom,
         lakeContextmenu = layui.lakeContextmenu;
-        
-    lake.setOption({
+    
+    var lakeAdmin = {
         menus: lake_menus,
         nowTabMenuid: '', // 当前tab的ID
         openTabNum: 10, // 最大可打开窗口数量
-    });
-    
-    var lakeAdmin = {
         
         renderHtml: function() {
-            $('#top_nav_menus').html(lakeMenu.buildTop(lake.config.menus));
+            $('#top_nav_menus').html(lakeMenu.buildTop(lakeAdmin.menus));
             element.render(); //重新渲染
             
             // iframe 加载事件
@@ -90,7 +87,7 @@ layui.define([
             .siblings().removeClass('current');
         var data_id = $(this).attr('lay-id'),
             menu_data_id = $(this).attr('data-id'),
-            data_list = lake.config.menus[menu_data_id],
+            data_list = lakeAdmin.menus[menu_data_id],
             sideMenusBar = $('#side_menus_bar');
 
         if (sideMenusBar.attr('lay-id') == data_id) {
@@ -113,9 +110,9 @@ layui.define([
         $('.lake-admin-module > li:first').addClass("layui-nav-itemed");
         
         // 左侧选择高亮
-        var topmenu = lake.getTopMenuByID(lake.config.nowTabMenuid);
+        var topmenu = lakeMenu.getTopMenuByID(lakeAdmin.nowTabMenuid, lakeAdmin.menus);
         if (topmenu && topmenu.menuid == data_id) {
-            lake.selectLeftMenu(lake.config.nowTabMenuid);
+            lake.selectLeftMenu(lakeAdmin.nowTabMenuid);
         }
     });
 
@@ -143,8 +140,8 @@ layui.define([
         var body_history_id = $(this).attr('lay-id');
         var body_history_li = $('#body_history li[lay-id=' + body_history_id + ']');
         if (body_history_li.length <= 0) {
-            if ($("#body_history li").length >= lake.config.openTabNum) {
-                layer.msg('只能同时打开' + lake.config.openTabNum + '个选项卡哦。不然系统会卡的！');
+            if ($("#body_history li").length >= lakeAdmin.openTabNum) {
+                layer.msg('只能同时打开' + lakeAdmin.openTabNum + '个选项卡哦。不然系统会卡的！');
                 return;
             }
         }
@@ -161,18 +158,17 @@ layui.define([
             $(this).removeClass("layui-nav-item-bar-hide");
         });
         
-        var data_id = $(this).attr('lay-id'),
+        var dataId = $(this).attr('lay-id'),
             icon = $(this).attr('lay-icon'),
             title = $(this).attr('lay-title'),
-            li = $('#body_history li[lay-id=' + data_id + ']');
-        var href = this.href;
+            href = this.href;
         
-        lake.config.nowTabMenuid = data_id;
+        lakeAdmin.nowTabMenuid = dataId;
 
         lake.iframeJudge({
             elem: $this,
             href: href,
-            id: data_id,
+            id: dataId,
             icon: icon,
             title: title
         });
@@ -183,6 +179,7 @@ layui.define([
     $('#body_history').on('click focus', 'li', function(e) {
         e.preventDefault();
         e.stopPropagation();
+        
         var data_id = $(this).attr('lay-id');
         if (data_id) {
             // 选择顶部菜单
@@ -199,7 +196,7 @@ layui.define([
                     .siblings().removeClass('layui-nav-itemed');
             }
             
-            lake.config.nowTabMenuid = data_id;
+            lakeAdmin.nowTabMenuid = data_id;
         }
 
         $(this).addClass('layui-this').siblings('li').removeClass('layui-this');
@@ -389,10 +386,15 @@ layui.define([
         layer.close(top_nav_layer_tips);
     });
     
-    
     // 清除缓存
     $(document).on('click', ".js-lake-admin-clearcache dd a", function() {
         var url = $(this).closest('dl').data('url');
+        var index = layer.msg('清除缓存中，请稍候', { 
+            icon: 16, 
+            time: false, 
+            shade: 0.8 
+        });
+        
         $.ajax({
             url: url,
             dataType: 'json',
@@ -401,18 +403,16 @@ layui.define([
             },
             cache: false,
             success: function(res) {
+                layer.close(index);
                 if (res.code == 1) {
-                    var index = layer.msg('清除缓存中，请稍候', { icon: 16, time: false, shade: 0.8 });
-                    setTimeout(function() {
-                        layer.close(index);
-                        layer.msg("缓存清除成功！");
-                    }, 1000);
+                    layer.msg("缓存清除成功！");
                 }else{
-                    layer.msg('清除缓存失败');
+                    layer.msg('清除缓存失败！');
                 }
             },
             error: function() {
-                layer.msg('清除缓存失败');
+                layer.close(index);
+                layer.msg('清除缓存失败！');
             }
         });
     });

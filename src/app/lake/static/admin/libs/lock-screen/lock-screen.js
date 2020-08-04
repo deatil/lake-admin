@@ -7,16 +7,18 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "utils"], fu
 
     // 锁定账户
     var lock_inter = "";
+    var menuid = "";
     lockShowInit(utils);
     $(".js-lake-admin-lock").on('click', function() {
         layer.confirm("确定要锁定账户吗？", function(index) {
-            var lock_url = $('.lake-admin-lock').attr('data-lock');
+            var lock_url = $('.lake-admin-lock').data('lock-url');
             $.post(lock_url, {}, function (res) {
                 if (res.code == 1) {
                     layer.close(index);
                     utils.local("isLock", '1');//设置锁屏缓存防止刷新失效
                     lockShowInit(utils);//锁屏
                     
+                    menuid = $.cookie('lake-admin-menuid');
                     $.cookie('lake-admin-menuid', null);
                 } else {
                     layer.alert(res.msg);
@@ -55,7 +57,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "utils"], fu
 
     //提交密码
     form.on('submit(lockSubmit)', function(data) {
-        var unlock_url = $('.lake-admin-lock').attr('data-unlock');
+        var unlock_url = $('.lake-admin-lock').data('unlock-url');
         var password = data.field.lock_password;
         $.post(unlock_url, {
             password: hex_md5(password)
@@ -70,6 +72,10 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "utils"], fu
                     $("#lockPassword").val("");   //清除输入框的密码
                     $(".lock-screen").hide();
                     clearInterval(lock_inter);
+                    
+                    $.cookie('lake-admin-menuid', menuid, {
+                        expires: 1,
+                    });
                 } else {
                     layer.alert("解锁账户失败！");
                 }
@@ -80,7 +86,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "utils"], fu
 
     //退出登录
     $("#lockQuit").on('click', function() {
-        var logout_url = $('.lake-admin-lock').attr('data-logout');
+        var logout_url = $('.lake-admin-lock').data('logout-url');
         window.location.replace(logout_url);
     });
     

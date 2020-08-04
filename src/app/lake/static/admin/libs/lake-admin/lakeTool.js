@@ -519,5 +519,5 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
         return false;
     });
     
-    exports('common', {});
+    exports('lakeTool', {});
 });

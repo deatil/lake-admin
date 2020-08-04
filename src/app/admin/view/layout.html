@@ -39,10 +39,10 @@
         version: '2020072023015895',
         base: 'admin/libs/layui-extend/'
     }).extend({
+        lakeTool: '{/}admin/libs/lake-admin/lakeTool',
+        lakeBind: '{/}admin/libs/lake-admin/lakeBind',
         tagsinput: '{/}admin/libs/layui-extend-tagsinput/tagsinput',
-        common: '{/}admin/admin/js/common',
-        bind: '{/}admin/admin/js/bind'
-    }).use(['common', 'bind']);
+    }).use(['lakeTool', 'lakeBind']);
 
     layui.define(['table', 'layer'], function(exports) {
         $ = layui.jquery;

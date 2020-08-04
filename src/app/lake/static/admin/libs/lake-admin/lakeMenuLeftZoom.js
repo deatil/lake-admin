@@ -17,12 +17,15 @@
     var lakeMenuLeftZoom = {
         
         list: function () {
+            var thiz = this;
+            var openTip = '';
+            
             // 监听提示信息
             $("body").on("mouseenter", ".layui-layout-admin-collapse .layui-nav-tree .lake-admin-nav-item", function () {
                 var tips = $(this).prop("innerHTML");
                 if (tips) {
                     tips = "<ul class='lake-admin-menu-left-zoom layui-nav layui-nav-tree layui-this js-menu-nav'><li class='layui-nav-item layui-nav-itemed'>"+tips+"</li></ul>" ;
-                    window.openTips = layer.tips(tips, $(this), {
+                    openTip = layer.tips(tips, $(this), {
                         tips: [2, '#2f4056'],
                         time: 300000,
                         skin: "popup-tips",
@@ -37,7 +40,7 @@
 
             $("body").on("mouseleave", ".popup-tips", function () {
                 try {
-                    layer.close(window.openTips);
+                    layer.close(openTip);
                 } catch (e) {
                     console.log(e.message);
                 }

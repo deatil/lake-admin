@@ -190,5 +190,5 @@ layui.define(['table', 'element', 'layer', 'form', 'notice', 'msg', 'lakeform', 
         this.value = (parseFloat(this.value) || 0).toFixed(fiexd);
     });
     
-    exports('bind', {});
+    exports('lakeBind', {});
 });

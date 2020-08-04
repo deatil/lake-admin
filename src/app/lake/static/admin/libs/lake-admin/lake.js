@@ -4,24 +4,11 @@
  * 
  * Apache License 2.0 © Deatil
  */
-!(function(a){
-    layui.define(['jquery', 'jqueryCookie'], function (exports) {
-        var jquery = layui.$;
-        
-        exports('lake', a(jquery));
-    });
-})(function($) {
+layui.define(['jquery', 'jqueryCookie', 'lakeMenu'], function (exports) {
+    var lakeMenu = layui.lakeMenu,
+        $ = layui.$;
     
     var lake = {
-        config: {
-            menus: {},
-            nowTabMenuid: '', // 当前tab的ID
-            openTabNum: 10, // 最大可打开窗口数量
-        },
-        
-        setOption: function(options) {
-            this.config = $.extend({}, this.config, options);
-        },
         
         // 选择左边菜单
         selectLeftMenu: function(data_id) {
@@ -37,59 +24,11 @@
             }
         },
         
-        // 重新刷新页面，使用location.reload()有可能导致重新提交
-        reloadPage: function(win) {
-            var location = win.location;
-            location.href = location.pathname + location.search;
-        },
-        
-        // 通过菜单id查找菜单配置对象
-        getMenuByID: function(mid, menugroup) {
-            var thiz = this;
-            var ret = {};
-            if (!menugroup) {
-                menugroup = thiz.config.menus;
-            }
-            if (!mid) {
-                ret = menugroup['default'];
-            } else {
-                $.each(menugroup, function(i, o) {
-                    if (o.menuid && o.menuid == mid) {
-                        ret = o;
-                        return false
-                    } else if (o.items) {
-                        var tmp = thiz.getMenuByID(mid, o.items);
-                        if (tmp.menuid && mid == tmp.menuid) {
-                            ret = tmp;
-                            return false
-                        }
-                    }
-                });
-            }
-            return ret;
-        },
-
-        getTopMenuByID: function(mid) {
-            var ret = {};
-            var menu = this.getMenuByID(mid);
-            if (menu) {
-                if (menu.parent) {
-                    var tmp = this.getTopMenuByID(menu.parent);
-                    if (tmp && tmp.menuid) {
-                        ret = tmp;
-                    }
-                } else {
-                    ret = menu;
-                }
-            }
-            return ret;
-        },
-        
         topMenuClick: function(curid) {
             if (curid == "default") {
                 var objtopmenu = $('#top_nav_menus li:first-child').find("a");
             } else {
-                var topmenu = this.getTopMenuByID(curid);
+                var topmenu = lakeMenu.getTopMenuByID(curid);
                 var objtopmenu = $('#top_nav_menus').find("a[lay-id=" + topmenu.menuid + "]");
             }
             
@@ -99,6 +38,12 @@
                 //触发事件
                 objtopmenu.click();
             }
+        },
+        
+        // 重新刷新页面，使用location.reload()有可能导致重新提交
+        reloadPage: function(win) {
+            var location = win.location;
+            location.href = location.pathname + location.search;
         },
 
         // 判断显示或创建iframe
@@ -112,10 +57,6 @@
             // 如果iframe标签是已经存在的，则显示并让选项卡高亮,并不显示loading
             if (li.length > 0) {
                 var iframe = $('#iframe_' + id);
-                setTimeout(function() {
-                    $('#loading').hide();
-                }, 500);
-                li.addClass('current');
                 if (iframe[0].contentWindow && iframe[0].contentWindow.location.href !== href) {
                     iframe[0].contentWindow.location.href = href;
                 }
@@ -136,9 +77,13 @@
 
                 $(iframe[0].contentWindow.document).ready(function() {
                     $('#body_frame iframe').hide();
-                    setTimeout(function() {
-                        $('#loading').hide();
-                    }, 500);
+                
+                    var layerLoad = layer.load(1, {
+                        shade: false
+                    });
+                    iframe[0].onload = function () {
+                        layer.close(layerLoad);
+                    };
                     
                     if (options.icon) {
                         var icon = '<i class="item-dragsort ' + options.icon + '"></i>&nbsp;';
@@ -185,5 +130,5 @@
         
     };
     
-    return lake;
+    exports('lake', lake);
 });

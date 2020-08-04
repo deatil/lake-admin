@@ -53,13 +53,9 @@
                     docElm.oRequestFullscreen();
                 } 
                 else {
-                    layer.msg('浏览器不支持全屏调用！');
+                    console.log('浏览器不支持全屏调用！');
                     return false;
                 }
-                
-                $(this).removeClass('icon-fullscreen')
-                    .addClass('icon-narrow');
-                layer.msg('按Esc即可退出全屏');
             },
             
             // 退出全屏
@@ -92,30 +88,72 @@
                     docElm.webkitCancelFullScreen();
                 } 
                 else {
-                    layer.msg('浏览器不支持全屏调用！');
+                    console.log('浏览器不支持全屏调用！');
                     return false;
                 }
-                
-                $(this).removeClass('icon-narrow')
+            },
+            
+            isFull: function() {
+                return Math.abs(window.screen.height-window.document.documentElement.clientHeight) <= 17;
+            },
+            
+            checkFull: function() {
+                var isFull = document.fullscreenEnabled || window.fullScreen || document.webkitIsFullScreen || document.msFullscreenEnabled;
+                //to fix : false || undefined == undefined
+                if (isFull === undefined) {
+                    isFull = false;
+                }
+                return isFull;
+            }
+        }
+        
+        var fullScreenAction = {
+            full: function(thiz) {
+                $(thiz).attr('data-check-screen', 'full');
+                fullScreen.full();
+            
+                $(thiz).removeClass('icon-fullscreen')
+                    .addClass('icon-narrow');
+                layer.msg('按Esc即可退出全屏');
+            }, 
+            exit: function(thiz) {
+                $(thiz).attr('data-check-screen', 'exit');
+                fullScreen.exit();
+            
+                $(thiz).removeClass('icon-narrow')
                     .addClass('icon-fullscreen');
             }
         }
         
-        this.each(function() {
-            $(this).on('click', function () {
-                var check = $(this).attr('data-check-screen');
-                if (check && check == 'full') {
-                    $(this).attr('data-check-screen', 'exit');
-                    fullScreen.exit();
-                } else {
-                    $(this).attr('data-check-screen', 'full');
-                    fullScreen.full();
-                }
-            });
+        var thiz = this;
+        
+        $(document).on('keydown', function(event) {
+            var e = event || window.event;
+            var k = e.keyCode || e.which;
             
-            return this;
+            if (k === 122) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
         });
         
+        $(document).on("keyup", function(event) {
+            // var ctrlKey = event.ctrlKey;
+            
+            // ESC
+            if (event.keyCode === 27) {
+                fullScreenAction.exit(thiz);
+            }
+        });
+        
+        $(this).on('click', function () {
+            var check = $(thiz).attr('data-check-screen');
+            if (check && check == 'full') {
+                fullScreenAction.exit(thiz);
+            } else {
+                fullScreenAction.full(thiz);
+            }
+        });
     };
     
 });

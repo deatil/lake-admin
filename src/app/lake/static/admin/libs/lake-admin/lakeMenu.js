@@ -106,7 +106,48 @@
                 + '</dl>';
             
             return menu_html;
-        }
+        },
+        
+        // 通过菜单id查找菜单配置对象
+        getMenuByID: function(mid, menus) {
+            var thiz = this;
+            var ret = {};
+            
+            if (!mid) {
+                ret = menus['default'];
+            } else {
+                $.each(menus, function(i, o) {
+                    if (o.menuid && o.menuid == mid) {
+                        ret = o;
+                        return false
+                    } else if (o.items) {
+                        var tmp = thiz.getMenuByID(mid, o.items);
+                        if (tmp.menuid && mid == tmp.menuid) {
+                            ret = tmp;
+                            return false
+                        }
+                    }
+                });
+            }
+            return ret;
+        },
+
+        getTopMenuByID: function(mid, menus) {
+            var ret = {};
+            var menu = this.getMenuByID(mid, menus);
+            if (menu) {
+                if (menu.parent) {
+                    var tmp = this.getTopMenuByID(menu.parent, menus);
+                    if (tmp && tmp.menuid) {
+                        ret = tmp;
+                    }
+                } else {
+                    ret = menu;
+                }
+            }
+            return ret;
+        },
+        
     };
     
     return lakeMenu;
