@@ -114,7 +114,7 @@
             var ret = {};
             
             if (!mid) {
-                ret = menus['default'];
+                ret = 'default';
             } else {
                 $.each(menus, function(i, o) {
                     if (o.menuid && o.menuid == mid) {
