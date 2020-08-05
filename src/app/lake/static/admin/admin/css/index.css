@@ -473,7 +473,7 @@
         display: block !important;
         transition: all .3s;
         -webkit-transition: all .3s; 
-    }	
+    }
     
     .lake-admin .layui-layout-admin .layui-side {
         transition: all .3s;
@@ -515,7 +515,7 @@
     }
     .lake-admin .layui-layout-admin.layui-layout-admin-collapse .layui-side .layui-nav .layui-nav-item:before {
         content: "";
-        position: absolute;		
+        position: absolute;
         left: 0;
         right: 0;
         top: 0;
@@ -633,7 +633,7 @@
         border-left: 3px none !important;
     }
 }
-@media screen and (max-width: 720px){
+@media screen and (max-width: 768px){
     .lake-admin .lake-admin-logo {width: 60px !important; }
     .lake-admin .lake-admin-logo-name {display: none !important; }
     .lake-admin .lake-admin-logo-name-mini {display: block !important; }

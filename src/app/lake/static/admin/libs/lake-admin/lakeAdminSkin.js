@@ -19,9 +19,9 @@
             var arr = $.cookie('lake-admin-skin');
             var skin = (arr != null) ? arr : "black";
             var body = $('body');
-            body.removeClass('lake-admin-skin-black');
-            body.removeClass('lake-admin-skin-white');
-            body.removeClass('lake-admin-skin-blue');
+            $(".lake-admin-skin").removeClass(function (index, className) { 
+                return (className.match(/(^|\s)lake-admin-skin-\S+/g) || []).join(' ');
+            });
             body.addClass('lake-admin-skin-' + skin);
             
             $(".lake-admin-skin dd")

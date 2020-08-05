@@ -21,13 +21,7 @@ abstract class Base extends BaseController
      * 控制器中间件
      * @var array
      */
-    protected $middleware = [
-        // 权限检测
-        \app\admin\middleware\AdminAuthCheck::class,
-
-        // 锁屏检测
-        \app\admin\middleware\AdminScreenLockCheck::class,
-    ];
+    protected $middleware = [];
     
     /**
      * 空操作

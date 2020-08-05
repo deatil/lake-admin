@@ -8,6 +8,7 @@ use think\console\Input;
 use app\admin\middleware\LakeAdminAppMap;
 use app\admin\middleware\LoadModule;
 use app\admin\middleware\CheckModule;
+use app\admin\listener\InitConfig;
 
 use app\admin\model\Hook as HookModel;
 use app\admin\service\ModuleInit as ModuleInitService;
@@ -69,10 +70,10 @@ class Service extends BaseService
         
         if ($this->isLakeAdminInstallCli() !== true) {
             // 注册配置行为
-            $this->app->event->listen('HttpRun', "app\\admin\\listener\\InitConfig", true);
+            $this->app->event->listen('HttpRun', InitConfig::class, true);
             
             // 全部模块
-            $this->app->event->listen('HttpRun', function ($params) {    
+            $this->app->event->listen('HttpRun', function ($params) {
                 // 后台系统配置
                 $this->setSystemHooks();
                 

@@ -44,7 +44,13 @@ class LakeAdminAppMap
             'app_map' => $appMaps,
         ], 'app');
         
-        return $next($request);
+        $response = $this->app->middleware->pipeline('app')
+            ->send($request)
+            ->then(function ($request) use ($next) {
+                return $next($request);
+            });
+        
+        return $response;
     }
     
 }

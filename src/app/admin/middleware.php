@@ -9,4 +9,10 @@ return [
     
     // Session初始化
     \think\middleware\SessionInit::class,
+    
+    // 权限检测
+    \app\admin\middleware\AdminAuthCheck::class,
+
+    // 锁屏检测
+    \app\admin\middleware\AdminScreenLockCheck::class,
 ];

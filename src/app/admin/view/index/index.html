@@ -81,8 +81,8 @@
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                        <img src="{:lake_get_file_path($user_info['avatar'])}" class="layui-nav-img userAvatar" width="35" height="35">
-                        <span class="lake-admin-winner-hide">{$user_info.nickname}</span>
+                        <img src="{:lake_get_file_path($user_info['avatar'])}" alt="{$user_info.nickname}" class="layui-nav-img lake-admin-user-avatar" width="35" height="35">
+                        <span class="lake-admin-user-nickname lake-admin-winner-hide">{$user_info.nickname}</span>
                     </a>
                     <dl class="layui-nav-child">
                         <dd class="js-menu-nav">
@@ -198,7 +198,6 @@
         </div>
     </div>
     <script src="admin/libs/layui/layui.js"></script>
-    {include file="index/lockscreen" /}
     <script type="text/javascript">
     var lake_menus = <?php echo json_encode($menus); ?>;
     

@@ -34,18 +34,37 @@ class AdminScreenLockCheck
      */
     public function handle($request, Closure $next)
     {
+        $response = $next($request);
+        
+        $this->checkScreenLock();
+        
+        return $response;
+    }
+    
+    
+    /**
+     * 检测锁屏
+     *
+     * @create 2020-8-5
+     * @author deatil
+     */
+    protected function checkScreenLock()
+    {
         // 过滤的行为
         $allowUrl = [
-            'admin/passport/captcha',
-            'admin/passport/login',
-            'admin/passport/logout',
-            'admin/passport/unlockscreen',
-            'admin/index/index',
-            'admin/index/main',
+            'get:admin/passport/captcha',
+            'get:admin/passport/login',
+            'post:admin/passport/login',
+            'get:admin/passport/logout',
+            'post:admin/passport/lockscreen',
+            'post:admin/passport/unlockscreen',
+            'get:admin/index/index',
+            'get:admin/index/main',
         ];
         
         $rule = strtolower(
-            $this->app->http->getName() . 
+            $this->app->request->method() . 
+            ':' . $this->app->http->getName() . 
             '/' . $this->app->request->controller() . 
             '/' . $this->app->request->action()
         );
@@ -57,13 +76,6 @@ class AdminScreenLockCheck
                 $this->error('后台已锁定，请先解锁', $url);
             }
         }
-        
-        $response = $this->app->middleware->pipeline('app')
-            ->send($request)
-            ->then(function ($request) use ($next) {
-                return $next($request);
-            });
-        
-        return $response;
     }
+    
 }

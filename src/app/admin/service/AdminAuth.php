@@ -65,7 +65,7 @@ class AdminAuth
      * @create 2020-7-25
      * @author deatil
      */
-    public static function checkRule($rule, $type = AuthRule::RULE_URL, $mode = 'url', $relation = 'or')
+    public static function checkRule($rule, $type = [1, 2], $mode = 'url', $relation = 'or')
     {
         $config = config('app.auth');
         $Auth = static::instance($config);

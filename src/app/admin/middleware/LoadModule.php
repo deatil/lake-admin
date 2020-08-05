@@ -40,9 +40,13 @@ class LoadModule
      */
     public function handle($request, Closure $next)
     {
-        $this->loadModule();;
+        $this->loadModule();
         
-        return $next($request);
+        return $this->app->middleware->pipeline('app')
+            ->send($request)
+            ->then(function ($request) use ($next) {
+                return $next($request);
+            });
     }
     
     /**

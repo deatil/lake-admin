@@ -5,7 +5,7 @@ namespace app\admin\middleware;
 use Closure;
 use think\App;
 
-use app\admin\boot\Jump;
+use app\admin\boot\Jump as JumpTrait;
 use app\admin\model\AuthRule as AuthRuleModel;
 use app\admin\service\AdminAuth as AdminAuthService;
 use app\admin\facade\Admin as AdminFacade;
@@ -18,7 +18,7 @@ use app\admin\facade\Admin as AdminFacade;
  */
 class AdminAuthCheck
 {
-    use Jump;
+    use JumpTrait;
     
     /** @var App */
     protected $app;
@@ -28,6 +28,7 @@ class AdminAuthCheck
     public function __construct(App $app)
     {
         $this->app  = $app;
+        $this->loginUrl = url('passport/login');
     }
     
     /**
@@ -38,17 +39,51 @@ class AdminAuthCheck
      */
     public function handle($request, Closure $next)
     {
-        $this->loginUrl = url('passport/login');
-        
+        // 登陆检测
         $this->checkAdminLogin();
         
-        $response = $this->app->middleware->pipeline('app')
-            ->send($request)
-            ->then(function ($request) use ($next) {
-                return $next($request);
-            });
+        $response = $next($request);
+        
+        // 地址检测
+        $this->checkAdminRuleAuth();
         
         return $response;
+    }
+    
+    /**
+     * 检测登陆权限
+     *
+     * @create 2019-7-15
+     * @author deatil
+     */
+    protected function checkAdminLogin()
+    {
+        // 重复检测跳过
+        if ($this->app->env->get('admin_id')) {
+            return;
+        }
+        
+        $adminAllowIp = config('app.admin_allow_ip');
+        if (!empty($adminAllowIp)) {
+            // 检查IP地址访问
+            $arr = explode(',', $adminAllowIp);
+            foreach ($arr as $val) {
+                // 是否是IP段
+                if (strpos($val, '*')) {
+                    if (strpos($this->app->request->ip(), str_replace('.*', '', $val)) !== false) {
+                        $this->error('你的地址被禁止访问！');
+                    }
+                } else {
+                    // 不是IP段,用绝对匹配
+                    if ($this->app->request->ip() == $val) {
+                        $this->error('你的地址被禁止访问！');
+                    }
+                }
+            }
+        }
+        
+        // 检测登陆
+        $this->competence();
     }
     
     /**
@@ -57,7 +92,7 @@ class AdminAuthCheck
      * @create 2019-7-15
      * @author deatil
      */
-    protected function checkAdminLogin()
+    protected function checkAdminRuleAuth()
     {
         // 过滤不需要登陆的行为
         $allowUrl = [
@@ -75,13 +110,8 @@ class AdminAuthCheck
         );
         
         if (!in_array($rule, $allowUrl)) {
-            // 重复检测跳过
-            if ($this->app->env->get('admin_id')) {
-                return;
-            }
-            
-            // 检测登陆
-            if (false === $this->competence()) {
+            $adminId = $this->app->env->get('admin_id');
+            if (empty($adminId)) {
                 // 跳转到登录界面
                 $this->error('请先登陆', $this->loginUrl);
             }
@@ -93,24 +123,6 @@ class AdminAuthCheck
             if ($adminIsRoot) {
                 return;
             }
-        
-            if (config('app.admin_allow_ip')) {
-                // 检查IP地址访问
-                $arr = explode(',', config('app.admin_allow_ip'));
-                foreach ($arr as $val) {
-                    // 是否是IP段
-                    if (strpos($val, '*')) {
-                        if (strpos($this->app->request->ip(), str_replace('.*', '', $val)) !== false) {
-                            $this->error('403:你在IP禁止段内,禁止访问！');
-                        }
-                    } else {
-                        // 不是IP段,用绝对匹配
-                        if ($this->app->request->ip() == $val) {
-                            $this->error('403:IP地址绝对匹配,禁止访问！');
-                        }
-                    }
-                }
-            }
             
             $noNeedAuthRules = (new AuthRuleModel())->getNoNeedAuthRuleList();
             if (!in_array($rule, $noNeedAuthRules)) {
@@ -120,6 +132,7 @@ class AdminAuthCheck
                 }
             }
         }
+        
     }
     
     /**
@@ -172,7 +185,7 @@ class AdminAuthCheck
      * @create 2019-7-15
      * @author deatil
      */
-    final private function checkRule($rule, $type = AuthRule::RULE_MENU, $mode = 'url', $relation = 'or')
+    final private function checkRule($rule, $type = [1, 2], $mode = 'url', $relation = 'or')
     {
         if (!AdminAuthService::checkRule($rule, $type, $mode, $relation)) {
             return false;

@@ -327,6 +327,11 @@ class Auth
      */
     public function getRuleExtendList($gids)
     {
+        if (!isset($this->_config['AUTH_RULE_EXTEND'])
+            || empty($this->_config['AUTH_RULE_EXTEND'])) {
+            return [];
+        }
+        
         $map = [
             ['group_id', 'in', $gids],
         ];        

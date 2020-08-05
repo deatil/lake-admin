@@ -1,10 +1,72 @@
-layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "utils"], function(exports) {
+layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "md5", "utils"], function(exports) {
     var $ = layui.jquery,
         element = layui.element,
         form = layui.form,
         utils = layui.utils,
+        md5 = layui.md5,
         layer = layui.layer;
+        
+    var lakeSkinRootPath = 'admin/libs/lock-screen/';
+    var userAvatar = $(".lake-admin-user-avatar").attr("src");
+    var userNickname = $(".lake-admin-user-avatar").attr("alt");
+    
+    var html = '<!-- 锁屏 -->\
+<link rel="stylesheet" href="' + lakeSkinRootPath + 'lock-screen.css">\
+<script src="' + lakeSkinRootPath + 'snowflake.js"></script>\
+<div class="lock-screen" style="display:none;">\
+    <div class="lock-bg">\
+        <img class="lock-gradual active" src="' + lakeSkinRootPath + 'wallpaper/100001.jpg" alt=""/>\
+        <img class="lock-gradual" src="' + lakeSkinRootPath + 'wallpaper/100002.jpg" alt=""/>\
+        <img class="lock-gradual" src="' + lakeSkinRootPath + 'wallpaper/100003.jpg" alt=""/>\
+        <img class="lock-gradual" src="' + lakeSkinRootPath + 'wallpaper/100004.jpg" alt=""/>\
+        <img class="lock-gradual" src="' + lakeSkinRootPath + 'wallpaper/100005.jpg" alt=""/>\
+        <img class="lock-gradual" src="' + lakeSkinRootPath + 'wallpaper/100006.jpg" alt=""/>\
+        <img class="lock-gradual" src="' + lakeSkinRootPath + 'wallpaper/100007.jpg" alt=""/>\
+        <img class="lock-gradual" src="' + lakeSkinRootPath + 'wallpaper/100008.jpg" alt=""/>\
+    </div>\
+    <div class="lock-content">\
+        <!--雪花-->\
+        <div class="snowflake">\
+            <canvas id="snowflake"></canvas>\
+        </div>\
+        <!--雪花 END-->\
+        <div class="time">\
+            <div>\
+                <div class="hhmmss"></div>\
+                <div class="yyyymmdd"></div>\
+            </div>\
+        </div>\
+        <div class="quit" id="lockQuit">\
+            <i class="layui-icon layui-icon-logout" title="退出登录"></i>\
+        </div>\
+        <table class="unlock">\
+            <tr>\
+                <td>\
+                    <div class="layui-form lock-form">\
+                        <div class="lock-head">\
+                            <img src="'+userAvatar+'" alt="'+userNickname+'"/>\
+                        </div>\
+                        <div class="layui-form-item">\
+                            <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">\
+                                <input type="password" required lay-verify="required" id="lockPassword" name="lock_password" style="border-radius: 0;border:0;height: 44px" placeholder="请输入登录密码" autocomplete="off"\
+                                       class="layui-input"/>\
+                            </div>\
+                            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">\
+                                <button style="width: 100%;box-sizing:border-box;border-radius: 0;" type="button" lay-submit lay-filter="lockSubmit"\
+                                        class="layui-btn lock-btn layui-btn-lg layui-btn-normal">确定\
+                                </button>\
+                            </div>\
+                        </div>\
+                    </div>\
+                </td>\
+            </tr>\
+        </table>\
+    </div>\
+</div>\
+';
 
+    $('body').append(html);
+    
     // 锁定账户
     var lock_inter = "";
     var menuid = "";
@@ -60,7 +122,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "utils"], fu
         var unlock_url = $('.lake-admin-lock').data('unlock-url');
         var password = data.field.lock_password;
         $.post(unlock_url, {
-            password: hex_md5(password)
+            password: md5(password)
         }, function (res) {
             layer.msg(res.msg, {
                 time:1500,

@@ -38,6 +38,11 @@ class ModuleLoad
      */
     public function loadApp($appPath)
     {
+        $routePath = $appPath . 'route' . DIRECTORY_SEPARATOR;
+        if (is_dir($routePath)) {
+            $this->app->http->setRoutePath($routePath);
+        }
+        
         if (is_file($appPath . 'common.php')) {
             include_once $appPath . 'common.php';
         }
