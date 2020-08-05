@@ -40,6 +40,12 @@ class Service extends BaseService
     public function boot()
     {
         if ($this->isLakeAdminInstallCli() !== true) {
+            // 初始化配置信息
+            (new InitConfig())->handle();
+            
+            // 后台系统配置
+            $this->setSystemHooks();
+            
             // 初始化模块
             (new ModuleInitService())->handle();
         }
@@ -69,13 +75,8 @@ class Service extends BaseService
         });
         
         if ($this->isLakeAdminInstallCli() !== true) {
-            // 注册配置行为
-            $this->app->event->listen('HttpRun', InitConfig::class, true);
-            
             // 全部模块
             $this->app->event->listen('HttpRun', function ($params) {
-                // 后台系统配置
-                $this->setSystemHooks();
                 
                 // 模块检测
                 $this->app->middleware->add(CheckModule::class);
@@ -155,7 +156,7 @@ class Service extends BaseService
                 ->toArray();
             $this->app->cache->set("lake_admin_hooks", $hooks);
         }
-            
+        
         if (!empty($hooks)) {
             foreach ($hooks as $hook) {
                 $this->app->event->listen($hook['name'], $hook['class']);

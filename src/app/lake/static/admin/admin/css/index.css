@@ -442,6 +442,30 @@
     padding-left: 25px !important;
 }
 
+@media screen and (min-width: 768px) {
+    .lake-admin .lake-admin-top-level-side {
+        transition: all .3s;
+        -webkit-transition: all .3s;
+        height: 60px;
+        width: 530px;
+        overflow-y: hidden;
+    }
+    .lake-admin .lake-admin-top-level-side-scroll {
+        position: relative;
+        float: left;
+        transition: all .3s;
+        -webkit-transition: all .3s;
+        overflow-y: hidden;
+        width: 100%;
+        height: 80px;
+    }
+    .lake-admin .lake-admin-top-level-menus {
+        transition: all .3s;
+        -webkit-transition: all .3s;
+        white-space: nowrap;
+    }
+}
+
 @media (min-width: 768px) {
     .lake-admin .layui-layout-admin .lake-admin-logo {
         width: 150px;

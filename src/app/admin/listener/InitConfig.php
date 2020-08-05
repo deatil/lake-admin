@@ -8,7 +8,7 @@ use think\facade\Config;
 use app\admin\model\Config as ConfigModel;
 
 /**
- * 初始化配置信息行为
+ * 初始化配置信息
  * 将系统配置信息合并到本地配置
  *
  * @create 2019-7-6
@@ -26,7 +26,7 @@ class InitConfig
      * @create 2019-7-6
      * @author deatil
      */
-    public function handle($params)
+    public function handle()
     {
         // 定义系统配置信息
         $this->setAppConfig();

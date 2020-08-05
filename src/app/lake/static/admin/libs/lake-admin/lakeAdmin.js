@@ -85,8 +85,6 @@ layui.define([
                 // 终止事件 不再派发事件
                 e.stopPropagation();
                 
-                $(this).parent().addClass('current')
-                    .siblings().removeClass('current');
                 var data_id = $(this).attr('lay-id'),
                     menu_data_id = $(this).attr('data-id'),
                     data_list = lakeAdmin.menus[menu_data_id],
