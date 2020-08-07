@@ -27,7 +27,7 @@
 {/block}
 
 {block name="script"}
-<script type="text/html" id="toolbarDemo">
+<script type="text/html" id="toolbarTop">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm confirm layui-batch-all" data-href='{:url("delete")}'>批量删除</button>
     </div>
@@ -64,7 +64,7 @@ layui.use(['table', 'laydate'], function() {
     });
     table.render({
         elem: '#dataTable',
-        toolbar: '#toolbarDemo',
+        toolbar: '#toolbarTop',
         url: '{:url("attachments/index")}',
         cols: [
             [

@@ -218,7 +218,25 @@ layui.define(["jquery"], function (exports) {
             contextMenu.remove();
         }
     });
-
+    
+    $(document).off('click.ctxMenu').on('click.ctxMenu', function () {
+        try {
+            var ifs = top.window.frames;
+            for (var i = 0; i < ifs.length; i++) {
+                var tif = ifs[i];
+                try {  // 可能会跨域
+                    (tif.layui && tif.layui.jquery) && tif.layui.jquery('body>.ctxMenu').remove();
+                } catch (e) {
+                }
+            }
+            try {  // 可能会跨域
+                (top.layui && top.layui.jquery) && top.layui.jquery('body>.ctxMenu').remove();
+            } catch (e) {
+            }
+        } catch (e) {
+        }
+    });
+    
     if ($("#lake-admin-contextmenu-css").length <= 0) {
         $('head').append('<style id="lake-admin-contextmenu-css">' + contextMenu.getCommonCss() + '</style>');
     }
