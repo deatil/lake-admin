@@ -2,10 +2,10 @@ layui.define([
     'element', 
     'layer', 
     'form', 
+    "utils",
     'jquery', 
     'jqueryCookie', 
     "jqueryDragsort", 
-    "utils",
     "lakeAdminMenu", 
     "lakeAdminSkin", 
     "lakeAdminTool", 
@@ -33,6 +33,11 @@ layui.define([
         renderHtml: function() {
             $('#top_nav_menus').html(lakeAdminMenu.buildTop(lakeAdmin.menus));
             element.render(); //重新渲染
+            
+            lakeAdminTool.topMenuScroll();
+            $(window).on('resize', function() {
+                lakeAdminTool.topMenuScroll();
+            })
             
             // iframe 加载事件
             var iframeDefault = document.getElementById('iframe_default');
@@ -74,6 +79,7 @@ layui.define([
                 placeHolderTemplate: "<li class='lake-admin-tab-item'></li>",
                 scrollSpeed: 5
             });
+            
         },
         
         listen: function() {

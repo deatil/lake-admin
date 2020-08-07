@@ -27,7 +27,7 @@
 
 .lake-admin .layui-tab-title .layui-this {background-color: #009688; color: #fff; }
 .lake-admin .layui-tab-title .layui-this:after {border: none; }
-.lake-admin .lake-admin-top-level-menus {float: left; }
+.lake-admin .lake-admin-top-level-menus { }
 .lake-admin .lake-admin-top-level-menus .layui-nav-item.layui-this {background-color: rgba(0,0,0,0.5); }
 .lake-admin .lake-admin-top-level-menus.layui-nav .layui-nav-item{height: 60px;}
 
@@ -443,30 +443,6 @@
 }
 
 @media screen and (min-width: 768px) {
-    .lake-admin .lake-admin-top-level-side {
-        transition: all .3s;
-        -webkit-transition: all .3s;
-        height: 60px;
-        width: 530px;
-        overflow-y: hidden;
-    }
-    .lake-admin .lake-admin-top-level-side-scroll {
-        position: relative;
-        float: left;
-        transition: all .3s;
-        -webkit-transition: all .3s;
-        overflow-y: hidden;
-        width: 100%;
-        height: 80px;
-    }
-    .lake-admin .lake-admin-top-level-menus {
-        transition: all .3s;
-        -webkit-transition: all .3s;
-        white-space: nowrap;
-    }
-}
-
-@media (min-width: 768px) {
     .lake-admin .layui-layout-admin .lake-admin-logo {
         width: 150px;
         transition: all .3s;
@@ -482,6 +458,21 @@
         transition: all .3s;
         -webkit-transition: all .3s; 
     }
+    
+    .lake-admin .lake-admin-top-level {
+        position: relative;
+        float: left;
+    }
+    .lake-admin .lake-admin-top-level-scroll {
+        margin: 0 20px;
+        width: 530px;
+        height: 60px;
+        overflow: hidden;
+    }
+    .lake-admin .lake-admin-top-level-menus {
+        padding: 0 !important;
+    }
+    
     .lake-admin .layui-layout-admin.layui-layout-admin-collapse .lake-admin-logo {
         width: 60px;
         padding: 0;
@@ -579,10 +570,30 @@
         -webkit-transition: all .3s; 
     }
 }
-@media screen and (max-width:1080px){
-    .lake-admin .lake-admin-top-level-menus{display: none !important; }
-}
 @media screen and (max-width: 768px) {
+    .lake-admin .layui-body,
+    .lake-admin .layui-layout-admin .layui-footer{ 
+        left:-2px; 
+    }
+    
+    .lake-admin .lake-admin-logo {width: 60px !important; }
+    .lake-admin .lake-admin-logo-name {display: none !important; }
+    .lake-admin .lake-admin-logo-name-mini {display: block !important; }
+    
+    .lake-admin .lake-admin-hide-menu {display: none !important; }
+    .lake-admin .lake-admin-winner-hide {display: none !important; }
+    .lake-admin .lake-admin-tab-action {display: none !important; }
+    .lake-admin .lake-admin-top-tabs-box .tab-right {
+        width: 106px !important;
+    }
+    .lake-admin .lake-admin-close-box {
+        padding: 0 5px;
+    }
+    .lake-admin .lake-admin-close-box .layui-nav-child {
+        top: 42px;
+        left: -65px;
+    }
+    
     .lake-admin .layui-layout-admin .layui-side{
         left: -300px; 
         transition: all .3s; 
@@ -603,12 +614,55 @@
         color: #fff;
     }
     
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level {
+        position: fixed;
+        left: 0;
+        top: 60px;
+        bottom: 0;
+        z-index: 999;
+        width: 130px;
+        overflow-x: hidden;
+        transition: all .3s;
+        -webkit-transition: all .3s;        
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-scroll {
+        position: relative;
+        width: 150px;
+        height: 100%;
+        overflow-x: hidden;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus {
+        display: block !important; 
+        float: left;
+        z-index:1100;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 130px;
+        padding: 0 !important;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item {
+        background-color: #23262e; 
+        width: 130px;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item.layui-this {
+        background-color: rgba(0,0,0,0.5); 
+    }
+    
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item.layui-this:after {
+        bottom: 0;
+        width: 5px;
+        height: inherit;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-bar {
+        display: none;
+    }
     .lake-admin.lake-admin-site-mobile .lake-admin-site-tree-mobile{
         display: none !important;
     }
     .lake-admin.lake-admin-site-mobile .layui-side{ 
-        left: 87px; 
-        z-index:1100; 
+        left: 132px; 
+        z-index: 1100; 
     }
     .lake-admin.lake-admin-site-mobile .lake-admin-site-mobile-shade{
         content: ''; 
@@ -619,10 +673,6 @@
         right: 0; 
         background-color: rgba(0,0,0,.9); 
         z-index: 999;
-    }
-    .lake-admin .layui-body,
-    .lake-admin .layui-layout-admin .layui-footer{ 
-        left:-2px; 
     }
 
     .lake-admin.lake-admin-site-mobile.lake-admin-skin-blue .lake-admin-top-level-menus .layui-nav-item {
@@ -657,35 +707,6 @@
         border-left: 3px none !important;
     }
 }
-@media screen and (max-width: 768px){
-    .lake-admin .lake-admin-logo {width: 60px !important; }
-    .lake-admin .lake-admin-logo-name {display: none !important; }
-    .lake-admin .lake-admin-logo-name-mini {display: block !important; }
-    
-    .lake-admin .lake-admin-hide-menu {display: none !important; }
-    .lake-admin .lake-admin-winner-hide {display: none !important; }
-    .lake-admin .lake-admin-tab-action {display: none !important; }
-    .lake-admin .lake-admin-top-tabs-box .tab-right {
-        width: 106px !important;
-    }
-    .lake-admin .lake-admin-close-box {
-        padding: 0 5px;
-    }
-    .lake-admin .lake-admin-close-box .layui-nav-child {
-        top: 42px;
-        left: -65px;
-    }
-    
-    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus {display: block !important; float: left;z-index:1100;position: absolute;left: -20px;top: 60px;width: 150px;}
-    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item {background-color: #23262e; }
-    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item.layui-this {background-color: rgba(0,0,0,0.5); }
-    
-    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item.layui-this:after {
-        bottom: 0;
-        width: 5px;
-        height: inherit;
-    }
-    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-bar {
-        display: none;
-    }
+@media screen and (max-width:1080px){
+    .lake-admin .lake-admin-top-level-menus{display: none !important; }
 }

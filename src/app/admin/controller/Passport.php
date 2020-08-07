@@ -22,7 +22,6 @@ class Passport extends Base
      */
     public function captcha()
     {
-        $this->setCaptchaConfig();
         return captcha();
     }
     
@@ -42,7 +41,6 @@ class Passport extends Base
             $data = request()->post();
             
             // 验证码
-            $this->setCaptchaConfig();
             if (!captcha_check($data['verify'])) {
                 return $this->error('验证码输入错误！');
             }
@@ -124,29 +122,6 @@ class Passport extends Base
         (new ScreenService())->unlock();
         
         $this->success('屏幕解除锁定成功');
-    }
-    
-    /**
-     * 设置验证码配置
-     *
-     * @create 2020-7-25
-     * @author deatil
-     */
-    protected function setCaptchaConfig()
-    {
-        $captchaConfig = app()->config->get('captcha');
-        
-        $captcha = array_merge($captchaConfig, [
-            'length' => 4,
-            'math' => false,
-            'expire' => 1800,
-            'useImgBg' => false,
-            'fontSize' => 17,
-            'imageW' => 130,
-            'imageH' => 36,
-        ]);
-        
-        app()->config->set($captcha, 'captcha');
     }
     
 }

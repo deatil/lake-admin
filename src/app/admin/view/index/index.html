@@ -25,20 +25,25 @@
             </span>
             <a href="javascript:;" class="admin-menu-toggle icon iconfont icon-other lake-admin-winner-hide" title="隐藏侧边"></a>
             <a href="javascript:;" class="admin-side-full icon iconfont icon-fullscreen lake-admin-winner-hide" title="全屏显示"></a>
-            <div class="lake-admin-top-level-side">
-                <div class="lake-admin-top-level-side-scroll">
+            <div class="lake-admin-top-level">
+                <div class="lake-admin-top-level-scroll">
                     <ul class="layui-nav lake-admin-menus-winner lake-admin-top-level-menus" id="top_nav_menus">
                         <!--AJAX数据-->
                     </ul>
                 </div>
             </div>
             <ul class="layui-nav layui-layout-right">
+                {:lake_runhook('lake_admin_top_left_nav_before')}
+                
                 <li class="layui-nav-item lake-admin-winner-hide">
                     <a href="/" target="_blank">
                         <i class="iconfont icon-homepage"></i>
                         <span>&nbsp;站点主页</span>
                     </a>
                 </li>
+                
+                {:lake_runhook('lake_admin_top_left_nav_homepage_after')}
+                
                 <li class="layui-nav-item layui-hide-xs lake-admin-top-tip" lay-title="锁屏">
                     <a class="lake-admin-lock js-lake-admin-lock" 
                         href="javascript:"
@@ -49,6 +54,9 @@
                         <i class="iconfont icon-lock"></i><cite></cite>
                     </a>
                 </li>
+                
+                {:lake_runhook('lake_admin_top_left_nav_lockscreen_after')}
+                
                 <li class="layui-nav-item">
                     <a href="javascript:;">
                         <i class="iconfont icon-richangqingli"></i>
@@ -72,6 +80,9 @@
                         </dd>
                     </dl>
                 </li>
+                
+                {:lake_runhook('lake_admin_top_left_nav_clearcache_after')}
+                
                 <li class="layui-nav-item lake-admin-skin">
                     <a class="name" href="javascript:;">
                         <i class="iconfont icon-clothes"></i>
@@ -83,6 +94,9 @@
                         <dd data-skin="blue"><a href="javascript:;">蓝白</a></dd>
                     </dl>
                 </li>
+                
+                {:lake_runhook('lake_admin_top_left_nav_skin_after')}
+                
                 <li class="layui-nav-item">
                     <a href="javascript:;">
                         <img src="{:lake_get_file_path($user_info['avatar'])}" alt="{$user_info.nickname}" class="layui-nav-img lake-admin-user-avatar" width="35" height="35">
@@ -114,6 +128,9 @@
                         </dd>
                     </dl>
                 </li>
+                
+                {:lake_runhook('lake_admin_top_left_nav_profile_after')}
+                
             </ul>
         </div>
         <div class="layui-side layui-bg-black">

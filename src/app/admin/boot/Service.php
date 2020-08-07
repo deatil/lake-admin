@@ -8,10 +8,10 @@ use think\console\Input;
 use app\admin\middleware\LakeAdminAppMap;
 use app\admin\middleware\LoadModule;
 use app\admin\middleware\CheckModule;
-use app\admin\listener\InitConfig;
 
-use app\admin\model\Hook as HookModel;
+use app\admin\model\Hook as EventModel;
 use app\admin\service\ModuleInit as ModuleInitService;
+use app\admin\service\ConfigInit as ConfigInitService;
 
 /**
  * lake-admin 服务
@@ -23,10 +23,8 @@ class Service extends BaseService
 {
     public function register()
     {
-        // 设置admin目录
-        $this->app->env->set([
-            'lake_admin_app_path' => rtrim(dirname(dirname(__DIR__)), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR,
-        ]);
+        // 全局配置
+        $this->setGlobalConfig();
         
         // 系统配置
         $this->setSystemConfig();
@@ -41,10 +39,10 @@ class Service extends BaseService
     {
         if ($this->isLakeAdminInstallCli() !== true) {
             // 初始化配置信息
-            (new InitConfig())->handle();
+            (new ConfigInitService())->handle();
             
-            // 后台系统配置
-            $this->setSystemHooks();
+            //  全局自定义事件
+            $this->setSystemEvents();
             
             // 初始化模块
             (new ModuleInitService())->handle();
@@ -53,26 +51,6 @@ class Service extends BaseService
         $this->app->event->listen('HttpRun', function () {
             $this->app->middleware->add(LakeAdminAppMap::class);
         }, true);
-        
-        // app初始化，全部模块
-        $this->app->event->listen('HttpRun', function ($params) {    
-            $path = $this->app->env->get('lake_admin_app_path');
-            
-            $lake_admin_layout = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'layout.html';
-            $lake_admin_input_item = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'inputItem.html';
-            
-            // 设置环境变量
-            $this->app->env->set([
-                'lake_admin_layout' => $lake_admin_layout,
-                'lake_admin_input_item' => $lake_admin_input_item,
-            ]);
-            
-            // 设置公用参数
-            $this->app->view->assign([
-                'lake_admin_layout' => $lake_admin_layout,
-                'lake_admin_input_item' => $lake_admin_input_item,
-            ]);
-        });
         
         if ($this->isLakeAdminInstallCli() !== true) {
             // 全部模块
@@ -114,6 +92,37 @@ class Service extends BaseService
     }
     
     /**
+     * 配置全局配置信息
+     *
+     * @create 2020-8-6
+     * @author deatil
+     */
+    protected function setGlobalConfig() 
+    {
+        $path = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR;
+        
+        // 设置admin目录
+        $this->app->env->set([
+            'lake_admin_app_path' => $path,
+        ]);
+        
+        $lake_admin_layout = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'layout.html';
+        $lake_admin_input_item = $path . 'admin' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'inputItem.html';
+        
+        // 设置环境变量
+        $this->app->env->set([
+            'lake_admin_layout' => $lake_admin_layout,
+            'lake_admin_input_item' => $lake_admin_input_item,
+        ]);
+        
+        // 设置公用参数
+        $this->app->view->assign([
+            'lake_admin_layout' => $lake_admin_layout,
+            'lake_admin_input_item' => $lake_admin_input_item,
+        ]);
+    }
+    
+    /**
      * 设置 lake-admin 系统配置
      *
      * @create 2020-4-7
@@ -138,28 +147,28 @@ class Service extends BaseService
     }
     
     /**
-     * 配置全局hook信息
+     * 配置全局事件
      *
      * @create 2020-4-7
      * @author deatil
      */
-    protected function setSystemHooks() 
+    protected function setSystemEvents() 
     {
-        $hooks = $this->app->cache->get("lake_admin_hooks");
-        if (empty($hooks)) {
-            $hooks = HookModel::field('name,class')
+        $events = $this->app->cache->get("lake_admin_events");
+        if (empty($events)) {
+            $events = EventModel::field('name,class')
                 ->where([
                     ['status', '=', 1],
                 ])
                 ->order('listorder ASC, id ASC')
                 ->select()
                 ->toArray();
-            $this->app->cache->set("lake_admin_hooks", $hooks);
+            $this->app->cache->set("lake_admin_events", $events);
         }
         
-        if (!empty($hooks)) {
-            foreach ($hooks as $hook) {
-                $this->app->event->listen($hook['name'], $hook['class']);
+        if (!empty($events)) {
+            foreach ($events as $event) {
+                $this->app->event->listen($event['name'], $event['class']);
             }
         }
     }

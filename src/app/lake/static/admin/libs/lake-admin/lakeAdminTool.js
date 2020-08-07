@@ -4,11 +4,34 @@
  * 
  * Apache License 2.0 © Deatil
  */
-layui.define(['jquery', 'jqueryCookie', 'lakeAdminMenu'], function (exports) {
+layui.define(['jquery', 'jqueryCookie', 'lakeAdminMenu', 'IScroll'], function (exports) {
     var lakeAdminMenu = layui.lakeAdminMenu,
-        $ = layui.$;
+        $ = layui.$,
+        IScroll = layui.IScroll;
     
     var lakeAdminTool = {
+        topMenuScroll: function() {
+            if ($('body').width() > 768) {
+                var topMenuUlWidth = 0;
+                $(".lake-admin-top-level-scroll ul").find("li").each(function() {
+                    topMenuUlWidth += $(this).width();
+                });
+                $(".lake-admin-top-level-scroll ul").width(topMenuUlWidth);
+            } else {
+                $(".lake-admin-top-level-scroll ul").width('');
+            }
+            
+            var topMenuScroll = new IScroll(".lake-admin-top-level-scroll", {
+                mouseWheel: true, // 开启鼠标滚轮支持
+                scrollbars: false, // 开启滚动条支持
+                fadeScrollbars: true,
+                click:true,
+                scrollY:true,
+                scrollX:true,
+                interactiveScrollbars:true,
+                preventDefault: false,
+            });
+        },
         
         // 选择左边菜单
         selectLeftMenu: function(data_id) {

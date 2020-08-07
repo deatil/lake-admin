@@ -1,3 +1,19 @@
+function getProjectUrl() {
+    var layuiDir = layui.cache.dir;
+    if (!layuiDir) {
+        var js = document.scripts, last = js.length - 1, src;
+        for (var i = last; i > 0; i--) {
+            if (js[i].readyState === 'interactive') {
+                src = js[i].src;
+                break;
+            }
+        }
+        var jsPath = src || js[last].src;
+        layuiDir = jsPath.substring(0, jsPath.lastIndexOf('/') + 1);
+    }
+    return layuiDir.substring(0, layuiDir.indexOf('layui'));
+}
+
 layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "md5", "utils"], function(exports) {
     var $ = layui.jquery,
         element = layui.element,
@@ -6,7 +22,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "md5", "util
         md5 = layui.md5,
         layer = layui.layer;
         
-    var lakeSkinRootPath = 'admin/libs/lock-screen/';
+    var lakeSkinRootPath = getProjectUrl() + 'lock-screen/';
     var userAvatar = $(".lake-admin-user-avatar").attr("src");
     var userNickname = $(".lake-admin-user-avatar").attr("alt");
     

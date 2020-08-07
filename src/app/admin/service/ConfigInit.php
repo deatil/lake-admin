@@ -1,6 +1,6 @@
 <?php
 
-namespace app\admin\listener;
+namespace app\admin\service;
 
 use think\facade\Env;
 use think\facade\Config;
@@ -14,7 +14,7 @@ use app\admin\model\Config as ConfigModel;
  * @create 2019-7-6
  * @author deatil
  */
-class InitConfig
+class ConfigInit
 {
 
     /**
@@ -44,11 +44,11 @@ class InitConfig
     private function setAppConfig()
     {
         // 读取系统配置
-        $system_config = (new ConfigModel)->getConfigList();
+        $systemConfig = (new ConfigModel)->getConfigList();
         
         // 设置配置信息
-        if (!empty($system_config)) {
-            foreach ($system_config as $key => $value) {
+        if (!empty($systemConfig)) {
+            foreach ($systemConfig as $key => $value) {
                 Config::set([
                     $key => $value,
                 ], 'app');
@@ -64,12 +64,12 @@ class InitConfig
      */
     private function setAppEnv()
     {
-        $lake_module_path = config('app.module_path');
-        $root_url = rtrim(dirname($_SERVER["SCRIPT_NAME"]), '\\/') . '/';
+        $lakeModulePath = config('app.module_path');
+        $rootUrl = rtrim(dirname($_SERVER["SCRIPT_NAME"]), '\\/') . '/';
     
         Env::set([
-            'lake_module_path' => $lake_module_path,
-            'root_url' => $root_url,
+            'lake_module_path' => $lakeModulePath,
+            'root_url' => $rootUrl,
         ]);
     }
 
