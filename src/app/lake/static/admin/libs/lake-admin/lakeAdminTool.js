@@ -47,11 +47,15 @@ layui.define(['jquery', 'jqueryCookie', 'lakeAdminMenu', 'IScroll'], function (e
             }
         },
         
-        topMenuClick: function(curid) {
+        topMenuClick: function(curid, menus) {
             if (curid == "default") {
                 var objtopmenu = $('#top_nav_menus li:first-child').find("a");
             } else {
-                var topmenu = lakeAdminMenu.getTopMenuByID(curid);
+                var topmenu = lakeAdminMenu.getTopMenuByID(curid, menus);
+                if (!topmenu) {
+                    return ;
+                }
+                
                 var objtopmenu = $('#top_nav_menus').find("a[lay-id=" + topmenu.menuid + "]");
             }
             

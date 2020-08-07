@@ -66,7 +66,7 @@ layui.define([
                 var lake_admin_menuid = $.cookie('lake-admin-menuid');
                 
                 // 选择顶部菜单
-                lakeAdminTool.topMenuClick(lake_admin_menuid);
+                lakeAdminTool.topMenuClick(lake_admin_menuid, lakeAdmin.menus);
                 
                 // 点击左侧菜单
                 $("#side_menus_bar a[lay-id="+lake_admin_menuid+"], .js-menu-nav a[lay-id="+lake_admin_menuid+"]").trigger('click');
@@ -189,7 +189,7 @@ layui.define([
                 var data_id = $(this).attr('lay-id');
                 if (data_id) {
                     // 选择顶部菜单
-                    lakeAdminTool.topMenuClick(data_id);
+                    lakeAdminTool.topMenuClick(data_id, lakeAdmin.menus);
                     
                     // 选择左边菜单
                     $("#side_menus_bar").find(".layui-this").removeClass('layui-this');

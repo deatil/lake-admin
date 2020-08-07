@@ -113,9 +113,7 @@
             var thiz = this;
             var ret = {};
             
-            if (!mid) {
-                ret = 'default';
-            } else {
+            if (mid) {
                 $.each(menus, function(i, o) {
                     if (o.menuid && o.menuid == mid) {
                         ret = o;
