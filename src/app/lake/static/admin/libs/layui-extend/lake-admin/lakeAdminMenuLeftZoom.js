@@ -18,7 +18,7 @@
         
         list: function () {
             var thiz = this;
-            var openTip = '';
+            var openTip;
             
             // 监听提示信息
             $("body").on("mouseenter", ".layui-layout-admin-collapse .layui-nav-tree .lake-admin-nav-item", function () {
@@ -45,19 +45,26 @@
                     console.log(e.message);
                 }
             });
+            
+            $("body").on("click", ".layui-layout-admin-collapse .layui-nav-tree .lake-admin-nav-item a", function () {
+                var layId = $(this).attr("lay-id");
+                $(".popup-tips").find('[lay-id='+layId+']')
+                    .parents('dd').addClass("layui-this")
+                    .siblings("dd").removeClass("layui-this");
+            });
         },
         
         tip: function () {
             // 左侧导航标题
-            var left_nav_layer_tips;
+            var openTip;
             $(document).on('mouseenter', ".layui-layout-admin-collapse .lay-tip-title", function() {
                 var title = $(this).attr("lay-title");
-                left_nav_layer_tips = layer.tips(title, this, {
+                openTip = layer.tips(title, this, {
                     tips: [2, '#009688'],
                 });
             });
             $(document).on('mouseleave', ".layui-layout-admin-collapse .lay-tip-title", function() {
-                layer.close(left_nav_layer_tips);
+                layer.close(openTip);
             });
         },
         
@@ -71,7 +78,7 @@
             $(document).on('click', ".admin-menu-toggle", function() {
                 if ($(".layui-layout-admin").hasClass("layui-layout-admin-collapse")) {
                     $(".layui-layout-admin").removeClass("layui-layout-admin-collapse");
-                    $.cookie('admin-collapse', null);
+                    $.cookie('admin-collapse', "", {expires: -1});
                 } else {
                     $(".layui-layout-admin").addClass("layui-layout-admin-collapse");
                     $.cookie('admin-collapse', 'collapse', {

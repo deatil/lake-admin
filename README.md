@@ -8,12 +8,6 @@
 *  更新 `layui` 版本到 v2.5.6 版本
 
 
-### 开源协议
-
-*  `lake-admin` 遵循 `Apache2` 开源协议发布，在保留本系统版权（包括版权文件及系统相关标识，相关的标识需在明显位置标示出来）的情况下提供个人及商业免费使用。  
-*  使用该项目时，请在明显的位置保留该系统的标识（标识包括：lake，lake-admin及该系统所属logo），为了防止不必要的麻烦，请遵守该协议要求。
-
-
 ### 版权
 
 *  该系统所属版权归deatil(deatil#github.com)所有。
@@ -37,3 +31,9 @@
 [![LakeAdmin1](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin1.png)](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin1.png)
 [![LakeAdmin2](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin2.png)](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin2.png)
 [![LakeAdmin3](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin3.png)](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin3.png)
+
+
+### 开源协议
+
+*  `lake-admin` 遵循 `Apache2` 开源协议发布，在保留本系统版权（包括版权文件及系统相关标识，相关的标识需在明显位置标示出来）的情况下提供个人及商业免费使用。  
+*  使用该项目时，请在明显的位置保留该系统的标识（标识包括：lake，lake-admin及该系统所属logo），为了防止不必要的麻烦，请遵守该协议要求。

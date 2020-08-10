@@ -4,6 +4,7 @@ layui.define(['table', 'element', 'layer', 'form', 'notice', 'msg', 'lakeform', 
         layer = layui.layer,
         $ = layui.jquery,
         form = layui.form,
+        msg = layui.msg,
         lakeform = layui.lakeform,
         notice = layui.notice;
     

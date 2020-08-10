@@ -15,21 +15,23 @@
 <body class="layui-layout-body lake-admin lake-admin-skin">
     <div class="layui-layout layui-layout-admin">
         <div class="layui-header">
-            <span href="javascript:void(0);" class="lake-admin-logo">
-                <a href="javascript:void(0);" title="{:config('lake.name')}" class="lake-admin-logo-name">
+            <div class="lake-admin-logo">
+                <a href="{:url('index/index')}" title="{:config('lake.name')}" class="lake-admin-logo-name">
                     <span>{:config('lake.name')}</span>
                 </a>
-                <a href="javascript:void(0);" title="{:config('lake.name')}" class="lake-admin-logo-name-mini">
+                <a href="{:url('index/index')}" title="{:config('lake.name')}" class="lake-admin-logo-name-mini">
                     <span>{:config('lake.name_mini')}</span>
                 </a>
-            </span>
-            <a href="javascript:;" class="admin-menu-toggle icon iconfont icon-other lake-admin-winner-hide" title="隐藏侧边"></a>
-            <a href="javascript:;" class="admin-side-full icon iconfont icon-fullscreen lake-admin-winner-hide" title="全屏显示"></a>
-            <div class="lake-admin-top-level">
-                <div class="lake-admin-top-level-scroll">
-                    <ul class="layui-nav lake-admin-menus-winner lake-admin-top-level-menus" id="top_nav_menus">
-                        <!--AJAX数据-->
-                    </ul>
+            </div>
+            <div class="lake-admin-left">
+                <a href="javascript:;" class="admin-menu-toggle icon iconfont icon-other lake-admin-winner-hide" title="隐藏侧边"></a>
+                <a href="javascript:;" class="admin-side-full icon iconfont icon-fullscreen lake-admin-winner-hide" title="全屏显示"></a>
+                <div class="lake-admin-top-level">
+                    <div class="lake-admin-top-level-scroll">
+                        <ul class="layui-nav lake-admin-menus-winner lake-admin-top-level-menus" id="top_nav_menus">
+                            <!--AJAX数据-->
+                        </ul>
+                    </div>
                 </div>
             </div>
             <ul class="layui-nav layui-layout-right">
@@ -89,9 +91,13 @@
                         <span class="lake-admin-winner-hide">&nbsp;主题</span>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd data-skin="black"><a href="javascript:;">黑白</a></dd>
-                        <dd data-skin="white"><a href="javascript:;">纯白</a></dd>
-                        <dd data-skin="blue"><a href="javascript:;">蓝白</a></dd>
+                        <dd data-skin="theme-black"><a href="javascript:;">黑白</a></dd>
+                        <dd data-skin="theme-blue"><a href="javascript:;">蓝色</a></dd>
+                        <dd data-skin="theme-purple"><a href="javascript:;">紫色</a></dd>
+                        <dd data-skin="theme-green"><a href="javascript:;">黑绿</a></dd>
+                        <dd data-skin="theme-red"><a href="javascript:;">红色</a></dd>
+                        <dd data-skin="theme-red-white"><a href="javascript:;">红白</a></dd>
+                        <dd data-skin="theme-pink"><a href="javascript:;">粉红</a></dd>
                     </dl>
                 </li>
                 
@@ -222,22 +228,22 @@
     <script type="text/javascript">
     var lake_menus = <?php echo json_encode($menus); ?>;
     
-    if (self.location != top.location) {
-        top.location.href = '{:url("index/index")}';
+    if (window != top) {
+        top.location.replace(location.href);
     }
     
     layui.config({
         version: '2020080510355895',
         base: 'admin/libs/layui-extend/'
     }).extend({
-        lakeAdmin: '{/}admin/libs/lake-admin/lakeAdmin',
-        lakeAdminMenu: '{/}admin/libs/lake-admin/lakeAdminMenu',
-        lakeAdminSkin: '{/}admin/libs/lake-admin/lakeAdminSkin',
-        lakeAdminTool: '{/}admin/libs/lake-admin/lakeAdminTool',
-        lakeAdminFullscreen: '{/}admin/libs/lake-admin/lakeAdminFullscreen',
-        lakeAdminContextmenu: '{/}admin/libs/lake-admin/lakeAdminContextmenu',
-        lakeAdminMenuLeftZoom: '{/}admin/libs/lake-admin/lakeAdminMenuLeftZoom',
-        lakeAdminLockScreen: '{/}admin/libs/lock-screen/lock-screen',
+        lakeAdmin: 'lake-admin/lakeAdmin',
+        lakeAdminMenu: 'lake-admin/lakeAdminMenu',
+        lakeAdminSkin: 'lake-admin/lakeAdminSkin',
+        lakeAdminTool: 'lake-admin/lakeAdminTool',
+        lakeAdminFullscreen: 'lake-admin/lakeAdminFullscreen',
+        lakeAdminContextmenu: 'lake-admin/lakeAdminContextmenu',
+        lakeAdminMenuLeftZoom: 'lake-admin/lakeAdminMenuLeftZoom',
+        lakeAdminLockScreen: 'lock-screen/lock-screen',
     }).use(['lakeAdmin']);
     </script>
 </body>

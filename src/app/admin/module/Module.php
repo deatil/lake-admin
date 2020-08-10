@@ -458,7 +458,9 @@ class Module
         }
         
         // 执行菜单项安装
-        if (isset($config['menus']) && !empty($config['menus'])) {
+        if (isset($config['menus']) 
+            && !empty($config['menus'])
+        ) {
             if ($this->installMenu($name, $config['menus']) !== true) {
                 $this->installRollback($name);
                 return false;

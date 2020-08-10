@@ -1,10 +1,28 @@
-layui.define(['element', 'layer', 'form', 'contextMenu'], function(exports) {
+/*!
+ * lakeAdminLayout.js v1.0.2
+ * https://github.com/deatil/lake-admin
+ * 
+ * Apache License 2.0 © Deatil
+ */
+layui.define([
+    'element', 
+    'layer', 
+    'form', 
+    'lakeTool', 
+    'lakeBind', 
+    'lakeAdminSkin', 
+    'contextMenu'
+], function(exports) {
     var element = layui.element,
         layer = layui.layer,
         $ = layui.jquery,
         form = layui.form,
+        lakeAdminSkin = layui.lakeAdminSkin,
         contextMenu = layui.contextMenu;
-        
+    
+    // 监听主题
+    lakeAdminSkin.listenSkin();
+    
     !(function() {
         if (contextMenu) {
             $('.layui-card-header').on('contextmenu', function (e) {

@@ -1,3 +1,9 @@
+/*!
+ * lakeAdmin.js v1.0.2
+ * https://github.com/deatil/lake-admin
+ * 
+ * Apache License 2.0 © Deatil
+ */
 layui.define([
     'element', 
     'layer', 
@@ -435,7 +441,7 @@ layui.define([
                     icon: 3, 
                     title: '提示信息' 
                 }, function(index) {
-                    $.cookie('lake-admin-menuid', null);
+                    $.cookie('lake-admin-menuid', "", {expires: -1});
                     location.href = url;
                 });
             });

@@ -1,5 +1,5 @@
 function getProjectUrl() {
-    var layuiDir = layui.cache.dir;
+    var layuiDir = layui.cache.base;
     if (!layuiDir) {
         var js = document.scripts, last = js.length - 1, src;
         for (var i = last; i > 0; i--) {
@@ -11,7 +11,7 @@ function getProjectUrl() {
         var jsPath = src || js[last].src;
         layuiDir = jsPath.substring(0, jsPath.lastIndexOf('/') + 1);
     }
-    return layuiDir.substring(0, layuiDir.indexOf('layui'));
+    return layuiDir;
 }
 
 layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "md5", "utils"], function(exports) {
@@ -97,7 +97,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "md5", "util
                     lockShowInit(utils);//锁屏
                     
                     menuid = $.cookie('lake-admin-menuid');
-                    $.cookie('lake-admin-menuid', null);
+                    $.cookie('lake-admin-menuid', "", {expires: -1});
                 } else {
                     layer.alert(res.msg);
                 }

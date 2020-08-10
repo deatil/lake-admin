@@ -147,9 +147,13 @@
          // 将上传实例存起来
          webuploader.push(uploader);
      });
+     
+    $('.uploader-list').each(function () {
+        $(this).viewer();
+    });
 
      //图片上传
-     $('.js-upload-image,.js-upload-images').each(function() {
+    $('.js-upload-image,.js-upload-images').each(function() {
          var $input_file = $(this).find('input');
          var $input_file_name = $input_file.attr('id');
          // 图片列表
@@ -262,7 +266,9 @@
              $li.find('.file-state').html('<div class="layui-bg-green">' + response.info + '</div>');
              $li.find('img').attr('data-original', response.path);
              // 上传成功后，再次初始化图片查看功能
-             //Dolphin.viewer();
+            $('.uploader-list').each(function () {
+                $(this).viewer();
+            });
          });
 
          // 文件上传失败，显示上传出错。
@@ -304,7 +310,9 @@
                  $input_file.val('');
              }
              // 删除后，再次初始化图片查看功能
-             //Dolphin.viewer();
+            $('.uploader-list').each(function () {
+                $(this).viewer();
+            });
          });
 
          // 将上传实例存起来
@@ -325,5 +333,5 @@
                  }
              });
          }
-     });
- });
+    });
+});

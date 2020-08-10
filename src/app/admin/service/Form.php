@@ -115,6 +115,8 @@ class Form
         }
         if (!defined('FORM_JS')) {
             $string .= '
+                <script type="text/javascript" src="' . $static_url . '/libs/viewer/viewer.min.js"></script>
+                <link rel="stylesheet" href="' . $static_url . '/libs/viewer/viewer.min.css">
                 <script type="text/javascript"  src="' . $static_url . '/admin/js/form.js"></script>';
             define('FORM_JS', 1);
         }

@@ -31,19 +31,20 @@
     
     {block name="layui"}
     <script type="text/javascript">
-    if (self.location == top.location) {
-        window.location.href = '{:url("index/index")}';
+    if (window == top) {
+        window.location.replace('{:url("index/index")}');
     }
     
     layui.config({
         version: '2020072023015895',
         base: 'admin/libs/layui-extend/'
     }).extend({
-        lakeTool: '{/}admin/libs/lake-admin/lakeTool',
-        lakeBind: '{/}admin/libs/lake-admin/lakeBind',
-        lakeAdminLayout: '{/}admin/libs/lake-admin/lakeAdminLayout',
-        tagsinput: '{/}admin/libs/layui-extend-tagsinput/tagsinput',
-    }).use(['lakeTool', 'lakeBind', 'lakeAdminLayout']);
+        lakeTool: 'lake-admin/lakeTool',
+        lakeBind: 'lake-admin/lakeBind',
+        lakeAdminSkin: 'lake-admin/lakeAdminSkin',
+        lakeAdminLayout: 'lake-admin/lakeAdminLayout',
+        tagsinput: 'tagsinput/tagsinput',
+    }).use(['lakeAdminLayout']);
     </script>
     {/block}
     {block name="script"}{/block}
