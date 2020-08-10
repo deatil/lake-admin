@@ -20,10 +20,27 @@
 .layui-layout-admin .layui-header a {
     color: #333;
 }
-
 .layui-layout-admin .layui-header a:hover {
     color: #333;
 }
+
+.layui-layout-admin .layui-header .lake-admin-skin-active {
+    background-color: #FB7299;
+}
+.layui-layout-admin .layui-header .lake-admin-skin-active:hover {
+    background-color: #FB7299;
+}
+.layui-layout-admin .layui-header .lake-admin-skin-active a {
+    color: #fff;
+}
+.layui-layout-admin .layui-header .lake-admin-skin-active a:hover {
+    color: #fff;
+}
+.layui-layout-admin .layui-header .lake-admin-skin-active a:hover {
+    color: #fff;
+    background-color: #FB7299;
+}
+
 .lake-admin .lake-admin-top-level-menus .layui-nav-item.layui-this {
     background-color: #fff;
 }
@@ -303,5 +320,8 @@
 
 .layui-card .layui-card-header {
     background: #FB7299 !important;
+}
+.layui-elem-quote {
+    border-left: 5px solid #FB7299 !important;
 }
 
