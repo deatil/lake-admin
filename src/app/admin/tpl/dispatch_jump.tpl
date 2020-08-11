@@ -52,7 +52,12 @@
             var interval = setInterval(function () {
                 var time = --wait.innerHTML;
                 if (time <= 0) {
-                    location.href = "{$url}";
+                    if (window == top) {
+                        location.href = "{$url}";
+                    } else {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    }
                     clearInterval(interval);
                 }
             }, 1000);
