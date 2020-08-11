@@ -18,6 +18,9 @@
     color: #fff;
     box-shadow: none !important;
 }
+.layui-layout-admin .layui-side .layui-nav .layui-nav-item a:hover {
+    color: #DD4B39;
+}
 
 /** header样式 */
 .layui-layout-admin .layui-header {
