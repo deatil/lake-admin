@@ -17,7 +17,7 @@ use lake\Symlink;
 use lake\Module;
 
 /**
- * lake-admin 插件cmd安装
+ * lake-admin 安装
  *
  * php think lake-admin:install [--dbpre lake_]
  *
@@ -53,13 +53,42 @@ class LakeAdminInstall extends Command
     protected function execute(Input $input, Output $output)
     {
         $output->writeln('');
-        $this->output->highlight('lake-admin version v' . app()->config->get('lake.version') . "\n");
+        $output->highlight('lake-admin version v' . app()->config->get('lake.version') . "\n");
+        
+        $isCheckFunc = $output->ask($input, '> Before install, you need check system\'fuctions (Y/n)?') ?: 'y';
+        if ($isCheckFunc === 'y') {
+            $this->lakeAdminCheckFunction($input, $output);
+        } else {
+            $output->info('> You not check and not install!');
+            return false;
+        }
+        
+        $output->writeln('');
         $isStart = $this->output->ask($input, '> You will install lake-admin (Y/n)?') ?: 'y';
-
         if ($isStart === 'y') {
             $this->lakeAdminInstall($input, $output);
         } else {
             $output->info('> You not install!');
+        }
+    }
+
+    /**
+     * 检测扩展
+     *
+     * @create 2020-8-11
+     * @author deatil
+     */
+    protected function lakeAdminCheckFunction(Input $input, Output $output)
+    {
+        $output->info("> lake-admin is checking...\n");
+        
+        $items = $this->checkFunc();
+        foreach ($items as $v) {
+            if ($v[2] == 'no') {
+                $output->writeln("<fg=red>" . $v[0] . "</> is need open.\n");
+            } else {
+                $output->writeln("<fg=green>" . $v[0]."</> is opened.");
+            }
         }
     }
 
@@ -71,12 +100,11 @@ class LakeAdminInstall extends Command
      */
     protected function lakeAdminInstall(Input $input, Output $output)
     {
-        $output->info("> lake-admin is installing...");
-        $output->writeln('');
+        $output->info("> lake-admin is installing...\n");
         
         $installLockFile = root_path() . 'install.lock';
         if (file_exists($installLockFile)) {
-            $output->info("<info>lake-admin tip:</info> lake-admin is installed!");
+            $output->writeln("<info>lake-admin tip:</info> lake-admin is installed!");
             return false;
         }
         
@@ -94,11 +122,11 @@ class LakeAdminInstall extends Command
         $databaseCharset = $dbConfig['charset'];
         
         if (empty($database)) {
-            $output->info("<info>lake-admin tip:</info> place set database config!");
+            $output->writeln("<info>lake-admin tip:</info> place set database config!");
             return false;
         }
         if (empty($databaseCharset)) {
-            $output->info("<info>lake-admin tip:</info> place set database charset config!");
+            $output->writeln("<info>lake-admin tip:</info> place set database charset config!");
             return false;
         }
         
@@ -121,13 +149,13 @@ class LakeAdminInstall extends Command
             . 'database' . DIRECTORY_SEPARATOR
             . 'lake.sql';
         if (!file_exists($sqlFile)) {
-            $output->info("<info>lake-admin tip:</info> sql is not exist!");
+            $output->writeln("<info>lake-admin tip:</info> sql is not exist!");
             return false;
         }
         
         $sqlStatement = Sql::getSqlFromFile($sqlFile);
         if (empty($sqlStatement)) {
-            $output->info("<info>lake-admin tip:</info> sql is empty!");
+            $output->writeln("<info>lake-admin tip:</info> sql is empty!");
             return false;
         }
         
@@ -153,7 +181,7 @@ class LakeAdminInstall extends Command
                 ], trim($value));
                 $db2->execute($value);
             } catch (\Exception $e) {
-                $output->info("<info>lake-admin tip:</info> import sql is error!");
+                $output->writeln("<info>lake-admin tip:</info> import sql is error!");
                 return false;
             }
         }
@@ -181,4 +209,39 @@ class LakeAdminInstall extends Command
        
         $output->info("Install lake-admin Successed!");
     }
+    
+    /**
+     * 函数及扩展检查
+     * @return array
+     *
+     * @create 2020-8-11
+     * @author deatil
+     */
+    private function checkFunc()
+    {
+        $items = [
+            ['pdo', '支持', 'yes', '类'],
+            ['pdo_mysql', '支持', 'yes', '模块'],
+            ['zip', '支持', 'yes', '模块'],
+            ['fileinfo', '支持', 'yes', '模块'],
+            ['curl', '支持', 'yes', '模块'],
+            ['xml', '支持', 'yes', '函数'],
+            ['file_get_contents', '支持', 'yes', '函数'],
+            ['mb_strlen', '支持', 'yes', '函数'],
+            ['gzopen', '支持', 'yes', '函数'],
+        ];
+
+        foreach ($items as &$v) {
+            if (('类' == $v[3] && !class_exists($v[0])) 
+                || ('模块' == $v[3] && !extension_loaded($v[0])) 
+                || ('函数' == $v[3] && !function_exists($v[0])) 
+            ) {
+                $v[1] = '不支持';
+                $v[2] = 'no';
+            }
+        }
+
+        return $items;
+    }
+
 }
