@@ -110,11 +110,6 @@
     border-left-color: #722ED1;
 }
 
-/** 主题切换 */
-.btnTheme:hover, .btnTheme.active {
-    border-color: #722ED1;
-}
-
 /** admin风格弹窗样式 */
 .layui-layer.layui-layer-admin .layui-layer-title {
     background-color: #722ED1;
@@ -260,10 +255,17 @@
 .lake-admin .layui-nav-tree .layui-nav-item.layui-nav-item-active > a:after {
     background-color: #722ED1;
 }
+.lake-admin .lake-admin-top-tabs-box .layui-nav-bar {
+    background-color: #722ED1;
+}
 
 .layui-card .layui-card-header {
     background: #722ED1 !important;
 }
+.layui-tab .layui-tab-title li.layui-this a {
+    color: #722ED1 !important;
+}
+
 .layui-elem-quote {
     border-left: 5px solid #722ED1 !important;
 }

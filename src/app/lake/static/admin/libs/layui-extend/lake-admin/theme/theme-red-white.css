@@ -64,7 +64,8 @@ html {
 }
 
 /** header线条 */
-.layui-layout-admin .layui-header .layui-nav .layui-this:after, .layui-layout-admin .layui-header .layui-nav-bar {
+.layui-layout-admin .layui-header .layui-nav .layui-this:after, 
+.layui-layout-admin .layui-header .layui-nav-bar {
     background-color: #fff;
 }
 
@@ -352,11 +353,6 @@ html {
     border-left-color: #DD4B39;
 }
 
-/** 主题切换 */
-.btnTheme:hover, .btnTheme.active {
-    border-color: #DD4B39;
-}
-
 /** admin风格弹窗样式 */
 .layui-layer.layui-layer-admin {
     /*border-radius: 6px;*/
@@ -522,6 +518,10 @@ html {
     background: #fff;
     border-bottom: 0;
 }
+.lake-admin .lake-admin-top-tabs-box .layui-nav-bar {
+    background-color: #DD4B39;
+}
+
 .lake-admin .popup-tips .layui-nav .layui-nav-item a {
     color: #000 !important;
     background: #fff;
@@ -538,6 +538,10 @@ html {
 .layui-card .layui-card-header {
     background: #DD4B39 !important;
 }
+.layui-tab .layui-tab-title li.layui-this a {
+    color: #DD4B39 !important;
+}
+
 .layui-elem-quote {
     border-left: 5px solid #DD4B39 !important;
 }

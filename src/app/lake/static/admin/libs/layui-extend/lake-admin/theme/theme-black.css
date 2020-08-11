@@ -62,7 +62,8 @@
 
 .layui-nav-tree .layui-nav-child dd.layui-this, 
 .layui-nav-tree .layui-nav-child dd.layui-this a, 
-.layui-nav-tree .layui-this, .layui-nav-tree .layui-this > a, 
+.layui-nav-tree .layui-this, 
+.layui-nav-tree .layui-this > a, 
 .layui-nav-tree .layui-this > a:hover {
     background-color: #009688;
 }
@@ -80,11 +81,26 @@
     color: rgba(238, 238, 238, .7);
 }
 
-.layui-side .layui-nav-itemed > a, .layui-nav-tree .layui-nav-title a, .layui-nav-tree .layui-nav-title a:hover {
+.layui-side .layui-nav-itemed > a, 
+.layui-nav-tree .layui-nav-title a, 
+.layui-nav-tree .layui-nav-title a:hover {
     color: #eee !important;
 }
 
 /** tab */
 .layui-card .layui-card-header {
     background: #3A3D49 !important;
+}
+
+.lake-admin .admin-menu-toggle { 
+    border:1px solid #1AA094; 
+}
+.lake-admin .admin-menu-toggle:hover { 
+    border:1px solid rgba(0,0,0,.3); 
+}
+.lake-admin .admin-side-full { 
+    border:1px solid #1AA094; 
+}
+.lake-admin .admin-side-full:hover { 
+    border:1px solid rgba(0,0,0,.3); 
 }

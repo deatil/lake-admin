@@ -71,8 +71,16 @@
 .layui-side .layui-nav .layui-nav-item a {
     color: #fff;
 }
+.layui-side .layui-nav .layui-nav-item a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, .15);
+}
 
-.layui-nav-tree .layui-nav-child dd.layui-this, .layui-nav-tree .layui-nav-child dd.layui-this a, .layui-nav-tree .layui-this, .layui-nav-tree .layui-this > a, .layui-nav-tree .layui-this > a:hover {
+.layui-nav-tree .layui-nav-child dd.layui-this, 
+.layui-nav-tree .layui-nav-child dd.layui-this a, 
+.layui-nav-tree .layui-this, 
+.layui-nav-tree .layui-this > a, 
+.layui-nav-tree .layui-this > a:hover {
     background-color: rgba(255, 255, 255, .15);
     color: #fff;
 }
@@ -117,11 +125,6 @@
 /** 主体标题 */
 .layui-body-header-title {
     border-left-color: #FB7299;
-}
-
-/** 主题切换 */
-.btnTheme:hover, .btnTheme.active {
-    border-color: #FB7299;
 }
 
 /** admin风格弹窗样式 */
@@ -309,17 +312,29 @@
     background: #fff;
     border-bottom: 0;
 }
+.lake-admin .lake-admin-top-tabs-box .layui-nav-bar {
+    background-color: #FB7299;
+}
+
+.lake-admin .popup-tips .layui-nav-item ,
 .lake-admin .popup-tips .layui-nav .layui-nav-item a {
     color: #fff !important;
     background: #FB7299;
 }
 .lake-admin .popup-tips .layui-nav .layui-nav-item a:hover {
     color: #fff;
-    background: #FB7295;
+    background: rgba(255, 255, 255, .15);
+}
+.lake-admin .popup-tips .layui-nav .layui-nav-item dd.layui-this a {
+    color: #fff !important;
+    background: rgba(255, 255, 255, .15);
 }
 
 .layui-card .layui-card-header {
     background: #FB7299 !important;
+}
+.layui-tab .layui-tab-title li.layui-this a {
+    color: #FB7299 !important;
 }
 .layui-elem-quote {
     border-left: 5px solid #FB7299 !important;
