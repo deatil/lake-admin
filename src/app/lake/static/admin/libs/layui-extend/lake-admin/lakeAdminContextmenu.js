@@ -44,17 +44,17 @@
                 var thisDataId = $(this).attr('lay-id');
                 if (!(thisDataId != '' && thisDataId != 'default')) {
                     var ul = '<ul>';
-                    ul += '<li data-target="lake-admin-contextmenu-refresh-page" title="刷新当前选项卡"><i class="iconfont icon-shuaxin" aria-hidden="true"></i> 刷新</li>';
-                    ul += '<li data-target="lake-admin-contextmenu-close-other-page" title="关闭其他选项卡"><i class="layui-icon layui-icon-radio" aria-hidden="true"></i> 关闭其他</li>';
-                    ul += '<li data-target="lake-admin-contextmenu-close-all-page" title="关闭全部选项卡"><i class="iconfont icon-richangqingli" aria-hidden="true"></i> 全部关闭</li>';
-                    ul += '</ul>';
+                        ul += '<li data-target="lake-admin-contextmenu-refresh-page" title="刷新当前选项卡"><i class="iconfont icon-shuaxin" aria-hidden="true"></i> 刷新</li>';
+                        ul += '<li data-target="lake-admin-contextmenu-close-other-page" title="关闭其他选项卡"><i class="layui-icon layui-icon-radio" aria-hidden="true"></i> 关闭其他</li>';
+                        ul += '<li data-target="lake-admin-contextmenu-close-all-page" title="关闭全部选项卡"><i class="iconfont icon-richangqingli" aria-hidden="true"></i> 全部关闭</li>';
+                        ul += '</ul>';
                 } else {
                     var ul = '<ul>';
-                    ul += '<li data-target="lake-admin-contextmenu-refresh-page" title="刷新当前选项卡"><i class="iconfont icon-shuaxin" aria-hidden="true"></i> 刷新</li>';
-                    ul += '<li data-target="lake-admin-contextmenu-close-current-page" title="关闭当前选项卡"><i class="layui-icon layui-icon-close" aria-hidden="true"></i> 关闭当前</li>';
-                    ul += '<li data-target="lake-admin-contextmenu-close-other-page" title="关闭其他选项卡"><i class="layui-icon layui-icon-radio" aria-hidden="true"></i> 关闭其他</li>';
-                    ul += '<li data-target="lake-admin-contextmenu-close-all-page" title="关闭全部选项卡"><i class="iconfont icon-richangqingli" aria-hidden="true"></i> 全部关闭</li>';
-                    ul += '</ul>';
+                        ul += '<li data-target="lake-admin-contextmenu-refresh-page" title="刷新当前选项卡"><i class="iconfont icon-shuaxin" aria-hidden="true"></i> 刷新</li>';
+                        ul += '<li data-target="lake-admin-contextmenu-close-current-page" title="关闭当前选项卡"><i class="layui-icon layui-icon-close" aria-hidden="true"></i> 关闭当前</li>';
+                        ul += '<li data-target="lake-admin-contextmenu-close-other-page" title="关闭其他选项卡"><i class="layui-icon layui-icon-radio" aria-hidden="true"></i> 关闭其他</li>';
+                        ul += '<li data-target="lake-admin-contextmenu-close-all-page" title="关闭全部选项卡"><i class="iconfont icon-richangqingli" aria-hidden="true"></i> 全部关闭</li>';
+                        ul += '</ul>';
                 }
                 
                 var contextmenuHtml = '<div class="lake-admin-contextmenu">' + ul + '</div>';
@@ -83,10 +83,9 @@
                     .append(contextmenuHtmlMask);
             
                 var topNav = $(".lake-admin-top-tab");
+                
                 // 获取当前点击选项卡的id值
                 var id = $($target).attr('lay-id');
-                var topTabUl = $('#body_history');
-                var topTabPrevWith = $('#layui_iframe_refresh').outerWidth(true) + $('#page-prev').outerWidth(true);
                 var $context = $(document).find('div.lake-admin-contextmenu');
                 var $maskContext = $(document).find('div.lake-admin-contextmenu-mask');
                 if ($context.length > 0) {
@@ -122,10 +121,6 @@
                                         }
                                     });
                                     
-                                    topTabUl.animate({
-                                        left: topTabPrevWith
-                                    }, 200, 'swing');
-                                    
                                     $('li[lay-id="'+id+'"]').trigger('click');
                                     
                                     break;
@@ -135,10 +130,6 @@
                                             $(this).find(".layui-tab-close").trigger('click');
                                         }
                                     });
-                                    
-                                    topTabUl.animate({
-                                        left: topTabPrevWith
-                                    }, 200, 'swing');
                                     
                                     $('li[lay-id="default"]').trigger('click');
                                     

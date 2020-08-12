@@ -52,13 +52,18 @@
             var interval = setInterval(function () {
                 var time = --wait.innerHTML;
                 if (time <= 0) {
-                    if (window == top) {
+                    clearInterval(interval);
+                    
+                    if (typeof parent.layer == "undefined") {
                         location.href = "{$url}";
                     } else {
                         var index = parent.layer.getFrameIndex(window.name);
-                        parent.layer.close(index);
+                        if (index > 0) {
+                            parent.layer.close(index);
+                        } else {
+                            location.href = "{$url}";
+                        }
                     }
-                    clearInterval(interval);
                 }
             }, 1000);
         })();

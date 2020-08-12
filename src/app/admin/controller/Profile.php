@@ -125,6 +125,8 @@ class Profile extends Base
                 $this->error('修改密码失败！');
             }
             
+            AdminFacade::logout();
+            
             $this->success("修改密码成功！");
         } else {
             $id = $adminInfo['id'];

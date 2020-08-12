@@ -231,17 +231,27 @@ layui.define([
             $('#body_history').on('click', '.layui-tab-close', function(e) {
                 e.stopPropagation();
                 e.preventDefault();
+                
                 var li = $(this).parent(),
                     prev_li = li.prev('li'),
                     data_id = li.attr('lay-id');
+                
+                var topTabUl = $('#body_history');
+                var topTabPrevWith = $('#layui_iframe_refresh').outerWidth(true) + $('#page-prev').outerWidth(true);
+                
                 li.hide(60, function() {
                     $(this).remove(); // 移除选项卡
                     $('#iframe_' + data_id).remove(); // 移除iframe页面
                     var current_li = $('#body_history li.layui-this');
                     // 找到关闭后当前应该显示的选项卡
                     current_li = current_li.length ? current_li : prev_li;
-                    
                     lakeAdminTool.showTab(current_li);
+                    
+                    if (topTabUl.find().length <= 2) {
+                        topTabUl.animate({
+                            left: topTabPrevWith
+                        }, 200);
+                    }
                 });
             });
 
@@ -332,9 +342,6 @@ layui.define([
                 e.preventDefault();
                 e.stopPropagation();
                 
-                var top_tab_ul = $('#body_history');
-                var top_tab_prev_with = $('#layui_iframe_refresh').outerWidth(true) + $('#page-prev').outerWidth(true);
-                
                 if ($("#body_history li").length > 1) {
                     var this_data_id = $("#body_history li.layui-this").attr('lay-id');
                     $("#body_history li").each(function() {
@@ -346,14 +353,9 @@ layui.define([
                             $(this).find(".layui-tab-close").trigger('click');
                         }
                     });
-
                 } else {
                     layer.msg("没有可以关闭的窗口了");
                 }
-                
-                top_tab_ul.animate({
-                    left: top_tab_prev_with
-                }, 200, 'swing');
 
                 $(document).find('div.lake-admin-contextmenu').remove();
             });
@@ -362,9 +364,6 @@ layui.define([
             $(document).on("click", ".lake-admin-close-all-page", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                
-                var top_tab_ul = $('#body_history');
-                var top_tab_prev_with = $('#layui_iframe_refresh').outerWidth(true) + $('#page-prev').outerWidth(true);
                 
                 if ($("#body_history li").length > 1) {
                     $("#body_history li").each(function() {
@@ -376,10 +375,6 @@ layui.define([
                 } else {
                     layer.msg("没有可以关闭的窗口了");
                 }
-                
-                top_tab_ul.animate({
-                    left: top_tab_prev_with
-                }, 200, 'swing');
                 
                 $('li[lay-id="default"]').trigger('click');
 
