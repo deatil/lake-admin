@@ -32,7 +32,9 @@ class AuthRule extends ModelBase
                 'status' => 1,
             ])
             ->order('listorder ASC,module ASC')
-            ->column('name');
+            ->field('name,method')
+            ->select()
+            ->toArray();
         return $data;
     }
     

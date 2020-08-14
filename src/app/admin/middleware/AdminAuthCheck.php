@@ -124,9 +124,30 @@ class AdminAuthCheck
                 return;
             }
             
+            $param = request()->param();
+            
+            $passList = [];
             $noNeedAuthRules = (new AuthRuleModel())->getNoNeedAuthRuleList();
-            if (!in_array($rule, $noNeedAuthRules)) {
+            if (!empty($noNeedAuthRules)) {
+                foreach ($noNeedAuthRules as $noNeedAuthRule) {
+                    $noNeedAuthRuleString = strtolower($noNeedAuthRule['method'].':'.$noNeedAuthRule['name']);
+                    $noNeedAuthRuleQuery = preg_replace('/^.+\?/U', '', $noNeedAuthRuleString);
+                    parse_str($noNeedAuthRuleQuery, $noNeedAuthRuleParam);
+                    $intersect = array_intersect_assoc($param, $noNeedAuthRuleParam);
+                    $noNeedAuth = preg_replace('/\?.*$/U', '', $noNeedAuthRuleString);
+                    if ($noNeedAuth == $rule 
+                        && serialize($intersect) == serialize($noNeedAuthRuleParam)
+                    ) {
+                        $passList[] = $noNeedAuth;
+                    }
+                }
+            }
+            
+            if (empty($passList)) {
                 // 检测访问权限
+                if (!empty($param)) {
+                    $rule = $rule . '?' . http_build_query($param);
+                }
                 if (!$this->checkRule($rule, [1, 2])) {
                     $this->error('未授权访问!');
                 }

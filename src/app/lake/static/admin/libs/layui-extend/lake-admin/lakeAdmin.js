@@ -405,6 +405,7 @@ layui.define([
                 $.ajax({
                     url: url,
                     dataType: 'json',
+                    method: 'POST',
                     data: { 
                         type: $(this).data("type") 
                     },

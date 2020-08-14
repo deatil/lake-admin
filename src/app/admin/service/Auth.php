@@ -12,10 +12,7 @@ use think\facade\Db;
  * 2，可以同时对多条规则进行认证，并设置多条规则的关系（or或者and）
  *      $auth = new Auth();  $auth->check('规则1,规则2','用户id','and')
  *      第三个参数为and时表示，用户需要同时具有规则1和规则2的权限。 当第三个参数为or时，表示用户值需要具备其中一个条件即可。默认为or
- * 3，一个用户可以属于多个用户组(think_auth_group_access表 定义了用户所属用户组)。我们需要设置每个用户组拥有哪些规则(think_auth_group 定义了用户组权限)
- *
- * 4，支持规则表达式。
- *      在think_auth_rule 表中定义一条规则时，如果type为1， condition字段就可以定义规则表达式。 如定义{score}>5  and {score}<100  表示用户的分数在5-100之间时这条规则才会通过。
+ * 3，一个用户可以属于多个用户组(auth_group_access表 定义了用户所属用户组)。我们需要设置每个用户组拥有哪些规则(think_auth_group 定义了用户组权限)
  *
  * @create 2019-7-9
  * @author deatil
@@ -60,8 +57,13 @@ class Auth
      * @create 2019-7-9
      * @author deatil
      */
-    public function check($name, $uid, $type = 1, $mode = 'url', $relation = 'or')
-    {
+    public function check(
+        $name, 
+        $uid, 
+        $type = 1, 
+        $mode = 'url', 
+        $relation = 'or'
+    ) {
         if (!$this->_config['AUTH_ON']) {
             return true;
         }
@@ -76,40 +78,51 @@ class Auth
         }
         
         $list = []; // 保存验证通过的规则名
-        if ('url' == $mode) {
-            $nameParam = [];
-            $nameQuery = preg_replace('/^.+\?/U', '', $name);
-            if ($nameQuery != $name) {
-                parse_str($nameQuery, $nameParam);
-            }
-        }
         
-        $authList = $this->getAuthList($uid, $type); // 获取用户需要验证的所有有效规则列表
-        if (!empty($authList)) {
-            foreach ($authList as $auth) {
-                $query = preg_replace('/^.+\?/U', '', $auth);
-                if ($mode == 'url' && $query != $auth) {
-                    parse_str($query, $param); // 解析规则中的param
-                    $intersect = array_intersect_assoc($nameParam, $param);
-                    $auth = preg_replace('/\?.*$/U', '', $auth);
-                    if (in_array($auth, $name) 
-                        && serialize($intersect) == serialize($param)
-                    ) {
-                        // 如果节点相符且url参数满足
-                        $list[] = $auth;
+        if (!empty($name)) {
+            foreach ($name as $nameValue) {
+                if ($mode == 'url') {
+                    $nameParam = [];
+                    $nameQuery = preg_replace('/^.+\?/U', '', $nameValue);
+                    $nameAuth = preg_replace('/\?.*$/U', '', $nameValue);
+                    if ($nameAuth != $nameValue) {
+                        parse_str($nameQuery, $nameParam);
                     }
-                } elseif (in_array($auth, $name)) {
-                    $list[] = $auth;
+                }
+                
+                $authList = $this->getAuthList($uid, $type); // 获取用户需要验证的所有有效规则列表
+                if (!empty($authList)) {
+                    foreach ($authList as $auth) {
+                        if ($mode == 'url') {
+                            $query = preg_replace('/^.+\?/U', '', $auth);
+                            $auth2 = preg_replace('/\?.*$/U', '', $auth);
+                            
+                            if ($auth != $auth2) {
+                                parse_str($query, $param); // 解析规则中的param
+                                $intersect = array_intersect_assoc($nameParam, $param);
+                                
+                                if ($auth2 == $nameAuth
+                                    && serialize($intersect) == serialize($param)
+                                ) {
+                                    // 如果节点相符且url参数满足
+                                    $list[] = $auth;
+                                }
+                            } elseif ($auth2 == $nameAuth) {
+                                $list[] = $auth;
+                            }
+                        } elseif ($auth == $nameValue) {
+                            $list[] = $auth;
+                        }
+                    }
                 }
             }
         }
         
-        if ($relation == 'or' and !empty($list)) {
+        if ($relation == 'or' && !empty($list)) {
             return true;
         }
         
-        $diff = array_diff($name, $list);
-        if ($relation == 'and' and empty($diff)) {
+        if ($relation == 'and' && count($list) == count($name)) {
             return true;
         }
         
@@ -404,24 +417,4 @@ class Auth
         
         return array_unique($authIdList);
     }
-    
-    /**
-     * 获得用户资料,根据自己的情况读取数据库
-     *
-     * @create 2019-7-9
-     * @author deatil
-     */
-    public function getUserInfo($uid)
-    {
-        static $userinfo = [];
-        if (!isset($userinfo[$uid])) {
-            $userinfo[$uid] = Db::name($this->_config['auth_user'])
-                ->where([
-                    'id' => $uid,
-                ])
-                ->find();
-        }
-        return $userinfo[$uid];
-    }
-
 }
