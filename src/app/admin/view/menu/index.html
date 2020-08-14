@@ -24,6 +24,12 @@
     <a href='{:url("add")}?parentid={{ d.id }}' class="layui-btn layui-btn-xs layui-btn-normal layui-iframe" title="新增菜单">添加</a>
     <a href='{:url("delete")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
 </script>
+<script type="text/html" id="iconTpl">
+    <span title="{{d.title}}：{{d.id}}"><i class='iconfont {{d.icon}}'></i></span>
+</script>
+<script type="text/html" id="nameTpl">
+    <span>{{d.name}}</span>
+</script>
 <script type="text/html" id="titleTpl">
     <span data-lake-tip="" lay-title="{{ d.tip }}">{{ d.title }}</span>
 </script>
@@ -55,7 +61,8 @@ layui.use(['table', 'treeGrid'], function() {
         treeId: 'id', //树形id字段名称
         treeUpId: 'parentid', //树形父id字段名称
         treeShowName: 'title', //以树形式显示的字段
-        height: 'full-140',
+        cellMinWidth: '150',
+        height: '', // full-140
         isFilter: false,
         iconOpen: false, //是否显示图标【默认显示】
         isOpenDefault: false, //节点默认是展开还是折叠【默认展开】
@@ -63,14 +70,16 @@ layui.use(['table', 'treeGrid'], function() {
         cols: [
             [
                 { field: 'listorder', align: 'center', width: 60, title: '排序', edit: 'text' },
+                /*
                 { field: 'id', align: 'center', width: 60, title: 'ID' },
+                */
+                { width: 80, title: '图标',align: 'center', event: 'view', templet:'#iconTpl' },
                 { field: 'title', title: '菜单名称', templet: '#titleTpl' },
-                { width: 80,title: '图标',align: 'center',templet:"<div><i class='iconfont {{d.icon}}'></i></div>" },
-                { width: 200,title: '模块/控制器/方法',templet:"<div>{{d.name}}</div>"},
+                { width: 200, title: '模块/控制器/方法', templet:"#nameTpl"},
+                { field: 'method', align: 'center', width: 90, title: '请求方式' },
                 /*
                 { field: 'is_need_auth', align: 'center', hide: 'true', width: 100, title: '权限验证', templet: '#authTpl', unresize: true },
                 */
-                { field: 'method', align: 'center', width: 90, title: '请求方式' },
                 { field: 'is_menu', align: 'center', width: 90, title: '菜单', templet: '#menuTpl', unresize: true },
                 { field: 'status', align: 'center', width: 90, title: '状态', templet: '#switchTpl', unresize: true },
                 { align: 'center', width: 180, title: '操作', toolbar: '#barTool' }
@@ -97,6 +106,16 @@ layui.use(['table', 'treeGrid'], function() {
         var treedata = treeGrid.getDataTreeList(tableId);
         treeGrid.treeOpenAll(tableId, !treedata[0][treeGrid.config.cols.isOpen]);
     })
+
+    treeGrid.on('tool(treeTable)', function(obj) {
+        var data = obj.data;
+        if (obj.event === 'view') {
+            layer.alert(data.id, {
+                title: '菜单ID',
+                closeBtn: 0
+            });
+        }
+    });
 
 });
 </script>

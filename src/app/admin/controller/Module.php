@@ -108,6 +108,8 @@ class Module extends Base
             
             $config = ModuleFacade::getInfoFromFile($module);
             
+            $icon = ModuleFacade::getModuleIconData($module);
+            
             // 版本检查
             $versionCheck = '';
             if ($config['adaptation']) {
@@ -151,6 +153,7 @@ class Module extends Base
             $this->assign('version_check', $versionCheck);
             $this->assign('table_check', $tableCheck);
             $this->assign('config', $config);
+            $this->assign('icon', $icon);
             
             return $this->fetch();
             
@@ -181,8 +184,13 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要卸载的模块！');
             }
+            
             $config = ModuleFacade::getInfoFromFile($module);
+            $icon = ModuleFacade::getModuleIconData($module);
+            
             $this->assign('config', $config);
+            $this->assign('icon', $icon);
+            
             return $this->fetch();
             
         }
@@ -258,10 +266,13 @@ class Module extends Base
             
             }
             
+            $icon = ModuleFacade::getModuleIconData($module);
+            
             $this->assign('need_module', $needModule);
             $this->assign('version_check', $versionCheck);
             $this->assign('table_check', $tableCheck);
             $this->assign('config', $config);
+            $this->assign('icon', $icon);
             
             return $this->fetch();
         

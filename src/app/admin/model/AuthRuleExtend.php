@@ -11,6 +11,6 @@ namespace app\admin\model;
 class AuthRuleExtend extends ModelBase
 {
     // 设置当前模型对应的数据表名称
-    protected $name = 'auth_rule_extend';
+    protected $name = 'lakeadmin_auth_rule_extend';
 
 }

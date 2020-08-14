@@ -16,7 +16,7 @@ use app\admin\facade\Admin as AdminFacade;
 class AuthRule extends ModelBase
 {
     // 设置当前模型对应的数据表名称
-    protected $name = 'auth_rule';
+    protected $name = 'lakeadmin_auth_rule';
     
     const RULE_MENU = 1; // 菜单
     const RULE_URL = 2;

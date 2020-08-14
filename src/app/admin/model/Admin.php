@@ -13,7 +13,7 @@ use app\admin\facade\Password as PasswordFacade;
 class Admin extends ModelBase
 {
     // 设置当前模型对应的完整数据表名称
-    protected $name = 'admin';
+    protected $name = 'lakeadmin_admin';
     protected $insert = [
         'status' => 1,
     ];

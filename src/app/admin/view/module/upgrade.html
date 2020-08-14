@@ -9,20 +9,38 @@
             
             <div class="layui-form-item">
                 <blockquote class="layui-elem-quote layui-quote-nm">
-                    <h3 class="lake-admin-module-name">
-                        {$config.name} 
-                        <span class="lake-admin-module-ver text-gray">v{$config.version}</span>
-                    </h3>
-                    
-                    <div class="lake-admin-module-author">
-                        <a href="{$config.authorsite|default='javascript:;'}" target="_blank">
-                            {$config.author}
-                        </a>
-                        <span class="lake-admin-module-authoremail text-gray">({$config.authoremail})</span>
-                    </div>
-                    
-                    <div class="lake-admin-module-introduce">
-                        {$config.introduce}
+                    <div class="layui-row layui-col-space10">
+                        <div class="layui-col-xs12 layui-col-sm2 lake-admin-module-icon">
+                            <img src="{$icon}" />
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm10">
+                            <h3 class="lake-admin-module-name">
+                                {$config.name} 
+                                <span class="lake-admin-module-ver text-gray">v{$config.version}</span>
+                            </h3>
+                            
+                            <div class="lake-admin-module-author">
+                                <span class="text-gray">
+                                    <i class="iconfont icon-people"></i>
+                                    作者：
+                                </span>
+                                <a class="text-black" href="{$config.authorsite|default='javascript:;'}" target="_blank">
+                                    {$config.author}
+                                </a>
+                            </div>
+                            
+                            <div class="lake-admin-module-authoremail">
+                                <span class="text-muted">
+                                    <i class="iconfont icon-mail"></i>
+                                    作者邮箱：
+                                </span>
+                                <span class="text-black">{$config.authoremail}</span>
+                            </div>
+                            
+                            <div class="lake-admin-module-introduce text-gray">
+                                {$config.introduce}
+                            </div>
+                        </div>
                     </div>
                 </blockquote>
             </div>

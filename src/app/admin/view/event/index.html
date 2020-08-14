@@ -2,7 +2,7 @@
 
 {block name="main"}
 <div class="layui-card">
-    <div class="layui-card-header layui-bg-cyan">嵌入点</div>
+    <div class="layui-card-header layui-bg-cyan">事件</div>
     <div class="layui-card-body">
         <blockquote class="layui-elem-quote">
             <form class="layui-form lake-admin-search-form" method="get" lay-filter="lake-admin-search-from">
@@ -10,7 +10,7 @@
                     <select name="field" class="lake-admin-search-field">
                         <option value="">全部类型</option>
                         <option value="module">模块</option>
-                        <option value="name">嵌入点</option>
+                        <option value="name">监听点</option>
                     </select>
                 </div>
                 <div class="layui-inline">
@@ -35,9 +35,9 @@
 {block name="script"}
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
-        <a class="layui-btn layui-btn-sm layui-iframe" href="{:url('add')}" title="添加嵌入点">添加嵌入点</a>
-        <a class="layui-btn layui-btn-sm layui-btn-normal" href="{:url('module')}" title="嵌入点模型">模型列表</a>
-        <a class="layui-btn layui-btn-sm layui-btn-normal" href="{:url('name')}" title="嵌入点名称">名称列表</a>
+        <a class="layui-btn layui-btn-sm layui-iframe" href="{:url('add')}" title="添加监听点">添加监听点</a>
+        <a class="layui-btn layui-btn-sm layui-btn-normal" href="{:url('module')}" title="监听点模型">模型列表</a>
+        <a class="layui-btn layui-btn-sm layui-btn-normal" href="{:url('name')}" title="监听点名称">名称列表</a>
     </div>
 </script>
 
@@ -83,8 +83,8 @@ layui.use('table', function() {
             [
                 { field: 'listorder', align: 'center', width: 70, title: '排序', edit: 'text' },
                 { field: 'module', width: 120, title: '所属模块', templet:'#module' },
-                { field: 'name', width: 130, title: '嵌入点', templet:'#name' },
-                { field: 'class', width: 230, title: 'Hook类' },
+                { field: 'name', width: 130, title: '监听点', templet:'#name' },
+                { field: 'class', width: 230, title: '监听类' },
                 { field: 'description', title: '描述' },
                 { field: 'status', width: 100, align:"center", title: '状态', templet:'#status' },
                 { width: 160, title: '操作', toolbar: '#barTool' },

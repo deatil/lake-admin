@@ -284,6 +284,9 @@
         transition: all .3s;
         -webkit-transition: all .3s; 
     }
+    .lake-admin .layui-layout-admin .layui-side .layui-nav-title cite {
+        font-weight: 600;
+    }
     .lake-admin .layui-layout-admin.layui-layout-admin-collapse .layui-side .layui-nav-title {
         display: none !important;
         transition: all .3s;

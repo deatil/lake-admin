@@ -11,7 +11,7 @@ namespace app\admin\model;
 class FieldType extends ModelBase
 {
     // 设置当前模型对应的数据表名称
-    protected $name = 'field_type';
+    protected $name = 'lakeadmin_field_type';
 
     /**
      * 获取字段类型列表

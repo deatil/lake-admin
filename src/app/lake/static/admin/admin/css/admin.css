@@ -302,20 +302,28 @@ code {
 }
 
 /* 安装模块详情 */
+.lake-admin-module-icon {
+    overflow: hidden;
+}
+.lake-admin-module-icon img {
+    width: 90%;
+}
 .lake-admin-module-name {
     font-weight: bold;
-    font-size: 16px;
+    font-size: 22px;
 }
 .lake-admin-module-name .lake-admin-module-ver {
-    font-size: 13px;
+    font-size: 18px;
 }
 .lake-admin-module-author {
-    font-size: 13px;
+    margin-top: 10px;
+}
+.lake-admin-module-authoremail {
     margin-top: 3px;
 }
 .lake-admin-module-introduce {
     font-size: 16px;
-    margin: 10px 0 5px 0;
+    margin: 15px 0 5px 0;
 }
 
 .lake-admin-auth-manager-access  {

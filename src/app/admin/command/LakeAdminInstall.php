@@ -104,7 +104,7 @@ class LakeAdminInstall extends Command
         
         $installLockFile = root_path() . 'install.lock';
         if (file_exists($installLockFile)) {
-            $output->writeln("<info>lake-admin tip:</info> lake-admin is installed!");
+            $output->writeln("<info>lake-admin tip:</info> lake-admin is installed! Please unlink root 'install.lock' file.");
             return false;
         }
         

@@ -11,7 +11,7 @@ namespace app\admin\model;
 class Config extends ModelBase
 {
     // 设置当前模型对应的数据表名称
-    protected $name = 'config';
+    protected $name = 'lakeadmin_config';
     
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;

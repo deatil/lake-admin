@@ -13,7 +13,7 @@ use app\admin\facade\Admin as AdminFacade;
 class AdminLog extends ModelBase
 {
     // 设置当前模型对应的数据表名称
-    protected $name = 'admin_log';
+    protected $name = 'lakeadmin_admin_log';
     
     protected $autoWriteTimestamp = true;
     protected $updateTime = false;

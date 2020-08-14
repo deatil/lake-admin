@@ -5,7 +5,7 @@
     <title>跳转提示</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="__STATIC__/" />
-	<style type="text/css">
+    <style type="text/css">
         *{box-sizing:border-box;margin:0;padding:0;font-family:Lantinghei SC,Open Sans,Arial,Hiragino Sans GB,Microsoft YaHei,"微软雅黑",STHeiti,WenQuanYi Micro Hei,SimSun,sans-serif;-webkit-font-smoothing:antialiased}
         body{padding:70px 0;background:#edf1f4;font-weight:400;font-size:1pc;-webkit-text-size-adjust:none;color:#333}
         a{outline:0;color:#3498db;text-decoration:none;cursor:pointer}

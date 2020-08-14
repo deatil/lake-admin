@@ -7,7 +7,6 @@ use Composer\Autoload\ClassLoader;
 use think\App;
 use think\Console;
 
-use app\admin\model\Hook as HookModel;
 use app\admin\model\Module as ModuleModel;
 use app\admin\facade\Module as ModuleFacade;
 use app\admin\service\ModuleLoad as ModuleLoadService;

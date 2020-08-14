@@ -64,7 +64,9 @@
                     '<li class="layui-nav-item layui-nav-itemed lake-admin-nav-item">'
                         + '<a href="' + url + '" class="lay-tip-title" lay-id="' + data.menuid + '" data-id="' + data.id + '" lay-icon="iconfont ' + data.icon + '" lay-title="' + data.title + '">'
                             + menu_icon
-                            + '<span class="layui-nav-title"><b>' + data.title + '</b></span>'
+                            + '<span class="layui-nav-title">'
+                                + '<cite>' + data.title + '</cite>'
+                            +'</span>'
                         + '</a>'
                         + child_html
                     + '</li>';
@@ -95,7 +97,9 @@
                 menu_dd_html += '<dd>'
                     + '<a href="' + url + '" class="lay-tip-title" lay-id="' + data.menuid + '" data-id="' + data.id + '" lay-icon="iconfont ' + data.icon + '" lay-title="' + data.title + '">'
                         + menu_icon
-                        + '<span class="layui-nav-title">' + data.title + '</span>'
+                        + '<span class="layui-nav-title">' 
+                            + data.title 
+                        + '</span>'
                     + '</a>'
                     + menu_child_html
                 + '</dd>';

@@ -11,7 +11,7 @@ namespace app\admin\model;
 class AuthGroup extends ModelBase
 {
     // 设置当前模型对应的数据表名称
-    protected $name = 'auth_group';
+    protected $name = 'lakeadmin_auth_group';
 
     protected $resultSetType = 'collection';
     

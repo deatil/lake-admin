@@ -2,13 +2,13 @@
 
 {block name="main"}
 <div class="layui-card">
-    <div class="layui-card-header layui-bg-cyan">嵌入点 - 模型列表</div>
+    <div class="layui-card-header layui-bg-cyan">事件 - 名称列表</div>
     <div class="layui-card-body">
         <blockquote class="layui-elem-quote">
             <form class="layui-form lake-admin-search-form" method="get" lay-filter="lake-admin-search-from">
                 <div class="layui-inline">
                     <select name="field" class="lake-admin-search-field">
-                        <option value="module">模型</option>
+                        <option value="name">名称</option>
                     </select>
                 </div>
                 <div class="layui-inline">
@@ -18,7 +18,7 @@
                     <a class="layui-btn lake-admin-search-btn" data-type="search">搜索</a>
                 </div>
                 <div class="layui-inline">
-                    <a class="layui-btn" href="{:url('module')}">查看全部</a>
+                    <a class="layui-btn" href="{:url('name')}">查看全部</a>
                 </div>
             </form>
         </blockquote>
@@ -33,17 +33,16 @@
 {block name="script"}
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
-        <a class="layui-btn layui-btn-sm" href="{:url('index')}" title="嵌入点列表">嵌入点列表</a>
+        <a class="layui-btn layui-btn-sm" href="{:url('index')}" title="事件列表">事件列表</a>
     </div>
 </script>
 
-<script type="text/html" id="module">
-    {{ d.module }}
+<script type="text/html" id="name">
+    {{ d.name }}
 </script>
 
 <script type="text/html" id="barTool">
-    <a href='{:url("module/view")}?module={{ d.module }}' class="layui-btn layui-btn-xs layui-iframe" title="模型详情">模型详情</a>
-    <a href='{:url("index")}?search_field=module&keyword={{ d.module }}' class="layui-btn layui-btn-xs layui-iframe" title="模型嵌入点">嵌入点</a>
+    <a href='{:url("index")}?search_field=name&keyword={{ d.name }}' class="layui-btn layui-btn-xs layui-iframe" title="模型列表">模型</a>
 </script>
 
 <script type="text/javascript">
@@ -53,19 +52,19 @@ layui.use('table', function() {
         form = layui.form;
         
     form.val('lake-admin-search-from', {
-        "field": "{$search_field|default='module'}",
+        "field": "{$search_field|default='name'}",
         "keyword": "{$keyword}",
     });
         
     table.render({
         elem: '#table',
         toolbar: '#toolbar',
-        url: '{:url("module")}',
+        url: '{:url("name")}',
         cols: [
             [
-                { field: 'module', title: '模块名称', templet:'#module' },
-                { field: 'num', width: 120, title: '嵌入点数量', align: 'center' },
-                { width: 150, title: '操作', toolbar: '#barTool' },
+                { field: 'name', title: '名称', templet:'#name' },
+                { field: 'num', width: 120, title: '模型数量', align: 'center' },
+                { width: 120, title: '操作', toolbar: '#barTool' },
             ]
         ],
         page: {},

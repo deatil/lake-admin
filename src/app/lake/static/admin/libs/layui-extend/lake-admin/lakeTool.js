@@ -307,8 +307,10 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
                     
                     var lay_close = that.attr('lay-close');
                     if (lay_close == 'self') {
-                        var index = parent.layer.getFrameIndex(window.name);
-                        parent.layer.close(index);
+                        if (typeof parent.layer != "undefined") {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        }
                     }
 
                 }, 3000);

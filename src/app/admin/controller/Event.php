@@ -2,17 +2,17 @@
 
 namespace app\admin\controller;
 
-use app\admin\model\Hook as HookModel;
+use app\admin\model\Event as EventModel;
 use app\admin\model\AuthGroup as AuthGroupModel;
 use app\admin\facade\Module as ModuleFacade;
 
 /**
- * 嵌入点
+ * 事件
  *
  * @create 2019-7-20
  * @author deatil
  */
-class Hook extends Base
+class Event extends Base
 {
     /**
      * 列表
@@ -27,12 +27,12 @@ class Hook extends Base
             $page = $this->request->param('page/d', 1);
             $map = $this->buildparams();
             
-            $data = HookModel::page($page, $limit)
+            $data = EventModel::page($page, $limit)
                 ->where($map)
                 ->order('listorder ASC, module ASC')
                 ->select()
                 ->toArray();
-            $total = HookModel::where($map)
+            $total = EventModel::where($map)
                 ->order('listorder ASC, module ASC')
                 ->count();
             
@@ -76,7 +76,7 @@ class Hook extends Base
             $data['add_time'] = time();
             $data['add_ip'] = request()->ip(1);
             
-            $status = HookModel::insert($data);
+            $status = EventModel::insert($data);
        
             if ($status === false) {
                 $this->error("添加失败！");
@@ -118,7 +118,7 @@ class Hook extends Base
             
             $id = $data['id'];
             unset($data['id']);
-            $rs = HookModel::where([
+            $rs = EventModel::where([
                 'id' => $id,
             ])->update($data);
             
@@ -129,7 +129,7 @@ class Hook extends Base
             $this->success("修改成功！");
         } else {
             $id = $this->request->param('id/s');
-            $data = HookModel::where([
+            $data = EventModel::where([
                 "id" => $id,
             ])->find();
             if (empty($data)) {
@@ -163,14 +163,14 @@ class Hook extends Base
             $this->error('参数不能为空！');
         }
         
-        $data = HookModel::where([
+        $data = EventModel::where([
             "id" => $id,
         ])->find();
         if (empty($data)) {
             $this->error('信息不存在！');
         }
         
-        $rs = HookModel::where([
+        $rs = EventModel::where([
                 'id' => $id, 
             ])
             ->delete();
@@ -201,7 +201,7 @@ class Hook extends Base
         
         $listorder = $this->request->param('value/d', 100);
         
-        $rs = HookModel::where([
+        $rs = EventModel::where([
                 'id' => $id, 
             ])
             ->update([
@@ -228,14 +228,14 @@ class Hook extends Base
             $page = $this->request->param('page/d', 1);
             $map = $this->buildparams();
             
-            $data = HookModel::page($page, $limit)
+            $data = EventModel::page($page, $limit)
                 ->where($map)
                 ->field("module, count(module) as num")
                 ->group("module")
                 ->order('module ASC')
                 ->select()
                 ->toArray();
-            $total = HookModel::where($map)
+            $total = EventModel::where($map)
                 ->group("module")
                 ->count();
             
@@ -253,7 +253,7 @@ class Hook extends Base
     }
     
     /**
-     * 嵌入点列表
+     * 事件点列表
      *
      * @create 2019-7-28
      * @author deatil
@@ -265,14 +265,14 @@ class Hook extends Base
             $page = $this->request->param('page/d', 1);
             $map = $this->buildparams();
             
-            $data = HookModel::page($page, $limit)
+            $data = EventModel::page($page, $limit)
                 ->where($map)
                 ->field("name, count(name) as num")
                 ->group("name")
                 ->order('name ASC')
                 ->select()
                 ->toArray();
-            $total = HookModel::where($map)
+            $total = EventModel::where($map)
                 ->group("name")
                 ->count();
             

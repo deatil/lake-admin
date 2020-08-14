@@ -9,7 +9,7 @@ use app\admin\middleware\LakeAdminAppMap;
 use app\admin\middleware\LoadModule;
 use app\admin\middleware\CheckModule;
 
-use app\admin\model\Hook as EventModel;
+use app\admin\model\Event as EventModel;
 use app\admin\service\ModuleInit as ModuleInitService;
 use app\admin\service\ConfigInit as ConfigInitService;
 

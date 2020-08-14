@@ -21,6 +21,9 @@
         </div>
     </div>
 </div>
+{/block}
+
+{block name="script"}
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         {if lake_check_auth('admin/config/add')}
@@ -39,9 +42,6 @@
 <script type="text/html" id="switchTpl">
     <input type="checkbox" name="status" data-href="{:url('setstate')}?id={{d.id}}" value="{{d.id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="switchStatus" {{ d.status==1 ? 'checked' : '' }}>
 </script>
-{/block}
-
-{block name="script"}
 <script>
 layui.use('table', function() {
     var table = layui.table,

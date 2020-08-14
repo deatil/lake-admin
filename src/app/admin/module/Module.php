@@ -14,7 +14,7 @@ use lake\File;
 use lake\Sql;
 use lake\Symlink;
 
-use app\admin\model\Hook as HookModel;
+use app\admin\model\Event as EventModel;
 use app\admin\model\Module as ModuleModel;
 use app\admin\model\AuthRule as AuthRuleModel;
 use app\admin\service\Module as ModuleService;
@@ -537,7 +537,7 @@ class Module
         $this->uninstallMenu($name);
         
         // 去除对应行为
-        HookModel::where([
+        EventModel::where([
             'module' => $name,
         ])->delete();
         
@@ -606,7 +606,7 @@ class Module
         }
         
         // 安装行为
-        HookModel::where([
+        EventModel::where([
             'module' => $name,
         ])->delete();
         if (isset($config['hooks']) && !empty($config['hooks'])) {
@@ -755,7 +755,7 @@ class Module
         }
         
         foreach ($hooks as $hook) {
-            HookModel::insert([
+            EventModel::insert([
                 'id' => md5(time().lake_to_guid_string(time()).mt_rand(0, 100000)),
                 'module' => $name,
                 'name' => $hook['name'],
@@ -785,7 +785,7 @@ class Module
             return false;
         }
         
-        HookModel::where([
+        EventModel::where([
             'module' => $name,
         ])->delete();
         
@@ -960,7 +960,7 @@ class Module
         $this->uninstallMenu($name);
         
         // 去除对应行为
-        HookModel::where([
+        EventModel::where([
             'module' => $name,
         ])->delete();
         
@@ -1016,7 +1016,7 @@ class Module
             return false;
         }
         
-        $status = HookModel::where([
+        $status = EventModel::where([
             'module' => $name,
         ])->update([
             'status' => 1,
@@ -1063,7 +1063,7 @@ class Module
             return false;
         }
         
-        $status = HookModel::where([
+        $status = EventModel::where([
             'module' => $name,
         ])->update([
             'status' => 0,
@@ -1419,7 +1419,7 @@ class Module
     {
         // 清空缓存
         cache('lake_admin_module_list', null);
-        cache('lake_admin_hooks', null);
+        cache('lake_admin_events', null);
         cache('lake_admin_modules', null);
     }
     

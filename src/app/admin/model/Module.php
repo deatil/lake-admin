@@ -11,7 +11,7 @@ namespace app\admin\model;
 class Module extends ModelBase
 {
     // 设置当前模型对应的数据表名称
-    protected $name = 'module';
+    protected $name = 'lakeadmin_module';
     
     // 自动完成
     protected $auto = [];

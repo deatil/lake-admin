@@ -76,6 +76,12 @@
     color: #fff;
 }
 
+.lake-admin .layui-nav .layui-this:after, 
+.lake-admin .layui-nav-bar, 
+.lake-admin .layui-nav-tree .layui-nav-itemed:after {
+    background-color: #3A3D49;
+}
+
 /** 侧边栏文字颜色 */
 .layui-side .layui-nav .layui-nav-item a {
     color: rgba(238, 238, 238, .7);
@@ -103,4 +109,13 @@
 }
 .lake-admin .admin-side-full:hover { 
     border:1px solid rgba(0,0,0,.3); 
+}
+
+@media screen and (max-width: 768px) {
+    .lake-admin .lake-admin-top-level-menus .layui-nav-item.layui-this {
+        background-color: #009688;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item.layui-this:after {
+        background-color: #009688;
+    }
 }
