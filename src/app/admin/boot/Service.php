@@ -31,6 +31,7 @@ class Service extends BaseService
         
         // 设置模块基础别名
         class_alias('app\\admin\\module\\Module', 'lake\\Module');
+        class_alias('app\\admin\\model\\ModelBase', 'lake\\module\\model\\ModelBase');
         class_alias('app\\admin\\module\\controller\\AdminBase', 'lake\\module\\controller\\AdminBase');
         class_alias('app\\admin\\module\\controller\\HomeBase', 'lake\\module\\controller\\HomeBase');
     }

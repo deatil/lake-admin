@@ -36,7 +36,7 @@ class AdminAuth
         $config = [
             'AUTH_ON' => true, // 认证开关
             'AUTH_TYPE' => 1, // 认证方式，1为实时认证；2为登录认证。
-            'AUTH_USER' => (new AdminModel)->getName(), // 用户信息表
+            'AUTH_ACCESS_FIELD' => 'admin_id', // admin_id
             'AUTH_GROUP' => (new AuthGroupModel)->getName(), // 用户组数据表名
             'AUTH_GROUP_ACCESS' => (new AuthGroupAccessModel)->getName(),
             'AUTH_RULE' => (new AuthRuleModel)->getName(), // 权限规则表

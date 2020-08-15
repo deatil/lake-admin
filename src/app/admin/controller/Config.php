@@ -26,18 +26,20 @@ class Config extends Base
     public function index($group = 'system')
     {
         if ($this->request->isAjax()) {
+            $cTable = (new ConfigModel)->getName();
+            $ftTable = (new FieldTypeModel)->getName();
             $list = Db::view(
-                    'config', 
+                    $cTable . ' c', 
                     'id,name,title,type,listorder,status,is_system,update_time'
                 )
                 ->where('group', $group)
                 ->view(
-                    'field_type', 
+                    $ftTable . ' ft', 
                     'title as ftitle', 
-                    'field_type.name=config.type', 
+                    'ft.name=c.type', 
                     'LEFT'
                 )
-                ->order('config.listorder,config.create_time desc')
+                ->order('c.listorder ASC, c.create_time DESC')
                 ->select()
                 ->toArray();
                 

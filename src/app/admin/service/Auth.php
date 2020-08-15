@@ -23,7 +23,7 @@ class Auth
     protected $_config = [
         'AUTH_ON' => true, // 认证开关
         'AUTH_TYPE' => 1, // 认证方式，1为实时认证；2为登录认证。
-        'AUTH_USER' => '', // 用户信息表 admin
+        'AUTH_ACCESS_FIELD' => '', // 相当于UID字段，必填 admin_id
         'AUTH_GROUP' => '', // 用户组数据表名 auth_group
         'AUTH_GROUP_ACCESS' => '', // 授权表 auth_group_access
         'AUTH_RULE' => '', // 权限规则表 auth_rule
@@ -242,11 +242,10 @@ class Auth
             return $groups[$uid];
         }
         
-        $userGroups = Db::name($this->_config['AUTH_USER'])
-            ->alias('au')
-            ->join($this->_config['AUTH_GROUP_ACCESS'] . ' aga', "aga.admin_id = au.id")
+        $userGroups = Db::name($this->_config['AUTH_GROUP_ACCESS'])
+            ->alias('aga')
             ->join($this->_config['AUTH_GROUP'] . ' ag', "aga.group_id = ag.id")
-            ->where('au.id', $uid)
+            ->where('aga.'.$this->_config['AUTH_ACCESS_FIELD'], $uid)
             ->where('ag.status', 1)
             ->field('ag.id, ag.title')
             ->select();

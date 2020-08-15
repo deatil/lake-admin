@@ -15,7 +15,7 @@ class Admin extends Validate
 
     //定义验证规则
     protected $rule = [
-        'username|用户名' => 'unique:admin|require|alphaDash|length:3,20',
+        'username|用户名' => 'require|alphaDash|length:3,20',
         'password|密码' => 'require|length:3,20|confirm',
         'email|邮箱' => 'email',
     ];
