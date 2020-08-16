@@ -2,13 +2,13 @@
 
 {block name="main"}
 <div class="layui-card">
-    <div class="layui-card-header layui-bg-cyan">事件 - 模型列表</div>
+    <div class="layui-card-header layui-bg-cyan">事件 - 模块列表</div>
     <div class="layui-card-body">
         <blockquote class="layui-elem-quote">
             <form class="layui-form lake-admin-search-form" method="get" lay-filter="lake-admin-search-from">
                 <div class="layui-inline">
                     <select name="field" class="lake-admin-search-field">
-                        <option value="module">模型</option>
+                        <option value="module">模块</option>
                     </select>
                 </div>
                 <div class="layui-inline">
@@ -42,8 +42,8 @@
 </script>
 
 <script type="text/html" id="barTool">
-    <a href='{:url("module/view")}?module={{ d.module }}' class="layui-btn layui-btn-xs layui-iframe" title="模型详情">模型详情</a>
-    <a href='{:url("index")}?search_field=module&keyword={{ d.module }}' class="layui-btn layui-btn-xs layui-iframe" title="模型监听点">监听点</a>
+    <a href='{:url("module/view")}?module={{ d.module }}' class="layui-btn layui-btn-xs layui-iframe" title="模块详情">模块详情</a>
+    <a href='{:url("index")}?search_field=module&keyword={{ d.module }}' class="layui-btn layui-btn-xs layui-iframe" title="监听点">监听点</a>
 </script>
 
 <script type="text/javascript">

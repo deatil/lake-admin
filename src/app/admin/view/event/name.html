@@ -42,7 +42,7 @@
 </script>
 
 <script type="text/html" id="barTool">
-    <a href='{:url("index")}?search_field=name&keyword={{ d.name }}' class="layui-btn layui-btn-xs layui-iframe" title="模型列表">模型</a>
+    <a href='{:url("index")}?search_field=name&keyword={{ d.name }}' class="layui-btn layui-btn-xs layui-iframe" title="模块列表">模块</a>
 </script>
 
 <script type="text/javascript">
@@ -63,7 +63,7 @@ layui.use('table', function() {
         cols: [
             [
                 { field: 'name', title: '名称', templet:'#name' },
-                { field: 'num', width: 120, title: '模型数量', align: 'center' },
+                { field: 'num', width: 120, title: '模块数量', align: 'center' },
                 { width: 120, title: '操作', toolbar: '#barTool' },
             ]
         ],
