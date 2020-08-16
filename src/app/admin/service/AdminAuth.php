@@ -70,7 +70,7 @@ class AdminAuth
         $config = config('app.auth');
         $Auth = static::instance($config);
         
-        if (!$Auth->check($rule, Env::get('admin_id'), $type, $mode, $relation)) {
+        if (!$Auth->check($rule, Env::get('admin_id'), $relation, $type, $mode)) {
             return false;
         }
         return true;

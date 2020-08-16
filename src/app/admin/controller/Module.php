@@ -94,7 +94,12 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要安装的模块！');
             }
-            if (!ModuleFacade::install($module)) {
+            
+            $status = ModuleFacade::install($module);
+            if ($status === false) {
+                // 安装错误回滚
+                ModuleFacade::installRollback($module);
+                
                 $error = ModuleFacade::getError();
                 $this->error($error ? $error : '模块安装失败！');
             }
@@ -173,12 +178,14 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要卸载的模块！');
             }
-            if (ModuleFacade::uninstall($module)) {
-                $this->success("模块卸载成功！一键清理缓存后生效！", url("Module/index"));
-            } else {
+            
+            $status = ModuleFacade::uninstall($module);
+            if ($status === false) {
                 $error = ModuleFacade::getError();
                 $this->error($error ? $error : "模块卸载失败！", url("Module/index"));
             }
+            
+            $this->success("模块卸载成功！一键清理缓存后生效！", url("Module/index"));
         } else {
             $module = $this->request->param('module', '');
             if (empty($module)) {
@@ -209,12 +216,17 @@ class Module extends Base
             if (empty($module)) {
                 $this->error('请选择需要更新的模块！');
             }
-            if (ModuleFacade::upgrade($module)) {
-                $this->success('模块更新成功！一键清理缓存后生效！', url('Module/index'));
-            } else {
+            
+            $status = ModuleFacade::upgrade($module);
+            if ($status === false) {
+                // 更新错误回滚，只是禁用模块
+                ModuleFacade::upgradeRollback($module);
+                
                 $error = ModuleFacade::getError();
                 $this->error($error ? $error : '模块更新失败！');
             }
+            
+            $this->success('模块更新成功！一键清理缓存后生效！', url('Module/index'));
         } else {
             $module = $this->request->param('module', '');
             if (empty($module)) {

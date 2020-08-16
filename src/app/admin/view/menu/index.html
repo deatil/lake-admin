@@ -19,11 +19,7 @@
         <a class="layui-btn layui-btn-sm" href="{:url('all')}">全部菜单</a>
     </div>
 </script>
-<script type="text/html" id="barTool">
-    <a href='{:url("edit")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="编辑菜单">编辑</a>
-    <a href='{:url("add")}?parentid={{ d.id }}' class="layui-btn layui-btn-xs layui-btn-normal layui-iframe" title="新增菜单">添加</a>
-    <a href='{:url("delete")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
-</script>
+
 <script type="text/html" id="iconTpl">
     <span title="{{d.title}}：{{d.id}}"><i class='iconfont {{d.icon}}'></i></span>
 </script>
@@ -41,6 +37,11 @@
 </script>
 <script type="text/html" id="switchTpl">
     <input type="checkbox" name="status" data-href="{:url('setstate')}?id={{d.id}}" value="{{d.id}}" lay-skin="switch" lay-text="启用|关闭" lay-filter="switchStatus" {{ d.status==1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="barTool">
+    <a href='{:url("edit")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="编辑菜单">编辑</a>
+    <a href='{:url("add")}?parentid={{ d.id }}' class="layui-btn layui-btn-xs layui-btn-normal layui-iframe" title="新增菜单">添加</a>
+    <a href='{:url("delete")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
 </script>
 
 <script>

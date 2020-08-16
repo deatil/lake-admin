@@ -1,3 +1,6 @@
+::selection{color:#fff !important;background-color:#3C8DBC !important}
+::-moz-selection{color:#fff !important;background-color:#3C8DBC !important}
+
 .layui-nav .layui-nav-child dd.layui-this a, 
 .layui-nav-child dd.layui-this {
     background-color: #3C8DBC;
@@ -64,6 +67,7 @@
 /** header线条 */
 .layui-layout-admin .layui-header .layui-nav .layui-this:after, 
 .layui-layout-admin .layui-header .layui-nav-bar {
+    top: 0 !important;
     background-color: #fff;
 }
 

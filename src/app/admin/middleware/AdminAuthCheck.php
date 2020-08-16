@@ -108,6 +108,11 @@ class AdminAuthCheck
             '/' . $this->app->request->controller() . 
             '/' . $this->app->request->action()
         );
+        $rule = str_replace([
+            '.',
+        ], [
+            '/',
+        ], $rule);
         
         if (!in_array($rule, $allowUrl)) {
             $adminId = $this->app->env->get('admin_id');

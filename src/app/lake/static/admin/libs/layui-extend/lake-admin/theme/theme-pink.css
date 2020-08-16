@@ -1,3 +1,6 @@
+::selection{color:#fff !important;background-color:#FB7299 !important}
+::-moz-selection{color:#fff !important;background-color:#FB7299 !important}
+
 .layui-nav .layui-nav-child dd.layui-this a, 
 .layui-nav-child dd.layui-this {
     background-color: #FB7299;

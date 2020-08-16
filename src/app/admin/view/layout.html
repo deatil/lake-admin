@@ -30,6 +30,7 @@
     {block name="main"}lake-admin{/block}
     
     {block name="layui"}
+    <link rel="stylesheet" href="admin/libs/layui-extend/jquery.jsonview/jquery.jsonview.min.css">
     <script type="text/javascript">
     if (window == top) {
         window.location.replace('{:url("index/index")}');
@@ -44,6 +45,7 @@
         lakeAdminSkin: 'lake-admin/lakeAdminSkin',
         lakeAdminLayout: 'lake-admin/lakeAdminLayout',
         tagsinput: 'tagsinput/tagsinput',
+        jqueryJSONView: 'jquery.jsonview/jquery.jsonview.min',
     }).use(['lakeAdminLayout']);
     </script>
     {/block}

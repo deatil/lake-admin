@@ -462,14 +462,13 @@ class Module
             && !empty($config['menus'])
         ) {
             if ($this->installMenu($name, $config['menus']) !== true) {
-                $this->installRollback($name);
                 return false;
             }
         }
         
-        // 安装行为
-        if (isset($config['hooks']) && !empty($config['hooks'])) {
-            $this->installModuleHooks($name, $config['hooks']);
+        // 安装事件
+        if (isset($config['event']) && !empty($config['event'])) {
+            $this->installModuleEvent($name, $config['event']);
         }
         
         // 安装结束，最后调用安装脚本完成
@@ -537,9 +536,7 @@ class Module
         $this->uninstallMenu($name);
         
         // 去除对应行为
-        EventModel::where([
-            'module' => $name,
-        ])->delete();
+        $this->uninstallModuleEvent($name);
         
         // 卸载结束，最后调用卸载脚本完成
         $installScript = $this->runScript($name, 'end', 'Uninstall');
@@ -606,11 +603,9 @@ class Module
         }
         
         // 安装行为
-        EventModel::where([
-            'module' => $name,
-        ])->delete();
-        if (isset($config['hooks']) && !empty($config['hooks'])) {
-            $this->installModuleHooks($name, $config['hooks']);
+        $this->uninstallModuleEvent($name);
+        if (isset($config['event']) && !empty($config['event'])) {
+            $this->installModuleEvent($name, $config['event']);
         }
         
         // 更新结束，最后调用安装脚本完成
@@ -742,7 +737,7 @@ class Module
      * @create 2019-8-5
      * @author deatil
      */
-    private function installModuleHooks($name = '', $hooks = [])
+    private function installModuleEvent($name = '', $hooks = [])
     {
         if (empty($name)) {
             $this->error = '模块名称不能为空！';
@@ -771,14 +766,14 @@ class Module
     }
     
     /**
-     * 卸载菜单项项
+     * 卸载摸板事件
      * @param type $name
      * @return boolean
      *
      * @create 2019-8-5
      * @author deatil
      */
-    private function uninstallModuleHooks($name = '')
+    private function uninstallModuleEvent($name = '')
     {
         if (empty($name)) {
             $this->error = '模块名称不能为空！';
@@ -960,11 +955,45 @@ class Module
         $this->uninstallMenu($name);
         
         // 去除对应行为
+        $this->uninstallModuleEvent($name);
+        
+        // 清除缓存
+        $this->clearModuleCache();
+    }
+
+    /**
+     * 更新回滚
+     * @param type $name 模块名(目录名)
+     *
+     * @create 2020-8-15
+     * @author deatil
+     */
+    private function upgradeRollback($name = '')
+    {
+        if (empty($name)) {
+            $this->error = '模块名称不能为空！';
+            return false;
+        }
+        
+        ModuleModel::where([
+            'module' => $name,
+        ])->update([
+            'status' => 0,
+        ]);
+        
+        AuthRuleModel::where([
+            'module' => $name,
+        ])->update([
+            'status' => 0,
+        ]);
+        
         EventModel::where([
             'module' => $name,
-        ])->delete();
+        ])->update([
+            'status' => 0,
+        ]);
         
-        // 更新缓存
+        // 清除缓存
         $this->clearModuleCache();
     }
 
@@ -1016,13 +1045,13 @@ class Module
             return false;
         }
         
-        $status = EventModel::where([
+        EventModel::where([
             'module' => $name,
         ])->update([
             'status' => 1,
         ]);
         
-        $status = AuthRuleModel::where([
+        AuthRuleModel::where([
             'module' => $name,
         ])->update([
             'status' => 1,
@@ -1063,13 +1092,13 @@ class Module
             return false;
         }
         
-        $status = EventModel::where([
+        EventModel::where([
             'module' => $name,
         ])->update([
             'status' => 0,
         ]);
         
-        $status = AuthRuleModel::where([
+        AuthRuleModel::where([
             'module' => $name,
         ])->update([
             'status' => 0,
