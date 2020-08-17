@@ -57,7 +57,7 @@
 .layui-layout-admin .layui-header .layui-nav .layui-this:after, 
 .layui-layout-admin .layui-header .layui-nav-bar {
     top: 0 !important;
-    background-color: #eee;
+    background-color: #009688;
 }
 
 /** 侧边栏样式 */

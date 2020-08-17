@@ -13,7 +13,7 @@ return [
     'module_namespace' => 'app',
 
     // 模块地址
-    'module_path' => root_path() . 'addons' . DIRECTORY_SEPARATOR,
+    'module_path' => root_path() . 'addon' . DIRECTORY_SEPARATOR,
     
     // 系统模块
     'system_module_list' => [

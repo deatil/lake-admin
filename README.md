@@ -16,7 +16,7 @@
 *  cmd里执行 `php think lake-admin:install` 及 `php think lake-admin:service-discover` 初始化 `lake-admin` 管理系统
 *  设置网站执行目录为：`public`
 *  后台admin登陆，超级管理员账号及密码：`admin/123456`
-*  模块插件目录：`addons` 文件夹 及 自定义包模块插件
+*  模块插件目录：`addon` 文件夹 及 自定义包模块插件
 *  自定义包模块插件可以查看：`lake-admin-addon-lmenu` 插件 及 `lake-admin-addon-lroute` 插件
 *  如果项目迁移，可以执行 `php think lake-admin:repair` 修复静态文件失效问题，已安装模块请根据模块相关文档更新静态文件链接
 
@@ -31,7 +31,7 @@
 ### 开源协议
 
 *  `lake-admin` 遵循 `Apache2` 开源协议发布，在保留本系统版权（包括版权文件及系统相关标识，相关的标识需在明显位置标示出来）的情况下提供个人及商业免费使用。  
-*  使用该项目时，请在明显的位置保留该系统的标识（标识包括：lake，lake-admin及该系统所属logo），为了防止不必要的麻烦，请遵守该协议要求。
+*  使用该项目时，请在明显的位置保留该系统的标识（标识包括：lake，lake-admin及该系统所属logo），请遵守该协议要求。
 
 
 ### 版权
