@@ -31,18 +31,23 @@ class Module extends Base
             
             $list = ModuleModel::page($page, $limit)
                 ->order('listorder ASC, module ASC')
-                ->select()
+                ->paginate([
+                    'list_rows' => $limit,
+                    'page' => $page
+                ])
                 ->toArray();
             
-            if (!empty($list)) {
-                foreach ($list as $k => $v) {
-                    $list[$k]['icon'] = ModuleFacade::getModuleIconData($v['module']);
+            if (!empty($list['data'])) {
+                foreach ($list['data'] as $k => $v) {
+                    $list['data'][$k]['icon'] = ModuleFacade::getModuleIconData($v['module']);
                 }
             }
             
             return $this->json([
                 "code" => 0, 
-                "data" => $list,
+                'msg' => '获取成功!',
+                'data' => $list['data'],
+                'count' => $list['total'],
             ]);
         } else {
             return $this->fetch();

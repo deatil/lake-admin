@@ -416,6 +416,11 @@ class Module
             return false;
         }
         
+        if (in_array($name, $this->systemModuleList)) {
+            $this->error = '该模块名称不能不能被安装！';
+            return false;
+        }
+        
         // 检查模块是否已经安装
         if ($this->isInstall($name)) {
             $this->error = '模块已经安装，无法重复安装！';
