@@ -844,11 +844,14 @@ class Module
     
     /**
      * 添加静态文件
+     * @param string $name 模块名称
+     * @param string $fromPath [选填]模块静态文件夹
+     * @return boolean
      *
      * @create 2019-8-12
      * @author deatil
      */
-    public function installStatic($name = '')
+    public function installStatic($name = '', $fromPath = '')
     {
         if (empty($name)) {
             $this->error = '模块名称不能为空！';
@@ -858,9 +861,12 @@ class Module
         $name = strtolower($name);
         
         // 静态资源文件软链接
-        $fromPath = $this->modulePath 
-            . $name . DIRECTORY_SEPARATOR 
-            . "static" . DIRECTORY_SEPARATOR;
+        if (empty($fromPath)) {
+            $fromPath = $this->modulePath 
+                . $name . DIRECTORY_SEPARATOR 
+                . "static" . DIRECTORY_SEPARATOR;
+        }
+        
         $toPath = $this->staticPath . DIRECTORY_SEPARATOR 
             . $name . DIRECTORY_SEPARATOR;
         
