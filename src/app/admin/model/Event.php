@@ -13,6 +13,9 @@ class Event extends ModelBase
     // 设置当前模型对应的数据表名称
     protected $name = 'lakeadmin_event';
     
+    // 设置主键名
+    protected $pk = 'id';
+    
     // protected $autoWriteTimestamp = true;
 
 }

@@ -12,10 +12,46 @@ class AuthGroup extends ModelBase
 {
     // 设置当前模型对应的数据表名称
     protected $name = 'lakeadmin_auth_group';
+    
+    // 设置主键名
+    protected $pk = 'id';
 
     protected $resultSetType = 'collection';
     
-    const TYPE_ADMIN = 1; // 管理员用户组类型标识
+    const TYPE_ADMIN = 1;
+    
+    /**
+     * 组的权限列表
+     *
+     * @create 2020-8-19
+     * @author deatil
+     */
+    public function rules()
+    {
+        return $this->belongsToMany(AuthRule::class, AuthRuleAccess::class, 'rule_id', 'group_id');
+    }
+    
+    /**
+     * 组的管理员列表
+     *
+     * @create 2020-8-19
+     * @author deatil
+     */
+    public function admins()
+    {
+        return $this->belongsToMany(Admin::class, AuthGroupAccess::class, 'admin_id', 'group_id');
+    }
+    
+    /**
+     * 组的扩展权限列表
+     *
+     * @create 2020-8-19
+     * @author deatil
+     */
+    public function extendRule()
+    {
+        return $this->hasOne(AuthRuleExtend::class, 'group_id', 'id');
+    }
 
     /**
      * 返回用户组列表
@@ -109,5 +145,4 @@ class AuthGroup extends ModelBase
         
         return $status !== false ? true : false;
     }
-
 }

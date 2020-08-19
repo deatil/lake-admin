@@ -15,6 +15,9 @@ class AdminLog extends ModelBase
     // 设置当前模型对应的数据表名称
     protected $name = 'lakeadmin_admin_log';
     
+    // 设置主键名
+    protected $pk = 'id';
+    
     protected $autoWriteTimestamp = true;
     protected $updateTime = false;
 

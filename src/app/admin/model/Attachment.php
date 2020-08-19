@@ -13,6 +13,9 @@ class Attachment extends ModelBase
     // 设置当前模型对应的数据表名称
     protected $name = 'lakeadmin_attachment';
     
+    // 设置主键名
+    protected $pk = 'id';
+    
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
     protected $insert = ['status' => 1];

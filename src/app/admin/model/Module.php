@@ -13,6 +13,9 @@ class Module extends ModelBase
     // 设置当前模型对应的数据表名称
     protected $name = 'lakeadmin_module';
     
+    // 设置主键名
+    protected $pk = 'module';
+    
     // 自动完成
     protected $auto = [];
     

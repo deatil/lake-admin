@@ -13,8 +13,22 @@ class Config extends ModelBase
     // 设置当前模型对应的数据表名称
     protected $name = 'lakeadmin_config';
     
+    // 设置主键名
+    protected $pk = 'id';
+    
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
+    
+    /**
+     * 字段类型
+     *
+     * @create 2020-8-19
+     * @author deatil
+     */
+    public function fieldType()
+    {
+        return $this->hasOne(FieldType::class, 'name', 'type');
+    }
 
     /**
      * 获取配置信息

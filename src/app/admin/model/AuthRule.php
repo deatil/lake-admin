@@ -22,6 +22,17 @@ class AuthRule extends ModelBase
     const RULE_URL = 2;
     
     /**
+     * 规则的分组列表
+     *
+     * @create 2020-8-19
+     * @author deatil
+     */
+    public function groups()
+    {
+        return $this->belongsToMany(AuthGroup::class, AuthRuleAccess::class, 'group_id', 'rule_id');
+    }
+    
+    /**
      * 获取不需要鉴权的菜单
      * @return type
      */

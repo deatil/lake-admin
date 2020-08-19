@@ -12,6 +12,20 @@ class FieldType extends ModelBase
 {
     // 设置当前模型对应的数据表名称
     protected $name = 'lakeadmin_field_type';
+    
+    // 设置主键名
+    protected $pk = 'id';
+    
+    /**
+     * 字段类型的配置列表
+     *
+     * @create 2020-8-19
+     * @author deatil
+     */
+    public function configs()
+    {
+        return $this->hasMany(Config::class, 'type', 'name');
+    }
 
     /**
      * 获取字段类型列表

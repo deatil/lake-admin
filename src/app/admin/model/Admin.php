@@ -14,6 +14,11 @@ class Admin extends ModelBase
 {
     // 设置当前模型对应的完整数据表名称
     protected $name = 'lakeadmin_admin';
+    
+    // 设置主键名
+    protected $pk = 'id';
+    
+    // 插入数据自动
     protected $insert = [
         'status' => 1,
     ];
@@ -49,6 +54,44 @@ class Admin extends ModelBase
     {
         $value = intval($value);
         return long2ip($value);
+    }
+    
+    /**
+     * 管理员的分组列表
+     *
+     * @create 2020-8-19
+     * @author deatil
+     */
+    public function groups()
+    {
+        return $this->belongsToMany(AuthGroup::class, AuthGroupAccess::class, 'group_id', 'admin_id');
+    }
+    
+    /**
+     * 管理员的日志列表
+     *
+     * @create 2020-8-19
+     * @author deatil
+     */
+    public function logs()
+    {
+        return $this->hasMany(AdminLog::class, 'admin_id', 'id');
+    }
+    
+    /**
+     * 管理员的附件列表
+     * @param string $type 关联类型
+     * @return array
+     *
+     * @create 2020-8-19
+     * @author deatil
+     */
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, [
+            'type',
+            'type_id', 
+        ], 'admin');
     }
 
     /**
