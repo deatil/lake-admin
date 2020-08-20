@@ -543,17 +543,11 @@ if (!function_exists('lake_runhook')) {
      */
     function lake_runhook($tag, $params = null, $once = false)
     {
-        $hooks = Event::trigger($tag, $params, $once);
+        $event = Event::trigger($tag, $params, $once);
         if ($once) {
-            return $hooks;
+            return $event;
         } else {
-            $html = '';
-            if (!empty($hooks)) {
-                foreach ($hooks as $hook) {
-                    $html .= $hook;
-                }
-            }
-
+            $html = join("", $event);;
             return $html;
         }
         

@@ -384,8 +384,8 @@ class Module
             'need_module' => [],
             // 设置
             'setting' => [],
-            // 嵌入点
-            'hooks' => [],
+            // 事件类
+            'event' => [],
             // 菜单
             'menus' => [],
             // 数据表，不用加表前缀
@@ -507,12 +507,6 @@ class Module
         
         // 设置脚本最大执行时间
         @set_time_limit(0);
-
-        // 加载模块基本配置
-        $config = $this->getInfoFromFile($name);
-        if ($config === false) {
-            return false;
-        }
         
         // 取得该模块数据库中记录的安装信息
         $info = ModuleModel::where([
@@ -523,17 +517,17 @@ class Module
             return false;
         }
         
+        // 执行卸载脚本
+        $installScript = $this->runScript($name, 'run', 'Uninstall');
+        if ($installScript === false) {
+            return false;
+        }
+        
         // 删除
         if (ModuleModel::where([
             'module' => $name,
         ])->delete() === false) {
             $this->error = '卸载失败！';
-            return false;
-        }
-        
-        // 执行卸载脚本
-        $installScript = $this->runScript($name, 'run', 'Uninstall');
-        if ($installScript === false) {
             return false;
         }
         
@@ -581,6 +575,12 @@ class Module
         // 设置脚本最大执行时间
         @set_time_limit(0);
         
+        // 执行更新脚本
+        $installScript = $this->runScript($name, 'run', 'Upgrade');
+        if ($installScript === false) {
+            return false;
+        }
+        
         // 加载模块基本配置
         $config = $this->getInfoFromInstall($name);
         if ($config === false) {
@@ -590,12 +590,6 @@ class Module
         // 更新配置信息
         if (!$this->upgradeModuleConfig($name, $config)) {
             $this->error = '安装失败！';
-            return false;
-        }
-        
-        // 执行更新脚本
-        $installScript = $this->runScript($name, 'run', 'Upgrade');
-        if ($installScript === false) {
             return false;
         }
         
@@ -734,35 +728,35 @@ class Module
     }
     
     /**
-     * 安装模块嵌入点
+     * 安装模块事件类
      * @param type $name 模块名称
-     * @param type $hooks 嵌入点信息
+     * @param type $events 事件类信息
      * @return boolean
      *
      * @create 2019-8-5
      * @author deatil
      */
-    private function installModuleEvent($name = '', $hooks = [])
+    private function installModuleEvent($name = '', $events = [])
     {
         if (empty($name)) {
             $this->error = '模块名称不能为空！';
             return false;
         }
         
-        if (empty($hooks)) {
-            $this->error = '嵌入点信息不能为空！';
+        if (empty($events)) {
+            $this->error = '事件类信息不能为空！';
             return false;
         }
         
-        foreach ($hooks as $hook) {
+        foreach ($events as $event) {
             EventModel::insert([
                 'id' => md5(time().lake_to_guid_string(time()).mt_rand(0, 100000)),
                 'module' => $name,
-                'name' => $hook['name'],
-                'class' => $hook['class'],
-                'description' => $hook['description'],
-                'listorder' => isset($hook['listorder']) ? $hook['listorder'] : 100,
-                'status' => (isset($hook['status']) && $hook['status'] == 1) ? 1 : 0,
+                'name' => $event['name'],
+                'class' => $event['class'],
+                'description' => $event['description'],
+                'listorder' => isset($event['listorder']) ? $event['listorder'] : 100,
+                'status' => (isset($event['status']) && $event['status'] == 1) ? 1 : 0,
                 'add_time' => time(),
                 'add_ip' => request()->ip(1),
             ]);
