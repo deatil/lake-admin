@@ -18,7 +18,13 @@ class Attachment extends ModelBase
     
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
-    protected $insert = ['status' => 1];
+    
+    // 时间字段取出后的默认时间格式
+    protected $dateFormat = false;
+    
+    protected $insert = [
+        'status' => 1,
+    ];
 
     public function getSizeAttr($value)
     {

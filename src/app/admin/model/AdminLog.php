@@ -20,6 +20,9 @@ class AdminLog extends ModelBase
     
     protected $autoWriteTimestamp = true;
     protected $updateTime = false;
+    
+    // 时间字段取出后的默认时间格式
+    protected $dateFormat = false;
 
     public function getIpAttr($value)
     {

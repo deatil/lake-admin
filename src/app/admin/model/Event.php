@@ -17,5 +17,8 @@ class Event extends ModelBase
     protected $pk = 'id';
     
     // protected $autoWriteTimestamp = true;
+    
+    // 时间字段取出后的默认时间格式
+    protected $dateFormat = false;
 
 }

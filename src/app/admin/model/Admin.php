@@ -18,6 +18,9 @@ class Admin extends ModelBase
     // 设置主键名
     protected $pk = 'id';
     
+    // 时间字段取出后的默认时间格式
+    protected $dateFormat = false;
+    
     // 插入数据自动
     protected $insert = [
         'status' => 1,

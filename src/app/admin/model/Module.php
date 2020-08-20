@@ -16,6 +16,9 @@ class Module extends ModelBase
     // 设置主键名
     protected $pk = 'module';
     
+    // 时间字段取出后的默认时间格式
+    protected $dateFormat = false;
+    
     // 自动完成
     protected $auto = [];
     

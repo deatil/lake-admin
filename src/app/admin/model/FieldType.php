@@ -16,6 +16,9 @@ class FieldType extends ModelBase
     // 设置主键名
     protected $pk = 'id';
     
+    // 时间字段取出后的默认时间格式
+    protected $dateFormat = false;
+    
     /**
      * 字段类型的配置列表
      *

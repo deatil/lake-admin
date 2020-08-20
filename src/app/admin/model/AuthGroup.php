@@ -18,6 +18,9 @@ class AuthGroup extends ModelBase
 
     protected $resultSetType = 'collection';
     
+    // 时间字段取出后的默认时间格式
+    protected $dateFormat = false;
+    
     const TYPE_ADMIN = 1;
     
     /**
