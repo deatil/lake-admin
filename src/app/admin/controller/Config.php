@@ -68,24 +68,24 @@ class Config extends Base
             
             $map = [];
             if (!empty($searchField) && !empty($keyword)) {
-                $searchField = 'c.'.$searchField;
+                $searchField = $searchField;
                 $map[] = [$searchField, 'like', "%$keyword%"];
             }
             
-            $ftTable = (new FieldTypeModel)->getName();
-            $data = ConfigModel::alias('c')
-                ->leftJoin($ftTable . ' ft ', 'ft.name=c.type')
-                ->field('
-                    c.*,
-                    ft.title as ftitle
-                ')
+            $data = ConfigModel::field('id,name,title,group,type,listorder,status,is_system,update_time')
+                ->withJoin(['fieldType'])
                 ->page($page, $limit)
                 ->where($map)
-                ->order('c.group ASC, c.listorder ASC, c.name ASC, c.id DESC')
+                ->order('group ASC, listorder ASC, name ASC, id DESC')
                 ->select()
+                ->visible([
+                    'fieldType' => [
+                        'title',
+                    ]
+                ])
                 ->toArray();
-            $total = ConfigModel::alias('c')
-                ->where($map)
+            
+            $total = ConfigModel::where($map)
                 ->count();
             
             $result = [

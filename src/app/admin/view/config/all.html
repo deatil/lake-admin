@@ -55,9 +55,13 @@
     <a href='{:url("edit")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="编辑配置项">编辑</a>
     <a href='{:url("del")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
 </script>
+<script type="text/html" id="fieldTypeTpl">
+    {{ d.fieldType.title }}
+</script>
 <script type="text/html" id="switchTpl">
     <input type="checkbox" name="status" data-href="{:url('setstate')}?id={{d.id}}" value="{{d.id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="switchStatus" {{ d.status==1 ? 'checked' : '' }}>
 </script>
+
 <script>
 layui.use('table', function() {
     var table = layui.table,
@@ -74,7 +78,7 @@ layui.use('table', function() {
                 { field: 'group', width: 100, title: '分组' },
                 { field: 'name', title: '名称' },
                 { field: 'title', title: '标题' },
-                { field: 'ftitle', width: 110, title: '类型' },
+                { field: 'ftitle', width: 110, title: '类型', templet: '#fieldTypeTpl' },
                 { field: 'update_time', width: 200, title: '更新时间', templet: function(d){ return layui.formatDateTime(d.update_time) }},
                 { field: 'status', title: '状态', width: 100, templet: '#switchTpl', unresize: true },
                 { fixed: 'right', width: 120, title: '操作', toolbar: '#barTool' }
