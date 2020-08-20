@@ -79,7 +79,7 @@ class Service extends BaseService
 {
     public function boot()
     {
-        // 该事件将模块信息注入到系统，以公系统获取信息及调用，请填写正确
+        // 该事件将模块信息注入到系统，以供系统获取信息及调用，请填写正确
         $this->app->event->listen('lake_admin_module', function () {
             $info_file = dirname(__DIR__)
                 . DIRECTORY_SEPARATOR . 'info.php';
