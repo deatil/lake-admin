@@ -1,27 +1,42 @@
-## `lake-admin` `模块插件` 目录说明
+## lake-admin 模块插件目录说明
 
 > `addon目录` 下模块插件必须有的目录结构
 
 ~~~
-┌-- module_name
-├---- admin 模块后台目录[不需后台可删去]
-├------- controller 模块后台控制器目录
-├------- view 模块后台视图目录
-├---- api 模块api目录[没有API可删去]
-├------- controller 模块api控制器目录
-├---- config 模块配置文件目录
-├---- controller 模块控制器目录
-├---- global 模块全局配置及文件引入目录[非必须]
-├---- icon.png 模块logo文件
-├---- info.php 模块说明文件
-├---- Install.php 模块安装文件[非必须]
-├---- Uninstall.php 模块卸载文件[非必须]
-├---- Upgrade.php 模块更新文件[非必须]
+www  WEB部署目录
+├─addon                 lake-admin系统模块插件目录
+│  ├─module_name        模块目录
+│  │  ├─admin           模块后台目录[不需后台可删除，非必须]
+│  │  │  ├─controller   控制器目录
+│  │  │  └─view         视图目录
+│  │  │
+│  │  ├─api             模块api目录[没有API可删除，非必须]
+│  │  │  └─controller   控制器目录
+│  │  │
+│  │  ├─global          模块全局配置及文件引入目录[非必须]
+│  │  │  ├─config       配置目录
+│  │  │  ├─common.php   函数文件
+│  │  │  └─ ...         更多文件与 app/module_name 目录下文件相同
+│  │  │
+│  │  ├─controller      控制器目录
+│  │  ├─model           模型目录
+│  │  ├─view            视图目录
+│  │  ├─common.php      模块函数文件
+│  │  ├─icon.png        模块logo文件
+│  │  ├─info.php        模块配置文件
+│  │  ├─Install.php     模块安装文件[非必须]
+│  │  ├─Uninstall.php   模块卸载文件[非必须]
+│  │  ├─Upgrade.php     模块更新文件[非必须]
+│  │  └─ ...            其他
+│  │
+│  └─ ...               其他模块目录
+│
+└─ ...                  其他自定义文件和目录
 ~~~
 
 > `自定义模块插件` 下模块插件必须有的目录结构
 
-*  需要在composer.json引入插件的Service，并在插件Service注入模块信息到lake-admin系统
+*  需要在composer.json引入模块的Service，并在模块Service注入模块信息到lake-admin系统
 *  下面以 `lake-admin-addon-lmenu` 为例子说明。
 *  更多具体的信息可以直接查看该模块插件项目
 
@@ -157,12 +172,12 @@ return [
     // 菜单，菜单数组建议单独引入
     'menus' => include __DIR__ . '/menu.php',
     
-    // 数据表，不用加表前缀
+    // 数据表，无表前缀数据表
     'tables' => [
         'lcms_category',
     ],
     
-    // 安装演示数据
+    // 安装演示数据。具体的演示数据需要在安装过程自己手动放入
     'demo' => 1,
 ];
 ~~~
