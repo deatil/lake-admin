@@ -944,7 +944,7 @@ class Module
      * @create 2019-8-5
      * @author deatil
      */
-    private function installRollback($name = '')
+    public function installRollback($name = '')
     {
         if (empty($name)) {
             $this->error = '模块名称不能为空！';
@@ -973,7 +973,7 @@ class Module
      * @create 2020-8-15
      * @author deatil
      */
-    private function upgradeRollback($name = '')
+    public function upgradeRollback($name = '')
     {
         if (empty($name)) {
             $this->error = '模块名称不能为空！';
