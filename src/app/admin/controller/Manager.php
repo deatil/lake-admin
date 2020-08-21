@@ -383,7 +383,7 @@ class Manager extends Base
         
             $rs = $this->AdminModel->editManager($data);
             if ($rs === false) {
-                $this->error($this->User->getError() ?: '修改失败！');
+                $this->error($this->AdminModel->getError() ?: '修改失败！');
             }
             
             $this->success("修改成功！");

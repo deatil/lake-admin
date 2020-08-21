@@ -371,6 +371,12 @@ code {
 .layui-table-view{overflow: auto;}
 .layui-form-field-label{display: block; padding:3px 0px; font-weight: 400; line-height: 20px; }
 
+@media screen and (max-width: 450px) {
+    .layui-form-item .layui-input-inline {
+        margin: 0px 0px 10px 0 !important;
+        width: 100% !important;
+    }
+}
 @media screen and (max-width: 750px) {
     .lake-admin-search-form .layui-btn,
     .lake-admin-search-form .layui-btn+.layui-btn,
@@ -409,5 +415,9 @@ code {
     .layui-form-item .layui-inline {
         width: 100% !important;
         margin-bottom: 5px !important;
+    }
+    .layui-form-item .layui-input-inline {
+        margin: 0px 0px 10px 0 !important;
+        width: 100% !important;
     }
 }

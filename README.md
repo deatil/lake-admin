@@ -24,9 +24,9 @@
 
 ### 截图预览
 
-[![LakeAdmin1](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin1.png)](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin1.png)
-[![LakeAdmin2](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin2.png)](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin2.png)
-[![LakeAdmin3](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin3.png)](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin3.png)
+[LakeAdmin1](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin1.png)
+[LakeAdmin2](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin2.png)
+[LakeAdmin3](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin3.png)
 
 
 ### 开源协议

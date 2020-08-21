@@ -34,6 +34,8 @@ class Service extends BaseService
         class_alias('app\\admin\\model\\ModelBase', 'lake\\module\\model\\ModelBase');
         class_alias('app\\admin\\module\\controller\\AdminBase', 'lake\\module\\controller\\AdminBase');
         class_alias('app\\admin\\module\\controller\\HomeBase', 'lake\\module\\controller\\HomeBase');
+        class_alias('app\\admin\\boot\\Jump', 'lake\\module\\controller\\Jump');
+        class_alias('app\\admin\\boot\\View', 'lake\\module\\controller\\View');
     }
     
     public function boot()
