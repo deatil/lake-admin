@@ -4,19 +4,17 @@
  * 用法：
  * class index
  * {
- *     use \app\admin\boot\Jump;
+ *     use \app\admin\http\Jump;
  *     public function index(){
  *         $this->error();
  *         $this->redirect();
  *     }
  * }
  */
-namespace app\admin\boot;
+namespace app\admin\http;
 
-use think\Container;
 use think\exception\HttpResponseException;
 use think\Response;
-use think\response\Redirect;
 
 /**
  * 页面跳转
@@ -37,8 +35,13 @@ trait Jump
      * @param  array     $header 发送的Header信息
      * @return void
      */
-    protected function success($msg = '', $url = null, $data = '', $wait = 3, array $header = [])
-    {
+    protected function success(
+        $msg = '', 
+        $url = null, 
+        $data = '', 
+        $wait = 3, 
+        array $header = []
+    ) {
         if (is_null($url) && isset($_SERVER["HTTP_REFERER"])) {
             $url = $_SERVER["HTTP_REFERER"];
         } elseif ($url) {
@@ -73,8 +76,13 @@ trait Jump
      * @param  array     $header 发送的Header信息
      * @return void
      */
-    protected function error($msg = '', $url = null, $data = '', $wait = 3, array $header = [])
-    {
+    protected function error(
+        $msg = '', 
+        $url = null, 
+        $data = '', 
+        $wait = 3, 
+        array $header = []
+    ) {
         $type = $this->getResponseType();
         if (is_null($url)) {
             $url = request()->isAjax() ? '' : 'javascript:history.back(-1);';
@@ -110,13 +118,18 @@ trait Jump
      * @param  array     $header 发送的Header信息
      * @return void
      */
-    protected function result($data, $code = 0, $msg = '', $type = '', array $header = [])
-    {
+    protected function result(
+        $data, 
+        $code = 0, 
+        $msg = '', 
+        $type = '', 
+        array $header = []
+    ) {
         $result = [
             'code' => $code,
             'msg'  => $msg,
-            'time' => time(),
             'data' => $data,
+            'time' => time(),
         ];
 
         $type     = $type ?: $this->getResponseType();

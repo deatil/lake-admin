@@ -123,17 +123,6 @@ class FieldType extends Base
     ];
     
     /**
-     * 框架构造函数
-     *
-     * @create 2019-8-4
-     * @author deatil
-     */
-    protected function initialize()
-    {
-        parent::initialize();
-    }
-    
-    /**
      * 列表
      *
      * @create 2019-7-10

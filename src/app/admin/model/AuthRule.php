@@ -23,6 +23,12 @@ class AuthRule extends ModelBase
     
     const RULE_MENU = 1; // 菜单
     const RULE_URL = 2;
+
+    public static function onBeforeInsert($model)
+    {
+        $id = md5(mt_rand(10000, 99999) . time() . mt_rand(10000, 99999));
+        $model->setAttr('id', $id);
+    }
     
     /**
      * 规则的分组列表

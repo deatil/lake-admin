@@ -22,7 +22,7 @@ class AdminLog
     public function handle($params)
     {
         $msg = request()->param();
-        (new AdminLogModel())->record(json_encode($msg), 1);
+        AdminLogModel::record(json_encode($msg), 1);
     }
     
 }

@@ -13,7 +13,6 @@ use app\admin\facade\Admin as AdminFacade;
  */
 class Passport extends Base
 {
-    
     /**
      * 验证码
      *

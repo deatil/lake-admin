@@ -5,7 +5,7 @@ namespace app\admin\middleware;
 use Closure;
 use think\App;
 
-use app\admin\boot\Jump as JumpTrait;
+use app\admin\http\Jump as JumpTrait;
 use app\admin\service\Screen as ScreenService;
 
 /**

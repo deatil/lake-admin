@@ -2,8 +2,8 @@
 
 namespace app\admin\controller;
 
-use app\admin\boot\Jump as JumpTrait;
-use app\admin\boot\View as ViewTrait;
+use app\admin\http\Jump as JumpTrait;
+use app\admin\http\View as ViewTrait;
 use app\admin\boot\BaseController;
 
 /**

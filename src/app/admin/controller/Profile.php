@@ -13,7 +13,6 @@ use app\admin\facade\Admin as AdminFacade;
  */
 class Profile extends Base
 {
-
     /**
      * 管理员账号修改
      *

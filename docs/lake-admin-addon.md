@@ -75,7 +75,8 @@ www  WEB部署目录
     "extra": {
         "think":{
             "services":[
-                "app\\lmenu\\boot\\Service" # 该行引入模块插件Service
+                /** 该行引入模块插件Service */
+                "app\\lmenu\\boot\\Service" 
             ]
         }
     }

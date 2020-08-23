@@ -24,6 +24,12 @@ class AdminLog extends ModelBase
     // 时间字段取出后的默认时间格式
     protected $dateFormat = false;
 
+    public static function onBeforeInsert($model)
+    {
+        $id = md5(mt_rand(10000, 99999) . time() . mt_rand(10000, 99999));
+        $model->setAttr('id', $id);
+    }
+
     public function getIpAttr($value)
     {
         return long2ip($value);
@@ -34,7 +40,7 @@ class AdminLog extends ModelBase
      * @param type $message 说明
      * @param  integer $status  状态
      */
-    public function record($message, $status = 0)
+    public static function record($message, $status = 0)
     {
         $adminId = AdminFacade::isLogin();
         if ($adminId > 0) {
@@ -56,16 +62,16 @@ class AdminLog extends ModelBase
             'useragent' => request()->server('HTTP_USER_AGENT'),
             'status' => $status,
         ];
-        return $this->save($data) !== false ? true : false;
+        return (new self)->save($data) !== false ? true : false;
     }
 
     /**
      * 删除一个月前的日志
      * @return boolean
      */
-    public function deleteAMonthago()
+    public static function deleteAMonthago()
     {
-        $status = $this->where('create_time', '<= time', time() - (86400 * 30))->delete();
+        $status = self::where('create_time', '<= time', time() - (86400 * 30))->delete();
         return $status !== false ? true : false;
     }
 

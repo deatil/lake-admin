@@ -4,14 +4,14 @@
  * 用法：
  * class index
  * {
- *     use \app\admin\boot\View;
+ *     use \app\admin\http\View;
  *     public function index(){
  *         $this->assign();
  *         return $this->fetch();
  *     }
  * }
  */
-namespace app\admin\boot;
+namespace app\admin\http;
 
 use think\facade\View as ViewFacade;
 

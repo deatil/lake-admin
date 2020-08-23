@@ -4,8 +4,8 @@ namespace app\admin\module\controller;
 
 use think\facade\Env;
 
-use app\admin\boot\Jump as JumpTrait;
-use app\admin\boot\View as ViewTrait;
+use app\admin\http\Jump as JumpTrait;
+use app\admin\http\View as ViewTrait;
 use app\admin\boot\BaseController;
 
 use app\admin\model\Module as ModuleModel;

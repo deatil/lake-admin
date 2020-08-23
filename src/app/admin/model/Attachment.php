@@ -26,6 +26,12 @@ class Attachment extends ModelBase
         'status' => 1,
     ];
 
+    public static function onBeforeInsert($model)
+    {
+        $id = md5(mt_rand(10000, 99999) . time() . mt_rand(10000, 99999));
+        $model->setAttr('id', $id);
+    }
+
     public function getSizeAttr($value)
     {
         return lake_format_bytes($value);

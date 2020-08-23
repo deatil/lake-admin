@@ -2,10 +2,14 @@
 
 use think\facade\Event;
 
+use think\facade\Lang;
+
 use lake\Arr;
 use lake\Str;
 use lake\Http;
 use lake\Random;
+
+use app\admin\http\Json as HttpJsonTrait;
 
 use app\admin\facade\Password as PasswordFacade;
 
@@ -13,6 +17,68 @@ use app\admin\service\AdminAuth as AdminAuthService;
 use app\admin\service\Module as ModuleService;
 use app\admin\service\Config as ConfigService;
 use app\admin\service\Attachment as AttachmentService;
+
+
+if (!function_exists('__')) {
+
+    /**
+     * 获取语言变量值
+     * @param string $name 语言变量名
+     * @param array  $vars 动态变量值
+     * @param string $lang 语言
+     * @return mixed
+     */
+    function __($name, $vars = [], $lang = '')
+    {
+        if (is_numeric($name) || !$name) {
+            return $name;
+        }
+        if (!is_array($vars)) {
+            $vars = func_get_args();
+            array_shift($vars);
+            $lang = '';
+        }
+        return Lang::get($name, $vars, $lang);
+    }
+}
+
+if (!function_exists('lake_success_json')) {
+    /*
+     * 检测签名
+     *
+     * @create 2020-8-22
+     * @author deatil
+     */
+    function lake_success_json($msg = '获取成功', $data = null, $code = 0, $header = []) {
+        return (new class {
+            use HttpJsonTrait;
+            
+            public function json($msg = '获取成功', $data = null, $code = 0, $header = [])
+            {
+                return $this->successJson($msg, $data, $code, $header);
+            }
+        })->json($msg, $data, $code, $header);
+    }
+}
+
+if (!function_exists('lake_error_json')) {
+    /*
+     * 检测签名
+     *
+     * @create 2020-8-22
+     * @author deatil
+     */
+    function lake_error_json($msg = null, $code = 1, $data = [], $header = []) {
+        return (new class {
+            use HttpJsonTrait;
+            
+            public function json($msg = null, $code = 1, $data = [], $header = [])
+            {
+                return $this->errorJson($msg, $code, $data, $header);
+            }
+        })->json($msg, $code, $data, $header);
+    }
+}
 
 if (!function_exists('lake_app')) {
     /**

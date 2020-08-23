@@ -12,21 +12,6 @@ use app\admin\model\AdminLog as AdminlogModel;
  */
 class AdminLog extends Base
 {
-    protected $AdminlogModel;
-    
-    /**
-     * 框架构造函数
-     *
-     * @create 2019-8-4
-     * @author deatil
-     */
-    protected function initialize()
-    {
-        parent::initialize();
-        
-        $this->AdminlogModel = new AdminlogModel;
-    }
-    
     /**
      * 日志首页
      *
@@ -46,15 +31,13 @@ class AdminLog extends Base
                 $map[] = ['method', '=', $method];
             }
             
-            $data = $this->AdminlogModel
-                ->where($map)
+            $data = AdminlogModel::where($map)
                 ->page($page, $limit)
                 ->order('create_time desc')
                 ->select()
                 ->toArray();
             
-            $total = $this->AdminlogModel
-                ->where($map)
+            $total = AdminlogModel::where($map)
                 ->order('id DESC')
                 ->count();
             
@@ -87,8 +70,7 @@ class AdminLog extends Base
             $this->error('信息ID错误！');
         }
         
-        $data = $this->AdminlogModel
-            ->where([
+        $data = AdminlogModel::where([
                 "id" => $id,
             ])
             ->find();
@@ -112,7 +94,7 @@ class AdminLog extends Base
             $this->error('请求错误！');
         }
         
-        $status = $this->AdminlogModel->deleteAMonthago();
+        $status = AdminlogModel::deleteAMonthago();
         if ($status === false) {
             $this->error("删除日志失败！");
         }

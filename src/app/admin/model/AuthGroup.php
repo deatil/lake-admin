@@ -22,6 +22,12 @@ class AuthGroup extends ModelBase
     protected $dateFormat = false;
     
     const TYPE_ADMIN = 1;
+
+    public static function onBeforeInsert($model)
+    {
+        $id = md5(mt_rand(10000, 99999) . time() . mt_rand(10000, 99999));
+        $model->setAttr('id', $id);
+    }
     
     /**
      * 组的权限列表
