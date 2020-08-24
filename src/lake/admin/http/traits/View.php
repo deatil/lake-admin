@@ -1,17 +1,6 @@
 <?php
 
-/**
- * 用法：
- * class index
- * {
- *     use \lake\admin\http\View;
- *     public function index(){
- *         $this->assign();
- *         return $this->fetch();
- *     }
- * }
- */
-namespace lake\admin\http;
+namespace lake\admin\http\traits;
 
 use think\facade\View as ViewFacade;
 
@@ -20,6 +9,16 @@ use think\facade\View as ViewFacade;
  *
  * @create 2020-7-21
  * @author deatil
+ *
+ * 用法：
+ * class index
+ * {
+ *     use \lake\admin\http\traits\View;
+ *     public function index(){
+ *         $this->assign();
+ *         return $this->fetch();
+ *     }
+ * }
  */
 trait View
 {

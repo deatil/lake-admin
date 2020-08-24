@@ -67,7 +67,7 @@ class AuthManager extends Base
             
             $result = [];
             if (empty($map)) {
-                $tree = new Tree();
+                $tree = app(Tree::class, [], true);
                 $tree->init($list);
                 $result = [];
                 
@@ -124,7 +124,7 @@ class AuthManager extends Base
             'status' => 1,
         ]);
         
-        $tree = new Tree();
+        $tree = app(Tree::class, [], true);
         $str = "'<option value='\$id' \$selected>\$spacer\$title</option>";
         $list = AuthGroupModel::order(['id' => 'ASC'])
             ->column('*', 'id');
@@ -224,7 +224,7 @@ class AuthManager extends Base
             $this->error($check['msg']);
         }
     
-        $tree = new Tree();
+        $tree = app(Tree::class, [], true);
         
         $str = "'<option value='\$id' \$selected>\$spacer\$title</option>";
         $list = AuthGroupModel::order([
@@ -482,7 +482,7 @@ class AuthManager extends Base
             // 当前用户权限ID列表
             $userAuthIds = AdminAuthService::instance()->getUserAuthIdList(env('admin_id'));
         
-            $result = (new AuthRuleModel)->returnNodes(false);
+            $result = app(AuthRuleModel::class, [], true)->returnNodes(false);
             
             $json = [];
             if (!empty($result)) {

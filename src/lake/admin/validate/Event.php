@@ -10,13 +10,13 @@ use think\Validate;
  * @create 2019-7-20
  * @author deatil
  */
-class Hook extends Validate
+class Event extends Validate
 {
     //定义验证规则
     protected $rule = [
         'module|模型' => 'require|chsAlphaNum',
-        'name|嵌入点名称' => 'require',
-        'class|hook类' => 'require',
+        'name|检测点名称' => 'require',
+        'class|事件类' => 'require',
     ];
 
     //定义验证提示

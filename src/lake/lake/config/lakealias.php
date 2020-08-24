@@ -19,9 +19,9 @@ return [
     
     // 模块基础别名
     "lake\\Module" => "lake\\admin\\module\\Module",
-    "lake\\module\\traits\\Jump" => "lake\\admin\\http\\Jump",
-    "lake\\module\\traits\\View" => "lake\\admin\\http\\View",
-    "lake\\module\\traits\\Json" => "lake\\admin\\http\\Json",
+    "lake\\module\\traits\\Jump" => "lake\\admin\\http\\traits\\Jump",
+    "lake\\module\\traits\\View" => "lake\\admin\\http\\traits\\View",
+    "lake\\module\\traits\\Json" => "lake\\admin\\http\\traits\\Json",
     "lake\\module\\model\\ModelBase" => "lake\\admin\\model\\ModelBase",
     "lake\\module\\controller\\AdminBase" => "lake\\admin\\module\\controller\\AdminBase",
     "lake\\module\\controller\\HomeBase" => "lake\\admin\\module\\controller\\HomeBase",

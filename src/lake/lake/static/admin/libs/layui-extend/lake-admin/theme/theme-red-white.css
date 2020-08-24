@@ -1,5 +1,8 @@
 ::selection{color:#fff !important;background-color:#DD4B39 !important}
 ::-moz-selection{color:#fff !important;background-color:#DD4B39 !important}
+::-webkit-scrollbar-thumb {
+    background-color: #DD4B39 !important;
+}
 
 html {
     background-color: #F5F7F9;
@@ -269,7 +272,8 @@ html {
         left: 235px;
     }
 
-    .layui-layout-admin .layui-side, .layui-layout-admin .layui-header .layui-logo:after {
+    .layui-layout-admin .layui-side, 
+    .layui-layout-admin .layui-header .layui-logo:after {
         box-shadow: none;
     }
 }
@@ -552,5 +556,34 @@ html {
 @media screen and (max-width: 768px) {
     .layui-layout-admin .layui-body {
         left: -2px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .lake-admin .lake-admin-site-tree-mobile {
+        background-color: rgba(221, 75, 57, .7) !important;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus {
+        background-color: #fff;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item {
+        background-color: #fff;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item:hover {
+        color: #000;
+        background: #f2f2f2;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item.layui-this {
+        background: #FFF2E8;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item.layui-this a {
+        color: #DD4B39 !important;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item.layui-this:after {
+        width: 2px;
+        background: #DD4B39;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item a {
+        color: #000;
     }
 }

@@ -50,6 +50,8 @@ class Passport extends Base
                 'password|密码' => 'require|length:32',
             ];
             $message = [
+                'username.require' => '用户名不能为空',
+                'password.require' => '密码不能为空',
                 'password.length' => '密码错误',
             ];
             $result = $this->validate($data, $rule, $message);

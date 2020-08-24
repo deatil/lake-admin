@@ -59,7 +59,7 @@ class Event extends Base
     {
         if ($this->request->isPost()) {
             $data = $this->request->post('');
-            $result = $this->validate($data, 'lake\\admin\\validate\\Hook.insert');
+            $result = $this->validate($data, 'lake\\admin\\validate\\Event.insert');
             if (true !== $result) {
                 return $this->error($result);
             }
@@ -103,7 +103,7 @@ class Event extends Base
     {
         if ($this->request->isPost()) {
             $data = $this->request->post();
-            $result = $this->validate($data, 'lake\\admin\\validate\\Hook.update');
+            $result = $this->validate($data, 'lake\\admin\\validate\\Event.update');
             if (true !== $result) {
                 return $this->error($result);
             }

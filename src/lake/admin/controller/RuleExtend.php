@@ -91,7 +91,7 @@ class RuleExtend extends Base
             return $this->success("添加成功！");
             
         } else {
-            $this->assign("roles", (new AuthGroupModel)->getGroups());
+            $this->assign("roles", AuthGroupModel::getGroups());
             
             // 模块列表
             $modules = ModuleFacade::getAll();
@@ -137,7 +137,7 @@ class RuleExtend extends Base
             }
             
             $this->assign("data", $data);
-            $this->assign("roles", (new AuthGroupModel)->getGroups());
+            $this->assign("roles", AuthGroupModel::getGroups());
             
             // 模块列表
             $modules = ModuleFacade::getAll();

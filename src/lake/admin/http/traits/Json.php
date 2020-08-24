@@ -1,17 +1,5 @@
 <?php
-
-/**
- * 用法：
- * class index
- * {
- *     use \lake\admin\http\Json;
- *     public function index(){
- *         $this->errorJson();
- *         $this->successJson();
- *     }
- * }
- */
-namespace lake\admin\http;
+namespace lake\admin\http\traits;
 
 use think\Response;
 use think\exception\HttpResponseException;
@@ -21,6 +9,16 @@ use think\exception\HttpResponseException;
  *
  * @create 2020-8-22
  * @author deatil
+ *
+ * 用法：
+ * class index
+ * {
+ *     use \lake\admin\http\traits\Json;
+ *     public function index(){
+ *         $this->errorJson();
+ *         $this->successJson();
+ *     }
+ * }
  */
 trait Json
 {

@@ -8,7 +8,7 @@ use lake\Str;
 use lake\Http;
 use lake\Random;
 
-use lake\admin\http\Json as HttpJsonTrait;
+use lake\admin\http\traits\Json as HttpJsonTrait;
 use lake\admin\facade\Password as PasswordFacade;
 use lake\admin\service\AdminAuth as AdminAuthService;
 use lake\admin\service\Module as ModuleService;

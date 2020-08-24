@@ -141,12 +141,11 @@ class Manager extends Base
         } else {
             if (!env('admin_is_root')) {
                 $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
-                $roles = (new AuthGroupModel)
-                    ->getGroups([
+                $roles = AuthGroupModel::getGroups([
                         ['id', 'in', $userChildGroupIds],
                     ]);
             } else {
-                $roles = (new AuthGroupModel)->getGroups();
+                $roles = AuthGroupModel::getGroups();
             }
             $this->assign("roles", $roles);
             
@@ -251,12 +250,11 @@ class Manager extends Base
             
             if (!env('admin_is_root')) {
                 $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
-                $roles = (new AuthGroupModel)
-                    ->getGroups([
+                $roles = AuthGroupModel::getGroups([
                         ['id', 'in', $userChildGroupIds],
                     ]);
             } else {
-                $roles = (new AuthGroupModel)->getGroups();
+                $roles = AuthGroupModel::getGroups();
             }
             $this->assign("roles", $roles);
             
@@ -331,7 +329,7 @@ class Manager extends Base
                 'admin_id' => $id,
             ])
             ->column('group_id');
-        $authGroups = (new AuthGroupModel)->getGroups();
+        $authGroups = AuthGroupModel::getGroups();
         
         $groups = [];
         if (!empty($authGroups)) {

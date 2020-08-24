@@ -1,5 +1,8 @@
 ::selection{color:#fff !important;background-color:#00A65A !important}
 ::-moz-selection{color:#fff !important;background-color:#00A65A !important}
+::-webkit-scrollbar-thumb {
+    background-color: #00A65A !important;
+}
 
 .layui-nav .layui-nav-child dd.layui-this a, 
 .layui-nav-child dd.layui-this {

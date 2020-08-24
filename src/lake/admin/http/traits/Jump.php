@@ -1,17 +1,6 @@
 <?php
 
-/**
- * 用法：
- * class index
- * {
- *     use \lake\admin\http\Jump;
- *     public function index(){
- *         $this->error();
- *         $this->redirect();
- *     }
- * }
- */
-namespace lake\admin\http;
+namespace lake\admin\http\traits;
 
 use think\exception\HttpResponseException;
 use think\Response;
@@ -21,6 +10,16 @@ use think\Response;
  *
  * @create 2019-7-7
  * @author deatil
+ *
+ * 用法：
+ * class index
+ * {
+ *     use \lake\admin\http\traits\Jump;
+ *     public function index(){
+ *         $this->error();
+ *         $this->redirect();
+ *     }
+ * }
  */
 trait Jump
 {

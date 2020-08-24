@@ -5,7 +5,7 @@ namespace lake\admin\middleware;
 use Closure;
 use think\App;
 
-use lake\admin\http\Jump as JumpTrait;
+use lake\admin\http\traits\Jump as JumpTrait;
 use lake\admin\model\AuthRule as AuthRuleModel;
 use lake\admin\service\AdminAuth as AdminAuthService;
 use lake\admin\facade\Admin as AdminFacade;

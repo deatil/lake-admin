@@ -89,7 +89,7 @@ class AuthGroup extends ModelBase
      * 默认返回正常状态的管理员用户组列表
      * @param array $where   查询条件,供where()方法使用
      */
-    public function getGroups($where = [])
+    public static function getGroups($where = [])
     {
         $map = [
             'status' => 1, 
@@ -97,7 +97,7 @@ class AuthGroup extends ModelBase
             'module' => 'admin'
         ];
         
-        $data = $this->where($map)
+        $data = self::where($map)
             ->where($where)
             ->order('listorder ASC')
             ->select()

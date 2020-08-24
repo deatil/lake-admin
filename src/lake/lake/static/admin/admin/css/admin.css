@@ -3,6 +3,24 @@
 ::selection{color:#fff !important;background-color:#009688 !important}
 ::-moz-selection{color:#fff !important;background-color:#009688 !important}
 
+/**自定义滚动条样式 */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px
+}
+::-webkit-scrollbar-track {
+    background-color: transparent;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius: 2em;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #9c9da0;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius: 2em
+}
+
 code {
     padding: 2px 4px;
     font-size: 90%;

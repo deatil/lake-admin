@@ -1,5 +1,8 @@
 ::selection{color:#fff !important;background-color:#3C8DBC !important}
 ::-moz-selection{color:#fff !important;background-color:#3C8DBC !important}
+::-webkit-scrollbar-thumb {
+    background-color: #3C8DBC !important;
+}
 
 .layui-nav .layui-nav-child dd.layui-this a, 
 .layui-nav-child dd.layui-this {
@@ -20,10 +23,6 @@
     background-color: #3C8DBC;
     color: #fff;
     box-shadow: none !important;
-}
-
-.layui-layout-admin .layui-side .layui-nav .layui-nav-item a:hover {
-    color: #3C8DBC;
 }
 
 /** header样式 */
@@ -81,15 +80,29 @@
     color: #b8c7ce;
 }
 
-.layui-nav-tree .layui-nav-child dd.layui-this, .layui-nav-tree .layui-nav-child dd.layui-this a, .layui-nav-tree .layui-this, .layui-nav-tree .layui-this > a, .layui-nav-tree .layui-this > a:hover {
+.layui-nav-tree .layui-nav-child dd.layui-this, 
+.layui-nav-tree .layui-nav-child dd.layui-this a, 
+.layui-nav-tree .layui-this, 
+.layui-nav-tree .layui-this > a, 
+.layui-nav-tree .layui-this > a:hover {
+    background-color: #3C8DBC;
+}
+.layui-nav-tree .layui-nav-child dd a:hover {
+    color: #3C8DBC;
+}
+.layui-nav-tree .layui-nav-child dd.layui-this a {
+    color: #fff;
+}
+
+.layui-nav-tree .layui-nav-bar, 
+.layui-nav-tree > .layui-nav-item > a:before {
     background-color: #3C8DBC;
 }
 
-.layui-nav-tree .layui-nav-bar, .layui-nav-tree > .layui-nav-item > a:before {
-    background-color: #3C8DBC;
-}
-
-.layui-side .layui-nav-itemed > a, .layui-nav-tree .layui-nav-title a, .layui-nav-tree .layui-nav-title a:hover, .layui-side .layui-nav-item.layui-this > a {
+.layui-side .layui-nav-itemed > a, 
+.layui-nav-tree .layui-nav-title a, 
+.layui-nav-tree .layui-nav-title a:hover, 
+.layui-side .layui-nav-item.layui-this > a {
     color: #fff !important;
 }
 

@@ -1,5 +1,8 @@
 ::selection{color:#fff !important;background-color:#FB7299 !important}
 ::-moz-selection{color:#fff !important;background-color:#FB7299 !important}
+::-webkit-scrollbar-thumb {
+    background-color: #FB7299 !important;
+}
 
 .layui-nav .layui-nav-child dd.layui-this a, 
 .layui-nav-child dd.layui-this {
@@ -290,11 +293,18 @@
     .lake-admin .layui-layout-admin .lake-admin-logo .lake-admin-logo-name-mini {
         color: #000 !important; 
     }
+    .lake-admin .lake-admin-site-tree-mobile {
+        background-color: rgba(251, 114, 153, 0.7) !important;
+    }
     .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus {
         background-color: #FB7299;
     }
     .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item {
         background-color: #FB7299;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, .15);
     }
     .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item.layui-this {
         background-color: rgba(255, 255, 255, .15);
@@ -306,7 +316,6 @@
     .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item a {
         color: #fff;
     }
-    
 }
 .lake-admin .layui-nav-tree .layui-nav-item.layui-nav-item-active > a:after {
     background-color: #FB7299;
