@@ -35,13 +35,13 @@ class Service extends BaseService
     {
         if ($this->isLakeAdminInstallCli() !== true) {
             // 初始化配置信息
-            app(ConfigInitService::class)->handle();
+            (new ConfigInitService)->handle();
             
             //  全局自定义事件
             $this->setSystemEvents();
             
             // 初始化模块
-            app(ModuleInitService::class)->handle();
+            (new ModuleInitService)->handle();
         }
         
         $this->app->event->listen('HttpRun', function () {

@@ -6,7 +6,7 @@ use think\facade\Env;
 
 use lake\admin\http\traits\Jump as JumpTrait;
 use lake\admin\http\traits\View as ViewTrait;
-use lake\admin\boot\BaseController;
+use lake\admin\http\BaseController;
 
 use lake\admin\model\Module as ModuleModel;
 

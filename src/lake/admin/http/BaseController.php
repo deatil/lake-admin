@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-namespace lake\admin\boot;
+namespace lake\admin\http;
 
 use think\App;
 use think\exception\ValidateException;

@@ -62,7 +62,7 @@ CREATE TABLE `pre__lakeadmin_auth_group` (
   `parentid` varchar(32) CHARACTER SET utf8mb4 NOT NULL DEFAULT '0' COMMENT '父组别',
   `module` varchar(250) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '用户组所属模块',
   `type` tinyint(4) NOT NULL COMMENT '组类型',
-  `title` char(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '用户组中文名称',
+  `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '用户组中文名称',
   `description` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '描述信息',
   `listorder` smallint(5) unsigned NOT NULL DEFAULT '100' COMMENT '排序ID',
   `is_system` varchar(255) CHARACTER SET utf8mb4 DEFAULT '0' COMMENT '1-系统默认角色',

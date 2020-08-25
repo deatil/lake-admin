@@ -134,7 +134,7 @@ class Attachments extends Base
         
         foreach ($ids as $id) {
             try {
-                app(AttachmentService::class, [], true)->deleteFile($id);
+                (new AttachmentService)->deleteFile($id);
             } catch (\Exception $ex) {
                 $this->error($ex->getMessage());
             }
@@ -160,7 +160,7 @@ class Attachments extends Base
         $sizelimit = -1, 
         $extlimit = ''
     ) {
-        $UploadService = app(UploadService::class, [], true);
+        $UploadService = (new UploadService);
         
         $admin_id = AdminFacade::getLoginUserInfo('id');
         return $UploadService->setTypeInfo('admin', $admin_id)
@@ -175,7 +175,7 @@ class Attachments extends Base
      */
     public function getUrlFile()
     {
-        $AttachmentService = app(AttachmentService::class, [], true);
+        $AttachmentService = (new AttachmentService);
         
         $admin_id = AdminFacade::getLoginUserInfo('id');
         return $AttachmentService->setTypeInfo('admin', $admin_id)

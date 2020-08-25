@@ -107,13 +107,13 @@ class AuthGroup extends ModelBase
 
     /**
      * 根据角色Id获取角色名
-     * @param int $Groupid 角色id
+     * @param int $id 角色id
      * @return string 返回角色名
      */
-    public function getRoleIdName($Groupid)
+    public static function getRoleIdName($id)
     {
-        return $this->where([
-            'id' => $Groupid,
+        return self::where([
+            'id' => $id,
         ])->value('title');
     }
 
@@ -122,18 +122,29 @@ class AuthGroup extends ModelBase
      * @param type $id
      * @return string
      */
-    public function getArrchildid($id)
+    public static function getArrchildid($id)
     {
-        if (empty($this->roleList)) {
-            $this->roleList = $this->order([
-                "id" => "desc",
-            ])->column('*', 'id');
+        $list = self::where([
+                ['parentid', '=', $id],
+            ])
+            ->order([
+                "add_time" => "ASC",
+            ])
+            ->field('*')
+            ->select()
+            ->toArray();
+        if (!empty($list)) {
+            return [];
         }
-        $arrchildid = $id;
-        if (is_array($this->roleList)) {
-            foreach ($this->roleList as $k => $cat) {
-                if ($cat['parentid'] && $k != $id && $cat['parentid'] == $id) {
-                    $arrchildid .= ',' . $this->getArrchildid($k);
+        
+        $arrchildid = [];
+        if (is_array($list)) {
+            foreach ($list as $k => $v) {
+                $arrchildid[] = $v['id'];
+                
+                $child = self::getArrchildid($v['id']);
+                if (!empty($child)) {
+                    $arrchildid = array_merge($arrchildid, $child);
                 }
             }
         }
@@ -142,38 +153,31 @@ class AuthGroup extends ModelBase
 
     /**
      * 删除角色
-     * @param int $Groupid 角色ID
+     * @param int $id 角色ID
      * @return boolean
      */
-    public function groupDelete($Groupid)
+    public static function groupDelete($id)
     {
-        if (empty($Groupid) || $Groupid == 1) {
-            $this->error = '超级管理员角色不能被删除！';
-            return false;
-        }
-        //角色信息
-        $info = $this->where([
-            'id' => $Groupid,
-        ])->find();
-        if (empty($info)) {
-            $this->error = '该角色不存在！';
-            return false;
-        }
-        //子角色列表
-        $child = explode(',', $this->getArrchildid($Groupid));
-        if (count($child) > 1) {
-            $this->error = '该角色下有子角色，请删除子角色才可以删除！';
+        if (empty($id)) {
             return false;
         }
         
-        $status = $this->where(['id' => $Groupid])->delete();
+        // 角色信息
+        $info = self::where([
+            'id' => $id,
+        ])->find();
+        if (empty($info)) {
+            return false;
+        }
+        
+        $status = self::where(['id' => $id])->delete();
         if ($status !== false) {
             AuthRuleAccess::where([
                 'module' => 'admin',
-                'group_id' => $Groupid,
+                'group_id' => $id,
             ])->delete();
         }
         
-        return $status !== false ? true : false;
+        return $status;
     }
 }

@@ -4,7 +4,7 @@ namespace lake\admin\controller;
 
 use lake\admin\http\traits\Jump as JumpTrait;
 use lake\admin\http\traits\View as ViewTrait;
-use lake\admin\boot\BaseController;
+use lake\admin\http\BaseController;
 
 /**
  * 后台基础类

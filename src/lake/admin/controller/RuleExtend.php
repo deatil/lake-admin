@@ -2,6 +2,8 @@
 
 namespace lake\admin\controller;
 
+use think\model\Relation;
+
 use lake\admin\facade\Module as ModuleFacade;
 use lake\admin\model\AuthGroup as AuthGroupModel;
 use lake\admin\model\AuthRuleExtend as AuthRuleExtendModel;
@@ -31,27 +33,21 @@ class RuleExtend extends Base
             
             $map = [];
             if (!empty($searchField) && !empty($keyword)) {
-                if ($searchField == 'group') {
-                    $searchField = 'ag.title';
-                } else {
-                    $searchField = 'are.'.$searchField;
-                }
                 $map[] = [$searchField, 'like', "%$keyword%"];
             }
             
-            $agTable = (new AuthGroupModel)->getName();
-            $data = AuthRuleExtendModel::alias('are')
-                ->leftJoin($agTable . ' ag ', 'are.group_id = ag.id')
-                ->field('are.*, ag.title as group_title ')
+            $data = AuthRuleExtendModel::withJoin(['group' => function(Relation $query) {
+                    $query->withField(["id","title"]);
+                }])
                 ->where($map)
                 ->page($page, $limit)
-                ->order('are.module ASC')
+                ->order('module ASC')
                 ->select()
                 ->toArray();
             
-            $agTable = (new AuthGroupModel)->getName();
-            $total = AuthRuleExtendModel::alias('are')
-                ->leftJoin($agTable . ' ag ', 'are.group_id = ag.id')
+            $total = AuthRuleExtendModel::withJoin(['group' => function(Relation $query) {
+                    $query->withField(["id","title"]);
+                }])
                 ->where($map)
                 ->count();
         

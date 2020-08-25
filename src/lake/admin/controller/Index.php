@@ -34,7 +34,7 @@ class Index extends Base
         $this->assign('user_info', env('admin_info'));
 
         // 左侧菜单
-        $menus = app(AuthRuleModel::class)->getMenuList();
+        $menus = (new AuthRuleModel)->getMenuList();
         $this->assign("menus", $menus);
         
         // 默认后台首页

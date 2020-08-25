@@ -37,8 +37,8 @@ class AuthManager extends Base
     {
         parent::initialize();
         
-        $this->AuthGroupModel = app(AuthGroupModel::class);
-        $this->AuthManagerService = app(AuthManagerService::class);
+        $this->AuthGroupModel = new AuthGroupModel;
+        $this->AuthManagerService = new AuthManagerService;
     }
 
     /**
@@ -67,7 +67,7 @@ class AuthManager extends Base
             
             $result = [];
             if (empty($map)) {
-                $tree = app(Tree::class, [], true);
+                $tree = new Tree;
                 $tree->init($list);
                 $result = [];
                 
@@ -87,6 +87,8 @@ class AuthManager extends Base
                 if (!empty($data)) {
                     $result = $tree->getTreeList($data, 'title');
                 }
+            } else {
+                $result = $list;
             }
             
             $result = [
@@ -124,7 +126,7 @@ class AuthManager extends Base
             'status' => 1,
         ]);
         
-        $tree = app(Tree::class, [], true);
+        $tree = new Tree;
         $str = "'<option value='\$id' \$selected>\$spacer\$title</option>";
         $list = AuthGroupModel::order(['id' => 'ASC'])
             ->column('*', 'id');
@@ -224,7 +226,7 @@ class AuthManager extends Base
             $this->error($check['msg']);
         }
     
-        $tree = app(Tree::class, [], true);
+        $tree = new Tree;
         
         $str = "'<option value='\$id' \$selected>\$spacer\$title</option>";
         $list = AuthGroupModel::order([
@@ -349,7 +351,7 @@ class AuthManager extends Base
             ])
             ->find();
         if (empty($authGroup)) {
-            $this->error('角色组不存在');
+            $this->error('角色组不存在！');
         }
         
         if ($authGroup['is_system'] == 1) {
@@ -363,11 +365,19 @@ class AuthManager extends Base
         
         Event::trigger('AuthManagerDeleteGroup', $groupId);
         
-        $rs = $this->AuthGroupModel->groupDelete($groupId);
+        // 子角色检测
+        $childGroupCount = AuthGroupModel::where([
+                ['parentid', '=', $groupId],
+            ])
+            ->count();
+        if ($childGroupCount > 0) {
+            $this->error('删除失败，请删除子角色后再删除！');
+        }
+        
+        $rs = AuthGroupModel::groupDelete($groupId);
         
         if ($rs === false) {
-            $error = $this->AuthGroupModel->getError();
-            $this->error($error ? $error : '删除失败！');
+            $this->error('删除失败！');
         }
         
         $this->success("删除成功！");
@@ -482,7 +492,7 @@ class AuthManager extends Base
             // 当前用户权限ID列表
             $userAuthIds = AdminAuthService::instance()->getUserAuthIdList(env('admin_id'));
         
-            $result = app(AuthRuleModel::class, [], true)->returnNodes(false);
+            $result = (new AuthRuleModel)->returnNodes(false);
             
             $json = [];
             if (!empty($result)) {

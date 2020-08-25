@@ -23,7 +23,6 @@ class Profile extends Base
     {
         $adminInfo = env('admin_info');
         
-        $AdminModel = app(AdminModel::class);
         if ($this->request->isPost()) {
             $post = $this->request->post();
             
@@ -32,8 +31,7 @@ class Profile extends Base
             $data['nickname'] = $post['nickname'];
             $data['avatar'] = $post['avatar'];
 
-            $status = $AdminModel
-                ->where([
+            $status = AdminModel::where([
                     'id' => $post['id'],
                 ])
                 ->data($data)
@@ -46,7 +44,7 @@ class Profile extends Base
             $this->success("修改成功！");
         } else {
             $id = $adminInfo['id'];
-            $data = $AdminModel->where([
+            $data = AdminModel::where([
                 "id" => $id,
             ])->find();
             if (empty($data)) {
@@ -67,7 +65,6 @@ class Profile extends Base
     {
         $adminInfo = env('admin_info');
         
-        $AdminModel = app(AdminModel::class);
         if ($this->request->isPost()) {
             $post = $this->request->post();
             
@@ -112,7 +109,7 @@ class Profile extends Base
             $data['encrypt'] = $passwordinfo['encrypt'];
             $data['password'] = $passwordinfo['password'];
 
-            $status = $AdminModel->where([
+            $status = AdminModel::where([
                 'id' => $adminInfo['id'],
             ])->update($data);
             
@@ -124,7 +121,7 @@ class Profile extends Base
             
             $this->success("修改密码成功！");
         } else {
-            $data = $AdminModel->where([
+            $data = AdminModel::where([
                 "id" => $adminInfo['id'],
             ])->find();
             if (empty($data)) {

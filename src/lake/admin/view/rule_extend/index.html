@@ -12,7 +12,7 @@
                         <option value="module">模块</option>
                         <option value="type">扩展标识</option>
                         <option value="rule">扩展规则</option>
-                        <option value="group">用户组</option>
+                        <option value="group_id">用户组ID</option>
                     </select>
                 </div>
                 <div class="layui-inline">
@@ -42,7 +42,7 @@
 </script>
 
 <script type="text/html" id="groupTpl">
-    {{ d.group_title }}
+    {{ d.group.title }}
 </script>
 
 <script type="text/html" id="dataToolbar">
@@ -65,8 +65,8 @@ layui.use('table', function() {
         url: '{:url("index")}',
         cols: [
             [
-                { field: 'module', width: 120, align:"center", title: '所属模块'},
-                { field: 'type', width: 130, align:"center", title: '扩展标识' },
+                { field: 'module', width: 120, title: '所属模块'},
+                { field: 'type', width: 130, title: '扩展标识' },
                 { field: 'group_title', width: 130, title: '用户组', templet: '#groupTpl' },
                 { field: 'rule', title: '扩展规则' },
                 { field: 'condition', title: '附加条件' },

@@ -6,6 +6,7 @@ use lake\admin\model\Admin as AdminModel;
 use lake\admin\model\AuthGroup as AuthGroupModel;
 use lake\admin\model\AuthGroupAccess as AuthGroupAccessModel;
 
+use lake\admin\service\Manager as ManagerService;
 use lake\admin\service\AuthManager as AuthManagerService;
 
 /**
@@ -16,8 +17,6 @@ use lake\admin\service\AuthManager as AuthManagerService;
  */
 class Manager extends Base
 {
-    protected $AdminModel;
-    
     protected $AuthManagerService;
 
     /**
@@ -30,8 +29,7 @@ class Manager extends Base
     {
         parent::initialize();
         
-        $this->AdminModel = app(AdminModel::class);
-        $this->AuthManagerService = app(AuthManagerService::class);
+        $this->AuthManagerService = new AuthManagerService;
     }
 
     /**
@@ -57,13 +55,11 @@ class Manager extends Base
                 $map[] = ['id', 'in', $adminIds];
             }
             
-            $list = $this->AdminModel
-                ->where($map)
+            $list = AdminModel::where($map)
                 ->page($page, $limit)
                 ->select()
                 ->toArray();
-            $total = $this->AdminModel
-                ->where($map)
+            $total = AdminModel::where($map)
                 ->count();
             
             if (!empty($list)) {
@@ -131,9 +127,10 @@ class Manager extends Base
                 }
             }
             
-            $status = $this->AdminModel->createManager($data);
+            $ManagerService = (new ManagerService);
+            $status = $ManagerService->createManager($data);
             if ($status === false) {
-                $error = $this->AdminModel->getError();
+                $error = $ManagerService->getError();
                 $this->error($error ? $error : '添加失败！');
             }
            
@@ -179,8 +176,7 @@ class Manager extends Base
                 }
             }
             
-            $adminInfo = $this->AdminModel
-                ->where([
+            $adminInfo = AdminModel::where([
                     "id" => $data['id'],
                 ])
                 ->find();
@@ -214,9 +210,10 @@ class Manager extends Base
                 }
             }
             
-            $status = $this->AdminModel->editManager($data);
+            $ManagerService = (new ManagerService);
+            $status = $ManagerService->editManager($data);
             if ($status === false) {
-                $error = $this->AdminModel->getError();
+                $error = $ManagerService->getError();
                 $this->error($error ? $error : '修改失败！');
             }
             
@@ -227,8 +224,7 @@ class Manager extends Base
                 $this->error('参数错误！');
             }
             
-            $data = $this->AdminModel
-                ->where([
+            $data = AdminModel::where([
                     "id" => $id,
                 ])
                 ->find();
@@ -279,8 +275,7 @@ class Manager extends Base
             $this->error('参数错误！');
         }
         
-        $adminInfo = $this->AdminModel
-            ->where([
+        $adminInfo = AdminModel::where([
                 "id" => $id,
             ])
             ->find();
@@ -292,9 +287,10 @@ class Manager extends Base
             $this->error('系统默认账户不可操作！');
         }
         
-        $rs = $this->AdminModel->deleteManager($id);
+        $ManagerService = (new ManagerService);
+        $rs = $ManagerService->deleteManager($id);
         if ($rs === false) {
-            $this->error($this->AdminModel->getError() ?: '删除失败！');
+            $this->error($ManagerService->getError() ?: '删除失败！');
         }
         
         $this->success("删除成功！");
@@ -317,7 +313,7 @@ class Manager extends Base
             $this->error('参数错误！');
         }
         
-        $data = $this->AdminModel->where([
+        $data = AdminModel::where([
             "id" => $id,
         ])->find();
         if (empty($data)) {
@@ -378,17 +374,17 @@ class Manager extends Base
             
             $data['id'] = $post['id'];
             $data['password'] = $post['password'];
-        
-            $rs = $this->AdminModel->editManager($data);
+            
+            $ManagerService = (new ManagerService);
+            $rs = $ManagerService->editManager($data);
             if ($rs === false) {
-                $this->error($this->AdminModel->getError() ?: '修改失败！');
+                $this->error($ManagerService->getError() ?: '修改失败！');
             }
             
             $this->success("修改成功！");
         } else {
             $id = $this->request->param('id/s');
-            $data = $this->AdminModel
-                ->where([
+            $data = AdminModel::where([
                     "id" => $id,
                 ])
                 ->find();

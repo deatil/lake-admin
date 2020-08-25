@@ -132,7 +132,7 @@ class AdminAuthCheck
             $param = request()->param();
             
             $passList = [];
-            $noNeedAuthRules = (new AuthRuleModel())->getNoNeedAuthRuleList();
+            $noNeedAuthRules = AuthRuleModel::getNoNeedAuthRuleList();
             if (!empty($noNeedAuthRules)) {
                 foreach ($noNeedAuthRules as $noNeedAuthRule) {
                     $noNeedAuthRuleString = strtolower($noNeedAuthRule['method'].':'.$noNeedAuthRule['name']);

@@ -118,7 +118,7 @@ class Module
         $list = $this->getLocalList();
         
         // 读取数据库已经安装模块表
-        $moduleList = app(ModuleService::class)->getList();
+        $moduleList = (new ModuleService)->getList();
         
         if (!empty($list)) {
             foreach ($list as $name => $config) {
@@ -806,7 +806,7 @@ class Module
             return false;
         }
         
-        $AuthRuleModel = app(AuthRuleModel::class);
+        $AuthRuleModel = (new AuthRuleModel);
         $status = $AuthRuleModel->installModuleMenu($menu, $this->getInfoFromFile($name));
         if ($status === true) {
             return true;
@@ -831,7 +831,7 @@ class Module
             return false;
         }
         
-        app(AuthRuleModel::class)->delModuleMenu($name);
+        (new AuthRuleModel)->delModuleMenu($name);
         
         return true;
     }
@@ -1017,7 +1017,7 @@ class Module
             return false;
         }
         
-        $moduleList = app(ModuleService::class)->getList();
+        $moduleList = (new ModuleService)->getList();
         return (isset($moduleList[$name]) && $moduleList[$name]) ? true : false;
     }
     

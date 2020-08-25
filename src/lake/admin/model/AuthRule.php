@@ -45,9 +45,9 @@ class AuthRule extends ModelBase
      * 获取不需要鉴权的菜单
      * @return type
      */
-    public function getNoNeedAuthRuleList()
+    public static function getNoNeedAuthRuleList()
     {
-        $data = $this->where([
+        $data = self::where([
                 'is_need_auth' => 0,
                 'status' => 1,
             ])
