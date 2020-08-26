@@ -85,9 +85,9 @@ class LakeAdminInstall extends Command
         $items = $this->checkFunc();
         foreach ($items as $v) {
             if ($v[2] == 'no') {
-                $output->writeln("<fg=red>" . $v[0] . "</> is need open.\n");
+                $output->writeln("<fg=red>" . $v[0] . " is need open.</>\n");
             } else {
-                $output->writeln("<fg=green>" . $v[0]."</> is opened.");
+                $output->writeln("<fg=green>" . $v[0]." is opened.</>");
             }
         }
     }
@@ -104,7 +104,7 @@ class LakeAdminInstall extends Command
         
         $installLockFile = root_path() . 'install.lock';
         if (file_exists($installLockFile)) {
-            $output->writeln("<info>lake-admin tip:</info> lake-admin is installed! Please unlink root 'install.lock' file.");
+            $output->writeln("<info>lake-admin tip: lake-admin is installed! Please unlink root 'install.lock' file.</info>");
             return false;
         }
         
@@ -122,11 +122,11 @@ class LakeAdminInstall extends Command
         $databaseCharset = $dbConfig['charset'];
         
         if (empty($database)) {
-            $output->writeln("<info>lake-admin tip:</info> place set database config!");
+            $output->writeln("<info>lake-admin tip: place set database config!</info>");
             return false;
         }
         if (empty($databaseCharset)) {
-            $output->writeln("<info>lake-admin tip:</info> place set database charset config!");
+            $output->writeln("<info>lake-admin tip: place set database charset config!</info>");
             return false;
         }
         
@@ -149,13 +149,13 @@ class LakeAdminInstall extends Command
             . 'database' . DIRECTORY_SEPARATOR
             . 'lake.sql';
         if (!file_exists($sqlFile)) {
-            $output->writeln("<info>lake-admin tip:</info> sql is not exist!");
+            $output->writeln("<info>lake-admin tip: sql is not exist!</info>");
             return false;
         }
         
         $sqlStatement = Sql::getSqlFromFile($sqlFile);
         if (empty($sqlStatement)) {
-            $output->writeln("<info>lake-admin tip:</info> sql is empty!");
+            $output->writeln("<info>lake-admin tip: sql is empty!</info>");
             return false;
         }
         
@@ -181,7 +181,7 @@ class LakeAdminInstall extends Command
                 ], trim($value));
                 $db2->execute($value);
             } catch (\Exception $e) {
-                $output->writeln("<info>lake-admin tip:</info> import sql is error!");
+                $output->writeln("<info>lake-admin tip: import sql is error!</info>");
                 return false;
             }
         }

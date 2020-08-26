@@ -1,6 +1,6 @@
 <?php
 
-namespace lake\admin\service;
+namespace lake\admin\service\captcha;
 
 use think\facade\Cache;
 
@@ -31,7 +31,11 @@ class Captcha
     public function __construct($config = [])
     {
         // 动态配置属性
-        foreach ($config as $k => $v) if (isset($this->$k)) $this->$k = $v;
+        foreach ($config as $k => $v) {
+            if (isset($this->$k)) {
+                $this->$k = $v;
+            }
+        }
         // 生成验证码序号
         $this->uniqid = uniqid('captcha') . mt_rand(1000, 9999);
         // 生成验证码字符串

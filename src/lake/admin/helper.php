@@ -41,7 +41,7 @@ if (!function_exists('__')) {
 
 if (!function_exists('lake_success_json')) {
     /*
-     * 检测签名
+     * 返回成功JSON
      *
      * @create 2020-8-22
      * @author deatil
@@ -60,7 +60,7 @@ if (!function_exists('lake_success_json')) {
 
 if (!function_exists('lake_error_json')) {
     /*
-     * 检测签名
+     * 返回失败JSON
      *
      * @create 2020-8-22
      * @author deatil
@@ -123,7 +123,7 @@ if (!function_exists('lake_var_export')) {
 
 if (!function_exists('lake_json_encode')) {
     /**
-     * 返回数组
+     * 返回正常的中文JSON
      * @param array $data 输出的数据
      * @return string
      */
