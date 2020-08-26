@@ -16,11 +16,11 @@
     // 全局变量
     var lake = {
         url: {
-            'image_upload_url': '{$image_upload_url ? $image_upload_url : url("attachments/upload", ["dir" => "images", "module" => env("module_name", app("http")->getName())])}',
-            'file_upload_url': '{$file_upload_url ? $file_upload_url : url("attachments/upload", ["dir" => "files", "module" => env("module_name", app("http")->getName())])}',
+            'image_upload_url': '{$image_upload_url ?: url("File/upload", ["dir" => "images", "module" => env("module_name", app("http")->getName())])}',
+            'file_upload_url': '{$file_upload_url ?: url("File/upload", ["dir" => "files", "module" => env("module_name", app("http")->getName())])}',
             'webuploader_swf': 'admin/webuploader/Uploader.swf',
-            'ueditor_upload_url': '{$ueditor_upload_url ? $ueditor_upload_url : url("attachments/upload", ["dir" => "images","from"=>"ueditor", "module" => env("module_name", app("http")->getName())])}',
-            'ueditor_grabimg_url': '{$ueditor_upload_url ? $ueditor_upload_url : url("attachments/geturlfile")}',
+            'ueditor_upload_url': '{$ueditor_upload_url ?: url("File/upload", ["dir" => "images","from"=>"ueditor", "module" => env("module_name", app("http")->getName())])}',
+            'ueditor_grabimg_url': '{$ueditor_upload_url ?: url("File/geturlfile")}',
         }
     };
     </script>

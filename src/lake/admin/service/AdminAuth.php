@@ -12,7 +12,7 @@ use lake\admin\model\AuthGroupAccess as AuthGroupAccessModel;
 use lake\admin\Model\AuthRule as AuthRuleModel;
 use lake\admin\model\AuthRuleAccess as AuthRuleAccessModel;
 use lake\admin\model\AuthRuleExtend as AuthRuleExtendModel;
-use lake\admin\service\Auth as AuthService;
+use lake\admin\auth\Auth as AuthService;
 
 /**
  * 管理员验证

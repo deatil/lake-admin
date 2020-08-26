@@ -512,7 +512,7 @@ class AuthManager extends Base
             Event::trigger('AuthManagerAccessData', $json);
             
             $this->assign('group_id', $groupId);
-            $this->assign('json', json_encode($json));
+            $this->assign('json', $json);
             
             $authGroup = AuthGroupModel::where([
                 'type' => AuthGroupModel::TYPE_ADMIN,

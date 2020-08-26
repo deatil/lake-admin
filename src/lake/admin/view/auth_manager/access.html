@@ -76,9 +76,9 @@ layui.config({
             }
         }
     };
-    //节点数据
-    var zNodes = {$json|raw};
-    //zTree对象
+    // 节点数据
+    var zNodes = {:json_encode($json)};
+    // zTree对象
     var zTree = null;
     $(document).ready(function() {
         $.fn.zTree.init($("#treeRule"), setting, zNodes);

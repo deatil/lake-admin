@@ -1,6 +1,6 @@
 <?php
 
-namespace lake\admin\service;
+namespace lake\admin\auth;
 
 use think\facade\Db;
 

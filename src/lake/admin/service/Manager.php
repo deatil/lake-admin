@@ -19,7 +19,7 @@ class Manager
      * @param array $data
      * @return boolean
      */
-    public function createManager($data)
+    public function create($data)
     {
         if (empty($data)) {
             $this->error = '没有数据！';
@@ -58,7 +58,7 @@ class Manager
      * @param array $data [修改数据]
      * @return boolean
      */
-    public function editManager($data)
+    public function edit($data)
     {
         if (empty($data) 
             || !isset($data['id']) 
@@ -75,16 +75,9 @@ class Manager
             return false;
         }
         
-        // 密码为空，表示不修改密码
-        if (!isset($data['password']) || empty($data['password'])) {
-            unset($data['password']);
-            unset($data['encrypt']);
-        } else {
-            // 对密码进行处理
-            $passwordinfo = $this->encryptPassword($data['password']); 
-            $data['encrypt'] = $passwordinfo['encrypt'];
-            $data['password'] = $passwordinfo['password'];
-        }
+        // 密码不能被修改
+        unset($data['password']);
+        unset($data['encrypt']);
         
         if (isset($data['roleid']) && !empty($data['roleid'])) {
             $roleid = $data['roleid'];
@@ -123,11 +116,48 @@ class Manager
     }
 
     /**
+     * 修改密码
+     * @param string $id 账号ID
+     * @param string $password 密码
+     * @return boolean
+     */
+    public function changePassword($id, $password)
+    {
+        if (empty($id)) {
+            $this->error = 'ID不能为空！';
+            return false;
+        }
+        
+        if (empty($password)) {
+            $this->error = '密码不能为空！';
+            return false;
+        }
+        
+        $data = [];
+        
+        // 对密码进行处理
+        $passwordinfo = $this->encryptPassword($password); 
+        $data['encrypt'] = $passwordinfo['encrypt'];
+        $data['password'] = $passwordinfo['password'];
+        
+        $status = AdminModel::where([
+                'id' => $id,
+            ])
+            ->update($data);
+        if ($status === false) {
+            $this->error = '密码修改失败！';
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
      * 删除管理员
      * @param type $id
      * @return boolean
      */
-    public function deleteManager($id)
+    public function delete($id)
     {
         $id = trim($id);
         if (empty($id)) {

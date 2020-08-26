@@ -55,29 +55,18 @@ class Manager extends Base
                 $map[] = ['id', 'in', $adminIds];
             }
             
-            $list = AdminModel::where($map)
+            $list = AdminModel::with(['groups'])
+                ->where($map)
                 ->page($page, $limit)
                 ->select()
+                ->visible([
+                    'groups' => [
+                        'title',
+                    ]
+                ])
                 ->toArray();
             $total = AdminModel::where($map)
                 ->count();
-            
-            if (!empty($list)) {
-                $agaTable = (new AuthGroupAccessModel)->getName();
-                foreach ($list as $k => $v) {
-                    $groups = AuthGroupModel::alias('ag')
-                        ->join($agaTable . ' aga', "aga.group_id = ag.id")
-                        ->where([
-                            'aga.admin_id' => $v['id'],
-                        ])
-                        ->column('ag.title');
-                    if (!empty($groups)) {
-                        $list[$k]['groups'] = implode('，', $groups);
-                    } else {
-                        $list[$k]['groups'] = '-';
-                    }
-                }
-            }
             
             $result = [
                 "code" => 0, 
@@ -128,7 +117,7 @@ class Manager extends Base
             }
             
             $ManagerService = (new ManagerService);
-            $status = $ManagerService->createManager($data);
+            $status = $ManagerService->create($data);
             if ($status === false) {
                 $error = $ManagerService->getError();
                 $this->error($error ? $error : '添加失败！');
@@ -194,24 +183,26 @@ class Manager extends Base
                 $data['status'] = 0;
             }
             
-            if (isset($data['roleid']) && !empty($data['roleid'])) {
-                $roleids = explode(',', $data['roleid']);
-                $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
-                $isAllow = true;
-                foreach ($roleids as $roleid) {
-                    if (!in_array($roleid, $userChildGroupIds)) {
-                        $isAllow = false;
-                        break;
+            if (env('admin_is_root') === false) {
+                if (isset($data['roleid']) && !empty($data['roleid'])) {
+                    $roleids = explode(',', $data['roleid']);
+                    $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
+                    $isAllow = true;
+                    foreach ($roleids as $roleid) {
+                        if (!in_array($roleid, $userChildGroupIds)) {
+                            $isAllow = false;
+                            break;
+                        }
                     }
-                }
-                
-                if ($isAllow === false) {
-                    $this->error('选择权限组错误！');
+                    
+                    if ($isAllow === false) {
+                        $this->error('选择权限组错误！');
+                    }
                 }
             }
             
             $ManagerService = (new ManagerService);
-            $status = $ManagerService->editManager($data);
+            $status = $ManagerService->edit($data);
             if ($status === false) {
                 $error = $ManagerService->getError();
                 $this->error($error ? $error : '修改失败！');
@@ -288,7 +279,7 @@ class Manager extends Base
         }
         
         $ManagerService = (new ManagerService);
-        $rs = $ManagerService->deleteManager($id);
+        $rs = $ManagerService->delete($id);
         if ($rs === false) {
             $this->error($ManagerService->getError() ?: '删除失败！');
         }
@@ -372,16 +363,13 @@ class Manager extends Base
                 $this->error('两次密码不一致！');
             }
             
-            $data['id'] = $post['id'];
-            $data['password'] = $post['password'];
-            
             $ManagerService = (new ManagerService);
-            $rs = $ManagerService->editManager($data);
+            $rs = $ManagerService->changePassword($post['id'], $post['password']);
             if ($rs === false) {
-                $this->error($ManagerService->getError() ?: '修改失败！');
+                $this->error($ManagerService->getError() ?: '修改密码失败！');
             }
             
-            $this->success("修改成功！");
+            $this->success("修改密码成功！");
         } else {
             $id = $this->request->param('id/s');
             $data = AdminModel::where([

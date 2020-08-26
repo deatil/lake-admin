@@ -5,10 +5,7 @@ namespace lake\admin\controller;
 use think\facade\Event;
 
 use lake\admin\model\Attachment as AttachmentModel;
-
 use lake\admin\service\Attachment as AttachmentService;
-use lake\admin\service\Upload as UploadService;
-use lake\admin\facade\Admin as AdminFacade;
 
 /**
  * 附件管理
@@ -18,8 +15,6 @@ use lake\admin\facade\Admin as AdminFacade;
  */
 class Attachments extends Base
 {
-    protected $AttachmentModel;
-
     private $uploadUrl = '';
     
     private $uploadPath = '';
@@ -141,45 +136,6 @@ class Attachments extends Base
         }
         
         $this->success('文件删除成功！');
-    }
-
-    /**
-     * 附件上传
-     *
-     * @create 2019-7-18
-     * @author deatil
-     */
-    public function upload(
-        $dir = '', 
-        $from = '', 
-        $module = '', 
-        $thumb = 0, 
-        $thumbsize = '', 
-        $thumbtype = '', 
-        $watermark = 1, 
-        $sizelimit = -1, 
-        $extlimit = ''
-    ) {
-        $UploadService = (new UploadService);
-        
-        $admin_id = AdminFacade::getLoginUserInfo('id');
-        return $UploadService->setTypeInfo('admin', $admin_id)
-            ->save($dir, $from, $module, $thumb, $thumbsize, $thumbtype, $watermark, $sizelimit, $extlimit);
-    }
-
-    /**
-     * html代码远程图片本地化
-     *
-     * @create 2019-7-18
-     * @author deatil
-     */
-    public function getUrlFile()
-    {
-        $AttachmentService = (new AttachmentService);
-        
-        $admin_id = AdminFacade::getLoginUserInfo('id');
-        return $AttachmentService->setTypeInfo('admin', $admin_id)
-            ->getUrlFile();
     }
 
 }

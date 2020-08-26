@@ -44,6 +44,12 @@
     <a class="text-green layui-iframe" title="管理员详情" href="{:url('view')}?id={{ d.id }}">{{ d.username }}</a>
 </script>
 
+<script type="text/html" id="groupsTpl">
+{{#  layui.each(d.groups, function(index, item){ }}
+    <span class="layui-badge layui-bg-green">{{ item.title }}</span>
+{{#  }); }}
+</script>
+
 <script type="text/html" id="statusTpl">
     {{#  if(d.status == 1){ }}
         <span class='layui-badge-dot layui-bg-green'></span>
@@ -79,8 +85,8 @@ layui.use('table', function() {
                 { field: 'username', width: 120, title: '登录名', templet: '#usernameTpl' },
                 { field: 'email',width: 200, title: 'E-mail' },
                 { field: 'nickname', title: '昵称' },
-                { field: 'groups', width: 120, title: '所属角色'},
-                { field: 'last_login_time', width: 200, title: '最后登录时间' },
+                { field: 'groups', width: 150, title: '所属角色', templet: '#groupsTpl'},
+                { field: 'last_login_time', width: 170, title: '最后登录时间' },
                 { field: 'status', title: '状态', width: 80, templet: '#statusTpl' },
                 { title: '操作', width: 160, toolbar: '#barTool' },
             ]

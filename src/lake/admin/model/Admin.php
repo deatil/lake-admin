@@ -2,8 +2,6 @@
 
 namespace lake\admin\model;
 
-use lake\admin\facade\Password as PasswordFacade;
-
 /**
  * 管理员
  *
