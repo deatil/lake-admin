@@ -9,6 +9,7 @@ return [
     "app\\admin\\controller\\Error" => "lake\\admin\\controller\\Error",
     "app\\admin\\controller\\Event" => "lake\\admin\\controller\\Event",
     "app\\admin\\controller\\FieldType" => "lake\\admin\\controller\\FieldType",
+    "app\\admin\\controller\\File" => "lake\\admin\\controller\\File",
     "app\\admin\\controller\\Index" => "lake\\admin\\controller\\Index",
     "app\\admin\\controller\\Manager" => "lake\\admin\\controller\\Manager",
     "app\\admin\\controller\\Menu" => "lake\\admin\\controller\\Menu",
