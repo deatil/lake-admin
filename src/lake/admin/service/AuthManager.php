@@ -2,10 +2,11 @@
 
 namespace lake\admin\service;
 
-use lake\Tree;
+use lake\TTree;
 
+use lake\admin\model\Admin as AdminModel;
 use lake\admin\model\AuthGroup as AuthGroupModel;
-use lake\admin\service\AdminAuth as AdminAuthService;
+use lake\admin\model\AuthRuleAccess as AuthRuleAccessModel;
 
 /**
  * 权限管理服务
@@ -47,7 +48,7 @@ class AuthManager
         $uid = env('admin_id');
         
         // 当前用户权限ID列表
-        $userAuthIds = AdminAuthService::instance()->getUserAuthIdList($uid);
+        $userAuthIds = $this->getAuthIdList($uid);
         
         $isRoot = env('admin_is_root');
         if ($isRoot) {
@@ -79,8 +80,6 @@ class AuthManager
             ];
         }
         
-        $Auth = AdminAuthService::instance();
-        
         $group = AuthGroupModel::where([
             'id' => $groupId,
         ])->find();
@@ -102,7 +101,7 @@ class AuthManager
         $adminId = env('admin_id');
         
         // 当前用户组ID列表
-        $userGroupIds = $Auth->getUserGroupIdList($adminId);
+        $userGroupIds = $this->getGroupIdList($adminId);
         if (!in_array($group['parentid'], $userGroupIds)) {
             return [
                 'status' => false,
@@ -130,8 +129,6 @@ class AuthManager
                 'msg' => '用户组ID不能为空',
             ];
         }
-        
-        $Auth = AdminAuthService::instance();
         
         $group = AuthGroupModel::where([
             'id' => $groupId,
@@ -161,14 +158,14 @@ class AuthManager
             ->select();
     
         // 当前用户组ID列表
-        $userGroupIds = $Auth->getUserGroupIdList(env('admin_id'));
+        $userGroupIds = $this->getGroupIdList(env('admin_id'));
         
-        $Tree = new Tree();
+        $TTree = new TTree();
         
         $userChildGroupIds = [];
         if (!empty($userGroupIds)) {
             foreach ($userGroupIds as $userGroupId) {
-                $getChildGroupIds = $Tree->getChildsId($authGroupList, $userGroupId);
+                $getChildGroupIds = $TTree->getListChildsId($authGroupList, $userGroupId);
                 $userChildGroupIds = array_merge($userChildGroupIds, $getChildGroupIds);
             }
         }
@@ -205,8 +202,6 @@ class AuthManager
             return $list;
         }
         
-        $Auth = AdminAuthService::instance();
-        
         // 用户组列表
         $authGroupList = AuthGroupModel::where([
                 'module' => 'admin',
@@ -217,14 +212,14 @@ class AuthManager
             ->select();
     
         // 当前用户组ID列表
-        $userGroupIds = $Auth->getUserGroupIdList(env('admin_id'));
+        $userGroupIds = $this->getGroupIdList(env('admin_id'));
         
-        $Tree = new Tree();
+        $TTree = new TTree();
         
         $userChildGroupIds = [];
         if (!empty($userGroupIds)) {
             foreach ($userGroupIds as $user_group_id) {
-                $getChildGroupIds = $Tree->getChildsId($authGroupList, $user_group_id);
+                $getChildGroupIds = $TTree->getListChildsId($authGroupList, $user_group_id);
                 $userChildGroupIds = array_merge($userChildGroupIds, $getChildGroupIds);
             }
         }
@@ -249,9 +244,8 @@ class AuthManager
      */
     public function getUserGroupIds($uid)
     {
-        $Auth = AdminAuthService::instance();
         // 当前用户组ID列表
-        $userGroupIds = $Auth->getUserGroupIdList($uid);
+        $userGroupIds = $this->getGroupIdList($uid);
         return $userGroupIds;
     }
     
@@ -263,10 +257,9 @@ class AuthManager
      */
     public function getUserParentGroupIds($uid)
     {
-        $Auth = AdminAuthService::instance();
         // 当前用户组ID列表
-        $userGroupIds = $Auth->getUserGroupIdList($uid);
-        $userParentGroupIds = $Auth->getParentGroupIdList($userGroupIds);
+        $userGroupIds = $this->getGroupIdList($uid);
+        $userParentGroupIds = $this->getParentGroupIdList($userGroupIds);
         
         return $userParentGroupIds;
     }
@@ -291,18 +284,16 @@ class AuthManager
                 'id' => 'ASC',
             ])
             ->select();
-            
-        $Auth = AdminAuthService::instance();
         
         // 当前用户组ID列表
-        $userGroupIds = $Auth->getUserGroupIdList($uid);
+        $userGroupIds = $this->getGroupIdList($uid);
         
-        $Tree = new Tree();
+        $TTree = new TTree();
         
         $userChildGroupIds = [];
         if (!empty($userGroupIds)) {
             foreach ($userGroupIds as $user_group_id) {
-                $getChildGroupIds = $Tree->getChildsId($authGroupList, $user_group_id);
+                $getChildGroupIds = $TTree->getListChildsId($authGroupList, $user_group_id);
                 $userChildGroupIds = array_merge($userChildGroupIds, $getChildGroupIds);
             }
         }
@@ -310,4 +301,58 @@ class AuthManager
         return $userChildGroupIds;
     }
     
+    /**
+     * 获得用户权限ID列表
+     * @param integer $adminId  用户id
+     * @return array
+     *
+     * @create 2020-8-28
+     * @author deatil
+     */
+    public function getAuthIdList($adminId)
+    {
+        $groupIds = $this->getGroupIdList($adminId);
+        
+        $authIds = AuthRuleAccessModel::where([
+            ['group_id', 'in', $groupIds],
+        ])
+        ->column('rule_id');
+
+        return $authIds;
+    }
+    
+    public function getGroupIdList($adminId)
+    {
+        $admins = AdminModel::with(['groups'])
+            ->where([
+                'id' => env('admin_id'),
+            ])
+            ->select()
+            ->visible([
+                'groups' => [
+                    'id',
+                ]
+            ])
+            ->toArray();
+        $groupIds = [];
+        foreach ($admins as $admin) {
+            foreach ($admin['groups'] as $group) {
+                $groupIds[] = $group['id'];
+            }
+        }
+        
+        return $groupIds;
+    }
+    
+    public function getParentGroupIdList($gids = [])
+    {
+        $map = [
+            ['id', 'in', $gids],
+        ];
+        
+        $ids = AuthGroupModel::where($map)
+            ->column('parentid');
+        
+        return $ids;
+    }
 }

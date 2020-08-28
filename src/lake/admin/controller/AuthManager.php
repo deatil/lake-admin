@@ -4,12 +4,12 @@ namespace lake\admin\Controller;
 
 use think\facade\Event;
 
-use lake\Tree;
+use lake\TTree;
 
 use lake\admin\model\AuthGroup as AuthGroupModel;
-use lake\admin\model\AuthRule as AuthRuleModel;
 use lake\admin\model\AuthRuleAccess as AuthRuleAccessModel;
 
+use lake\admin\service\AuthRule as AuthRuleService;
 use lake\admin\service\AdminAuth as AdminAuthService;
 use lake\admin\service\AuthManager as AuthManagerService;
 
@@ -67,8 +67,8 @@ class AuthManager extends Base
             
             $result = [];
             if (empty($map)) {
-                $tree = new Tree;
-                $tree->init($list);
+                $TTree = new TTree();
+                $TTree->withData($list);
                 $result = [];
                 
                 if (!env('admin_is_root')) {
@@ -76,16 +76,16 @@ class AuthManager extends Base
                     $data = [];
                     if (!empty($userGroupIds)) {
                         foreach ($userGroupIds as $userGroupId) {
-                            $data2 = $tree->getTreeArray($userGroupId);
+                            $data2 = $TTree->buildArray($userGroupId);
                             $data = array_merge($data, $data2);
                         }
                     }
                 } else {
-                    $data = $tree->getTreeArray(0);
+                    $data = $TTree->buildArray(0);
                 }
                 
                 if (!empty($data)) {
-                    $result = $tree->getTreeList($data, 'title');
+                    $result = $TTree->buildFormatList($data, 'title');
                 }
             } else {
                 $result = $list;
@@ -126,26 +126,19 @@ class AuthManager extends Base
             'status' => 1,
         ]);
         
-        $tree = new Tree;
-        $str = "'<option value='\$id' \$selected>\$spacer\$title</option>";
+        $TTree = new TTree();
         $list = AuthGroupModel::order(['id' => 'ASC'])
             ->column('*', 'id');
         
         Event::trigger('AuthManagerCreateGroup', $list);
         
-        $tree->init($list);
-        
-        if (!env('admin_is_root')) {
-            $userParentGroupIds = $this->AuthManagerService->getUserParentGroupIds(env('admin_id'));
-            $groupData = '';
-            if (!empty($userParentGroupIds)) {
-                foreach ($userParentGroupIds as $userParentGroupId) {
-                    $groupData .= $tree->getTree($userParentGroupId, $str, 0);
-                }
-            }
+        $TTree->withData($list);
+        if (env('admin_is_root')) {
+            $groupData = $TTree->buildArray(0);
         } else {
-            $groupData = $tree->getTree(0, $str, 0);
+            $groupData = $TTree->buildArray(env('admin_id'));
         }
+        $groupData = $TTree->buildFormatList($groupData, 'title');
         
         $this->assign("group_data", $groupData);
         
@@ -225,16 +218,15 @@ class AuthManager extends Base
         if ($check['status'] === false) {
             $this->error($check['msg']);
         }
-    
-        $tree = new Tree;
         
-        $str = "'<option value='\$id' \$selected>\$spacer\$title</option>";
+        $TTree = new TTree();
+        
         $list = AuthGroupModel::order([
                 'id' => 'ASC',
             ])
             ->column('*', 'id');
             
-        $childsId = $tree->getChildsId($list, $authGroup['id']);
+        $childsId = $TTree->getListChildsId($list, $authGroup['id']);
         $childsId[] = $authGroup['id'];
         
         Event::trigger('AuthManagerEditGroup', $list);
@@ -247,19 +239,13 @@ class AuthManager extends Base
             }
         }
         
-        $tree->init($list);
-        
-        if (!env('admin_is_root')) {
-            $userParentGroupIds = $this->AuthManagerService->getUserParentGroupIds(env('admin_id'));
-            $groupData = '';
-            if (!empty($userParentGroupIds)) {
-                foreach ($userParentGroupIds as $userParentGroupId) {
-                    $groupData .= $tree->getTree($userParentGroupIds, $str, $authGroup['parentid']);
-                }
-            }
+        $TTree->withData($list);
+        if (env('admin_is_root')) {
+            $groupData = $TTree->buildArray(0);
         } else {
-            $groupData = $tree->getTree(0, $str, $authGroup['parentid']);
+            $groupData = $TTree->buildArray(env('admin_id'));
         }
+        $groupData = $TTree->buildFormatList($groupData, 'title');
         
         $this->assign("group_data", $groupData);
         $this->assign('auth_group', $authGroup);
@@ -490,9 +476,9 @@ class AuthManager extends Base
             ]);
             
             // 当前用户权限ID列表
-            $userAuthIds = AdminAuthService::instance()->getUserAuthIdList(env('admin_id'));
+            $userAuthIds = (new AuthManagerService)->getAuthIdList(env('admin_id'));
         
-            $result = (new AuthRuleModel)->returnNodes(false);
+            $result = (new AuthRuleService)->returnNodes(false);
             
             $json = [];
             if (!empty($result)) {

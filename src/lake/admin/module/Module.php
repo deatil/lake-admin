@@ -17,7 +17,9 @@ use lake\Symlink;
 use lake\admin\model\Event as EventModel;
 use lake\admin\model\Module as ModuleModel;
 use lake\admin\model\AuthRule as AuthRuleModel;
+
 use lake\admin\service\Module as ModuleService;
+use lake\admin\service\AuthRule as AuthRuleService;
 
 /**
  * 模块管理
@@ -806,12 +808,12 @@ class Module
             return false;
         }
         
-        $AuthRuleModel = (new AuthRuleModel);
-        $status = $AuthRuleModel->installModuleMenu($menu, $this->getInfoFromFile($name));
+        $AuthRuleService = (new AuthRuleService);
+        $status = $AuthRuleService->installModuleMenu($menu, $this->getInfoFromFile($name));
         if ($status === true) {
             return true;
         } else {
-            $this->error = $AuthRuleModel->getError() ?: '安装菜单项出现错误！';
+            $this->error = $AuthRuleService->getError() ?: '安装菜单项出现错误！';
             return false;
         }
     }
@@ -831,7 +833,7 @@ class Module
             return false;
         }
         
-        (new AuthRuleModel)->delModuleMenu($name);
+        (new AuthRuleService)->delModuleMenu($name);
         
         return true;
     }

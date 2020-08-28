@@ -10,7 +10,9 @@
                 <div class="layui-input-block w300">
                     <select name="parentid" lay-verify="required">
                         <option value="0">作为一级菜单</option>
-                        {$select_categorys|raw}
+                        {volist name="menus" id="vo"}
+                            <option value="{$vo.id}" {if $vo['id'] == $parentid}selected="selected"{/if}>{$vo.spacer} {$vo.title}</option>
+                        {/volist}
                     </select>
                 </div>
                 <div class="layui-input-block">

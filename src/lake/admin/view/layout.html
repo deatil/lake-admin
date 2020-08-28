@@ -18,6 +18,7 @@
         url: {
             'image_upload_url': '{$image_upload_url ?: url("File/upload", ["dir" => "images", "module" => env("module_name", app("http")->getName())])}',
             'file_upload_url': '{$file_upload_url ?: url("File/upload", ["dir" => "files", "module" => env("module_name", app("http")->getName())])}',
+            'file_list_url': '{$file_upload_url ?: url("File/lists")}',
             'webuploader_swf': 'admin/webuploader/Uploader.swf',
             'ueditor_upload_url': '{$ueditor_upload_url ?: url("File/upload", ["dir" => "images","from"=>"ueditor", "module" => env("module_name", app("http")->getName())])}',
             'ueditor_grabimg_url': '{$ueditor_upload_url ?: url("File/geturlfile")}',

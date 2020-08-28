@@ -137,5 +137,3 @@ class Form
     }
 
 }
-
-class_alias('lake\\admin\\service\\Form', 'HtmlForm');

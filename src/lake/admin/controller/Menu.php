@@ -2,7 +2,7 @@
 
 namespace lake\admin\controller;
 
-use lake\Tree;
+use lake\TTree;
 
 use lake\admin\facade\Module as ModuleFacade;
 use lake\admin\model\AuthRule as AuthRuleModel;
@@ -25,9 +25,7 @@ class Menu extends Base
     public function index()
     {
         if ($this->request->isAjax()) {
-            $tree = new Tree();
-            $tree->icon = ['', '', ''];
-            $tree->nbsp = '';
+
             $result = AuthRuleModel::order([
                     'listorder' => 'ASC', 
                     'id' => 'ASC',
@@ -35,14 +33,15 @@ class Menu extends Base
                 ->select()
                 ->toArray();
 
-            $tree->init($result);
-            $list = $tree->getTreeList($tree->getTreeArray(0), 'title');
-            $total = count($list);
+            $TTree = new TTree();
+            $menuTree = $TTree->withData($result)->buildArray(0);
+            $menus = $TTree->buildFormatList($menuTree, 'title');
+            $total = count($menus);
             
             $result = [
                 "code" => 0, 
                 "count" => $total, 
-                "data" => $list
+                "data" => $menus
             ];
             return $this->json($result);
         }
@@ -139,21 +138,19 @@ class Menu extends Base
             
             $this->success("添加成功！");
         } else {
-            $tree = new Tree();
             $parentid = $this->request->param('parentid/s', '');
-            $result = AuthRuleModel::order([
+            
+            $menus = AuthRuleModel::order([
                 'listorder', 
                 'id' => 'DESC',
             ])->select()->toArray();
-            $array = array();
-            foreach ($result as $r) {
-                $r['selected'] = ($r['id'] == $parentid) ? 'selected' : '';
-                $array[] = $r;
-            }
-            $str = "<option value='\$id' \$selected>\$spacer \$title</option>";
-            $tree->init($array);
-            $selectCategorys = $tree->getTree(0, $str);
-            $this->assign("select_categorys", $selectCategorys);
+            
+            $TTree = new TTree();
+            $menuTree = $TTree->withData($menus)->buildArray(0);
+            $menus = $TTree->buildFormatList($menuTree, 'title');
+            
+            $this->assign("parentid", $parentid);
+            $this->assign("menus", $menus);
             
             // 模块列表
             $modules = ModuleFacade::getAll();
@@ -182,7 +179,7 @@ class Menu extends Base
             }
             
             if ($rs['is_system'] == 1) {
-                $this->error('系统权限菜单不能进行编辑！');
+                // $this->error('系统权限菜单不能进行编辑！');
             }
             
             if (!isset($data['is_menu'])) {
@@ -223,37 +220,42 @@ class Menu extends Base
             
             $this->success("编辑成功！");
         } else {
-            $tree = new Tree();
             $id = $this->request->param('id/s', '');
-            $rs = AuthRuleModel::where(["id" => $id])->find();
             
-            if ($rs['is_system'] == 1) {
-                $this->error('系统权限菜单不能进行编辑！');
+            $data = AuthRuleModel::where(["id" => $id])->find();
+            if (empty($data)) {
+                $this->error('菜单不存在！');
             }
             
-            $result = AuthRuleModel::order([
+            if ($data['is_system'] == 1) {
+                // $this->error('系统权限菜单不能进行编辑！');
+            }
+            
+            $ruleList = AuthRuleModel::order([
                 'listorder' => 'ASC', 
                 'id' => 'DESC',
             ])->select()->toArray();
             
-            $childsId = $tree->getChildsId($result, $rs['id']);
-            $childsId[] = $rs['id'];
+            $TTree = new TTree();
+            $childsId = $TTree->getListChildsId($ruleList, $data['id']);
+            $childsId[] = $data['id'];
             
-            $array = [];
-            foreach ($result as $r) {
+            $ruleParentList = [];
+            foreach ($ruleList as $r) {
                 if (in_array($r['id'], $childsId)) {
                     continue;
                 }
                 
-                $r['selected'] = ($r['id'] == $rs['parentid']) ? 'selected' : '';
-                $array[] = $r;
+                $ruleParentList[] = $r;
             }
             
-            $str = "<option value='\$id' \$selected>\$spacer \$title</option>";
-            $tree->init($array);
-            $selectCategorys = $tree->getTree(0, $str);
-            $this->assign("data", $rs);
-            $this->assign("select_categorys", $selectCategorys);
+            $this->assign("data", $data);
+            
+            $menuTree = $TTree->withData($ruleParentList)->buildArray(0);
+            $menus = $TTree->buildFormatList($menuTree, 'title');
+            
+            $this->assign("parentid", $data['parentid']);
+            $this->assign("menus", $menus);
             
             // 模块列表
             $modules = ModuleFacade::getAll();

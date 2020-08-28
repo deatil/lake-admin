@@ -18,6 +18,9 @@ return [
     "app\\admin\\controller\\Profile" => "lake\\admin\\controller\\Profile",
     "app\\admin\\controller\\RuleExtend" => "lake\\admin\\controller\\RuleExtend",
     
+    // 表单
+    "HtmlForm" => "lake\\admin\\service\\Form",
+    
     // 模块基础别名
     "lake\\Module" => "lake\\admin\\module\\Module",
     "lake\\module\\traits\\Jump" => "lake\\admin\\http\\traits\\Jump",

@@ -12,6 +12,7 @@ use lake\File;
 use lake\admin\model\AuthRule as AuthRuleModel;
 use lake\admin\model\Module as ModuleModel;
 use lake\admin\model\Attachment as AttachmentModel;
+use lake\admin\service\AuthRule as AuthRuleService;
 
 /**
  * 后台首页
@@ -34,7 +35,7 @@ class Index extends Base
         $this->assign('user_info', env('admin_info'));
 
         // 左侧菜单
-        $menus = (new AuthRuleModel)->getMenuList();
+        $menus = (new AuthRuleService)->getMenuList();
         $this->assign("menus", $menus);
         
         // 默认后台首页

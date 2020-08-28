@@ -9,7 +9,9 @@
                 <label class="layui-form-label">父级</label>
                 <div class="layui-input-block w300">
                     <select name="parentid">
-                        {$group_data|raw}
+                        {volist name="group_data" id="vo"}
+                            <option value="{$vo.id}">{$vo.spacer} {$vo.title}</option>
+                        {/volist}
                     </select>
                 </div>
             </div>

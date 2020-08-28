@@ -14,6 +14,8 @@ use lake\admin\facade\Password as PasswordFacade;
  */
 class Manager
 {
+    protected $error = '操作失败！';
+    
     /**
      * 创建管理员
      * @param array $data
