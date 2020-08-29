@@ -10,7 +10,6 @@ namespace lake\admin\service;
  */
 class Form
 {
-
     /**
      * 生成Token
      *

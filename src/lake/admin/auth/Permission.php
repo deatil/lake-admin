@@ -17,7 +17,22 @@ namespace lake\admin\auth;
  */
 class Permission
 {
-    public $ruleType = 1;
+    protected $ruleType = 1;
+    
+    /**
+     * 设置
+     *
+     * @create 2019-7-9
+     * @author deatil
+     */
+    public function withRuleType($ruleType = 1)
+    {
+        if (!in_array($ruleType, [1, 2])) {
+            $ruleType = 1;
+        }
+        $this->ruleType = $ruleType;
+        return $this;
+    }
     
     /**
      * 检查权限

@@ -10,7 +10,6 @@ use lake\admin\model\AuthGroup as AuthGroupModel;
 use lake\admin\model\AuthRuleAccess as AuthRuleAccessModel;
 
 use lake\admin\service\AuthRule as AuthRuleService;
-use lake\admin\service\AdminAuth as AdminAuthService;
 use lake\admin\service\AuthManager as AuthManagerService;
 
 /**

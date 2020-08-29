@@ -51,7 +51,8 @@ class Check
      * @create 2020-8-28
      * @author deatil
      */
-    public function check($name, $relation = 'or', $mode = 'url') {
+    public function check($name, $relation = 'or', $mode = 'url') 
+    {
         if (empty($name)) {
             return false;
         }
@@ -61,7 +62,7 @@ class Check
         $list = []; // 保存验证通过的规则名
         foreach ($name as $nameValue) {
             $authPassList = [];
-            $auths = $this->auths; 
+            $auths = $this->getAuths(); 
             if (!empty($auths)) {
                 foreach ($auths as $auth) {
                     if ($mode == 'url') {
@@ -80,14 +81,14 @@ class Check
         }
         
         if ($relation == 'or') {
-            $or = $this->checckOrRelation($list);
+            $or = $this->checkOrRelation($list);
             if ($or === true) {
                 return true;
             }
         }
         
         if ($relation == 'and') {
-            $and = $this->checckAndRelation($list);
+            $and = $this->checkAndRelation($list);
             if ($and === true) {
                 return true;
             }
@@ -160,7 +161,7 @@ class Check
      * @create 2020-8-27
      * @author deatil
      */
-    protected function checckAndRelation($list)
+    protected function checkAndRelation($list)
     {
         if (empty($list)) {
             return false;
@@ -189,7 +190,7 @@ class Check
      * @create 2020-8-27
      * @author deatil
      */
-    protected function checckOrRelation($list)
+    protected function checkOrRelation($list)
     {
         if (empty($list)) {
             return false;

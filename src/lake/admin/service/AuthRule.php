@@ -8,7 +8,6 @@ use lake\admin\model\Admin as AdminModel;
 use lake\admin\model\AuthRule as AuthRuleModel;
 use lake\admin\model\AuthRuleAccess as AuthRuleAccessModel;
 
-use lake\admin\service\AdminAuth as AdminAuthService;
 use lake\admin\facade\Admin as AdminFacade;
 
 /**

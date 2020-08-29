@@ -2,7 +2,6 @@
 
 namespace lake\admin\controller;
 
-use think\facade\Db;
 use think\facade\Validate;
 
 use lake\admin\facade\Module as ModuleFacade;
