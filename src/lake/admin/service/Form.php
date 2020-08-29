@@ -17,7 +17,7 @@ class Form
      * @param string $type
      * @return string
      */
-    public function token($name = '__token__', $type = 'md5')
+    public static function token($name = '__token__', $type = 'md5')
     {
         if (function_exists('token')) {
             return token($name, $type);
