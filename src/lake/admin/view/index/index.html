@@ -228,9 +228,11 @@
     <script type="text/javascript">
     var lake_menus = <?php echo json_encode($menus); ?>;
     
-    if (window != top) {
-        top.location.replace(location.href);
-    }
+    ;(function(){
+        if (self != top) {
+            top.location.replace(location.href);
+        }
+    })();
     
     layui.config({
         version: '2020080510355895',

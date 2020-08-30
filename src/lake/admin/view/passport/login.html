@@ -46,9 +46,11 @@
     <script type="text/javascript" src="admin/libs/md5.js"></script>
     <script type="text/javascript" src="admin/libs/layui/layui.js"></script>
     <script type="text/javascript">
-    if (window != top) {
-        top.location.replace(location.href);
-    }
+    ;(function(){
+        if (self != top) {
+            top.location.replace(location.href);
+        }
+    })();
     
     layui.use(['form', 'layer', 'jquery'], function() {
         var form = layui.form,

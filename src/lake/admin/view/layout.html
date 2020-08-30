@@ -33,9 +33,11 @@
     {block name="layui"}
     <link rel="stylesheet" href="admin/libs/layui-extend/jquery.jsonview/jquery.jsonview.min.css">
     <script type="text/javascript">
-    if (window == top) {
-        window.location.replace('{:url("index/index")}');
-    }
+    ;(function(){
+        if (self == top) {
+            window.location.replace('{:url("index/index")}');
+        }
+    })();
     
     layui.config({
         version: '2020072023015895',

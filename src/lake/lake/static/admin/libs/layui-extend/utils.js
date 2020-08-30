@@ -1,63 +1,83 @@
 "use strict";
-var date_format = function (timestamp, format) {
-   format = format || 'yyyy年MM月dd';
-   timestamp = timestamp + "";
-   if (timestamp * 1 > 0 && timestamp.length == 10) {
-      timestamp = timestamp * 1000;
-   }
-
-   // 通过getDate()方法获取date类型的时间
-   var regYear = new RegExp("(y+)", "i");
-   var realDate = new Date(timestamp);
-
-   function timeFormat(num) {
-      return num < 10 ? '0' + num : num;
-   }
-
-   var date = [
-      ["M+", timeFormat(realDate.getMonth() + 1)],
-      ["d+", timeFormat(realDate.getDate())],
-      ["h+", timeFormat(realDate.getHours())],
-      ["m+", timeFormat(realDate.getMinutes())],
-      ["s+", timeFormat(realDate.getSeconds())],
-      ["q+", Math.floor((realDate.getMonth() + 3) / 3)],
-      ["S+", realDate.getMilliseconds()],
-   ];
-   var reg1 = regYear.exec(format);
-
-   if (reg1) {
-      format = format.replace(reg1[1], (realDate.getFullYear() + '').substring(4 - reg1[1].length));
-   }
-   for (var i = 0; i < date.length; i++) {
-      var k = date[i][0];
-      var v = date[i][1];
-      // getRegExp初始化一个正则表达式对象
-      var reg2 = new RegExp("(" + k + ")").exec(format);
-      if (reg2) {
-         format = format.replace(reg2[1], reg2[1].length == 1
-            ? v : ("00" + v).substring(("" + v).length));
-      }
-   }
-   return format;
-};
-
-// 格式化文件大小的JS方法
-function renderSize(filesize) {
-    if (null == filesize || filesize == '') {
-        return "0 B";
-    }
-    var unitArr = new Array("B","KB","MB","GB","TB","PB","EB","ZB","YB");
-    var index = 0;
-    var srcsize = parseFloat(filesize);
-    index = Math.floor(Math.log(srcsize)/Math.log(1024));
-    var size = srcsize/Math.pow(1024,index);
-    size = size.toFixed(2);//保留的小数位数
-    return size + unitArr[index];
-}
 
 layui.define(["layer"], function (exprots) {
    var $ = layui.jquery;
-   var utils = {
+   
+    var date_format = function (timestamp, format) {
+       format = format || 'yyyy年MM月dd';
+       timestamp = timestamp + "";
+       if (timestamp * 1 > 0 && timestamp.length == 10) {
+          timestamp = timestamp * 1000;
+       }
+
+       // 通过getDate()方法获取date类型的时间
+       var regYear = new RegExp("(y+)", "i");
+       var realDate = new Date(timestamp);
+
+       function timeFormat(num) {
+          return num < 10 ? '0' + num : num;
+       }
+
+       var date = [
+          ["M+", timeFormat(realDate.getMonth() + 1)],
+          ["d+", timeFormat(realDate.getDate())],
+          ["h+", timeFormat(realDate.getHours())],
+          ["m+", timeFormat(realDate.getMinutes())],
+          ["s+", timeFormat(realDate.getSeconds())],
+          ["q+", Math.floor((realDate.getMonth() + 3) / 3)],
+          ["S+", realDate.getMilliseconds()],
+       ];
+       var reg1 = regYear.exec(format);
+
+       if (reg1) {
+          format = format.replace(reg1[1], (realDate.getFullYear() + '').substring(4 - reg1[1].length));
+       }
+       for (var i = 0; i < date.length; i++) {
+          var k = date[i][0];
+          var v = date[i][1];
+          // getRegExp初始化一个正则表达式对象
+          var reg2 = new RegExp("(" + k + ")").exec(format);
+          if (reg2) {
+             format = format.replace(reg2[1], reg2[1].length == 1
+                ? v : ("00" + v).substring(("" + v).length));
+          }
+       }
+       return format;
+    };
+
+    // 格式化文件大小的JS方法
+    function renderSize(filesize) {
+        if (null == filesize || filesize == '') {
+            return "0 B";
+        }
+        var unitArr = new Array("B","KB","MB","GB","TB","PB","EB","ZB","YB");
+        var index = 0;
+        var srcsize = parseFloat(filesize);
+        index = Math.floor(Math.log(srcsize)/Math.log(1024));
+        var size = srcsize/Math.pow(1024,index);
+        size = size.toFixed(2);//保留的小数位数
+        return size + unitArr[index];
+    }
+    
+    // 获取选中节点的id
+    function getLayuiTreeCheckedIds(data) {
+        var id = "";
+        $(data).each(function (index, item) {
+            if (id != "") {
+                id = id + "," + item.id;
+            }
+            else {
+                id = item.id;
+            }
+            var i = getLayuiTreeCheckedIds(item.children);
+            if (i != "") {
+                id = id + "," + i;
+            }
+        });
+        return id;
+    }
+   
+    var utils = {
       /**
        * 是否前后端分离
        */
@@ -209,6 +229,11 @@ layui.define(["layer"], function (exprots) {
        * @returns {string}
        */
       renderSize: renderSize,
+      /**
+       * 获取选中节点的id
+       * @returns {string}
+       */
+      getLayuiTreeCheckedIds: getLayuiTreeCheckedIds,
       /**
        * 格式化当前日期
        * @param date
