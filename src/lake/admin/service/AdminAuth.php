@@ -4,8 +4,6 @@ namespace lake\admin\service;
 
 use think\facade\Env;
 
-use lake\admin\auth\Permission;
-
 /**
  * 管理员验证
  *
@@ -30,10 +28,11 @@ class AdminAuth
         $relation = 'or'
     ) {
         $ruleType = config('auth.rule_type', 1);
-        $Auth = new Permission();
+        $Auth = app()->auth;
         $Auth->withRuleType($ruleType);
         
-        if (!$Auth->check($rule, Env::get('admin_id'), $relation, $type, $mode)) {
+        $checkStatus = $Auth->check($rule, Env::get('admin_id'), $relation, $type, $mode);
+        if (false === $checkStatus) {
             return false;
         }
         

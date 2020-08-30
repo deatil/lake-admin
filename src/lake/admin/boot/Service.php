@@ -5,6 +5,7 @@ namespace lake\admin\boot;
 use think\Service as BaseService;
 use think\console\Input;
 
+use lake\admin\auth\Permission;
 use lake\admin\model\Event as EventModel;
 use lake\admin\middleware\LakeAdminAppMap;
 use lake\admin\middleware\LoadModule;
@@ -29,6 +30,9 @@ class Service extends BaseService
         
         // 系统别名
         $this->setSystemAlias();
+        
+        // 绑定
+        $this->setSystemBind();
     }
     
     public function boot()
@@ -150,6 +154,18 @@ class Service extends BaseService
         foreach ($controllers as $alias => $controller) {
             class_alias($controller, $alias);
         }
+    }
+    
+    /**
+     * 系统绑定
+     *
+     * @create 2020-8-30
+     * @author deatil
+     */
+    protected function setSystemBind()
+    {
+        // 绑定权限检测
+        $this->app->bind('auth', Permission::class);
     }
     
     /**

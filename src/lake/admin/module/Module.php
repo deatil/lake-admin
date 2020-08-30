@@ -1151,25 +1151,6 @@ class Module
     }
     
     /**
-     * 获取模块内文件
-     * @param string $file 模块内文件
-     * @return string
-     *
-     * @create 2019-8-5
-     * @author deatil
-     */    
-    public function getModuleFile($file = '')
-    {
-        if (empty($file)) {
-            return false;
-        }
-        
-        $realFile = $this->modulePath . ltrim($file, '/');
-        
-        return $realFile;
-    }
-    
-    /**
      * 获取模块路径信息
      *
      * @create 2019-11-23
@@ -1341,34 +1322,6 @@ class Module
                 $this->error = '导入SQL失败';
                 return false;
             }
-        }
-        
-        return true;
-    }
-    
-    /**
-     * 删除模块文件，只支持模块文件夹内删除
-     *
-     * @create 2019-11-23
-     * @author deatil
-     */    
-    public function removeModule($name = '')
-    {
-        if (empty($name)) {
-            $this->error = '模块名称不能为空';
-            return false;
-        }
-        
-        $module = $this->modulePath . ltrim($name, '/');
-        if (!file_exists($module)) {
-            $this->error = '模块不存在';
-            return false;
-        }
-        
-        $delStatus = File::delDir($module);
-        if (!$delStatus) {
-            $this->error = '删除失败';
-            return false;
         }
         
         return true;

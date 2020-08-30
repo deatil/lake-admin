@@ -46,7 +46,7 @@ class Check
      * @param string|array name  需要验证的规则列表,支持逗号分隔的权限规则或索引数组
      * @param string relation    如果为 'or' 表示满足任一条规则即通过验证;如果为 'and'则表示需满足所有规则才能通过验证
      * @param string mode        执行check的模式
-     * @return boolean           通过验证返回true;失败返回false
+     * @return boolean|array     通过验证返回true;失败返回false
      *
      * @create 2020-8-28
      * @author deatil
@@ -62,18 +62,10 @@ class Check
         $list = []; // 保存验证通过的规则名
         foreach ($name as $nameValue) {
             $authPassList = [];
-            $auths = $this->getAuths(); 
-            if (!empty($auths)) {
-                foreach ($auths as $auth) {
-                    if ($mode == 'url') {
-                        $matchUrl = $this->checkMatchUrl($nameValue, $auth);
-                        if ($matchUrl === true) {
-                            $authPassList[] = $auth;
-                        }
-                    } elseif ($auth == $nameValue) {
-                        $authPassList[] = $auth;
-                    }
-                }
+            
+            $checkMatchAuth = $this->checkOnce($nameValue, $mode); 
+            if ($checkMatchAuth !== false) {
+                $authPassList[] = $checkMatchAuth;
             }
             
             $nameMd5 = md5($nameValue);
@@ -83,14 +75,49 @@ class Check
         if ($relation == 'or') {
             $or = $this->checkOrRelation($list);
             if ($or === true) {
-                return true;
+                return $list;
             }
         }
         
         if ($relation == 'and') {
             $and = $this->checkAndRelation($list);
             if ($and === true) {
-                return true;
+                return $list;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * 单次检查权限
+     * @param string name       需要验证的规则列表
+     * @param string relation   如果为 'or' 表示满足任一条规则即通过验证;如果为 'and'则表示需满足所有规则才能通过验证
+     * @param string mode       执行check的模式
+     * @return boolean|string   通过验证返回true;失败返回false
+     *
+     * @create 2020-8-30
+     * @author deatil
+     */
+    public function checkOnce($name, $mode = 'url')
+    {
+        if (empty($name)) {
+            return false;
+        }
+        
+        $auths = $this->getAuths(); 
+        if (empty($auths)) {
+            return false;
+        }
+        
+        foreach ($auths as $auth) {
+            if ($mode == 'url') {
+                $matchUrl = $this->checkMatchUrl($name, $auth);
+                if ($matchUrl === true) {
+                    return $auth;
+                }
+            } elseif ($auth == $name) {
+                return $auth;
             }
         }
         
@@ -109,22 +136,22 @@ class Check
     protected function checkMatchUrl($name, $auth)
     {
         $nameParse = (new Parser)->withUrl($name)->parse();
-        $nameAuth = $nameParse->getPath();
+        $namePath = $nameParse->getPath();
         $nameParam = $nameParse->getParam();
         
         $authParse = (new Parser)->withUrl($auth)->parse();
-        $auth2 = $authParse->getPath();
-        $param = $authParse->getParam();
+        $authPath = $authParse->getPath();
+        $authParam = $authParse->getParam();
         
-        if ($auth != $auth2) {
-            $intersect = array_intersect_assoc($nameParam, $param);
+        if ($auth != $authPath) {
+            $intersectParam = array_intersect_assoc($nameParam, $authParam);
             
-            if ($auth2 == $nameAuth
-                && serialize($intersect) == serialize($param)
+            if ($namePath == $authPath
+                && serialize($intersectParam) == serialize($authParam)
             ) {
                 return true;
             }
-        } elseif ($auth2 == $nameAuth) {
+        } elseif ($namePath == $authPath) {
             return true;
         }
         
