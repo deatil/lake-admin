@@ -55,11 +55,15 @@
     </div>
 </script>
 
-<script type="text/html" id="browserToolbar">
+<script type="text/html" id="createTimeTpl">
+    {{ layui.util.toDateString(d.create_time * 1000, 'yyyy-MM-dd HH:mm:ss') }}
+</script>
+
+<script type="text/html" id="browserTpl">
     {{ d.useragent.split(" ")[0] }}
 </script>
 
-<script type="text/html" id="statusToolbar">
+<script type="text/html" id="statusTpl">
     <div>
         {{#  if(d.status) { }} 
             <span class='layui-badge-dot layui-bg-green'></span>
@@ -71,7 +75,7 @@
     </div>
 </script>
 
-<script type="text/html" id="actionToolbar">
+<script type="text/html" id="actionTpl">
     {if lake_check_auth('admin/adminLog/view')}
         <a href='{:url("view")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="日志详情">详情</a>
     {/if}
@@ -98,11 +102,11 @@ layui.use(['table', 'laydate'], function() {
                 { field: 'admin_username', width: 80, title: '账号', align: "center" },
                 { field: 'method', width: 90, title: '请求类型', align: 'center' },
                 { field: 'url', title: '操作URL' },
-                { field: 'create_time', width: 180, title: '时间' },
+                { field: 'create_time', width: 180, title: '时间', templet: '#createTimeTpl' },
                 { field: 'ip', width: 120, title: 'IP' },
-                { field: 'useragent', width: 120, title: '浏览器', templet: '#browserToolbar' },
-                { field: 'status', width: 80, title: '状态',align: "center", templet: '#statusToolbar' },
-                { width: 80, title: '操作', templet: '#actionToolbar' },
+                { field: 'useragent', width: 120, title: '浏览器', templet: '#browserTpl' },
+                { field: 'status', width: 80, title: '状态',align: "center", templet: '#statusTpl' },
+                { width: 80, title: '操作', templet: '#actionTpl' },
             ]
         ],
         page: {},

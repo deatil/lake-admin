@@ -41,6 +41,10 @@
     <div><a class="layui-btn layui-btn layui-btn-xs layui-iframe" href="{:url('attachments/view')}?id={{ d.id }}" title="附件详情">{{d.name}}</a></div>
 </script>
 
+<script type="text/html" id="createTimeTpl">
+    {{ layui.util.toDateString(d.create_time * 1000, 'yyyy-MM-dd HH:mm:ss') }}
+</script>
+
 <script type="text/html" id="statusTpl">
     <div>
         {{#  if(d.status) { }} 
@@ -75,7 +79,7 @@ layui.use(['table', 'laydate'], function() {
                 { field: 'ext',width: 80, title: '类型'},
                 { field: 'mime',width: 120, title: 'Mime类型'},
                 { field: 'driver',width: 100, title: '存储引擎'},
-                { field: 'create_time', width: 180, title: '上传时间' },
+                { field: 'create_time', width: 180, title: '上传时间', templet: '#createTimeTpl' },
                 { field: 'status', width: 80, title: '状态',align: "center", templet: '#statusTpl' },
                 { fixed: 'right', width: 70, title: '操作', toolbar: '#barTool' }
             ]
