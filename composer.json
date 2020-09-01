@@ -31,10 +31,10 @@
     },
     "autoload": {
         "psr-4": {
-            "lake\\admin\\": "src/lake/admin"
+            "Lake\\Admin\\": "src/lake/admin"
         },
         "files": [
-            "src/lake/admin/helper.php"
+            "src/lake/helper.php"
         ],
         "classmap": [
         ]
@@ -45,7 +45,7 @@
     "extra": {
         "think":{
             "services":[
-                "lake\\admin\\boot\\Service"
+                "Lake\\Admin\\Service"
             ]
         }
     }

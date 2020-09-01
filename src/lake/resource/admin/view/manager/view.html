@@ -1,0 +1,88 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">管理员详情</div>
+    <div class="layui-card-body">
+        <div class="table-responsive">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="200">
+                    <col>
+                </colgroup>
+          
+                <thead>
+                    <tr>
+                        <td>名称</td>
+                        <td>内容</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>头像</td>
+                        <td>
+                            <a href="{:lake_get_file_path($data['avatar'])}" target="_blank">
+                                <img src="{:lake_get_file_path($data['avatar'])}" />
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ID</td>
+                        <td>{$data.id}</td>
+                    </tr>
+                    <tr>
+                        <td>管理账号</td>
+                        <td>{$data.username}</td>
+                    </tr>
+                    <tr>
+                        <td>真实姓名</td>
+                        <td>{$data.nickname}</td>
+                    </tr>
+                    <tr>
+                        <td>所属角色</td>
+                        <td>{$data.groups}</td>
+                    </tr>
+                    <tr>
+                        <td>邮箱</td>
+                        <td>{$data.email}</td>
+                    </tr>
+                    <tr>
+                        <td>最后登陆时间</td>
+                        <td>{$data.last_login_time}</td>
+                    </tr>
+                    <tr>
+                        <td>最后登陆IP</td>
+                        <td>{$data.last_login_ip}</td>
+                    </tr>
+                    <tr>
+                        <td>状态</td>
+                        <td>
+                            {if $data['status'] == 1}
+                                <span class="layui-badge-dot layui-bg-green"></span>
+                                <span class="text-green">启用</span>
+                            {else/}
+                                <span class="layui-badge-dot layui-bg-orange"></span>
+                                <span class="text-orange">禁用</span>
+                            {/if}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>添加时间</td>
+                        <td>
+                            {$data['add_time']}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>添加IP</td>
+                        <td>
+                            {$data['add_ip']}
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}

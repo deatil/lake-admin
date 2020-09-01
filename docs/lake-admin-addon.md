@@ -257,3 +257,32 @@ class Upgrade
 
 }
 ~~~
+
+> 模块插件后台继承
+~~~
+namespace app\admin\controller;
+
+use Lake\Module\Controller\AdminBase;
+
+class LcmsBase extends AdminBase
+{
+    // 模块ID
+    protected $module = 'lcms';
+    
+    // 模板路径
+    // protected $viewPath = '';
+    
+    // 模块ID与模板路径选择其中之一，目前都和视图相关
+}
+~~~
+
+> 模块插件前台继承
+~~~
+namespace app\lcms\controller;
+
+use Lake\Module\Controller\HomeBase;
+
+class LcmsBase extends HomeBase
+{
+}
+~~~

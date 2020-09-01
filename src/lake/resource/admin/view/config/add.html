@@ -1,0 +1,180 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">添加配置</div>
+    <div class="layui-card-body">
+        <form class="layui-form" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">分组</label>
+                <div class="layui-input-block w300">
+                    <select name="group" lay-verify="required">
+                        <option value=""></option>
+                        {volist name="groupArray" id="vo"}
+                            <option value="{$key}" {if $key==$group}selected{/if}>{$vo}[{$key}]</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">配置类型</label>
+                <div class="layui-input-block w300">
+                    <select name="type" lay-filter="type" lay-verify="required">
+                        <option value=""></option>
+                        {volist name="fieldType" id="vo"}
+                        <option value="{$vo.name}" data-ifoption="{$vo.ifoption}">{$vo.title}[{$vo.name}]</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属模块</label>
+                <div class="layui-input-block">
+                    <div class="layui-inline w300">
+                        <input type="text" name="module" lay-verify="required" value="admin" autocomplete="off" placeholder="字段英文、数字、下划线及其组合" class="layui-input" id="config_module">
+                    </div>
+                    <div class="layui-inline">
+                        <select lay-filter="config_module" class="module-select-list">
+                            <option data-module=""></option>
+                            <option data-module="admin">lake-admin</option>
+                            {volist name="modules" id="module"}
+                                <option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">填写字段英文、数字、下划线及其组合，此为必填项</div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">配置标题</label>
+                <div class="layui-input-block w300">
+                    <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="字段中文标题" class="layui-input">
+                </div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">一般由中文组成，仅用于显示</div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">配置名称</label>
+                <div class="layui-input-block w300">
+                    <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="字段英文名称" class="layui-input">
+                </div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">由英文字母开头和下划线组成，如 <code>web_site_title</code></div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">配置默认值</label>
+                <div class="layui-input-block w300">
+                    <textarea name="value" placeholder="未指定值时默认插入字段的值" class="layui-textarea"></textarea>
+                </div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">
+                        配置类型为<code>数组</code>时内容为JSON字符
+                    </div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item layui-form-text" id="options">
+                <label class="layui-form-label">配置项</label>
+                <div class="layui-input-block">
+                    <div id="options_con"></div>
+                    <script id="options_main" type="text/html">
+                        <dl class="fieldlist layui-fieldlist">
+                            <dd class="fieldlist-head">
+                                <span>字段</span>
+                                <span>内容</span>
+                            </dd>
+                            <dd class="fieldlist-btns">
+                                <a href="javascript:;" class="layui-btn layui-btn-sm layui-btn-success btn-append">
+                                    <i class="iconfont icon-add"></i> 添加
+                                </a>
+                            </dd>
+                        </dl>
+                    </script>
+                    <script id="optionstpl" type="text/html">
+                        <dd class="fieldlist-item">
+                            <ins><input type="text" data-name="{{d.name}}[{{d.index}}][key]" value="{{d.row.key?d.row.key:''}}" placeholder="填写字段" class="layui-input"/></ins>
+                            <ins><input type="text" data-name="{{d.name}}[{{d.index}}][value]" value="{{d.row.value?d.row.value:''}}" placeholder="填写内容" class="layui-input"/></ins>
+                            
+                            <span class="layui-btn layui-btn-sm layui-btn-danger btn-remove"><i class="iconfont icon-close1"></i></span>
+                            <span class="layui-btn layui-btn-sm layui-btn-primary btn-dragsort"><i class="iconfont icon-yidong"></i></span>
+                        </dd>
+                    </script>
+                    <textarea name="options" 
+                        data-el="#options_con" 
+                        data-main="#options_main" 
+                        data-template="#optionstpl" 
+                        class="layui-form-fieldlist layui-hide"></textarea>
+                </div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">
+                        配置类型为<code>单选按钮,下拉框,复选框</code>时请填写
+                    </div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">配置备注</label>
+                <div class="layui-input-block w300">
+                    <textarea name="remark" placeholder="填写配置说明" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序</label>
+                <div class="layui-input-block w300">
+                    <input type="number" name="listorder" autocomplete="off" placeholder="只能是正整数" class="layui-input" value="100">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">显示</label>
+                <div class="layui-input-block w300">
+                    <input type="radio" name="is_show" value="1" title="显示" checked>
+                    <input type="radio" name="is_show" value="0" title="隐藏">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block w300">
+                    <input type="radio" name="status" value="1" title="启用" checked>
+                    <input type="radio" name="status" value="0" title="禁用">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-close="self" lay-submit="" lay-filter="formSubmit">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+layui.use(['layer', 'form'], function() {
+    var layer = layui.layer,
+        form = layui.form,
+        $ = layui.$;
+    
+    var module = $('#config_module').val();
+    $(".module-select-list option[data-module='"+module+"']").attr("selected", true);
+    form.render('select');
+    
+    form.on('select(config_module)', function(data) {
+        $('#config_module').val($(data.elem).find("option:selected").attr("data-module"));
+    });
+});
+</script>
+{/block}
