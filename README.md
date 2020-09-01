@@ -20,7 +20,7 @@
 *  模块插件目录：`addon` 文件夹 及 自定义包模块插件
 *  自定义包模块插件可以查看：`lake-admin-addon-lmenu` 插件 及 `lake-admin-addon-lroute` 插件
 *  如果项目迁移，可以执行 `php think lake-admin:repair` 修复静态文件失效问题，已安装模块请根据模块相关文档更新静态文件链接
-*  部分自定义配置，需要将更目录 `.env.lake` 文件里内容复制到 `.env` 内
+*  部分自定义配置，需要将根目录 `.env.lake` 文件里内容复制到 `.env` 内
 
 
 ### 截图预览
