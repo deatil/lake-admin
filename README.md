@@ -25,10 +25,10 @@
 
 ### 截图预览
 
-[LakeAdmin1](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin1.png)
-[LakeAdmin2](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin2.png)
-[LakeAdmin3](https://github.com/deatil/lake-admin/blob/master/docs/img/LakeAdmin3.png)
-
+![LakeAdmin1](https://user-images.githubusercontent.com/24578855/91877097-23f6d680-ecb0-11ea-99e1-c8e7b36421dd.png)
+![LakeAdmin2](https://user-images.githubusercontent.com/24578855/91877220-4ee12a80-ecb0-11ea-9f0f-e3879d4c07ac.png)
+![LakeAdmin3](https://user-images.githubusercontent.com/24578855/91877251-57396580-ecb0-11ea-8503-be6335c8a92d.png)
+![LakeAdmin0](https://user-images.githubusercontent.com/24578855/91877310-691b0880-ecb0-11ea-9692-06d0beb3c048.png)
 
 ### 开源协议
 
