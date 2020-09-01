@@ -379,7 +379,7 @@ code {
 .lake-admin-auth-manager-access  {
     border: 1px solid #D2D2D2;
     border-radius: 2px;	
-    padding: 5px 0 5px 3px;
+    padding: 5px 0 15px 3px;
     max-height: 500px;
     overflow-y: scroll;
 }

@@ -2,8 +2,6 @@
 
 namespace Lake\Admin\Controller;
 
-use think\facade\Event;
-
 use Lake\TTree;
 
 use Lake\Admin\Model\AuthGroup as AuthGroupModel;
@@ -96,8 +94,6 @@ class Role extends Base
                 "data" => $result,
             ];
             
-            Event::trigger('AuthManagerIndexAjax', $result);
-            
             return $this->json($result);
         } else {
             return $this->fetch();
@@ -128,8 +124,6 @@ class Role extends Base
         $TTree = new TTree();
         $list = AuthGroupModel::order(['id' => 'ASC'])
             ->column('*', 'id');
-        
-        Event::trigger('AuthManagerCreateGroup', $list);
         
         $TTree->withData($list);
         if (env('admin_is_root')) {
@@ -167,8 +161,6 @@ class Role extends Base
         }
         
         $data['type'] = AuthGroupModel::TYPE_ADMIN;
-        
-        Event::trigger('AuthManagerWriteGroup', $data);
         
         $result = $this->validate($data, 'Lake\\Admin\\Validate\\AuthGroup');
         if (true !== $result) {
@@ -228,8 +220,6 @@ class Role extends Base
         $childsId = $TTree->getListChildsId($list, $authGroup['id']);
         $childsId[] = $authGroup['id'];
         
-        Event::trigger('AuthManagerEditGroup', $list);
-        
         if (!empty($list)) {
             foreach ($list as $key => $val) {
                 if (in_array($val['id'], $childsId)) {
@@ -275,8 +265,6 @@ class Role extends Base
         }
         
         $data['type'] = AuthGroupModel::TYPE_ADMIN;
-        
-        Event::trigger('AuthManagerUpdateGroup', $data);
         
         if (!isset($data['id']) || empty($data['id'])) {
             $this->error('角色组ID不存在！');
@@ -348,8 +336,6 @@ class Role extends Base
             $this->error($check['msg']);
         }
         
-        Event::trigger('AuthManagerDeleteGroup', $groupId);
-        
         // 子角色检测
         $childGroupCount = AuthGroupModel::where([
                 ['parentid', '=', $groupId],
@@ -403,9 +389,6 @@ class Role extends Base
                 $rules = explode(',', $newRules);
             }
             
-            // 监听权限
-            Event::trigger('AuthManagerUpdateGroupRules', $rules);
-            
             // 获取提交的正确权限
             $rules = $this->AuthManagerService->getUserRightAuth($rules);
             
@@ -434,8 +417,6 @@ class Role extends Base
                         ];
                     }
                 }
-                
-                Event::trigger('AuthManagerAccessUpdate', $ruleAccess);
                 
                 $r = AuthRuleAccessModel::insertAll($ruleAccess);
             
@@ -467,12 +448,7 @@ class Role extends Base
                     ]
                 ])
                 ->column('ruleAccess.rule_id');
-                
-            // 监听权限
-            Event::trigger('AuthManagerAccessRules', [
-                'group_id' => $groupId,
-                'rules' => $rules,
-            ]);
+            $this->assign('rules', $rules);
             
             // 当前用户权限ID列表
             $userAuthIds = (new AuthManagerService)->getAuthIdList(env('admin_id'));
@@ -483,18 +459,18 @@ class Role extends Base
             if (!empty($result)) {
                 foreach ($result as $rs) {
                     $data = [
-                        'nid' => $rs['id'],
-                        'parentid' => $rs['parentid'],
-                        'name' => (empty($rs['method']) ? $rs['title'] : ($rs['title'] . '[' . strtoupper($rs['method']) . ']')),
                         'id' => $rs['id'],
-                        'chkDisabled' => $this->AuthManagerService->checkUserAuth($rs['id'], $userAuthIds),
-                        'checked' => in_array($rs['id'], $rules) ? true : false,
+                        'parentid' => $rs['parentid'],
+                        'title' => (empty($rs['method']) ? $rs['title'] : ($rs['title'] . '[' . strtoupper($rs['method']) . ']')),
+                        // 'checked' => in_array($rs['id'], $rules) ? true : false,
+                        'field' => 'roleid',
+                        'spread' => false,
                     ];
                     $json[] = $data;
                 }
             }
             
-            Event::trigger('AuthManagerAccessData', $json);
+            $json = (new TTree)->withConfig('buildChildKey', 'children')->withData($json)->buildArray(0);
             
             $this->assign('group_id', $groupId);
             $this->assign('json', $json);
