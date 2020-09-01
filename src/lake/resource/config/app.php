@@ -36,8 +36,8 @@ return [
     'module_static_path' => root_path() . 'public' . DIRECTORY_SEPARATOR . 'static' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR,
     
     // 超级管理员ID
-    'admin_super_id' => env('admin_super_id', 1),
+    'admin_super_id' => env('lake_admin.admin_super_id', 1),
     
     // 如果启用了自动加载语言包，需要开启该配置
-    'load_lang_pack' => env('load_lang_pack', 0),
+    'load_lang_pack' => env('lake_admin.load_lang_pack', 0),
 ];
