@@ -19,7 +19,8 @@ use Lake\Admin\Model\Module as ModuleModel;
 use Lake\Admin\Model\AuthRule as AuthRuleModel;
 
 use Lake\Admin\Service\Module as ModuleService;
-use Lake\Admin\Service\AuthRule as AuthRuleService;
+
+use Lake\Admin\Module\Menu;
 
 /**
  * 模块管理
@@ -808,12 +809,12 @@ class Module
             return false;
         }
         
-        $AuthRuleService = (new AuthRuleService);
-        $status = $AuthRuleService->installModuleMenu($menu, $this->getInfoFromFile($name));
+        $Menu = (new Menu);
+        $status = $Menu->installModuleMenu($menu, $this->getInfoFromFile($name));
         if ($status === true) {
             return true;
         } else {
-            $this->error = $AuthRuleService->getError() ?: '安装菜单项出现错误！';
+            $this->error = $Menu->getError() ?: '安装菜单项出现错误！';
             return false;
         }
     }
@@ -833,7 +834,7 @@ class Module
             return false;
         }
         
-        (new AuthRuleService)->delModuleMenu($name);
+        (new Menu)->delModuleMenu($name);
         
         return true;
     }

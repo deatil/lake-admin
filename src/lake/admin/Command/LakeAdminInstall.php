@@ -194,6 +194,9 @@ class LakeAdminInstall extends Command
         $staticPath = root_path() . 'public' . DIRECTORY_SEPARATOR 
             . 'static' . DIRECTORY_SEPARATOR
             . 'admin' . DIRECTORY_SEPARATOR;
+        // 移除旧的链接
+        Symlink::remove($staticPath);
+        // 创建新的链接
         Symlink::make($adminStaticPath, $staticPath);
 
         // 复制文件
