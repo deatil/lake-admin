@@ -84,6 +84,11 @@ class Service extends BaseService
             }
         }
         
+        $installLockFile = root_path() . 'install.lock';
+        if (!file_exists($installLockFile)) {
+            $isInstallCli = true;
+        }
+        
         return $isInstallCli;
     }
     
