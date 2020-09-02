@@ -665,8 +665,6 @@ class Module
         
             'installtime' => time(),
             'status' => 1,
-            'add_time' => time(),
-            'add_ip' => request()->ip(1),
         ];
         
         // 保存在安装表
@@ -752,16 +750,13 @@ class Module
         }
         
         foreach ($events as $event) {
-            EventModel::insert([
-                'id' => md5(time().lake_to_guid_string(time()).mt_rand(0, 100000)),
+            EventModel::create([
                 'module' => $name,
                 'name' => $event['name'],
                 'class' => $event['class'],
                 'description' => $event['description'],
                 'listorder' => isset($event['listorder']) ? $event['listorder'] : 100,
                 'status' => (isset($event['status']) && $event['status'] == 1) ? 1 : 0,
-                'add_time' => time(),
-                'add_ip' => request()->ip(1),
             ]);
         }
         

@@ -11,7 +11,7 @@
                 <div class="layui-input-block w300">
                     <select name="parentid">
                         {volist name="group_data" id="vo"}
-                            <option value="{$vo.id}" {if $vo['id'] == $auth_group['parentid']}selected="selected"{/if}>{$vo.spacer} {$vo.title}</option>
+                            <option value="{$vo.id}" {if $vo['id'] == $auth_group['parentid']}selected="selected"{/if}>{:htmlspecialchars_decode($vo['spacer'])} {$vo.title}</option>
                         {/volist}
                     </select>
                 </div>
@@ -37,7 +37,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-close="self" lay-filter="formSubmit">立即提交</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="formSubmit" lay-close="self">立即提交</button>
                 </div>
             </div>
         </form>

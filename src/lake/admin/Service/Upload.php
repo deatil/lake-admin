@@ -309,7 +309,6 @@ class Upload
 
             // 获取附件信息
             $file_info = [
-                'id' => md5(mt_rand(0, 100000).time().mt_rand(0, 100000)),
                 'module' => $module,
                 'type' => $this->type,
                 'type_id' => $this->type_id,

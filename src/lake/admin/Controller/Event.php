@@ -73,10 +73,7 @@ class Event extends Base
                 $data['status'] = 0;
             }
             
-            $data['add_time'] = time();
-            $data['add_ip'] = request()->ip(1);
-            
-            $status = EventModel::insert($data);
+            $status = EventModel::create($data);
        
             if ($status === false) {
                 $this->error("添加失败！");

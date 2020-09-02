@@ -242,7 +242,6 @@ class Config extends Base
                 return $this->error($result);
             }
             
-            $data['id'] = md5(mt_rand(100000, 999999).microtime().mt_rand(100000, 999999));
             $status = ConfigModel::create($data);
             if (false === $status) {
                 $this->error('配置添加失败！');

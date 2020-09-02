@@ -2,7 +2,7 @@
 
 {block name="main"}
 <div class="layui-card">
-    <div class="layui-card-header layui-bg-cyan">添加菜单</div>
+    <div class="layui-card-header layui-bg-cyan">新增菜单</div>
     <div class="layui-card-body">
         <form class="layui-form" method="post">
             <div class="layui-form-item">
@@ -11,7 +11,7 @@
                     <select name="parentid" lay-verify="required">
                         <option value="0">作为一级菜单</option>
                         {volist name="menus" id="vo"}
-                            <option value="{$vo.id}" {if $vo['id'] == $parentid}selected="selected"{/if}>{$vo.spacer} {$vo.title}</option>
+                            <option value="{$vo.id}" {if $vo['id'] == $parentid}selected="selected"{/if}>{:htmlspecialchars_decode($vo['spacer'])} {$vo.title}</option>
                         {/volist}
                     </select>
                 </div>
@@ -147,7 +147,7 @@
             
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-close="self" lay-filter="formSubmit">立即提交</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="formSubmit" lay-close="self">立即提交</button>
                 </div>
             </div>
         </form>

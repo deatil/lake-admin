@@ -28,9 +28,6 @@ class Manager
             return false;
         }
         
-        $data['add_time'] = time();
-        $data['add_ip'] = request()->ip();
-        
         $saveInfo = AdminModel::create($data);
         if ($saveInfo === false) {
             $this->error = '入库失败！';

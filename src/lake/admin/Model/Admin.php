@@ -18,33 +18,11 @@ class Admin extends ModelBase
     
     // 时间字段取出后的默认时间格式
     protected $dateFormat = false;
-    
-    // 插入数据自动
-    protected $insert = [
-        'status' => 1,
-    ];
-    
-    /**
-     * 获取格式化时间
-     *
-     * @create 2019-12-29
-     * @author deatil
-     */
-    public function getLastLoginTimeAttr($value)
-    {
-        return date('Y-m-d H:i:s', $value);
-    }
 
-    /**
-     * 获取格式化IP
-     *
-     * @create 2019-12-29
-     * @author deatil
-     */
-    public function getLastLoginIpAttr($value)
+    public static function onBeforeInsert($model)
     {
-        $value = intval($value);
-        return long2ip($value);
+        $model->setAttr('add_time', time());
+        $model->setAttr('add_ip', request()->ip());
     }
     
     /**

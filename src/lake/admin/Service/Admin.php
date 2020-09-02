@@ -95,7 +95,7 @@ class Admin
     {
         $data = [
             'last_login_time' => time(), 
-            'last_login_ip' => request()->ip(1)
+            'last_login_ip' => request()->ip()
         ];
         return AdminModel::where([
             'id' => $id,

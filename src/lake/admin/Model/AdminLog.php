@@ -18,21 +18,16 @@ class AdminLog extends ModelBase
     // 设置主键名
     protected $pk = 'id';
     
-    protected $autoWriteTimestamp = true;
-    protected $updateTime = false;
-    
     // 时间字段取出后的默认时间格式
     protected $dateFormat = false;
 
     public static function onBeforeInsert($model)
     {
-        $id = md5(mt_rand(10000, 99999) . time() . mt_rand(10000, 99999));
+        $id = md5(mt_rand(10000, 99999) . time() . mt_rand(10000, 99999) . microtime());
         $model->setAttr('id', $id);
-    }
-
-    public function getIpAttr($value)
-    {
-        return long2ip($value);
+        
+        $model->setAttr('add_time', time());
+        $model->setAttr('add_ip', request()->ip());
     }
 
     /**
@@ -52,13 +47,12 @@ class AdminLog extends ModelBase
         }
     
         $data = [
-            'id' => md5(time().mt_rand(10000, 99999)),
             'admin_id' => $adminId,
             'admin_username' => $adminUsername,
-            'info' => "{$message}",
+            'info' => $message,
             'method' => request()->method(),
             'url' => request()->url(),
-            'ip' => request()->ip(1),
+            'ip' => request()->ip(),
             'useragent' => request()->server('HTTP_USER_AGENT'),
             'status' => $status,
         ];

@@ -167,10 +167,6 @@ class Role extends Base
             return $this->error($result);
         }
         
-        $data['id'] = md5(microtime().mt_rand(100000, 999999));
-        $data['add_time'] = time();
-        $data['add_ip'] = request()->ip(1);
-        
         $r = $this->AuthGroupModel->save($data);
         
         if ($r === false) {

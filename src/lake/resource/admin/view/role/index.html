@@ -2,7 +2,7 @@
 
 {block name="main"}
 <div class="layui-card">
-    <div class="layui-card-header layui-bg-cyan">角色管理</div>
+    <div class="layui-card-header layui-bg-cyan">角色</div>
     <div class="layui-card-body">
         <blockquote class="layui-elem-quote">
             <form class="layui-form lake-admin-search-form" method="get" lay-filter="lake-admin-search-from">
@@ -34,7 +34,7 @@
 {block name="script"}
 <script type="text/html" id="toolbarTop">
     <div class="layui-btn-container">
-        <a class="layui-btn layui-btn-sm layui-iframe" href="{:url('createGroup')}" title="添加角色">添加角色</a>
+        <a class="layui-btn layui-btn-sm layui-iframe" href="{:url('create')}" title="添加角色">添加角色</a>
     </div>
 </script>
 
@@ -45,6 +45,10 @@
         <a href='{:url("edit")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="编辑角色">编辑</a>
         <a href='{:url("delete")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
     {{#  } }}
+</script>
+
+<script type="text/html" id="titleTpl">
+    {{ d.spacer }} {{ d.title }}
 </script>
 
 <script type="text/html" id="access">
@@ -76,7 +80,7 @@ layui.use('table', function() {
         cols: [
             [
                 { field: 'listorder', align: 'center', width: 70, title: '排序', edit: 'text' },
-                { field: 'title', width: 200, title: '权限组'},
+                { field: 'title', width: 200, title: '权限组', templet: '#titleTpl'},
                 { field: 'description', title: '描述' },
                 { title: '授权', width: 100, templet: "#access" },
                 { field: 'status', width: 100,title: '状态', templet: '#status' },

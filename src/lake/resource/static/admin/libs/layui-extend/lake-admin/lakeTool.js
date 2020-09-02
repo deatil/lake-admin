@@ -161,7 +161,7 @@ layui.define(['table', 'element', 'layer', 'form', 'notice'], function(exports) 
                     
                     if (callback) {
                         callback(that, res);
-                    }                    
+                    }
                 } else {
                     notice.error(res.msg);
                 }

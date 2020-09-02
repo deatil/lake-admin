@@ -18,25 +18,14 @@ class Module extends ModelBase
     
     // 时间字段取出后的默认时间格式
     protected $dateFormat = false;
-    
-    // 自动完成
-    protected $auto = [];
-    
-    // 添加时候
-    protected $insert = [
-        'installtime', 
-        'updatetime', 
-        'status' => 1,
-    ];
-    
-    protected function setInstalltimeAttr($value)
+
+    public static function onBeforeInsert($model)
     {
-        return time();
-    }
-    
-    protected function setUpdatetimeAttr($value)
-    {
-        return time();
+        $id = md5(mt_rand(10000, 99999) . time() . mt_rand(10000, 99999) . microtime());
+        $model->setAttr('id', $id);
+        
+        $model->setAttr('add_time', time());
+        $model->setAttr('add_ip', request()->ip());
     }
 
 }

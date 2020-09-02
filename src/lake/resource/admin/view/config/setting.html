@@ -2,7 +2,7 @@
 
 {block name="main"}
 <div class="layui-card">
-    <div class="layui-card-header layui-bg-cyan">网站设置</div>
+    <div class="layui-card-header layui-bg-cyan">系统设置</div>
     <div class="layui-card-body">
         <div class="layui-tab layui-tab-card">
             <ul class="layui-tab-title">
@@ -19,7 +19,7 @@
                     {if count($fieldList)}
                         <div class="layui-form-item">
                             <div>
-                                <button class="layui-btn" lay-submit="" lay-filter="formSubmit">立即提交</button>
+                                <button class="layui-btn" lay-submit="" lay-filter="formSubmit" lay-close="self">立即提交</button>
                             </div>
                         </div>
                     {/if}
