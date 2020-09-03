@@ -24,11 +24,7 @@
 
 /** header样式 */
 .layui-layout-admin .layui-header {
-    background-color: #3A3D49;
-}
-
-.layui-layout-admin .layui-header {
-    background-color: #3A3D49;
+    background-color: #282b33;
 }
 
 .layui-layout-admin .layui-header .lake-admin-skin-active {
