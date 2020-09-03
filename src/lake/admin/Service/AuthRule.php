@@ -57,7 +57,7 @@ class AuthRule
                         $exta = "?" . $a['parameter'];
                     }
                     
-                    $url = (string) url("{$name}{$exta}", ["menuid" => $id]);
+                    $url = (string) url("{$name}{$exta}");
                 }
                 
                 $array = [

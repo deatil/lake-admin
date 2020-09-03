@@ -70,7 +70,6 @@ class Menu
                 'is_menu' => isset($rs['is_menu']) ? $rs['is_menu'] : 0,
                 'status' => 1,
             ];
-            $newData['id'] = md5(time().md5($newData['module']).md5($newData['title']).md5($newData['module']).lake_get_random_string(12));
 
             $result = AuthRuleModel::create($newData);
             if (!$result) {

@@ -64,7 +64,6 @@ class Event extends Base
                 return $this->error($result);
             }
             
-            $data['id'] = md5(time().lake_to_guid_string(time()));
             if (isset($data['status']) 
                 && $data['status'] == 1
             ) {
