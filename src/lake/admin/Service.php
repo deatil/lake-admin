@@ -46,16 +46,13 @@ class Service extends BaseService
             
             // 初始化模块
             (new ModuleInitService)->handle();
-        }
-        
-        $this->app->event->listen('HttpRun', function () {
-            $this->app->middleware->add(LakeAdminAppMap::class);
-        }, true);
-        
-        if ($this->isLakeAdminInstallCli() !== true) {
-            // 全部模块
+            
+            $this->app->event->listen('HttpRun', function () {
+                $this->app->middleware->add(LakeAdminAppMap::class);
+            }, true);
+            
+            // 导入模块
             $this->app->event->listen('HttpRun', function ($params) {
-                // 导入模块
                 $this->app->middleware->add(LoadModule::class);
             });
         }

@@ -83,6 +83,7 @@ layui.define([
                 itemSelector: 'li.lake-admin-tab-item',
                 dragSelector: ".item-dragsort,.js-dragsort",
                 placeHolderTemplate: "<li class='lake-admin-tab-item'></li>",
+                dragBetween: true,
                 scrollSpeed: 5
             });
             
