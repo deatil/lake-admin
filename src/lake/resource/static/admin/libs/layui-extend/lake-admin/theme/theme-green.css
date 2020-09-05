@@ -271,3 +271,10 @@
     border-left: 5px solid #00A65A !important;
 }
 
+.lake-admin .popup-tips .layui-nav .layui-nav-item a {
+    color: #b8c7ce !important;
+}
+.lake-admin .popup-tips .layui-nav .layui-nav-item a:hover {
+    color: #e4f9ea;
+    background: rgba(0, 166, 90, 0.3);
+}

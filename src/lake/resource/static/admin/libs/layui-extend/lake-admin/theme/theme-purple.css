@@ -275,3 +275,11 @@
 .layui-elem-quote {
     border-left: 5px solid #722ED1 !important;
 }
+
+.lake-admin .popup-tips .layui-nav .layui-nav-item a {
+    color: #b8c7ce !important;
+}
+.lake-admin .popup-tips .layui-nav .layui-nav-item a:hover {
+    color: #e4f9ea;
+    background: rgba(114, 46, 209, 0.3);
+}
