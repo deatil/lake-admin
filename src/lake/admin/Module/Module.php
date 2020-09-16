@@ -59,24 +59,6 @@ class Module implements ModuleContract
     
     // 安装模块失败内容
     protected $error = '安装模块失败';
-
-    /**
-     * @param 单例
-     * @return static
-     *
-     * @create 2019-8-5
-     * @author deatil
-     */
-    public static function instance($options = [])
-    {
-        static $instance = null;
-        
-        if (is_null($instance)) {
-            $instance = new static($options);
-        }
-        
-        return $instance;
-    }
     
     /**
      * 构造方法
@@ -1033,7 +1015,7 @@ class Module implements ModuleContract
         }
         
         // 设置自定义的安装模块
-        $installModules = Config::get('install_modules');
+        $installModules = Config::get('app.install_modules');
         if (in_array($name, $installModules)) {
             return true;
         }
