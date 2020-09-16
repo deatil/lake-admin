@@ -32,7 +32,7 @@ class Profile extends Base
             $data['avatar'] = $post['avatar'];
 
             $status = AdminModel::where([
-                    'id' => $post['id'],
+                    'id' => $adminInfo['id'],
                 ])
                 ->data($data)
                 ->update();

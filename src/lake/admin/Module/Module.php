@@ -4,23 +4,20 @@ namespace Lake\Admin\Module;
 
 use Composer\Autoload\ClassLoader;
 
-use think\Container;
-use think\facade\Db;
 use think\facade\Event;
 use think\facade\Cache;
 use think\facade\Config;
 
-use Lake\File;
-use Lake\Sql;
-use Lake\Symlink;
-
-use Lake\Admin\Model\Event as EventModel;
 use Lake\Admin\Model\Module as ModuleModel;
 use Lake\Admin\Model\AuthRule as AuthRuleModel;
 
 use Lake\Admin\Service\Module as ModuleService;
 
-use Lake\Admin\Module\Menu;
+use Lake\Admin\Module\Contracts\Module as ModuleContract;
+use Lake\Admin\Module\Menu as ModuleMenu;
+use Lake\Admin\Module\Event as ModuleEvent;
+
+use Lake\Admin\Module\Data\Module as ModuleData;
 
 /**
  * 模块管理
@@ -28,7 +25,7 @@ use Lake\Admin\Module\Menu;
  * @create 2019-7-9
  * @author deatil
  */
-class Module
+class Module implements ModuleContract
 {
     // 根目录
     protected $rootPath;
@@ -172,7 +169,7 @@ class Module
             foreach ($dirsArr as $module) {
                 $moduleInfo = $this->getInfoFromLocalFile($module);
                 if ($moduleInfo !== false) {
-                    $moduleInfo = $this->parseModuleConfig($moduleInfo);
+                    $moduleInfo = Tool::parseModuleConfig($moduleInfo);
                     $list[$module] = $moduleInfo;
                 }
             }
@@ -183,7 +180,7 @@ class Module
         if (!empty($composerModules)) {
             foreach ($composerModules as $composerModule) {
                 if (isset($composerModule['module']) && !empty($composerModule['module'])) {
-                    $composerModule = $this->parseModuleConfig($composerModule);
+                    $composerModule = Tool::parseModuleConfig($composerModule);
                     $list[$composerModule['module']] = $composerModule;
                 }
             }
@@ -299,7 +296,7 @@ class Module
         
         $moduleConfig = include $this->modulePath . $name . DIRECTORY_SEPARATOR . 'info.php';
         
-        $config = $this->parseModuleConfig($moduleConfig);
+        $config = Tool::parseModuleConfig($moduleConfig);
         
         if (empty($config['path'])) {
             $config['path'] = $this->modulePath . $name;
@@ -348,56 +345,6 @@ class Module
             $this->error = '模块信息错误！';
             return false;
         }
-        
-        return $config;
-    }
-
-    /**
-     * 解析格式化模块配置为正确配置
-     * @param type $name 模块名(目录名)
-     * @return array
-     *
-     * @create 2020-7-25
-     * @author deatil
-     */
-    public function parseModuleConfig($moduleConfig = [])
-    {
-        $defaultConfig = [
-            // 模块目录
-            'module' => '',
-            // 模块名称
-            'name' => '',
-            // 模块简介
-            'introduce' => '',
-            // 模块作者
-            'author' => '',
-            // 作者地址
-            'authorsite' => '',
-            // 作者邮箱
-            'authoremail' => '',
-            // 版本号，请不要带除数字外的其他字符
-            'version' => '',
-            // 适配最低lake-admin版本，
-            'adaptation' => '',
-            // 模块路径，默认为空，自定义包插件可填写
-            'path' => '',
-            // 签名
-            'sign' => '',
-            // 依赖模块
-            'need_module' => [],
-            // 设置
-            'setting' => [],
-            // 事件类
-            'event' => [],
-            // 菜单
-            'menus' => [],
-            // 数据表，不用加表前缀
-            'tables' => [],
-            // 演示数据
-            'demo' => 0,
-        ];
-        
-        $config = array_merge($defaultConfig, $moduleConfig);
         
         return $config;
     }
@@ -453,22 +400,20 @@ class Module
         $loader->addPsr4($appNamespace . '\\' . $name . '\\', $namespaceModulePath . DIRECTORY_SEPARATOR);
         $loader->register();
         
-        // 保存在安装表
+        // 保存到安装表
         if (!$this->installModuleConfig($name, $config)) {
             $this->error = '安装失败！';
             return false;
         }
         
         // 执行安装脚本
-        $installScript = $this->runScript($name);
+        $installScript = Tool::runScript($name);
         if ($installScript === false) {
             return false;
         }
         
         // 执行菜单项安装
-        if (isset($config['menus']) 
-            && !empty($config['menus'])
-        ) {
+        if (isset($config['menus'])) {
             if ($this->installMenu($name, $config['menus']) !== true) {
                 return false;
             }
@@ -476,17 +421,17 @@ class Module
         
         // 安装事件
         if (isset($config['event']) && !empty($config['event'])) {
-            $this->installModuleEvent($name, $config['event']);
+            ModuleEvent::install($name, $config['event']);
         }
         
         // 安装结束，最后调用安装脚本完成
-        $installScript = $this->runScript($name, 'end');
+        $installScript = Tool::runScript($name, 'end');
         if ($installScript === false) {
             return false;
         }
         
         // 更新缓存
-        $this->clearModuleCache();
+        $this->clearCache();
         
         return true;
     }
@@ -521,33 +466,32 @@ class Module
         }
         
         // 执行卸载脚本
-        $installScript = $this->runScript($name, 'run', 'Uninstall');
+        $installScript = Tool::runScript($name, 'run', 'Uninstall');
         if ($installScript === false) {
             return false;
         }
         
         // 删除
-        if (ModuleModel::where([
-            'module' => $name,
-        ])->delete() === false) {
+        $deleteStatus = ModuleData::delete($name);
+        if ($deleteStatus === false) {
             $this->error = '卸载失败！';
             return false;
         }
         
         // 删除菜单项
-        $this->uninstallMenu($name);
+        ModuleMenu::uninstall($name);
         
         // 去除对应行为
-        $this->uninstallModuleEvent($name);
+        ModuleEvent::uninstall($name);
         
         // 卸载结束，最后调用卸载脚本完成
-        $installScript = $this->runScript($name, 'end', 'Uninstall');
+        $installScript = Tool::runScript($name, 'end', 'Uninstall');
         if ($installScript === false) {
             return false;
         }
         
         // 更新缓存
-        $this->clearModuleCache();
+        $this->clearCache();
         
         return true;
     }
@@ -579,7 +523,7 @@ class Module
         @set_time_limit(0);
         
         // 执行更新脚本
-        $installScript = $this->runScript($name, 'run', 'Upgrade');
+        $installScript = Tool::runScript($name, 'run', 'Upgrade');
         if ($installScript === false) {
             return false;
         }
@@ -597,27 +541,27 @@ class Module
         }
         
         // 执行菜单项安装
-        $this->uninstallMenu($name);
-        if (isset($config['menus']) && !empty($config['menus'])) {
+        ModuleMenu::uninstall($name);
+        if (isset($config['menus'])) {
             if ($this->installMenu($name, $config['menus']) === false) {
                 return false;
             }
         }
         
         // 安装行为
-        $this->uninstallModuleEvent($name);
+        ModuleEvent::uninstall($name);
         if (isset($config['event']) && !empty($config['event'])) {
-            $this->installModuleEvent($name, $config['event']);
+            ModuleEvent::install($name, $config['event']);
         }
         
         // 更新结束，最后调用安装脚本完成
-        $installScript = $this->runScript($name, 'end', 'Upgrade');
+        $installScript = Tool::runScript($name, 'end', 'Upgrade');
         if ($installScript === false) {
             return false;
         }
         
         // 更新缓存
-        $this->clearModuleCache();
+        $this->clearCache();
         
         return true;
     }
@@ -729,62 +673,6 @@ class Module
     }
     
     /**
-     * 安装模块事件类
-     * @param type $name 模块名称
-     * @param type $events 事件类信息
-     * @return boolean
-     *
-     * @create 2019-8-5
-     * @author deatil
-     */
-    private function installModuleEvent($name = '', $events = [])
-    {
-        if (empty($name)) {
-            $this->error = '模块名称不能为空！';
-            return false;
-        }
-        
-        if (empty($events)) {
-            $this->error = '事件类信息不能为空！';
-            return false;
-        }
-        
-        foreach ($events as $event) {
-            EventModel::create([
-                'module' => $name,
-                'name' => $event['name'],
-                'class' => $event['class'],
-                'description' => $event['description'],
-                'listorder' => isset($event['listorder']) ? $event['listorder'] : 100,
-                'status' => (isset($event['status']) && $event['status'] == 1) ? 1 : 0,
-            ]);
-        }
-        
-    }
-    
-    /**
-     * 卸载摸板事件
-     * @param type $name
-     * @return boolean
-     *
-     * @create 2019-8-5
-     * @author deatil
-     */
-    private function uninstallModuleEvent($name = '')
-    {
-        if (empty($name)) {
-            $this->error = '模块名称不能为空！';
-            return false;
-        }
-        
-        EventModel::where([
-            'module' => $name,
-        ])->delete();
-        
-        return true;
-    }
-    
-    /**
      * 安装菜单项
      * @param type $name 模块名称
      * @param type $file 文件
@@ -796,7 +684,6 @@ class Module
     private function installMenu($name = '', $menu = [])
     {
         if (empty($name)) {
-            $this->error = '模块名称不能为空！';
             return false;
         }
         
@@ -804,34 +691,13 @@ class Module
             return false;
         }
         
-        $Menu = (new Menu);
-        $status = $Menu->installModuleMenu($menu, $this->getInfoFromFile($name));
+        $status = ModuleMenu::install($menu, $this->getInfoFromFile($name));
         if ($status === true) {
             return true;
         } else {
-            $this->error = $Menu->getError() ?: '安装菜单项出现错误！';
+            $this->error = '安装菜单项出现错误！';
             return false;
         }
-    }
-    
-    /**
-     * 卸载菜单项项
-     * @param type $name
-     * @return boolean
-     *
-     * @create 2019-8-5
-     * @author deatil
-     */
-    private function uninstallMenu($name = '')
-    {
-        if (empty($name)) {
-            $this->error = '模块名称不能为空！';
-            return false;
-        }
-        
-        (new Menu)->delModuleMenu($name);
-        
-        return true;
     }
     
     /**
@@ -845,31 +711,10 @@ class Module
      */
     public function installStatic($name = '', $fromPath = '')
     {
-        if (empty($name)) {
-            $this->error = '模块名称不能为空！';
-            return false;
-        }
-        
-        $name = strtolower($name);
-        
-        // 静态资源文件软链接
-        if (empty($fromPath)) {
-            $fromPath = $this->modulePath 
-                . $name . DIRECTORY_SEPARATOR 
-                . "static" . DIRECTORY_SEPARATOR;
-        }
-        
-        $toPath = $this->staticPath . DIRECTORY_SEPARATOR 
-            . $name . DIRECTORY_SEPARATOR;
-        
-        // 创建静态资源文件软链接
-        $status = Symlink::make($fromPath, $toPath);
-        if ($status === false) {
-            $this->error = '创建模块静态资源软链接失败！';
-            return false;
-        }
-        
-        return true;
+        return (new Statics)
+            ->withModulePath($this->modulePath)
+            ->withStaticPath($this->staticPath)
+            ->install($name, $fromPath);
     }
 
     /**
@@ -880,59 +725,9 @@ class Module
      */    
     public function uninstallStatic($name = '')
     {
-        if (empty($name)) {
-            $this->error = '模块名称不能为空！';
-            return false;
-        }
-        
-        // 移除静态资源软链接
-        $moduleStatic = $this->staticPath . DIRECTORY_SEPARATOR
-            . strtolower($name) . DIRECTORY_SEPARATOR;
-        if (file_exists($moduleStatic)) {
-            Symlink::remove($moduleStatic);
-        }
-        
-        return true;
-    }
-
-    /**
-     * 执行安装脚本
-     * @param type $name 模块名(目录名)
-     * @return boolean
-     *
-     * @create 2019-8-5
-     * @author deatil
-     */
-    private function runScript(
-        $name = '', 
-        $type = 'run', 
-        $dir = 'Install'
-    ) {
-        if (empty($name)) {
-            $this->error = '模块名不嫩为空';
-            return false;
-        }
-        
-        // 检查是否有安装脚本
-        $class = "\\app\\{$name}\\{$dir}";
-        if (!class_exists($class)) {
-            return true;
-        }
-        
-        $installObj = Container::getInstance()->make($class);
-        
-        if (!method_exists($installObj, $type)) {
-            $this->error = '安装脚本错误';
-            return true;
-        }
-        
-        // 执行安装
-        if (false === Container::getInstance()->invoke([$installObj, $type], [])) {
-            $this->error = '安装模块失败';
-            return false;
-        }
-        
-        return true;
+        return (new Statics)
+            ->withStaticPath($this->staticPath)
+            ->uninstall($name);
     }
 
     /**
@@ -945,23 +740,20 @@ class Module
     public function installRollback($name = '')
     {
         if (empty($name)) {
-            $this->error = '模块名称不能为空！';
             return false;
         }
         
         // 删除安装状态
-        ModuleModel::where([
-            'module' => $name,
-        ])->delete();
+        ModuleData::delete($name);
         
         // 删除菜单项
-        $this->uninstallMenu($name);
+        ModuleMenu::uninstall($name);
         
         // 去除对应行为
-        $this->uninstallModuleEvent($name);
+        ModuleEvent::uninstall($name);
         
         // 清除缓存
-        $this->clearModuleCache();
+        $this->clearCache();
     }
 
     /**
@@ -974,30 +766,17 @@ class Module
     public function upgradeRollback($name = '')
     {
         if (empty($name)) {
-            $this->error = '模块名称不能为空！';
             return false;
         }
         
-        ModuleModel::where([
-            'module' => $name,
-        ])->update([
-            'status' => 0,
-        ]);
+        ModuleData::disable($name);
         
-        AuthRuleModel::where([
-            'module' => $name,
-        ])->update([
-            'status' => 0,
-        ]);
+        ModuleEvent::disable($name);
         
-        EventModel::where([
-            'module' => $name,
-        ])->update([
-            'status' => 0,
-        ]);
+        ModuleMenu::disable($name);
         
         // 清除缓存
-        $this->clearModuleCache();
+        $this->clearCache();
     }
 
     /**
@@ -1011,12 +790,10 @@ class Module
     public function isInstall($name = '')
     {
         if (empty($name)) {
-            $this->error = '模块名称不能为空！';
             return false;
         }
         
-        $moduleList = (new ModuleService)->getList();
-        return (isset($moduleList[$name]) && $moduleList[$name]) ? true : false;
+        return (new ModuleService)->isInstall($name);
     }
     
     /**
@@ -1025,7 +802,7 @@ class Module
      * @create 2019-7-14
      * @author deatil
      */
-    public function enable($name)
+    public function enable($name = '')
     {
         if (empty($name)) {
             $this->error = '模块名称不能为空！';
@@ -1037,31 +814,18 @@ class Module
             return false;
         }
         
-        $status = ModuleModel::where([
-            'module' => $name,
-        ])->update([
-            'status' => 1,
-        ]);
-        
+        $status = ModuleData::enable($name);
         if ($status === false) {
             $this->error = '模块启用失败！';
             return false;
         }
         
-        EventModel::where([
-            'module' => $name,
-        ])->update([
-            'status' => 1,
-        ]);
+        ModuleEvent::enable($name);
         
-        AuthRuleModel::where([
-            'module' => $name,
-        ])->update([
-            'status' => 1,
-        ]);
+        ModuleMenu::enable($name);
         
         // 更新缓存
-        $this->clearModuleCache();
+        $this->clearCache();
         
         return true;
     }
@@ -1072,7 +836,7 @@ class Module
      * @create 2019-7-14
      * @author deatil
      */
-    public function disable($name)
+    public function disable($name = '')
     {
         if (empty($name)) {
             $this->error = '模块名称不能为空！';
@@ -1084,31 +848,18 @@ class Module
             return false;
         }
         
-        $status = ModuleModel::where([
-            'module' => $name,
-        ])->update([
-            'status' => 0,
-        ]);
-        
+        $status = ModuleData::disable($name);
         if ($status === false) {
             $this->error = '模块禁用失败！';
             return false;
         }
         
-        EventModel::where([
-            'module' => $name,
-        ])->update([
-            'status' => 0,
-        ]);
+        ModuleEvent::disable($name);
         
-        AuthRuleModel::where([
-            'module' => $name,
-        ])->update([
-            'status' => 0,
-        ]);
+        ModuleMenu::disable($name);
         
         // 更新缓存
-        $this->clearModuleCache();
+        $this->clearCache();
         
         return true;
     }
@@ -1121,29 +872,18 @@ class Module
      */
     public function checkDependence($data = [])
     {
-        $need = [];
-        if (empty($data) || !is_array($data)) {
-            return $need;
-        }
-        
-        foreach ($data as $key => $value) {
-            if (!isset($value[2])) {
-                $value[2] = '=';
-            }
-            
-            // 当前版本
-            $currVersion = ModuleModel::where('module', $value[0])->value('version');
-            
-            $result = version_compare($currVersion, $value[1], $value[2]);
-            $need[$key] = [
-                'module' => $value[0],
-                'version' => $currVersion ? $currVersion : '未安装',
-                'version_need' => $value[2] . $value[1],
-                'result' => $result ? '<i class="iconfont icon-success text-success"></i>' : '<i class="iconfont icon-delete text-danger"></i>',
-            ];
-        }
-        
-        return $need;
+        return Tool::checkDependence($data);
+    }
+    
+    /**
+     * 执行数据库脚本
+     * @param string $sqlFile 数据库脚本文件
+     * @param string $dbPre 数据库前缀
+     * @return boolean
+     */
+    public function runSQL($sqlFile = '', $dbPre = '')
+    {
+        return Tool::runSQL($sqlFile, $dbPre);
     }
     
     /**
@@ -1276,54 +1016,6 @@ class Module
     }
     
     /**
-     * 执行数据库脚本
-     * @param string $sqlFile 数据库脚本文件
-     * @param string $dbPre 数据库前缀
-     * @return boolean
-     *
-     * @create 2019-8-5
-     * @author deatil
-     */
-    public function runSQL($sqlFile = '', $dbPre = '')
-    {
-        if (empty($sqlFile)) {
-            $this->error = 'SQL文件不能为空';
-            return false;
-        }
-        
-        if (!file_exists($sqlFile)) {
-            $this->error = 'SQL文件不存在';
-            return false;
-        }
-        
-        $sqlStatement = Sql::getSqlFromFile($sqlFile);
-        if (empty($sqlStatement)) {
-            $this->error = 'SQL文件内容为空';
-            return false;
-        }
-        
-        if (empty($dbPre)) {
-            $dbPre = app()->db->connect()->getConfig('prefix');
-        }
-    
-        foreach ($sqlStatement as $value) {
-            try {
-                $value = str_replace([
-                    'pre__',
-                ], [
-                    $dbPre,
-                ], $value);
-                Db::execute($value);
-            } catch (\Exception $e) {
-                $this->error = '导入SQL失败';
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    
-    /**
      * 检测安装模块
      *
      * @create 2019-7-14
@@ -1400,7 +1092,7 @@ class Module
      * @create 2020-3-30
      * @author deatil
      */
-    private function clearModuleCache()
+    private function clearCache()
     {
         // 清空缓存
         cache('lake_admin_module_list', null);

@@ -32,6 +32,41 @@ class AdminBase extends Base
     }
     
     /**
+     * 空操作
+     *
+     * @create 2020-4-10
+     * @author deatil
+     */
+    public function _empty()
+    {
+        $this->error('该页面不存在！');
+    }
+    
+    /**
+     * 设置模块名称
+     *
+     * @create 2020-9-13
+     * @author deatil
+     */
+    protected function withModule($module)
+    {
+        $this->module = $module;
+        return $this;
+    }
+    
+    /**
+     * 设置模块模版
+     *
+     * @create 2020-9-13
+     * @author deatil
+     */
+    protected function withViewPath($viewPath)
+    {
+        $this->viewPath = $viewPath;
+        return $this;
+    }
+    
+    /**
      * 重写获取模版方法
      *
      * @create 2020-4-10
@@ -70,17 +105,6 @@ class AdminBase extends Base
         app('config')->set([
             'view_path' => $viewPath,
         ], 'view');
-    }
-    
-    /**
-     * 空操作
-     *
-     * @create 2020-4-10
-     * @author deatil
-     */
-    public function _empty()
-    {
-        $this->error('该页面不存在！');
     }
 
 }

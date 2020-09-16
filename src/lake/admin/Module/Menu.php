@@ -13,8 +13,6 @@ use Lake\Admin\Model\AuthRuleAccess as AuthRuleAccessModel;
  */
 class Menu
 {
-    protected $error = '错误';
-
     /**
      * 模块安装时进行菜单注册
      * @param array $data 菜单数据
@@ -22,15 +20,13 @@ class Menu
      * @param type $parentid 父菜单ID
      * @return boolean
      */
-    public function installModuleMenu($data, $config, $parentid = 0)
+    public static function install($data, $config, $parentid = 0)
     {
         if (empty($data) || !is_array($data)) {
-            $this->error = '菜单没有数据！';
             return false;
         }
         
-        if (empty($config) || !is_array($data)) {
-            $this->error = '模块配置信息为空！';
+        if (empty($config) || !is_array($config)) {
             return false;
         }
         
@@ -43,13 +39,11 @@ class Menu
         $moduleName = $config['module'];
         foreach ($data as $rs) {
             if (empty($rs['route'])) {
-                $this->error = '菜单信息配置有误，route 不能为空！';
                 return false;
             }
             
-            $checkMenuRoute = $this->checkMenuRoute($rs['route']);
+            $checkMenuRoute = static::checkMenuRoute($rs['route']);
             if ($checkMenuRoute === false) {
-                $this->error = '菜单信息配置有误，route 格式错误！';
                 return false;
             }
            
@@ -78,7 +72,7 @@ class Menu
             
             //是否有子菜单
             if (!empty($rs['child'])) {
-                if ($this->installModuleMenu($rs['child'], $config, $result['id']) !== true) {
+                if (static::install($rs['child'], $config, $result['id']) !== true) {
                     return false;
                 }
             }
@@ -95,7 +89,7 @@ class Menu
      * @param type $moduleName 模块名称
      * @return boolean
      */
-    public function delModuleMenu($moduleName)
+    public static function uninstall($moduleName)
     {
         if (empty($moduleName)) {
             return false;
@@ -110,11 +104,53 @@ class Menu
     }
     
     /**
+     * 启用
+     */
+    public static function enable($name = '')
+    {
+        if (empty($name)) {
+            return false;
+        }
+        
+        $status = AuthRuleModel::where([
+            'module' => $name,
+        ])->update([
+            'status' => 1,
+        ]);
+        if ($status === false) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * 禁用
+     */
+    public static function disable($name = '')
+    {
+        if (empty($name)) {
+            return false;
+        }
+        
+        $status = AuthRuleModel::where([
+            'module' => $name,
+        ])->update([
+            'status' => 0,
+        ]);
+        if ($status === false) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
      * 检测route是否正确
      * @param type $route route内容
      * @return array
      */
-    private function checkMenuRoute($route)
+    protected static function checkMenuRoute($route)
     {
         $route = explode('/', $route);
         if (count($route) < 3) {

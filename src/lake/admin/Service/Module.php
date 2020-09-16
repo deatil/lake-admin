@@ -50,11 +50,14 @@ class Module
      * @create 2020-7-24
      * @author deatil
      */
-    function isInstall($name)
+    public function isInstall($name)
     {
+        if (empty($name)) {
+            return false;
+        }
+        
         $name = ModuleModel::where([
                 'module' => $name,
-                'status' => 1,
             ])
             ->field('name')
             ->find();

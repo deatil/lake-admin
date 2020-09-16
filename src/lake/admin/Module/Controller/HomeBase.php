@@ -40,6 +40,18 @@ class HomeBase extends BaseController
     }
     
     /**
+     * 设置模块模版
+     *
+     * @create 2020-9-13
+     * @author deatil
+     */
+    protected function withViewPath($viewPath)
+    {
+        $this->viewPath = $viewPath;
+        return $this;
+    }
+    
+    /**
      * 重写获取模版方法
      *
      * @create 2020-4-10
