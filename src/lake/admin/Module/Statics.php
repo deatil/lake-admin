@@ -12,11 +12,11 @@ use Lake\Symlink;
  */
 class Statics
 {
-    // 静态资源目录
-    protected $staticPath = null;
-    
     // 模块所处目录路径
     protected $modulePath;
+    
+    // 静态资源目录
+    protected $staticPath = null;
     
     /**
      * 设置模块目录

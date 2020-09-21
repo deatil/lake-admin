@@ -14,13 +14,13 @@
 *  安装 `thinkphp6.0` 框架
 *  配置数据库的连接信息
 *  `composer require lake/lake-admin` 导入lake-admin后台管理系统
-*  cmd里执行 `php think lake-admin:install` 及 `php think lake-admin:service-discover` 初始化 `lake-admin` 管理系统
+*  执行 `php think lake-admin:install` 及 `php think lake-admin:service-discover` 初始化 `lake-admin` 系统
 *  设置网站执行目录为：`public`
 *  后台admin登陆，超级管理员账号及密码：`admin/123456`
+*  部分自定义配置，需要将根目录 `.env.lake` 文件里内容复制到 `.env` 内
 *  模块插件目录：`addon` 文件夹 及 自定义包模块插件
 *  自定义包模块插件可以查看：`lake-admin-addon-lmenu` 插件 及 `lake-admin-addon-lroute` 插件
-*  如果项目迁移，可以执行 `php think lake-admin:repair` 修复静态文件失效问题，已安装模块请根据模块相关文档更新静态文件链接
-*  部分自定义配置，需要将根目录 `.env.lake` 文件里内容复制到 `.env` 内
+*  如果项目迁移，可以执行 `php think lake-admin:repair` 修复系统静态文件失效问题，已安装模块请根据模块相关文档更新模块静态文件链接
 
 
 ### 截图预览

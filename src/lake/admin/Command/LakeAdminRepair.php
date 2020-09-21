@@ -11,7 +11,7 @@ use think\console\Output;
 use Lake\Symlink;
 
 /**
- * lake-admin：修复网站更改路径后问题
+ * lake-admin：修复网站更改路径后静态文件失效问题
  *
  * php think lake-admin:repair
  *
@@ -20,7 +20,6 @@ use Lake\Symlink;
  */
 class LakeAdminRepair extends Command
 {
-
     /**
      * 配置
      *
@@ -41,6 +40,17 @@ class LakeAdminRepair extends Command
      * @author deatil
      */
     protected function execute(Input $input, Output $output)
+    {
+        $this->adminStatic($input, $output);
+    }
+
+    /**
+     * 系统静态文件
+     *
+     * @create 2020-9-21
+     * @author deatil
+     */
+    protected function adminStatic(Input $input, Output $output)
     {
         // 创建静态文件软链接
         $adminStaticPath = env('lake_admin_app_path') . DIRECTORY_SEPARATOR 
