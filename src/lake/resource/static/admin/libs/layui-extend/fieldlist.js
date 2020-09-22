@@ -1,5 +1,5 @@
 /*!
- * fieldlist.js v1.0.2
+ * fieldlist.js v1.0.3
  * https://github.com/deatil/lake-admin
  * 
  * Apache License 2.0 © Deatil
@@ -95,6 +95,8 @@
             var main = $(this).data("main") || opts.main;
             var template = $(this).data("template") || opts.template;
             var textarea = $(this).data("textarea") || opts.textarea;
+            var dataType = $(this).data("datatype") || opts.dataType;
+            var tagName = $(this).data("tag") || opts.tag;
             
             var mainTpl = '<dl class="fieldlist">\
                 <dd class="fieldlist-head">\
@@ -164,11 +166,15 @@
                     }
                     data[match[1]][match[2]] = value;
                 });
-                var result = {};
+                var result = (dataType == 'list') ? [] : {};
                 $.each(data, function (i, j) {
                     if (j) {
-                        if (j.key != '') {
-                            result[j.key] = j.value;
+                        if (dataType != 'list') {
+                            if (j.key != '') {
+                                result[j.key] = j.value;
+                            }
+                        } else {
+                            result.push(j);
                         }
                     }
                 });
@@ -198,18 +204,18 @@
             
             // 移除控制
             container.on("click", ".btn-remove,.js-remove", function () {
-                $(this).closest("dd").remove();
+                $(this).closest(tagName).remove();
                 refresh();
             });
             
             // 拖拽排序
             container.dragsort({
-                itemSelector: 'dd.fieldlist-item',
+                itemSelector: tagName + '.fieldlist-item',
                 dragSelector: ".btn-dragsort,.js-dragsort",
                 dragEnd: function () {
                     refresh();
                 },
-                placeHolderTemplate: "<dd class='fieldlist-item'></dd>",
+                placeHolderTemplate: $("<" + tagName + " class='fieldlist-item' />"),
                 scrollSpeed: 15
             });
             
@@ -224,7 +230,7 @@
                 } catch (e) {
                 }
                 $.each(json, function (i, j) {
-                    $(".btn-append,.js-append", container).trigger('click', {
+                    $(".btn-append,.js-append", container).trigger('click', (dataType == 'list') ? j : {
                         key: i,
                         value: j
                     });
@@ -241,6 +247,8 @@
         main: "",
         template: "",
         textarea: "",
+        tag: "dd",
+        dataType: "object", // object or list
     };
     
 });
