@@ -1,12 +1,18 @@
 @charset "utf-8";
 
-::selection{color:#fff !important;background-color:#009688 !important}
-::-moz-selection{color:#fff !important;background-color:#009688 !important}
+::selection{
+    color:#fff !important;
+    background-color:#009688 !important;
+}
+::-moz-selection{
+    color:#fff !important;
+    background-color:#009688 !important;
+}
 
 /**自定义滚动条样式 */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px
+    width: 10px;
+    height: 10px;
 }
 ::-webkit-scrollbar-track {
     background-color: transparent;
@@ -19,6 +25,12 @@
     -webkit-border-radius: 2em;
     -moz-border-radius: 2em;
     border-radius: 2em
+}
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(0,0,0,.15);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(128,135,139,.8);
 }
 
 code {
