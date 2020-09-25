@@ -27,6 +27,7 @@ class AdminAuth
         $mode = 'url', 
         $relation = 'or'
     ) {
+        $Auth = app()->auth;
         $checkStatus = $Auth->check($rule, Env::get('admin_id'), $relation, $type, $mode);
         if (false === $checkStatus) {
             return false;
