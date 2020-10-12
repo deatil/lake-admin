@@ -11,19 +11,19 @@ namespace Lake\Admin\Auth;
 class Parser
 {
     /** 
-     * param string
+     * @param string
      */
     protected $url = '';
     
     /** 
-     * param string
+     * @param string
      */
     protected $path = '';
     
     /** 
-     * param string
+     * @param array
      */
-    protected $param = '';
+    protected $param = [];
     
     /**
      * 设置
@@ -65,7 +65,7 @@ class Parser
     
     /**
      * 获取参数
-     * @return string
+     * @return array
      *
      * @create 2020-8-27
      * @author deatil
