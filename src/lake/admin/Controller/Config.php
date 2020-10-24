@@ -184,7 +184,7 @@ class Config extends Base
             }
             
             cache('lake_admin_config', null);
-            return $this->success('设置更新成功');
+            return $this->success(__('设置更新成功'));
         } else {
             $configList = ConfigModel::where('group', $group)
                 ->where([
@@ -244,11 +244,11 @@ class Config extends Base
             
             $status = ConfigModel::create($data);
             if (false === $status) {
-                $this->error('配置添加失败！');
+                $this->error(__('配置添加失败！'));
             }
             
             cache('lake_admin_config', null); //清空缓存配置
-            $this->success('配置添加成功~');
+            $this->success(__('配置添加成功！'));
         } else {
             $fieldType = FieldTypeModel::order('listorder')
                 ->column('name,title,ifoption,ifstring');
@@ -285,7 +285,7 @@ class Config extends Base
             }
             
             if (!isset($data['id']) || empty($data['id'])) {
-                return $this->error('配置ID不能为空！');
+                return $this->error(__('配置ID不能为空！'));
             }
             
             $id = $data['id'];
@@ -295,7 +295,7 @@ class Config extends Base
                 'id' => $id,
             ])->find();
             if (empty($info)) {
-                $this->error('信息不存在！');
+                $this->error(__('信息不存在！'));
             }
             
             if ($info['is_system'] == 1) {
@@ -306,15 +306,15 @@ class Config extends Base
                 'id' => $id,
             ])->update($data);
             if ($status === false) {
-                $this->error('配置编辑失败！');
+                $this->error(__('配置编辑失败！'));
             }
             
             cache('lake_admin_config', null); //清空缓存配置
-            $this->success('配置编辑成功~');
+            $this->success(__('配置编辑成功！'));
         } else {
             $id = $this->request->param('id');
             if (empty($id) || strlen($id) != 32) {
-                $this->error('参数错误！');
+                $this->error(__('参数错误！'));
             }
             
             $fieldType = FieldTypeModel::order('listorder')
@@ -324,7 +324,7 @@ class Config extends Base
                 'id' => $id,
             ])->find();
             if (empty($info)) {
-                $this->error('信息不存在！');
+                $this->error(__('信息不存在！'));
             }
             
             // 模块列表
@@ -350,34 +350,34 @@ class Config extends Base
     public function del()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id');
         if (empty($id) || strlen($id) != 32) {
-            $this->error('参数错误！');
+            $this->error(__('参数错误！'));
         }
         
         $info = ConfigModel::where([
             'id' => $id,
         ])->find();
         if (empty($info)) {
-            $this->error('信息不存在！');
+            $this->error(__('信息不存在！'));
         }
         
         if ($info['is_system'] == 1) {
-            $this->error('系统默认配置不可操作！');
+            $this->error(__('系统默认配置不可操作！'));
         }
         
         $re = ConfigModel::where([
             'id' => $id,
         ])->delete();
         if ($re === false) {
-            $this->error('删除失败！');
+            $this->error(__('删除失败！'));
         }
         
         cache('lake_admin_config', null); //清空缓存配置
-        $this->success('删除成功');
+        $this->success(__('删除成功'));
     }
     
     /**
@@ -389,12 +389,12 @@ class Config extends Base
     public function listorder()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id');
         if (empty($id) || strlen($id) != 32) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $listorder = $this->request->param('value/d', 0);
@@ -409,11 +409,11 @@ class Config extends Base
         ]);
         
         if ($rs === false) {
-            $this->error("排序失败！");
+            $this->error(__("排序失败！"));
         }
         
         cache('lake_admin_config', null); //清空缓存配置
-        $this->success("排序成功！");
+        $this->success(__("排序成功！"));
     }
     
     /**
@@ -425,12 +425,12 @@ class Config extends Base
     public function setstate($id, $status)
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id');
         if (empty($id) || strlen($id) != 32) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $status = $this->request->param('status/d');
@@ -444,11 +444,11 @@ class Config extends Base
             'status' => $status,
         ]);
         if ($rs === false) {
-            $this->error('操作失败！');
+            $this->error(__('操作失败！'));
         }
         
         cache('lake_admin_config', null); //清空缓存配置
-        $this->success('操作成功！');
+        $this->success(__('操作成功！'));
     }
     
 }

@@ -190,10 +190,10 @@ class FieldType extends Base
             $rs = FieldTypeModel::create($data);
        
             if ($rs === false) {
-                $this->error("添加失败！");
+                $this->error(__("添加失败！"));
             }
             
-            $this->success("添加成功！");
+            $this->success(__("添加成功！"));
 
         } else {
             // 类型列表
@@ -240,10 +240,10 @@ class FieldType extends Base
             ])->update($data);
             
             if ($rs === false) {
-                $this->error("修改失败！");
+                $this->error(__("修改失败！"));
             }
             
-            $this->success("修改成功！");
+            $this->success(__("修改成功！"));
         } else {
             $id = $this->request->param('id');
             
@@ -251,7 +251,7 @@ class FieldType extends Base
                 "id" => $id,
             ])->find();
             if (empty($data)) {
-                $this->error('信息不存在！');
+                $this->error(__('信息不存在！'));
             }
             
             $this->assign("data", $data);
@@ -275,23 +275,23 @@ class FieldType extends Base
     public function del()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id');
         if (empty($id)) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $data = FieldTypeModel::where([
             "id" => $id,
         ])->find();
         if (empty($data)) {
-            $this->error('信息不存在！');
+            $this->error(__('信息不存在！'));
         }
         
         if ($data['is_system'] == 1) {
-            $this->error('系统字段类型不能被删除！');
+            $this->error(__('系统字段类型不能被删除！'));
         }
         
         $rs = FieldTypeModel::where([
@@ -300,10 +300,10 @@ class FieldType extends Base
             ->delete();
         
         if ($rs === false) {
-            $this->error("删除失败！");
+            $this->error(__("删除失败！"));
         }
         
-        $this->success("删除成功！");
+        $this->success(__("删除成功！"));
     }
 
     /**
@@ -315,12 +315,12 @@ class FieldType extends Base
     public function listorder()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id', '');
         if (empty($id)) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $listorder = $this->request->param('value/d', 100);
@@ -333,10 +333,10 @@ class FieldType extends Base
             ]);
         
         if ($rs === false) {
-            $this->error("排序失败！");
+            $this->error(__("排序失败！"));
         }
         
-        $this->success("排序成功！");
+        $this->success(__("排序成功！"));
     }
     
 }

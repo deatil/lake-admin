@@ -80,10 +80,10 @@ class RuleExtend extends Base
             $rs = AuthRuleExtendModel::create($data);
        
             if ($rs === false) {
-                return $this->error("添加失败！");
+                return $this->error(__("添加失败！"));
             }
             
-            return $this->success("添加成功！");
+            return $this->success(__("添加成功！"));
             
         } else {
             $this->assign("roles", AuthGroupModel::getGroups());
@@ -118,17 +118,17 @@ class RuleExtend extends Base
             ])->update($data);
             
             if ($rs === false) {
-                $this->error("修改失败！");
+                $this->error(__("修改失败！"));
             }
             
-            $this->success("修改成功！");
+            $this->success(__("修改成功！"));
         } else {
             $id = $this->request->param('id');
             $data = AuthRuleExtendModel::where([
                 "id" => $id,
             ])->find();
             if (empty($data)) {
-                $this->error('信息不存在！');
+                $this->error(__('信息不存在！'));
             }
             
             $this->assign("data", $data);
@@ -151,19 +151,19 @@ class RuleExtend extends Base
     public function del()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id');
         if (empty($id)) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $data = AuthRuleExtendModel::where([
             "id" => $id,
         ])->find();
         if (empty($data)) {
-            $this->error('信息不存在！');
+            $this->error(__('信息不存在！'));
         }
         
         $rs = AuthRuleExtendModel::where([
@@ -172,10 +172,10 @@ class RuleExtend extends Base
             ->delete();
         
         if ($rs === false) {
-            $this->error("删除失败！");
+            $this->error(__("删除失败！"));
         }
         
-        $this->success("删除成功！");
+        $this->success(__("删除成功！"));
     }
     
     /**
@@ -187,19 +187,19 @@ class RuleExtend extends Base
     public function data()
     {
         if (!$this->request->isGet()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id');
         if (empty($id)) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $data = AuthRuleExtendModel::where([
             "id" => $id,
         ])->find();
         if (empty($data)) {
-            $this->error('信息不存在！');
+            $this->error(__('信息不存在！'));
         }
         
         $this->assign("data", $data);

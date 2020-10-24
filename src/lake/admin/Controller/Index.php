@@ -109,7 +109,7 @@ class Index extends Base
             $gd = gd_info();
             $sys_info['gdinfo'] = $gd['GD Version'];
         } else {
-            $sys_info['gdinfo'] = "未知";
+            $sys_info['gdinfo'] = __("未知");
         }
         return $sys_info;
     }
@@ -140,7 +140,7 @@ class Index extends Base
                 break;
         }
         
-        $this->success('清理缓存成功');
+        $this->success(__('清理缓存成功'));
     }
 
 }

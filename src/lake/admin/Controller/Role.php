@@ -109,7 +109,7 @@ class Role extends Base
     public function create()
     {
         if (!$this->request->isGet()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         // 清除编辑权限的值
@@ -147,12 +147,12 @@ class Role extends Base
     public function write()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $data = $this->request->post();
         if (empty($data['parentid'])) {
-            $this->error('父角色组不能为空');
+            $this->error(__('父角色组不能为空'));
         }
         
         $check = $this->AuthManagerService->checkGroupForUser($data['parentid']);
@@ -170,10 +170,10 @@ class Role extends Base
         $r = $this->AuthGroupModel->save($data);
         
         if ($r === false) {
-            $this->error('操作失败' . $this->AuthGroupModel->getError());
+            $this->error(__('操作失败！') . $this->AuthGroupModel->getError());
         }
         
-        $this->success('操作成功!');
+        $this->success(__('操作成功！'));
     }
     
     /**
@@ -186,7 +186,7 @@ class Role extends Base
     {
         $id = $this->request->param('id');
         if (empty($id)) {
-            $this->error('角色组不存在！');
+            $this->error(__('角色组不存在！'));
         }
         
         $authGroup = AuthGroupModel::where([
@@ -194,11 +194,11 @@ class Role extends Base
             ])
             ->find($id);
         if (empty($authGroup)) {
-            $this->error('角色组不存在！');
+            $this->error(__('角色组不存在！'));
         }
         
         if ($authGroup['is_system'] == 1) {
-            $this->error('系统默认角色不可操作！');
+            $this->error(__('系统默认角色不可操作！'));
         }
     
         $check = $this->AuthManagerService->checkUserGroup($id);
@@ -247,12 +247,12 @@ class Role extends Base
     public function update()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $data = $this->request->post();
         if (empty($data['parentid'])) {
-            $this->error('父角色组不能为空');
+            $this->error(__('父角色组不能为空'));
         }
         
         $check = $this->AuthManagerService->checkGroupForUser($data['parentid']);
@@ -263,7 +263,7 @@ class Role extends Base
         $data['type'] = AuthGroupModel::TYPE_ADMIN;
         
         if (!isset($data['id']) || empty($data['id'])) {
-            $this->error('角色组ID不存在！');
+            $this->error(__('角色组ID不存在！'));
         }
         
         $authGroup = AuthGroupModel::where([
@@ -271,11 +271,11 @@ class Role extends Base
             ])
             ->find($data['id']);
         if (empty($authGroup)) {
-            $this->error('角色组不存在！');
+            $this->error(__('角色组不存在！'));
         }
         
         if ($authGroup['is_system'] == 1) {
-            $this->error('系统默认角色不可操作！');
+            $this->error(__('系统默认角色不可操作！'));
         }
         
         $check = $this->AuthManagerService->checkUserGroup($data['id']);
@@ -291,10 +291,10 @@ class Role extends Base
             ->update($data);
         
         if ($r === false) {
-            $this->error('操作失败' . $this->AuthGroupModel->getError());
+            $this->error(__('操作失败：') . $this->AuthGroupModel->getError());
         }
         
-        $this->success('操作成功!');
+        $this->success(__('操作成功！'));
     }
     
     /**
@@ -306,12 +306,12 @@ class Role extends Base
     public function delete()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $groupId = $this->request->param('id');
         if (empty($groupId)) {
-            $this->error('角色组不存在！');
+            $this->error(__('角色组不存在！'));
         }
         
         $authGroup = AuthGroupModel::where([
@@ -320,11 +320,11 @@ class Role extends Base
             ])
             ->find();
         if (empty($authGroup)) {
-            $this->error('角色组不存在！');
+            $this->error(__('角色组不存在！'));
         }
         
         if ($authGroup['is_system'] == 1) {
-            $this->error('系统默认角色不可操作！');
+            $this->error(__('系统默认角色不可操作！'));
         }
         
         $check = $this->AuthManagerService->checkUserGroup($groupId);
@@ -338,16 +338,16 @@ class Role extends Base
             ])
             ->count();
         if ($childGroupCount > 0) {
-            $this->error('删除失败，请删除子角色后再删除！');
+            $this->error(__('删除失败，请删除子角色后再删除！'));
         }
         
         $rs = AuthGroupModel::groupDelete($groupId);
         
         if ($rs === false) {
-            $this->error('删除失败！');
+            $this->error(__('删除失败！'));
         }
         
-        $this->success("删除成功！");
+        $this->success(__("删除成功！"));
     }
     
     /**
@@ -361,7 +361,7 @@ class Role extends Base
         if ($this->request->isPost()) {
             $groupId = $this->request->post('id');
             if (empty($groupId)) {
-                $this->error('角色组不存在！');
+                $this->error(__('角色组不存在！'));
             }
         
             $authGroup = AuthGroupModel::where([
@@ -370,7 +370,7 @@ class Role extends Base
                 ])
                 ->find();
             if (empty($authGroup)) {
-                $this->error('角色组不存在');
+                $this->error(__('角色组不存在！'));
             }
             
             $check = $this->AuthManagerService->checkGroupForUser($authGroup['parentid']);
@@ -389,7 +389,7 @@ class Role extends Base
             $rules = $this->AuthManagerService->getUserRightAuth($rules);
             
             if ($authGroup['is_system'] == 1) {
-                $this->error('系统默认角色不可操作！');
+                $this->error(__('系统默认角色不可操作！'));
             }
             
             $check = $this->AuthManagerService->checkUserGroup($groupId);
@@ -417,15 +417,15 @@ class Role extends Base
                 $r = AuthRuleAccessModel::insertAll($ruleAccess);
             
                 if ($r === false) {
-                    $this->error('授权失败');
+                    $this->error(__('授权失败！'));
                 }
             }
             
-            $this->success('授权成功!');
+            $this->success(__('授权成功！'));
         } else {
             $groupId = $this->request->param('group_id');
             if (empty($groupId)) {
-                $this->error('角色组ID不能为空');
+                $this->error(__('角色组ID不能为空！'));
             }
             
             $check = $this->AuthManagerService->checkUserGroup($groupId);
@@ -490,12 +490,12 @@ class Role extends Base
     public function listorder()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id/s', 0);
         if (empty($id)) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $listorder = $this->request->param('value/d', 100);
@@ -506,10 +506,10 @@ class Role extends Base
             'id' => $id,
         ]);
         if ($rs === false) {
-            $this->error("排序失败！");
+            $this->error(__("排序失败！"));
         }
         
-        $this->success("排序成功！");
+        $this->success(__("排序成功！"));
     }
     
 }

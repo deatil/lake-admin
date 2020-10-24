@@ -31,7 +31,7 @@ abstract class Base extends BaseController
      */
     public function _empty()
     {
-        $this->error('该页面不存在！');
+        $this->error(__('该页面不存在！'));
     }
     
     /**

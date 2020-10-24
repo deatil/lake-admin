@@ -62,12 +62,12 @@ class AdminLog extends Base
     public function view()
     {
         if (!$this->request->isGet()) {
-            $this->error('访问错误！');
+            $this->error(__('访问错误！'));
         }
         
         $id = $this->request->param('id');
         if (empty($id)) {
-            $this->error('信息ID错误！');
+            $this->error(__('信息ID错误！'));
         }
         
         $data = AdminlogModel::where([
@@ -75,7 +75,7 @@ class AdminLog extends Base
             ])
             ->find();
         if (empty($data)) {
-            $this->error('信息不存在！');
+            $this->error(__('信息不存在！'));
         }
         
         $this->assign("data", $data);
@@ -91,14 +91,14 @@ class AdminLog extends Base
     public function clear()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $status = AdminlogModel::deleteAMonthago();
         if ($status === false) {
-            $this->error("删除日志失败！");
+            $this->error(__("删除日志失败！"));
         }
         
-        $this->success("删除日志成功！");
+        $this->success(__("删除日志成功！"));
     }
 }

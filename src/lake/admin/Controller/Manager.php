@@ -112,7 +112,7 @@ class Manager extends Base
                 }
                 
                 if ($isAllow === false) {
-                    $this->error('选择权限组错误！');
+                    $this->error(__('选择权限组错误！'));
                 }
             }
             
@@ -120,10 +120,10 @@ class Manager extends Base
             $status = $ManagerService->create($data);
             if ($status === false) {
                 $error = $ManagerService->getError();
-                $this->error($error ? $error : '添加失败！');
+                $this->error($error ? $error : __('添加失败！'));
             }
            
-            $this->success("添加管理员成功！");
+            $this->success(__("添加管理员成功！"));
         } else {
             if (!env('admin_is_root')) {
                 $userChildGroupIds = $this->AuthManagerService->getUserChildGroupIds(env('admin_id'));
@@ -156,12 +156,12 @@ class Manager extends Base
             }
             
             if (empty($data['id'])) {
-                $this->error('参数错误！');
+                $this->error(__('参数错误！'));
             }
             
             if (env('admin_is_root') != 1) {
                 if ($data['id'] == env('admin_id')) {
-                    $this->error('不能修改自己的账户！');
+                    $this->error(__('不能修改自己的账户！'));
                 }
             }
             
@@ -170,11 +170,11 @@ class Manager extends Base
                 ])
                 ->find();
             if (empty($adminInfo)) {
-                $this->error('信息不存在！');
+                $this->error(__('信息不存在！'));
             }
             
             if ($adminInfo['is_system'] == 1) {
-                $this->error('系统默认账户不可操作！');
+                $this->error(__('系统默认账户不可操作！'));
             }
             
             if (isset($data['status'])) {
@@ -196,7 +196,7 @@ class Manager extends Base
                     }
                     
                     if ($isAllow === false) {
-                        $this->error('选择权限组错误！');
+                        $this->error(__('选择权限组错误！'));
                     }
                 }
             }
@@ -205,14 +205,14 @@ class Manager extends Base
             $status = $ManagerService->edit($data);
             if ($status === false) {
                 $error = $ManagerService->getError();
-                $this->error($error ? $error : '修改失败！');
+                $this->error($error ? $error : __('修改失败！'));
             }
             
-            $this->success("修改成功！");
+            $this->success(__("修改成功！"));
         } else {
             $id = $this->request->param('id/s');
             if (empty($id)) {
-                $this->error('参数错误！');
+                $this->error(__('参数错误！'));
             }
             
             $data = AdminModel::where([
@@ -220,11 +220,11 @@ class Manager extends Base
                 ])
                 ->find();
             if (empty($data)) {
-                $this->error('该信息不存在！');
+                $this->error(__('该信息不存在！'));
             }
             
             if ($data['is_system'] == 1) {
-                $this->error('系统默认账户不可操作！');
+                $this->error(__('系统默认账户不可操作！'));
             }
             
             $data['gids'] = AuthGroupAccessModel::where([
@@ -257,12 +257,12 @@ class Manager extends Base
     public function del()
     {
         if (!$this->request->isPost()) {
-            $this->error('访问错误！');
+            $this->error(__('访问错误！'));
         }
         
         $id = $this->request->param('id');
         if (empty($id)) {
-            $this->error('参数错误！');
+            $this->error(__('参数错误！'));
         }
         
         $adminInfo = AdminModel::where([
@@ -270,20 +270,20 @@ class Manager extends Base
             ])
             ->find();
         if (empty($adminInfo)) {
-            $this->error('信息不存在！');
+            $this->error(__('信息不存在！'));
         }
         
         if ($adminInfo['is_system'] == 1) {
-            $this->error('系统默认账户不可操作！');
+            $this->error(__('系统默认账户不可操作！'));
         }
         
         $ManagerService = (new ManagerService);
         $rs = $ManagerService->delete($id);
         if ($rs === false) {
-            $this->error($ManagerService->getError() ?: '删除失败！');
+            $this->error($ManagerService->getError() ?: __('删除失败！'));
         }
         
-        $this->success("删除成功！");
+        $this->success(__("删除成功！"));
     }
     
     /**
@@ -295,19 +295,19 @@ class Manager extends Base
     public function view()
     {
         if (!$this->request->isGet()) {
-            $this->error('访问错误！');
+            $this->error(__('访问错误！'));
         }
         
         $id = $this->request->param('id/s');
         if (empty($id)) {
-            $this->error('参数错误！');
+            $this->error(__('参数错误！'));
         }
         
         $data = AdminModel::where([
             "id" => $id,
         ])->find();
         if (empty($data)) {
-            $this->error('该信息不存在！');
+            $this->error(__('信息不存在！'));
         }
         
         $gids = AuthGroupAccessModel::where([
@@ -346,28 +346,28 @@ class Manager extends Base
                 || !isset($post['id']) 
                 || !is_array($post)
             ) {
-                $this->error('没有修改的数据！');
+                $this->error(__('没有修改的数据！'));
                 return false;
             }
             
             if (empty($post['password'])) {
-                $this->error('新密码不能为空！');
+                $this->error(__('新密码不能为空！'));
             }
             if (empty($post['password_confirm'])) {
-                $this->error('确认密码不能为空！');
+                $this->error(__('确认密码不能为空！'));
             }
             
             if ($post['password'] != $post['password_confirm']) {
-                $this->error('两次密码不一致！');
+                $this->error(__('两次密码不一致！'));
             }
             
             $ManagerService = (new ManagerService);
             $rs = $ManagerService->changePassword($post['id'], $post['password']);
             if ($rs === false) {
-                $this->error($ManagerService->getError() ?: '修改密码失败！');
+                $this->error($ManagerService->getError() ?: __('修改密码失败！'));
             }
             
-            $this->success("修改密码成功！");
+            $this->success(__("修改密码成功！"));
         } else {
             $id = $this->request->param('id/s');
             $data = AdminModel::where([

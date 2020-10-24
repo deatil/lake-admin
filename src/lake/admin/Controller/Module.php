@@ -45,7 +45,7 @@ class Module extends Base
             
             return $this->json([
                 "code" => 0, 
-                'msg' => '获取成功!',
+                'msg' => __('获取成功！'),
                 'data' => $list['data'],
                 'count' => $list['total'],
             ]);
@@ -97,7 +97,7 @@ class Module extends Base
         if ($this->request->isPost()) {
             $module = $this->request->param('module');
             if (empty($module)) {
-                $this->error('请选择需要安装的模块！');
+                $this->error(__('请选择需要安装的模块！'));
             }
             
             $status = ModuleFacade::install($module);
@@ -106,14 +106,14 @@ class Module extends Base
                 ModuleFacade::installRollback($module);
                 
                 $error = ModuleFacade::getError();
-                $this->error($error ? $error : '模块安装失败！');
+                $this->error($error ? $error : __('模块安装失败！'));
             }
             
-            $this->success('模块安装成功！一键清理缓存后生效！', url('Module/index'));
+            $this->success(__('模块安装成功！一键清理缓存后生效！'), url('Module/index'));
         } else {
             $module = $this->request->param('module', '');
             if (empty($module)) {
-                $this->error('请选择需要安装的模块！');
+                $this->error(__('请选择需要安装的模块！'));
             }
             
             $config = ModuleFacade::getInfoFromFile($module);
@@ -147,7 +147,7 @@ class Module extends Base
                     if (Db::query("SHOW TABLES LIKE '{$table}'")) {
                         $tableCheck[] = [
                             'table' => "{$table}",
-                            'result' => '<span class="text-danger">存在同名</span>',
+                            'result' => '<span class="text-danger">'.__('存在同名').'</span>',
                         ];
                     } else {
                         $tableCheck[] = [
@@ -181,20 +181,20 @@ class Module extends Base
         if ($this->request->isPost()) {
             $module = $this->request->param('module');
             if (empty($module)) {
-                $this->error('请选择需要卸载的模块！');
+                $this->error(__('请选择需要卸载的模块！'));
             }
             
             $status = ModuleFacade::uninstall($module);
             if ($status === false) {
                 $error = ModuleFacade::getError();
-                $this->error($error ? $error : "模块卸载失败！", url("Module/index"));
+                $this->error($error ? $error : __("模块卸载失败！"), url("Module/index"));
             }
             
-            $this->success("模块卸载成功！一键清理缓存后生效！", url("Module/index"));
+            $this->success(__("模块卸载成功！一键清理缓存后生效！"), url("Module/index"));
         } else {
             $module = $this->request->param('module', '');
             if (empty($module)) {
-                $this->error('请选择需要卸载的模块！');
+                $this->error(__('请选择需要卸载的模块！'));
             }
             
             $config = ModuleFacade::getInfoFromFile($module);
@@ -219,7 +219,7 @@ class Module extends Base
         if ($this->request->isPost()) {
             $module = $this->request->param('module');
             if (empty($module)) {
-                $this->error('请选择需要更新的模块！');
+                $this->error(__('请选择需要更新的模块！'));
             }
             
             $status = ModuleFacade::upgrade($module);
@@ -228,14 +228,14 @@ class Module extends Base
                 ModuleFacade::upgradeRollback($module);
                 
                 $error = ModuleFacade::getError();
-                $this->error($error ? $error : '模块更新失败！');
+                $this->error($error ? $error : __('模块更新失败！'));
             }
             
-            $this->success('模块更新成功！一键清理缓存后生效！', url('Module/index'));
+            $this->success(__('模块更新成功！一键清理缓存后生效！'), url('Module/index'));
         } else {
             $module = $this->request->param('module', '');
             if (empty($module)) {
-                $this->error('请选择需要更新的模块！');
+                $this->error(__('请选择需要更新的模块！'));
             }
             
             $config = ModuleFacade::getInfoFromFile($module);
@@ -271,7 +271,7 @@ class Module extends Base
                     if (Db::query("SHOW TABLES LIKE '{$table}'")) {
                         $tableCheck[] = [
                             'table' => "{$table}",
-                            'result' => '<span class="text-danger">存在同名</span>',
+                            'result' => '<span class="text-danger">'.__('存在同名').'</span>',
                         ];
                     } else {
                         $tableCheck[] = [
@@ -305,17 +305,17 @@ class Module extends Base
     public function local()
     {
         if (!$this->request->isPost()) {
-            $this->error('访问错误！');
+            $this->error(__('访问错误！'));
         }
     
         $files = $this->request->file('file');
         if ($files == null) {
-            $this->error("请选择上传文件！");
+            $this->error(__("请选择上传文件！"));
         }
         
         $originalName = $files->getOriginalName();
         if (strtolower(substr($originalName, -3, 3)) != 'zip') {
-            $this->error("上传的文件格式有误！");
+            $this->error(__("上传的文件格式有误！"));
         }
         
         // 插件名称
@@ -331,10 +331,10 @@ class Module extends Base
         $zip = new PclZip($filename);
         $status = $zip->extract(PCLZIP_OPT_PATH, env('lake_module_path') . $moduleName);
         if (!$status) {
-            $this->error('模块解压失败！');
+            $this->error(__('模块解压失败！'));
         }
         
-        $this->success('模块上传成功，可以进入模块管理进行安装！', url('all'));
+        $this->success(__('模块上传成功，可以进入模块管理进行安装！'), url('all'));
     }
     
     /**
@@ -348,7 +348,7 @@ class Module extends Base
         if ($this->request->isGet()) {
             $moduleId = $this->request->param('module/s');
             if (empty($moduleId)) {
-                $this->error('请选择需要操作的模块！');
+                $this->error(__('请选择需要操作的模块！'));
             }
             
             // 获取插件信息
@@ -357,7 +357,7 @@ class Module extends Base
                 'status' => 1,
             ])->find();
             if (empty($module)) {
-                $this->error('该模块没有安装或者被禁用！');
+                $this->error(__('该模块没有安装或者被禁用！'));
             }
             
             $setting = json_decode($module['setting'], true);
@@ -388,7 +388,7 @@ class Module extends Base
         } else {
             $moduleId = $this->request->param('module/s');
             if (empty($moduleId)) {
-                $this->error('请选择需要操作的模块！');
+                $this->error(__('请选择需要操作的模块！'));
             }
             
             // 获取模块信息
@@ -397,7 +397,7 @@ class Module extends Base
                 'status' => 1,
             ])->find();
             if (empty($module)) {
-                $this->error('该模块没有安装或者被禁用！');
+                $this->error(__('该模块没有安装或者被禁用！'));
             }
             
             $config = $this->request->param('config/a');
@@ -408,10 +408,10 @@ class Module extends Base
             ])->update();
             
             if ($flag === false) {
-                $this->error('保存失败');
+                $this->error(__('保存失败'));
             }
             
-            $this->success('保存成功');
+            $this->success(__('保存成功'));
         }
     }
     
@@ -424,7 +424,7 @@ class Module extends Base
     public function view()
     {
         if (!$this->request->isGet()) {
-            $this->error("请求错误！");
+            $this->error(__("请求错误！"));
         }
         
         $module = $this->request->param('module/s');
@@ -432,7 +432,7 @@ class Module extends Base
             "module" => $module,
         ])->find();
         if (empty($data)) {
-            $this->error('信息不存在！');
+            $this->error(__('信息不存在！'));
         }
         
         $data['need_module'] = json_decode($data['need_module'], true);
@@ -450,12 +450,12 @@ class Module extends Base
     public function enable()
     {
         if (!$this->request->isPost()) {
-            $this->error('访问错误！');
+            $this->error(__('访问错误！'));
         }
         
         $module = $this->request->param('module/s');
         if (empty($module)) {
-            $this->error('模块ID错误！');
+            $this->error(__('模块ID错误！'));
         }
         
         $status = ModuleFacade::enable($module);
@@ -465,7 +465,7 @@ class Module extends Base
             $this->error($error);
         }
         
-        $this->success('启用成功！');
+        $this->success(__('启用成功！'));
     }
     
     /**
@@ -477,12 +477,12 @@ class Module extends Base
     public function disable()
     {
         if (!$this->request->isPost()) {
-            $this->error('访问错误！');
+            $this->error(__('访问错误！'));
         }
         
         $module = $this->request->param('module/s');
         if (empty($module)) {
-            $this->error('模块ID错误！');
+            $this->error(__('模块ID错误！'));
         }
         
         $status = ModuleFacade::disable($module);
@@ -492,7 +492,7 @@ class Module extends Base
             $this->error($error);
         }
         
-        $this->success('禁用成功！');
+        $this->success(__('禁用成功！'));
     }
     
 }

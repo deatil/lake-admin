@@ -75,10 +75,10 @@ class Event extends Base
             $status = EventModel::create($data);
        
             if ($status === false) {
-                $this->error("添加失败！");
+                $this->error(__("添加失败！"));
             }
             
-            $this->success("添加成功！");
+            $this->success(__("添加成功！"));
             
         } else {
             // 模块列表
@@ -119,17 +119,17 @@ class Event extends Base
             ])->update($data);
             
             if ($rs === false) {
-                $this->error("修改失败！");
+                $this->error(__("修改失败！"));
             }
             
-            $this->success("修改成功！");
+            $this->success(__("修改成功！"));
         } else {
             $id = $this->request->param('id/s');
             $data = EventModel::where([
                 "id" => $id,
             ])->find();
             if (empty($data)) {
-                $this->error('信息不存在！');
+                $this->error(__('信息不存在！'));
             }
             
             $this->assign("data", $data);
@@ -151,19 +151,19 @@ class Event extends Base
     public function del()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id/s');
         if (empty($id)) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $data = EventModel::where([
             "id" => $id,
         ])->find();
         if (empty($data)) {
-            $this->error('信息不存在！');
+            $this->error(__('信息不存在！'));
         }
         
         $rs = EventModel::where([
@@ -172,10 +172,10 @@ class Event extends Base
             ->delete();
         
         if ($rs === false) {
-            $this->error("删除失败！");
+            $this->error(__("删除失败！"));
         }
         
-        $this->success("删除成功！");
+        $this->success(__("删除成功！"));
     }
     
     /**
@@ -187,12 +187,12 @@ class Event extends Base
     public function listorder()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id/s', '');
         if (empty($id)) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $listorder = $this->request->param('value/d', 100);
@@ -205,10 +205,10 @@ class Event extends Base
             ]);
         
         if ($rs === false) {
-            $this->error("排序失败！");
+            $this->error(__("排序失败！"));
         }
         
-        $this->success("排序成功！");
+        $this->success(__("排序成功！"));
     }
     
     /**

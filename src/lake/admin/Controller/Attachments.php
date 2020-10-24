@@ -84,11 +84,11 @@ class Attachments extends Base
     public function view($id)
     {
         if (!$this->request->isGet()) {
-            $this->error('访问错误！');
+            $this->error(__('访问错误！'));
         }
         
         if (empty($id)) {
-            $this->error('请选择需要查看的附件！');
+            $this->error(__('请选择需要查看的附件！'));
         }
         
         $data = AttachmentModel::where([
@@ -113,12 +113,12 @@ class Attachments extends Base
     public function delete()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $ids = $this->request->param('ids/a', null);
         if (empty($ids)) {
-            $this->error('请选择需要删除的附件！');
+            $this->error(__('请选择需要删除的附件！'));
         }
         
         if (!is_array($ids)) {
@@ -135,7 +135,7 @@ class Attachments extends Base
             }
         }
         
-        $this->success('文件删除成功！');
+        $this->success(__('文件删除成功！'));
     }
 
 }

@@ -125,17 +125,17 @@ class Menu extends Base
             if (!empty($data['name'])) {
                 $names = explode('/', $data['name']);
                 if (count($names) < 3) {
-                    $this->error('后台菜单格式错误！');
+                    $this->error(__('后台菜单格式错误！'));
                 }
             }
             
             $res = AuthRuleModel::create($data);
             
             if ($res === false) {
-                $this->error('添加失败！');
+                $this->error(__('添加失败！'));
             }
             
-            $this->success("添加成功！");
+            $this->success(__("添加成功！"));
         } else {
             $parentid = $this->request->param('parentid/s', '');
             
@@ -174,11 +174,11 @@ class Menu extends Base
                 "id" => $data['id'],
             ])->find();
             if (empty($rs)) {
-                $this->error('权限菜单不存在！');
+                $this->error(__('权限菜单不存在！'));
             }
             
             if ($rs['is_system'] == 1) {
-                $this->error('系统权限菜单不能进行编辑！');
+                $this->error(__('系统权限菜单不能进行编辑！'));
             }
             
             if (!isset($data['is_menu'])) {
@@ -207,27 +207,27 @@ class Menu extends Base
             if (!empty($data['name'])) {
                 $names = explode('/', $data['name']);
                 if (count($names) < 3) {
-                    $this->error('后台菜单格式错误！');
+                    $this->error(__('后台菜单格式错误！'));
                 }
             }
             
             $res = AuthRuleModel::update($data);
             
             if ($res === false) {
-                $this->error('编辑失败！');
+                $this->error(__('编辑失败！'));
             }
             
-            $this->success("编辑成功！");
+            $this->success(__("编辑成功！"));
         } else {
             $id = $this->request->param('id/s', '');
             
             $data = AuthRuleModel::where(["id" => $id])->find();
             if (empty($data)) {
-                $this->error('菜单不存在！');
+                $this->error(__('菜单不存在！'));
             }
             
             if ($data['is_system'] == 1) {
-                $this->error('系统权限菜单不能进行编辑！');
+                $this->error(__('系统权限菜单不能进行编辑！'));
             }
             
             $ruleList = AuthRuleModel::order([
@@ -274,35 +274,35 @@ class Menu extends Base
     public function delete()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id/s');
         if (empty($id)) {
-            $this->error('ID错误');
+            $this->error(__('ID错误！'));
         }
         
         $rs = AuthRuleModel::where(["id" => $id])->find();
         if (empty($rs)) {
-            $this->error('权限菜单不存在！');
+            $this->error(__('权限菜单不存在！'));
         }
         
         if ($rs['is_system'] == 1) {
-            $this->error('系统权限菜单不能删除！');
+            $this->error(__('系统权限菜单不能删除！'));
         }
         
         $result = AuthRuleModel::where(["parentid" => $id])->find();
         if (!empty($result)) {
-            $this->error("含有子菜单，无法删除！");
+            $this->error(__("含有子菜单，无法删除！"));
         }
         
         $res = AuthRuleModel::destroy($id);
         
         if ($res === false) {
-            $this->error("删除失败！");
+            $this->error(__("删除失败！"));
         }
         
-        $this->success("删除成功！");
+        $this->success(__("删除成功！"));
     }
 
     /**
@@ -314,12 +314,12 @@ class Menu extends Base
     public function listorder()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id/s', 0);
         if (empty($id)) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $listorder = $this->request->param('value/d', 100);
@@ -330,10 +330,10 @@ class Menu extends Base
             'id' => $id,
         ]);
         if ($rs === false) {
-            $this->error("菜单排序失败！");
+            $this->error(__("菜单排序失败！"));
         }
         
-        $this->success("菜单排序成功！");
+        $this->success(__("菜单排序成功！"));
     }
 
     /**
@@ -345,12 +345,12 @@ class Menu extends Base
     public function setauth()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id/s');
         if (empty($id)) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $status = $this->request->param('status/d', 0);
@@ -361,10 +361,10 @@ class Menu extends Base
             'id' => $id,
         ]);
         if ($rs === false) {
-            $this->error('操作失败！');
+            $this->error(__('操作失败！'));
         }
         
-        $this->success('操作成功！');
+        $this->success(__('操作成功！'));
     }
 
     /**
@@ -376,12 +376,12 @@ class Menu extends Base
     public function setmenu()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id/s');
         if (empty($id)) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $status = $this->request->param('status/d', 0);
@@ -392,10 +392,10 @@ class Menu extends Base
             'id' => $id,
         ]);
         if ($rs === false) {
-            $this->error('操作失败！');
+            $this->error(__('操作失败！'));
         }
         
-        $this->success('操作成功！');
+        $this->success(__('操作成功！'));
     }
 
     /**
@@ -407,12 +407,12 @@ class Menu extends Base
     public function setstate()
     {
         if (!$this->request->isPost()) {
-            $this->error('请求错误！');
+            $this->error(__('请求错误！'));
         }
         
         $id = $this->request->param('id/s');
         if (empty($id)) {
-            $this->error('参数不能为空！');
+            $this->error(__('参数不能为空！'));
         }
         
         $status = $this->request->param('status/d', 0);
@@ -423,10 +423,10 @@ class Menu extends Base
             'id' => $id,
         ]);
         if ($rs === false) {
-            $this->error('操作失败！');
+            $this->error(__('操作失败！'));
         }
         
-        $this->success('操作成功！');
+        $this->success(__('操作成功！'));
     }
 
 }

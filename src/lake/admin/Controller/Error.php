@@ -18,6 +18,6 @@ class Error
      */
     public function index()
     {
-        abort(404, '该页面不存在！');
+        abort(404, __('该页面不存在！'));
     }
 }
