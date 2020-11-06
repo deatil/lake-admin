@@ -63,7 +63,7 @@ class LakeAdminServiceDiscover extends Command
             file_put_contents($servicesFile, $content);
         }
         
-        $output->info("<info>Lake-admin Discover Services Successed!</info>");
+        $output->info("<info>Lake-admin Discover Services successfully!</info>");
     }
 
 }

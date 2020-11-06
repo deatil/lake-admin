@@ -83,12 +83,12 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "md5", "util
 
     $('body').append(html);
     
-    // 锁定账户
+    // 锁定账号
     var lock_inter = "";
     var menuid = "";
     lockShowInit(utils);
     $(".js-lake-admin-lock").on('click', function() {
-        layer.confirm("确定要锁定账户吗？", function(index) {
+        layer.confirm("确定要锁定账号吗？", function(index) {
             var lock_url = $('.lake-admin-lock').data('lock-url');
             $.post(lock_url, {}, function (res) {
                 if (res.code == 1) {
@@ -155,7 +155,7 @@ layui.define(['element', 'layer', 'form', 'jquery', 'jqueryCookie', "md5", "util
                         expires: 1,
                     });
                 } else {
-                    layer.alert("解锁账户失败！");
+                    layer.alert("解锁账号失败！");
                 }
             });
         });

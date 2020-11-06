@@ -67,6 +67,6 @@ class LakeAdminRepair extends Command
         // 创建新的链接
         Symlink::make($adminStaticPath, $staticPath);
        
-        $output->info("Repair lake-admin Successed!");
+        $output->info("Repair lake-admin successfully!");
     }
 }

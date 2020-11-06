@@ -33,6 +33,13 @@ class Service extends BaseService
         
         // 绑定
         $this->setSystemBind();
+        
+        // 注册系统默认指令
+        $this->commands([
+            \Lake\Admin\Command\LakeAdminInstall::class,
+            \Lake\Admin\Command\LakeAdminRepair::class,
+            \Lake\Admin\Command\LakeAdminServiceDiscover::class,
+        ]);
     }
     
     public function boot()
@@ -56,13 +63,6 @@ class Service extends BaseService
                 $this->app->middleware->add(LoadModule::class);
             });
         }
-        
-        // 注册系统默认指令
-        $this->commands([
-            \Lake\Admin\Command\LakeAdminInstall::class,
-            \Lake\Admin\Command\LakeAdminRepair::class,
-            \Lake\Admin\Command\LakeAdminServiceDiscover::class,
-        ]);
     }
     
     /**

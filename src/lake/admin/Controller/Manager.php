@@ -116,10 +116,10 @@ class Manager extends Base
                 }
             }
             
-            $ManagerService = (new ManagerService);
-            $status = $ManagerService->create($data);
+            $managerService = (new ManagerService);
+            $status = $managerService->create($data);
             if ($status === false) {
-                $error = $ManagerService->getError();
+                $error = $managerService->getError();
                 $this->error($error ? $error : __('添加失败！'));
             }
            
@@ -161,7 +161,7 @@ class Manager extends Base
             
             if (env('admin_is_root') != 1) {
                 if ($data['id'] == env('admin_id')) {
-                    $this->error(__('不能修改自己的账户！'));
+                    $this->error(__('你不能修改自己的账号！'));
                 }
             }
             
@@ -174,7 +174,7 @@ class Manager extends Base
             }
             
             if ($adminInfo['is_system'] == 1) {
-                $this->error(__('系统默认账户不可操作！'));
+                $this->error(__('系统默认账号不可操作！'));
             }
             
             if (isset($data['status'])) {
@@ -201,11 +201,11 @@ class Manager extends Base
                 }
             }
             
-            $ManagerService = (new ManagerService);
-            $status = $ManagerService->edit($data);
+            $managerService = (new ManagerService);
+            $status = $managerService->edit($data);
             if ($status === false) {
-                $error = $ManagerService->getError();
-                $this->error($error ? $error : __('修改失败！'));
+                $error = $managerService->getError();
+                $this->error($error ?: __('修改失败！'));
             }
             
             $this->success(__("修改成功！"));
@@ -224,7 +224,7 @@ class Manager extends Base
             }
             
             if ($data['is_system'] == 1) {
-                $this->error(__('系统默认账户不可操作！'));
+                $this->error(__('系统默认账号不可操作！'));
             }
             
             $data['gids'] = AuthGroupAccessModel::where([
@@ -274,13 +274,17 @@ class Manager extends Base
         }
         
         if ($adminInfo['is_system'] == 1) {
-            $this->error(__('系统默认账户不可操作！'));
+            $this->error(__('系统默认账号不可操作！'));
         }
         
-        $ManagerService = (new ManagerService);
-        $rs = $ManagerService->delete($id);
+        if ($adminInfo['id'] == env('admin_id')) {
+            $this->error(__('你不能删除自己的账号！'));
+        }
+        
+        $managerService = (new ManagerService);
+        $rs = $managerService->delete($id);
         if ($rs === false) {
-            $this->error($ManagerService->getError() ?: __('删除失败！'));
+            $this->error($managerService->getError() ?: __('删除失败！'));
         }
         
         $this->success(__("删除成功！"));
@@ -317,11 +321,9 @@ class Manager extends Base
         $authGroups = AuthGroupModel::getGroups();
         
         $groups = [];
-        if (!empty($authGroups)) {
-            foreach ($authGroups as $authGroup) {
-                if (in_array($authGroup['id'], $gids)) {
-                    $groups[] = $authGroup['title'];
-                }
+        foreach ($authGroups as $authGroup) {
+            if (in_array($authGroup['id'], $gids)) {
+                $groups[] = $authGroup['title'];
             }
         }
         
@@ -342,10 +344,7 @@ class Manager extends Base
         if ($this->request->isPost()) {
             $post = $this->request->post('');
             
-            if (empty($post) 
-                || !isset($post['id']) 
-                || !is_array($post)
-            ) {
+            if (empty($post) || !isset($post['id'])) {
                 $this->error(__('没有修改的数据！'));
                 return false;
             }
@@ -361,8 +360,14 @@ class Manager extends Base
                 $this->error(__('两次密码不一致！'));
             }
             
-            $ManagerService = (new ManagerService);
-            $rs = $ManagerService->changePassword($post['id'], $post['password']);
+            if (env('admin_is_root') != 1) {
+                if ($post['id'] == env('admin_id')) {
+                    $this->error(__('你不能修改自己账号的密码！'));
+                }
+            }
+            
+            $managerService = (new ManagerService);
+            $rs = $managerService->changePassword($post['id'], $post['password']);
             if ($rs === false) {
                 $this->error($ManagerService->getError() ?: __('修改密码失败！'));
             }
