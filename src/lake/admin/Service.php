@@ -185,7 +185,7 @@ class Service extends BaseService
      */
     protected function setSystemEvents() 
     {
-        $events = $this->app->cache->get("lake_admin_events");
+        $events = $this->app->cache->get("lake_admin_events", []);
         if (empty($events)) {
             $events = EventModel::field('name,class')
                 ->where([
@@ -197,10 +197,8 @@ class Service extends BaseService
             $this->app->cache->set("lake_admin_events", $events);
         }
         
-        if (!empty($events)) {
-            foreach ($events as $event) {
-                $this->app->event->listen($event['name'], $event['class']);
-            }
+        foreach ($events as $event) {
+            $this->app->event->listen($event['name'], $event['class']);
         }
     }
     
