@@ -58,7 +58,6 @@
     border-color: #eee transparent transparent;
 }
 
-
 .layui-layout-admin .layui-header .layui-nav .layui-nav-mored {
     border-color: transparent transparent #eee;
 }
@@ -67,7 +66,8 @@
 .layui-layout-admin .layui-header .layui-nav .layui-this:after, 
 .layui-layout-admin .layui-header .layui-nav-bar {
     top: 0 !important;
-    background-color: #fff;
+    background-color: #b8c7ce40;
+    display: none;
 }
 
 /** 侧边栏样式 */
@@ -251,16 +251,11 @@
     border:1px solid #fff; 
 }
 
-.lake-admin .admin-side-full {
-    color: #fff;
-    background-color: #3C8DBC;
-    border:1px solid #3C8DBC; 
-}
-.lake-admin .admin-side-full:hover { 
-    border:1px solid #fff; 
-}
 .lake-admin .lake-admin-top-level-menus .layui-nav-item.layui-this {
-    background-color: #3C8DBC;
+    background-color: #b8c7ce40;
+}
+.lake-admin .layui-layout-right .layui-nav-item:hover {
+    background-color: #b8c7ce40;
 }
 
 .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item.layui-this:after {
@@ -282,4 +277,9 @@
 
 .layui-elem-quote {
     border-left: 5px solid #3C8DBC !important;
+}
+.layui-elem-quote.larke-admin-dashboard-nowtime {
+    border-left: 5px solid #009688 !important;
+    background-color: #009688 !important;
+    color: #fff!important;
 }

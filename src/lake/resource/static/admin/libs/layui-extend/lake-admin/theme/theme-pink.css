@@ -274,14 +274,6 @@
 .lake-admin .admin-menu-toggle:hover { 
     border:1px solid #FB7299; 
 }
-.lake-admin .admin-side-full {
-    color: #FB7299 !important;
-    background-color: #fff;
-    border:1px solid #fff; 
-}
-.lake-admin .admin-side-full:hover { 
-    border:1px solid #FB7299; 
-}
 
 .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item.layui-this:after {
     background-color: #FB7299;
@@ -351,4 +343,8 @@
 .layui-elem-quote {
     border-left: 5px solid #FB7299 !important;
 }
-
+.layui-elem-quote.larke-admin-dashboard-nowtime {
+    border-left: 5px solid #009688 !important;
+    background-color: #009688 !important;
+    color: #fff!important;
+}

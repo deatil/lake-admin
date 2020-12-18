@@ -31,7 +31,7 @@
 }
 
 .layui-layout-admin .layui-header > ul li > a {
-    color: #fff;
+    color: #efe2e2;
 }
 .layui-layout-admin .layui-header > ul li > a:hover {
     color: #fff;
@@ -243,14 +243,6 @@
     border:1px solid #fff; 
 }
 
-.lake-admin .admin-side-full {
-    color: #fff;
-    background-color: #722ED1;
-    border:1px solid #722ED1; 
-}
-.lake-admin .admin-side-full:hover { 
-    border:1px solid #fff; 
-}
 .lake-admin .lake-admin-top-level-menus .layui-nav-item.layui-this {
     background-color: #722ED1;
 }
@@ -274,6 +266,11 @@
 
 .layui-elem-quote {
     border-left: 5px solid #722ED1 !important;
+}
+.layui-elem-quote.larke-admin-dashboard-nowtime {
+    border-left: 5px solid #009688 !important;
+    background-color: #009688 !important;
+    color: #fff!important;
 }
 
 .lake-admin .popup-tips .layui-nav .layui-nav-item a {

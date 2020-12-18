@@ -4,14 +4,14 @@
 ### 项目介绍
 
 *  `lake-admin` 基于 `ThinkPHP` 框架，后台页面基于 `layui` 搭建
-*  更新 `ThinkPHP` 版本到 v6.0.4 版本
-*  更新 `layui` 版本到 v2.5.6 版本
+*  更新 `ThinkPHP` 版本到 v6.0.5 版本
+*  更新 `layui` 版本到 v2.5.7 版本
 *  模块插件文档请查看 `docs/lake-admin-addon.md` 文件
 
 
 ### 安装步骤
 
-*  安装 `thinkphp6.0` 框架
+*  安装 `thinkphp` `v6.*` 版本框架
 *  配置数据库的连接信息
 *  `composer require lake/lake-admin` 导入lake-admin后台管理系统
 *  执行 `php think lake-admin:install` 及 `php think lake-admin:service-discover` 初始化 `lake-admin` 系统

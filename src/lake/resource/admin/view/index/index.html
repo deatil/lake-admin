@@ -25,7 +25,6 @@
             </div>
             <div class="lake-admin-left">
                 <a href="javascript:;" class="admin-menu-toggle icon iconfont icon-other lake-admin-winner-hide" title="隐藏侧边"></a>
-                <a href="javascript:;" class="admin-side-full icon iconfont icon-fullscreen lake-admin-winner-hide" title="全屏显示"></a>
                 <div class="lake-admin-top-level">
                     <div class="lake-admin-top-level-scroll">
                         <ul class="layui-nav lake-admin-menus-winner lake-admin-top-level-menus" id="top_nav_menus">
@@ -37,10 +36,9 @@
             <ul class="layui-nav layui-layout-right lake-admin-right">
                 {:lake_runhook('lake_admin_top_left_nav_start')}
                 
-                <li class="layui-nav-item lake-admin-winner-hide">
+                <li class="layui-nav-item lake-admin-top-tip" lay-title="站点主页">
                     <a href="/" target="_blank">
                         <i class="iconfont icon-homepage"></i>
-                        <span>&nbsp;站点主页</span>
                     </a>
                 </li>
                 
@@ -60,9 +58,16 @@
                 {:lake_runhook('lake_admin_top_left_nav_lockscreen_after')}
                 
                 <li class="layui-nav-item">
-                    <a href="javascript:;">
+                    <a href="javascript:;" class="admin-side-full lake-admin-winner-hide lake-admin-top-tip" lay-title="全屏显示">
+                        <i class="icon iconfont icon-fullscreen"></i>
+                    </a>
+                </li>
+                
+                {:lake_runhook('lake_admin_top_left_nav_skin_after')}
+                
+                <li class="layui-nav-item">
+                    <a href="javascript:;" title="清理缓存">
                         <i class="iconfont icon-richangqingli"></i>
-                        <span class="lake-admin-winner-hide">&nbsp;清理缓存</span>
                     </a>
                     <dl class="layui-nav-child lake-admin-clearcache js-lake-admin-clearcache" data-url="{:url('index/clear')}">
                         <dd>
@@ -236,7 +241,7 @@
     })();
     
     layui.config({
-        version: '2020080510355895',
+        version: "{:config('lake.release')}",
         base: 'admin/libs/layui-extend/'
     }).extend({
         lakeAdmin: 'lake-admin/lakeAdmin',

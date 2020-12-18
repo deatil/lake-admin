@@ -16,15 +16,16 @@
 .lake-admin .admin-menu-toggle {float: left; width: 20px; height: 20px; margin-top: 15px; font-size: 17px; line-height: 20px; text-align: center; padding: 5px 5px; color: #fff; background-color: #1AA094; }
 .lake-admin .admin-menu-toggle:hover { color:#fff; }
 
-.lake-admin .admin-side-full {float: left; width: 20px; height: 20px; margin-top: 15px; margin-left: 15px; font-size: 17px; line-height: 20px; text-align: center; padding: 5px 5px; color: #fff; background-color: #1AA094; }
-.lake-admin .admin-side-full:hover { color:#fff; }
-
 .lake-admin .layui-tab-content {top: 41px; position: absolute; bottom: 0; width: 100%; padding: 0; }
 .lake-admin .lake-admin-iframe-box{position: relative; height: 100%; overflow: auto; }
 
 .lake-admin .layui-layout-admin .lake-admin-logo {color: #fff; float: left; line-height: 60px; font-size: 18px; padding: 0 25px; text-align: center; width: 150px; }
 .lake-admin .layui-layout-admin .lake-admin-logo .lake-admin-logo-name {color: #fff;}
 .lake-admin .layui-layout-admin .lake-admin-logo .lake-admin-logo-name-mini {color: #fff;display: none;}
+
+.lake-admin .layui-layout-admin .layui-header .layui-layout-right .layui-nav-item.layui-this:after {
+    display: none;
+}
 
 .lake-admin .layui-tab-title .layui-this {background-color: #009688; color: #fff; }
 .lake-admin .layui-tab-title .layui-this:after {border: none; }

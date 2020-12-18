@@ -1,5 +1,5 @@
 /*!
- * lakeAdminSkin.js v1.0.2
+ * lakeAdminSkin.js v1.0.3
  * https://github.com/deatil/lake-admin
  * 
  * Apache License 2.0 © Deatil
@@ -19,30 +19,8 @@
             try {
                 this.removeTheme(self);
                 (theme && self.layui) && self.layui.link(this.getThemeDir() + theme + this.getCssSuffix(), theme);
-                var ifs = self.window.frames;
-                for (var i = 0; i < ifs.length; i++) {
-                    try {  // 可能会跨域
-                        var tif = ifs[i];
-                        this.removeTheme(tif);
-                        if (theme && tif.layui) {
-                            tif.layui.link(this.getThemeDir() + theme + this.getCssSuffix(), theme);
-                        }
-                        // iframe下还有iframe的情况
-                        var sifs = tif.frames;
-                        for (var j = 0; j < sifs.length; j++) {
-                            try {  // 可能会跨域
-                                var stif = sifs[j];
-                                this.removeTheme(stif);
-                                if (theme && stif.layui) {
-                                    stif.layui.link(this.getThemeDir() + theme + this.getCssSuffix(), theme);
-                                }
-                            } catch (e) {
-                            }
-
-                        }
-                    } catch (e) {
-                    }
-                }
+                
+                this.frameThemeLink(self.window, theme)
             } catch (e) {
             }
         },
@@ -55,6 +33,27 @@
             if (w.layui) {
                 var themeId = 'layuicss-theme';
                 w.layui.jquery('link[id^="' + themeId + '"]').remove();
+            }
+        },
+        
+        /* 主题样式 */
+        frameThemeLink: function (w, theme) {
+            try {
+                var ifs = w.frames;
+                for (var i = 0; i < ifs.length; i++) {
+                    try {
+                        var tif = ifs[i];
+                        this.removeTheme(tif);
+                        if (theme && tif.layui) {
+                            tif.layui.link(this.getThemeDir() + theme + this.getCssSuffix(), theme);
+                        }
+                        
+                        // 子级
+                        this.frameThemeLink(tif, theme);
+                    } catch (e) {
+                    }
+                }
+            } catch (e) {
             }
         },
         

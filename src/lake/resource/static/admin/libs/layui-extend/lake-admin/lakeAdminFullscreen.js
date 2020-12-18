@@ -112,7 +112,7 @@
                 $(thiz).attr('data-check-screen', 'full');
                 fullScreen.full();
             
-                $(thiz).removeClass('icon-fullscreen')
+                $(thiz).find('i').removeClass('icon-fullscreen')
                     .addClass('icon-narrow');
                 layer.msg('按Esc即可退出全屏');
             }, 
@@ -120,7 +120,7 @@
                 $(thiz).attr('data-check-screen', 'exit');
                 fullScreen.exit();
             
-                $(thiz).removeClass('icon-narrow')
+                $(thiz).find('i').removeClass('icon-narrow')
                     .addClass('icon-fullscreen');
             }
         }
