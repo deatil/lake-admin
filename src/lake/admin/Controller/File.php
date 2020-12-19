@@ -39,7 +39,7 @@ class File extends Base
             ->toArray();
         if (!empty($list)) {
             foreach ($list as $k => &$v) {
-                $v['path'] = $v['driver'] == 'local' ? config('app.upload_url') . $v['path'] : $v['path'];
+                $v['path'] = AttachmentModel::objectUrl($v['path']);
             }
             unset($v);
         }

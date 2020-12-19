@@ -73,13 +73,12 @@ layui.use(['table', 'laydate'], function() {
         cols: [
             [
                 { type: 'checkbox', fixed: 'left' },
-                { field: 'id', width: 80, title: 'ID', sort: true },
                 { field: 'name', title: '名称', templet:'#pathTpl'},
                 { field: 'size',width: 100, title: '大小', sort: true },
-                { field: 'ext',width: 80, title: '类型'},
+                { field: 'ext',width: 80, title: '类型', sort: true},
                 { field: 'mime',width: 120, title: 'Mime类型'},
-                { field: 'driver',width: 100, title: '存储引擎'},
-                { field: 'create_time', width: 180, title: '上传时间', templet: '#createTimeTpl' },
+                { field: 'driver',width: 100, title: '存储引擎', sort: true},
+                { field: 'create_time', width: 180, title: '上传时间', sort: true, templet: '#createTimeTpl' },
                 { field: 'status', width: 80, title: '状态',align: "center", templet: '#statusTpl' },
                 { fixed: 'right', width: 70, title: '操作', toolbar: '#barTool' }
             ]

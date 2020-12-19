@@ -15,24 +15,6 @@ use Lake\Admin\Service\Attachment as AttachmentService;
  */
 class Attachments extends Base
 {
-    private $uploadUrl = '';
-    
-    private $uploadPath = '';
-
-    /**
-     * 框架构造函数
-     *
-     * @create 2019-8-4
-     * @author deatil
-     */
-    protected function initialize()
-    {
-        parent::initialize();
-        
-        $this->uploadUrl = config('app.upload_url');
-        $this->uploadPath = config('app.upload_path');
-    }
-
     /**
      * 附件列表页
      *
@@ -53,7 +35,7 @@ class Attachments extends Base
                 ->toArray();
             if (!empty($list)) {
                 foreach ($list as $k => &$v) {
-                    $v['path'] = $v['driver'] == 'local' ? $this->uploadUrl . $v['path'] : $v['path'];
+                    $v['path'] = AttachmentModel::objectUrl($v['path']);
                 }
                 unset($v);
             }
@@ -95,7 +77,7 @@ class Attachments extends Base
             'id' => $id,
         ])->find();
     
-        $data['path'] = ($data['driver'] == 'local') ? $this->uploadUrl . $data['path'] : $data['path'];
+        $data['path'] = AttachmentModel::objectUrl($data['path']);
         
         Event::trigger('AttachmentsView', $data);
         

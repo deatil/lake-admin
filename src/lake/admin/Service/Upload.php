@@ -22,7 +22,7 @@ class Upload
     public $type = '';
     public $type_id = 0;
     
-    private $uploadUrl = '';
+    // 上传文件目录
     private $uploadPath = '';
     
     //编辑器初始配置
@@ -90,7 +90,6 @@ class Upload
     {        
         $this->request = request();
         
-        $this->uploadUrl = Filesystem::getDiskConfig('public', 'url') . '/';
         $this->uploadPath = 'images';
     }
     
@@ -215,11 +214,7 @@ class Upload
         if ($file_exists = AttachmentModel::where([
             'md5' => $file->hash('md5'),
         ])->find()) {
-            if ($file_exists['driver'] == 'local') {
-                $file_path = $this->uploadUrl . $file_exists['path'];
-            } else {
-                $file_path = $file_exists['path'];
-            }
+            $file_path = AttachmentModel::objectUrl($file_exists['path']);
             
             AttachmentModel::where([
                 'md5' => $file->hash('md5'),
@@ -298,12 +293,13 @@ class Upload
         }
         
         // 移动到框架应用根目录指定目录下
-        $savename = Filesystem::disk('public')->putFile($this->uploadPath, $file);
+        $savename = AttachmentModel::filesystem()
+            ->putFile($this->uploadPath, $file);
         if ($savename) {
             // 水印功能
             if ($watermark == '') {
                 if ($dir == 'images' && config('app.upload_thumb_water') == 1 && config('app.upload_thumb_water_pic') > 0) {
-                    (new AttachmentService)->createWater(realpath('.' . $this->uploadUrl . $savename), config('app.upload_thumb_water_pic'));
+                    (new AttachmentService)->createWater(AttachmentModel::objectPath($savename), config('app.upload_thumb_water_pic'));
                 }
             }
 
@@ -314,11 +310,12 @@ class Upload
                 'type_id' => $this->type_id,
                 'name' => $file->getOriginalName(),
                 'mime' => $file->getOriginalMime(),
-                'path' => $this->uploadUrl . str_replace('\\', '/', $savename),
+                'path' => $savename,
                 'ext' => $file->getOriginalExtension(),
                 'size' => $file->getSize(),
                 'md5' => $file->hash('md5'),
                 'sha1' => $file->hash('sha1'),
+                'driver' => AttachmentModel::getFilesystemDefaultDisk(),
                 'status' => 1,
             ];
             if ($file_add = AttachmentModel::create($file_info)) {
@@ -446,12 +443,11 @@ class Upload
                 "total" => 0
             ]);
         }
-        $uploadUrl = config('app.public_url');
         $list = [];
         $i = 0;
         foreach ($filelist as $value) {
             $list[$i]['id'] = $value['id'];
-            $list[$i]['url'] = $uploadUrl . 'uploads/' . $value['path'];
+            $list[$i]['url'] = AttachmentModel::objectUrl($value['path']);
             $list[$i]['name'] = $value['name'];
             $list[$i]['size'] = lake_format_bytes($value['size']);
             $list[$i]['mtime'] = $value['create_time'];

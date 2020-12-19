@@ -2,6 +2,8 @@
 
 namespace Lake\Admin\Model;
 
+use think\facade\Filesystem;
+
 /**
  * 附件模型
  *
@@ -34,6 +36,71 @@ class Attachment extends ModelBase
     public function getSizeAttr($value)
     {
         return lake_format_bytes($value);
+    }
+
+    public function getUriAttr()
+    {
+        return static::objectUrl($this->path, $this->driver);
+    }
+
+    public function getRealpathAttr()
+    {
+        return static::objectPath($this->path, $this->driver);
+    }
+    
+    public static function getFilesystemDefaultDisk()
+    {
+        return config('app.upload_disk');
+    }
+    
+    public static function filesystem($disk = '')
+    {
+        if (empty($disk)) {
+            $disk = static::getFilesystemDefaultDisk();
+        }
+        
+        return Filesystem::disk($disk);
+    }
+    
+    public static function putContents(
+        $path, 
+        $contents, 
+        array $config = []
+    ) {
+        $path = trim($path, '/');
+
+        $result = static::filesystem()->put($path, $contents, $config);
+
+        return $result ? $path : false;
+    }
+    
+    public static function putStream(
+        $path, 
+        $fileStream, 
+        array $config = []
+    ) {
+        $path = trim($path, '/');
+        
+        $stream = fopen($fileStream, 'r');
+
+        $result = static::filesystem()->putStream($path, $stream, $config);
+
+        return $result ? $path : false;
+    }
+    
+    public static function objectPath($path = '', $disk = '')
+    {
+        return static::filesystem($disk)->path($path);
+    }
+    
+    public static function objectUrl($path = '', $disk = '')
+    {
+        if (empty($disk)) {
+            $disk = static::getFilesystemDefaultDisk();
+        }
+        
+        $url = Filesystem::getDiskConfig($disk, 'url', '');
+        return rtrim($url, '/') . '/' . ltrim($path, '/');
     }
 }
 
