@@ -74,7 +74,7 @@ class Attachment
                         $file_info['name'] = $vo;
                         $file_info['ext'] = ltrim($fileExt, ".");
 
-                        $fpath = $type . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . date('Ymd');
+                        $fpath = 'images' . DIRECTORY_SEPARATOR . date('Ymd');
                         $savePath = $fpath;
                         if (!is_dir($savePath)) {
                             mkdir($savePath, 0755, true);
