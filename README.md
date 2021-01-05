@@ -74,11 +74,6 @@ lake-admin是一款基于ThinkPHP6+Layui的后台开发框架。
 Github: https://github.com/deatil/lake-admin
 
 
-### 开源协议
-
-*  `lake-admin` 遵循 `Apache2` 开源协议发布，在保留本系统版权的情况下提供个人及商业免费使用。  
-
-
 ## 特别鸣谢
 
 感谢以下的项目,排名不分先后
