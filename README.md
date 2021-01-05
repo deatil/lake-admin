@@ -43,18 +43,20 @@ lake-admin是一款基于ThinkPHP6+Layui的后台开发框架。
 
 ### 界面截图
 
-![LakeAdmin1](https://user-images.githubusercontent.com/24578855/91877097-23f6d680-ecb0-11ea-99e1-c8e7b36421dd.png)
+![LakeAdmin-Index](https://user-images.githubusercontent.com/24578855/103670051-116d1080-4fb4-11eb-8dd9-b8767b35c459.png)
 
-![LakeAdmin2](https://user-images.githubusercontent.com/24578855/91877220-4ee12a80-ecb0-11ea-9f0f-e3879d4c07ac.png)
+![LakeAdmin-Attachment](https://user-images.githubusercontent.com/24578855/103670074-1631c480-4fb4-11eb-88d0-754e6e085f60.png)
 
-![LakeAdmin3](https://user-images.githubusercontent.com/24578855/91877251-57396580-ecb0-11ea-8503-be6335c8a92d.png)
+![LakeAdmin-Module](https://user-images.githubusercontent.com/24578855/103670080-17fb8800-4fb4-11eb-84f2-1021a2293a18.png)
+
+查看更多截图 ![LakeAdmin](https://github.com/deatil/lake-admin/issues)
 
 
 ### 扩展推荐
 
 | 名称 | 描述 |
 | --- | --- |
-| [CMS内容管理](https://github.com/deatil/lake-cms) | 强大的分类管理，完整的模版开发标签系统，配套的友情链接模块和自定义表单模块，让你的cms简单但搞笑 |
+| [CMS内容管理](https://github.com/deatil/lake-cms) | 强大的分类管理，完整的模版开发标签系统，配套的友情链接模块和自定义表单模块，让你的cms简单但高效 |
 | [用户管理](https://github.com/deatil/lake-admin-addon-luser) | 通用的用户管理模块，实现了用户登陆api的token及jwt双认证 |
 | [API接口](https://github.com/deatil/lake-admin-addon-lapi) | 强大的API接口管理系统，支持多种签名算法验证，支持签名字段多个位置存放 |
 | [路由美化](https://github.com/deatil/lake-admin-addon-lroute) | 支持thinkphp自带的多种路由美化设置，自定义你的系统url |
