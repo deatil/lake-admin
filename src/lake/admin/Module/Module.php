@@ -10,13 +10,10 @@ use think\facade\Config;
 
 use Lake\Admin\Model\Module as ModuleModel;
 use Lake\Admin\Model\AuthRule as AuthRuleModel;
-
 use Lake\Admin\Service\Module as ModuleService;
-
 use Lake\Admin\Module\Contracts\Module as ModuleContract;
 use Lake\Admin\Module\Menu as ModuleMenu;
 use Lake\Admin\Module\Event as ModuleEvent;
-
 use Lake\Admin\Module\Data\Module as ModuleData;
 
 /**
