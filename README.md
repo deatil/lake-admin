@@ -50,7 +50,7 @@ lake-admin是一款基于ThinkPHP6+Layui的后台开发框架。
 
 ![LakeAdmin-Module](https://user-images.githubusercontent.com/24578855/103670080-17fb8800-4fb4-11eb-84f2-1021a2293a18.png)
 
-查看更多截图 ![LakeAdmin](https://github.com/deatil/lake-admin/issues)
+查看更多截图 [LakeAdmin](https://github.com/deatil/lake-admin/issues)
 
 
 ### 扩展推荐
