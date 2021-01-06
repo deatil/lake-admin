@@ -23,8 +23,7 @@ lake-admin是一款基于ThinkPHP6+Layui的后台开发框架。
 * 强大的模块插件扩展功能，安装卸载升级插件随便组合
 * 自带附件管理及操作日志系统，方便系统维护管理
 * 通用的用户管理和API模块插件，轻易扩展你的系统
-* 强大的模块插件Admin开发和API开发
-* 系统CMS模块插件，为了节约CMS开发难题
+* 强大的模块插件自定义Admin开发和API开发
 * 简易的模块插件开发流程，为你的开发节省时间提高效率
 
 
@@ -57,7 +56,7 @@ lake-admin是一款基于ThinkPHP6+Layui的后台开发框架。
 
 | 名称 | 描述 |
 | --- | --- |
-| [cms系统](https://github.com/deatil/lake-cms) | 强大的分类管理，完整的模版开发标签系统，配套的友情链接模块和自定义表单模块，让你的cms简单但高效 |
+| [cms系统](https://github.com/deatil/lake-admin-cms) | 简单高效实用的内容管理系统 |
 | [用户管理](https://github.com/deatil/lake-admin-addon-luser) | 通用的用户管理模块，实现了用户登陆api的token及jwt双认证 |
 | [API接口](https://github.com/deatil/lake-admin-addon-lapi) | 强大的API接口管理系统，支持多种签名算法验证，支持签名字段多个位置存放 |
 | [路由美化](https://github.com/deatil/lake-admin-addon-lroute) | 支持thinkphp自带的多种路由美化设置，自定义你的系统url |
