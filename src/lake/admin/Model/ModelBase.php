@@ -46,7 +46,7 @@ abstract class ModelBase extends Model
     // 模型初始化
     protected static function init()
     {
-        // TODO:初始化内容
+        // 初始化内容
     }
 
     /**
@@ -67,7 +67,7 @@ abstract class ModelBase extends Model
      */
     protected function dropTable($table)
     {
-        $dbPrefix = $this->getConfig('prefix');
+        $dbPrefix = self::$db->connect($this->connection)->getConfig('prefix');
         $table = $dbPrefix . strtolower($table);
         return Db::query("DROP TABLE $table");
     }
@@ -78,7 +78,7 @@ abstract class ModelBase extends Model
      */
     protected function tableExists($table)
     {
-        $dbPrefix = $this->getConfig('prefix');
+        $dbPrefix = self::$db->connect($this->connection)->getConfig('prefix');
         $table = $dbPrefix . strtolower($table);
         if (true == Db::query("SHOW TABLES LIKE '{$table}'")) {
             return true;
@@ -104,7 +104,7 @@ abstract class ModelBase extends Model
     protected function getFields($table)
     {
         $fields = [];
-        $dbPrefix = $this->getConfig('prefix');
+        $dbPrefix = self::$db->connect($this->connection)->getConfig('prefix');
         $table = $dbPrefix . strtolower($table);
         $data = Db::query("SHOW COLUMNS FROM $table");
         if (!empty($data)) {

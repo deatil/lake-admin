@@ -394,6 +394,7 @@ class Module implements ModuleContract
         // 执行菜单项安装
         if (isset($config['menus'])) {
             if ($this->installMenu($name, $config['menus']) !== true) {
+                $this->error = '菜单安装失败！';
                 return false;
             }
         }
@@ -406,6 +407,7 @@ class Module implements ModuleContract
         // 安装结束，最后调用安装脚本完成
         $installScript = Tool::runScript($name, 'end');
         if ($installScript === false) {
+            $this->error = '脚本安装失败！';
             return false;
         }
         

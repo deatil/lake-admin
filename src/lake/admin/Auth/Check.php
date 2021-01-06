@@ -57,7 +57,7 @@ class Check
             return false;
         }
         
-        $name = $this->fotmatName($name);
+        $name = $this->formatName($name);
         
         $list = []; // 保存验证通过的规则名
         foreach ($name as $nameValue) {
@@ -166,7 +166,7 @@ class Check
      * @create 2020-8-27
      * @author deatil
      */
-    protected function fotmatName($name)
+    protected function formatName($name)
     {
         if (is_string($name)) {
             $name = strtolower($name);
