@@ -32,7 +32,7 @@
                             <div class="lake-admin-module-authoremail">
                                 <span class="text-muted">
                                     <i class="iconfont icon-mail"></i>
-                                    作者邮箱：
+                                    邮箱：
                                 </span>
                                 <span class="text-black">{$config.authoremail}</span>
                             </div>
@@ -54,7 +54,7 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <td>是否适配系统版本</td>
+                            <td>系统版本适配</td>
                             <td class="text-center">{$version_check|raw}</td>
                         </tr>
                     </thead>
@@ -63,7 +63,7 @@
             
             {notempty name="need_module"}
             <div class="layui-form-item">
-                <h4><b>模块依赖检查</b></h4>
+                <h4><b>模块依赖</b></h4>
                 <table class="layui-table" lay-even style="max-width: 400px;">
                     <colgroup>
                         <col width="180">
@@ -92,43 +92,14 @@
             </div>
             {/notempty}
             
-            {notempty name="table_check"}
-            <div class="layui-form-item">
-                <h4><b>数据表检查</b></h4>
-                <table class="layui-table" lay-even style="max-width: 280px;">
-                    <colgroup>
-                        <col width="180">
-                        <col width="100">
-                        <col>
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>数据表</th>
-                            <th class="text-center">检查结果</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {volist name="table_check" id="vo"}
-                        <tr>
-                            <td>{$vo.table}</td>
-                            <td class="text-center">{$vo.result|raw}</td>
-                        </tr>
-                        {/volist}
-                    </tbody>
-                </table>
-            </div>
-            {/notempty}
-            
-            {if !empty($config['tables'])}
             <div class="layui-form-item">
                 <h4><b>是否清除旧数据</b></h4>
                 <div>
                     <input type="radio" name="clear" value="0" title="否" checked>
                     <input type="radio" name="clear" value="1" title="是">
                 </div>
-                <div class="layui-form-mid layui-word-aux">选择“是”，将删除数据库中已存在的相同数据表</div>
+                <div class="layui-form-mid layui-word-aux">选择“是”，将根据模块的安装脚本执行相应的清除操作。</div>
             </div>
-            {/if}
             
             {if !empty($config['demo'])}
             <div class="layui-form-item">

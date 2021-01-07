@@ -109,7 +109,7 @@ class Module extends Base
                 $this->error($error ? $error : __('模块安装失败！'));
             }
             
-            $this->success(__('模块安装成功！一键清理缓存后生效！'), url('Module/index'));
+            $this->success(__('模块安装成功！'), url('Module/index'));
         } else {
             $module = $this->request->param('module', '');
             if (empty($module)) {
@@ -138,30 +138,8 @@ class Module extends Base
                 $needModule = ModuleFacade::checkDependence($config['need_module']);
             }
             
-            $dbPrefix = app()->db->connect()->getConfig('prefix');
-            
-            // 检查数据表
-            if (isset($config['tables']) && !empty($config['tables'])) {
-                foreach ($config['tables'] as $table) {
-                    $table = $dbPrefix . $table;
-                    if (Db::query("SHOW TABLES LIKE '{$table}'")) {
-                        $tableCheck[] = [
-                            'table' => "{$table}",
-                            'result' => '<span class="text-danger">'.__('存在同名').'</span>',
-                        ];
-                    } else {
-                        $tableCheck[] = [
-                            'table' => "{$table}",
-                            'result' => '<i class="iconfont icon-success text-success"></i>',
-                        ];
-                    }
-                }
-
-            }
-            
             $this->assign('need_module', $needModule);
             $this->assign('version_check', $versionCheck);
-            $this->assign('table_check', $tableCheck);
             $this->assign('config', $config);
             $this->assign('icon', $icon);
             
@@ -190,7 +168,7 @@ class Module extends Base
                 $this->error($error ? $error : __("模块卸载失败！"), url("Module/index"));
             }
             
-            $this->success(__("模块卸载成功！一键清理缓存后生效！"), url("Module/index"));
+            $this->success(__("模块卸载成功！"), url("Module/index"));
         } else {
             $module = $this->request->param('module', '');
             if (empty($module)) {
@@ -231,7 +209,7 @@ class Module extends Base
                 $this->error($error ? $error : __('模块更新失败！'));
             }
             
-            $this->success(__('模块更新成功！一键清理缓存后生效！'), url('Module/index'));
+            $this->success(__('模块更新成功！'), url('Module/index'));
         } else {
             $module = $this->request->param('module', '');
             if (empty($module)) {
@@ -258,36 +236,10 @@ class Module extends Base
                 $needModule = ModuleFacade::checkDependence($config['need_module']);
             }
             
-            $dbPrefix = app()->db->connect()->getConfig('prefix');
-            
-            // 检查数据表
-            if (isset($config['tables']) && !empty($config['tables'])) {
-                foreach ($config['tables'] as $table) {
-                    $table = str_replace([
-                        'pre__'
-                    ], [
-                        $dbPrefix
-                    ], $table);
-                    if (Db::query("SHOW TABLES LIKE '{$table}'")) {
-                        $tableCheck[] = [
-                            'table' => "{$table}",
-                            'result' => '<span class="text-danger">'.__('存在同名').'</span>',
-                        ];
-                    } else {
-                        $tableCheck[] = [
-                            'table' => "{$table}",
-                            'result' => '<i class="iconfont icon-success text-success"></i>',
-                        ];
-                    }
-                }
-            
-            }
-            
             $icon = ModuleFacade::getModuleIconData($module);
             
             $this->assign('need_module', $needModule);
             $this->assign('version_check', $versionCheck);
-            $this->assign('table_check', $tableCheck);
             $this->assign('config', $config);
             $this->assign('icon', $icon);
             
@@ -322,7 +274,7 @@ class Module extends Base
         $modulePathinfo = pathinfo($originalName);
         $moduleName = $modulePathinfo['filename'];
         // 检查插件目录是否存在
-        if (!ModuleFacade::isLocal($moduleName)) {
+        if (! ModuleFacade::isLocal($moduleName)) {
             $this->error(ModuleFacade::getError());
         }
         
@@ -330,7 +282,7 @@ class Module extends Base
         $filename = $files->getPathname();
         $zip = new PclZip($filename);
         $status = $zip->extract(PCLZIP_OPT_PATH, env('lake_module_path') . $moduleName);
-        if (!$status) {
+        if (! $status) {
             $this->error(__('模块解压失败！'));
         }
         

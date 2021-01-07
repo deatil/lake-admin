@@ -233,7 +233,6 @@ class Attachment
         try {
             AttachmentModel::filesystem()->delete($filePath['path']);
         } catch(\Exception $e) {
-            throw new \Exception("删除" . $filePath['path'] . "失败");
         }
         
         $status = AttachmentModel::where('id', $id)->delete();

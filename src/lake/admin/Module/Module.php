@@ -386,13 +386,21 @@ class Module implements ModuleContract
         }
         
         // 执行安装脚本
-        $installScript = Tool::runScript($name);
+        try {
+            $installScript = Tool::runScript($name);
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
         if ($installScript === false) {
             return false;
         }
         
         // 执行菜单项安装
-        if (isset($config['menus'])) {
+        if (isset($config['menus']) 
+            && !empty($config['menus'])
+            && is_array($config['menus'])
+        ) {
             if ($this->installMenu($name, $config['menus']) !== true) {
                 $this->error = '菜单安装失败！';
                 return false;
@@ -405,8 +413,13 @@ class Module implements ModuleContract
         }
         
         // 安装结束，最后调用安装脚本完成
-        $installScript = Tool::runScript($name, 'end');
-        if ($installScript === false) {
+        try {
+            $installEnd = Tool::runScript($name, 'end');
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
+        if ($installEnd === false) {
             $this->error = '脚本安装失败！';
             return false;
         }
@@ -447,8 +460,15 @@ class Module implements ModuleContract
         }
         
         // 执行卸载脚本
-        $installScript = Tool::runScript($name, 'run', 'Uninstall');
-        if ($installScript === false) {
+        try {
+            $uninstallRun = Tool::runScript($name, 'run', 'Uninstall');
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
+        
+        if ($uninstallRun === false) {
+            $this->error = '脚本卸载失败！';
             return false;
         }
         
@@ -466,8 +486,14 @@ class Module implements ModuleContract
         ModuleEvent::uninstall($name);
         
         // 卸载结束，最后调用卸载脚本完成
-        $installScript = Tool::runScript($name, 'end', 'Uninstall');
-        if ($installScript === false) {
+        try {
+            $uninstallEnd = Tool::runScript($name, 'end', 'Uninstall');
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
+        if ($uninstallEnd === false) {
+            $this->error = '脚本卸载后失败！';
             return false;
         }
         
@@ -504,8 +530,14 @@ class Module implements ModuleContract
         @set_time_limit(0);
         
         // 执行更新脚本
-        $installScript = Tool::runScript($name, 'run', 'Upgrade');
-        if ($installScript === false) {
+        try {
+            $upgradeRun = Tool::runScript($name, 'run', 'Upgrade');
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
+        if ($upgradeRun === false) {
+            $this->error = '脚本更新失败！';
             return false;
         }
         
@@ -536,8 +568,14 @@ class Module implements ModuleContract
         }
         
         // 更新结束，最后调用安装脚本完成
-        $installScript = Tool::runScript($name, 'end', 'Upgrade');
-        if ($installScript === false) {
+        try {
+            $upgradeEnd = Tool::runScript($name, 'end', 'Upgrade');
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
+        if ($upgradeEnd === false) {
+            $this->error = '脚本更新后失败！';
             return false;
         }
         
@@ -560,7 +598,6 @@ class Module implements ModuleContract
     {
         if (empty($config['name']) 
             || empty($config['version']) 
-            || empty($config['sign'])
         ) {
             $this->error = '模块信息错误！';
             return false;
@@ -581,7 +618,6 @@ class Module implements ModuleContract
             'version' => $config['version'],
             'adaptation' => isset($config['adaptation']) ? $config['adaptation'] : '',
             'path' => $modulePath,
-            'sign' => $config['sign'],
             
             'need_module' => (isset($config['need_module']) && !empty($config['need_module'])) ? json_encode($config['need_module']) : '',
             'setting' => (isset($config['setting']) && !empty($config['setting'])) ?  json_encode($config['setting']) : '',
@@ -613,7 +649,6 @@ class Module implements ModuleContract
     {
         if (empty($config['name']) 
             || empty($config['version']) 
-            || empty($config['sign'])
         ) {
             $this->error = '模块信息错误！';
             return false;
@@ -633,7 +668,6 @@ class Module implements ModuleContract
             'version' => $config['version'],
             'adaptation' => isset($config['adaptation']) ? $config['adaptation'] : '',
             'path' => $modulePath,
-            'sign' => $config['sign'],
             
             'need_module' => isset($config['need_module']) ? json_encode($config['need_module']) : '',
             'setting' => isset($config['setting']) ?  json_encode($config['setting']) : '',

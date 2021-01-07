@@ -43,8 +43,6 @@ class Tool
             'adaptation' => '',
             // 模块路径，默认为空，自定义包插件可填写
             'path' => '',
-            // 签名
-            'sign' => '',
             // 依赖模块
             'need_module' => [],
             // 设置

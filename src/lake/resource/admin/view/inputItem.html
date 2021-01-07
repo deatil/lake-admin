@@ -166,7 +166,7 @@ layui.use('colorpicker', function(){
     <div class="layui-form-item">
         <label class="">{$vo.title} {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}&nbsp;<font color="red">*</font>{/if}</label>
         <div class="layui-form-field-label">
-            <input type="text" class="layui-input test-item" name="{$vo.fieldArr}[{$vo.name}]" placeholder="请输入{$vo.title}" value="{$vo.value}">
+            <input type="text" class="layui-input datetime-item" name="{$vo.fieldArr}[{$vo.name}]" placeholder="请输入{$vo.title}" value="{$vo.value}">
         </div>
         {if $vo.remark}<div class="layui-form-mid layui-word-aux">{$vo.remark|raw}</div>{/if}
     </div>
@@ -174,7 +174,7 @@ layui.use('colorpicker', function(){
 <script type="text/javascript">
 layui.use(['laydate'], function() {
     var laydate = layui.laydate;
-    lay('.test-item').each(function() {
+    lay('.datetime-item').each(function() {
         laydate.render({
             elem: this,
             trigger: 'click',

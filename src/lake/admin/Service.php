@@ -198,7 +198,9 @@ class Service extends BaseService
         }
         
         foreach ($events as $event) {
-            $this->app->event->listen($event['name'], $event['class']);
+            if (class_exists($event['class'])) {
+                $this->app->event->listen($event['name'], $event['class']);
+            }
         }
     }
     

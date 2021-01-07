@@ -126,7 +126,7 @@ class LakeAdminInstall extends Command
         // $dbpre = $input->getOption('dbpre');
         
         // 手动添加
-        $dbpre = $this->output->ask($input, '> You can set a dbpre');
+        $dbpre = $this->output->ask($input, '> You can set a dbpre (enter skip)');
         
         // 当前连接数据库配置
         $dbConfig = app()->db->connect()->getConfig();
