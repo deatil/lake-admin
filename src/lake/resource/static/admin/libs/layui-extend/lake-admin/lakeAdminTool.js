@@ -115,7 +115,7 @@ layui.define(['jquery', 'jqueryCookie', 'lakeAdminMenu', 'IScroll'], function (e
                     if (options.icon) {
                         var icon = '<i class="item-dragsort ' + options.icon + '"></i>&nbsp;';
                     } else {
-                        var icon = '';
+                        var icon = '<i class="item-dragsort icon-neirongguanli"></i>&nbsp;';
                     }
                     
                     var title = icon + '<span class="layui-nav-title">' + options.title + '</span>';

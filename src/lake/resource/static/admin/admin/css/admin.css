@@ -9,7 +9,7 @@
     background-color:#009688 !important;
 }
 
-/**自定义滚动条样式 */
+/** 自定义滚动条样式 */
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -31,6 +31,23 @@
 }
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(128,135,139,.8);
+}
+
+input::-webkit-input-placeholder, 
+textarea::-webkit-input-placeholder {
+    color: #b3b3b3;
+}
+input:-moz-placeholder, 
+textarea:-moz-placeholder {
+    color:#b3b3b3;
+}
+input::-moz-placeholder, 
+textarea::-moz-placeholder {
+    color:#b3b3b3;
+}
+input:-ms-input-placeholder, 
+textarea:-ms-input-placeholder {
+    color:#b3b3b3;
 }
 
 code {
