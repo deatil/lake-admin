@@ -33,7 +33,7 @@ class Attachments extends Base
                 ->order('create_time desc')
                 ->select()
                 ->toArray();
-            if (!empty($list)) {
+            if (! empty($list)) {
                 foreach ($list as $k => &$v) {
                     $v['path'] = AttachmentModel::objectUrl($v['path']);
                 }
@@ -65,7 +65,7 @@ class Attachments extends Base
      */
     public function view($id)
     {
-        if (!$this->request->isGet()) {
+        if (! $this->request->isGet()) {
             $this->error(__('访问错误！'));
         }
         
@@ -94,7 +94,7 @@ class Attachments extends Base
      */
     public function delete()
     {
-        if (!$this->request->isPost()) {
+        if (! $this->request->isPost()) {
             $this->error(__('请求错误！'));
         }
         
@@ -103,7 +103,7 @@ class Attachments extends Base
             $this->error(__('请选择需要删除的附件！'));
         }
         
-        if (!is_array($ids)) {
+        if (! is_array($ids)) {
             $ids = [0 => $ids];
         }
         
