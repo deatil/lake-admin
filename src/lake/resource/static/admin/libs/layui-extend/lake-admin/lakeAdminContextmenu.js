@@ -45,13 +45,14 @@
                 if (!(thisDataId != '' && thisDataId != 'default')) {
                     var ul = '<ul>';
                         ul += '<li data-target="lake-admin-contextmenu-refresh-page" title="刷新当前选项卡"><i class="iconfont icon-shuaxin" aria-hidden="true"></i> 刷新</li>';
-                        ul += '<li data-target="lake-admin-contextmenu-close-other-page" title="关闭其他选项卡"><i class="layui-icon layui-icon-radio" aria-hidden="true"></i> 关闭其他</li>';
                         ul += '<li data-target="lake-admin-contextmenu-close-all-page" title="关闭全部选项卡"><i class="iconfont icon-richangqingli" aria-hidden="true"></i> 全部关闭</li>';
                         ul += '</ul>';
                 } else {
                     var ul = '<ul>';
                         ul += '<li data-target="lake-admin-contextmenu-refresh-page" title="刷新当前选项卡"><i class="iconfont icon-shuaxin" aria-hidden="true"></i> 刷新</li>';
                         ul += '<li data-target="lake-admin-contextmenu-close-current-page" title="关闭当前选项卡"><i class="layui-icon layui-icon-close" aria-hidden="true"></i> 关闭当前</li>';
+                        ul += '<li data-target="lake-admin-contextmenu-close-prev-page" title="关闭左侧选项卡"><i class="layui-icon layui-icon-left" aria-hidden="true"></i> 关闭左侧</li>';
+                        ul += '<li data-target="lake-admin-contextmenu-close-next-page" title="关闭右侧选项卡"><i class="layui-icon layui-icon-right" aria-hidden="true"></i> 关闭右侧</li>';
                         ul += '<li data-target="lake-admin-contextmenu-close-other-page" title="关闭其他选项卡"><i class="layui-icon layui-icon-radio" aria-hidden="true"></i> 关闭其他</li>';
                         ul += '<li data-target="lake-admin-contextmenu-close-all-page" title="关闭全部选项卡"><i class="iconfont icon-richangqingli" aria-hidden="true"></i> 全部关闭</li>';
                         ul += '</ul>';
@@ -93,11 +94,12 @@
                         var $that = $(this);
                         // 绑定菜单的点击事件
                         $that.on('click', function () {
-                            //获取点击的target值
+                            // 获取点击的target值
                             var target = $that.data('target');
                             
                             switch (target) {
-                                case 'lake-admin-contextmenu-refresh-page': //刷新当前
+                                // 刷新当前
+                                case 'lake-admin-contextmenu-refresh-page': 
                                     var index = layer.load();
                                     var iframe = $('#iframe_' + id);
                                     if (iframe[0].contentWindow) {
@@ -105,12 +107,54 @@
                                         layer.close(index);
                                     }
                                     break;
-                                case 'lake-admin-contextmenu-close-current-page': //关闭当前
+                                // 关闭当前
+                                case 'lake-admin-contextmenu-close-current-page': 
                                     if ($($target).find(".layui-tab-close").length > 0) {
                                         $($target).find(".layui-tab-close").trigger('click');
                                     }
                                     break;
-                                case 'lake-admin-contextmenu-close-other-page': //关闭其他
+                                // 关闭左侧
+                                case 'lake-admin-contextmenu-close-prev-page': 
+                                    var hasCurrentPostion = false;
+                                    topNav.children('li').each(function () {
+                                        if ($(this).attr('lay-id') == id 
+                                            || hasCurrentPostion == true
+                                        ) {
+                                            hasCurrentPostion = true;
+                                            return ;
+                                        }
+                                        
+                                        if ($(this).find(".layui-tab-close").length > 0) {
+                                            $(this).find(".layui-tab-close").trigger('click');
+                                        }
+                                    });
+                                    
+                                    $('li[lay-id="'+id+'"]').trigger('click');
+                                    
+                                    break;
+                                // 关闭右侧
+                                case 'lake-admin-contextmenu-close-next-page': 
+                                    var hasCurrentPostion = false;
+                                    topNav.children('li').each(function () {
+                                        if ($(this).attr('lay-id') == id) {
+                                            hasCurrentPostion = true;
+                                            return ;
+                                        }
+                                        
+                                        if (hasCurrentPostion == false) {
+                                            return ;
+                                        }
+                                        
+                                        if ($(this).find(".layui-tab-close").length > 0) {
+                                            $(this).find(".layui-tab-close").trigger('click');
+                                        }
+                                    });
+                                    
+                                    $('li[lay-id="'+id+'"]').trigger('click');
+                                    
+                                    break;
+                                // 关闭其他
+                                case 'lake-admin-contextmenu-close-other-page': 
                                     topNav.children('li').each(function () {
                                         if ($(this).attr('lay-id') == id) {
                                             return;
@@ -124,7 +168,8 @@
                                     $('li[lay-id="'+id+'"]').trigger('click');
                                     
                                     break;
-                                case 'lake-admin-contextmenu-close-all-page': //全部关闭
+                                // 全部关闭
+                                case 'lake-admin-contextmenu-close-all-page': 
                                     topNav.children('li').each(function () {
                                         if ($(this).find(".layui-tab-close").length > 0) {
                                             $(this).find(".layui-tab-close").trigger('click');

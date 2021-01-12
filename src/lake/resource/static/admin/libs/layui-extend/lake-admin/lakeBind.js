@@ -1,3 +1,6 @@
+/**
+ * 快速绑定方法，部分代码来自于网络
+ */
 layui.define(['table', 'element', 'layer', 'form', 'notice', 'msg', 'lakeform', 'fieldlist'], function(exports) {
     var element = layui.element,
         table = layui.table,
