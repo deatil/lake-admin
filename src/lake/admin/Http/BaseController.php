@@ -64,11 +64,19 @@ abstract class BaseController
      * @param  bool         $batch    是否批量验证
      * @return string|true
      */
-    protected function validate(array $data, $validate, array $message = [], bool $batch = false)
-    {
+    protected function validate(
+        array $data, 
+        $validate, 
+        array $message = [], 
+        bool $batch = false
+    ) {
         if (is_array($validate)) {
             $v = new Validate();
             $v->rule($validate);
+        } elseif (is_object($validate) 
+            && $validate instanceof Validate
+        ) {
+            $v = $validate;
         } else {
             if (strpos($validate, '.')) {
                 // 支持场景
@@ -76,7 +84,7 @@ abstract class BaseController
             }
             $class = false !== strpos($validate, '\\') ? $validate : $this->app->parseClass('validate', $validate);
             $v     = new $class();
-            if (!empty($scene)) {
+            if (! empty($scene)) {
                 $v->scene($scene);
             }
         }
