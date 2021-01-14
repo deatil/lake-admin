@@ -6,6 +6,22 @@
         <input type="hidden" class="form-control" name="{$vo.fieldArr}[{$vo.name}]"  value="{$vo.value}">
     {/if}
 {/case}
+{case value="password"}
+<div class="layui-form-item">
+    <label class="">
+        {$vo.title} 
+        {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+            &nbsp;<font color="red">*</font>
+        {/if}
+    </label>
+    <div class="layui-form-field-label">
+        <input type="password" name="{$vo.fieldArr}[{$vo.name}]" placeholder="请输入{$vo.title}" autocomplete="off" class="layui-input" value="{$vo.value}">
+    </div>
+    {if $vo.remark}
+        <div class="layui-form-mid layui-word-aux">{$vo.remark|raw}</div>
+    {/if}
+</div>
+{/case}
 {case value="text"}
 <div class="layui-form-item">
     <label class="">
