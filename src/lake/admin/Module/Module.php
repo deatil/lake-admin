@@ -1046,7 +1046,7 @@ class Module implements ModuleContract
         }
         
         // 设置自定义的安装模块
-        $installModules = Config::get('app.install_modules');
+        $installModules = Config::get('app.install_modules', []);
         if (in_array($name, $installModules)) {
             return true;
         }
