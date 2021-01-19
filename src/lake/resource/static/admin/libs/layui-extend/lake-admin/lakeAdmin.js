@@ -5,12 +5,12 @@
  * Apache License 2.0 © Deatil
  */
 layui.define([
-    'element', 
-    'layer', 
-    'form', 
+    "element", 
+    "layer", 
+    "form", 
     "utils",
-    'jquery', 
-    'jqueryCookie', 
+    "jquery", 
+    "jqueryCookie", 
     "jqueryDragsort", 
     "lakeAdminMenu", 
     "lakeAdminSkin", 
