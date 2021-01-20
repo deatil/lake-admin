@@ -232,6 +232,34 @@
         </script>
         {/case}
         
+        {case value="date"}
+        <div class="layui-form-item">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <input type="text" class="layui-input date-item date-item-{$vo.name}" name="{$vo.fieldArr}[{$vo.name}]" placeholder="请输入{$vo.title}" value="{$vo.value}">
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        <script type="text/javascript">
+        layui.use(['laydate'], function() {
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: ".date-item-{$vo.name}",
+                trigger: 'click'
+            });
+        });
+        </script>
+        {/case}
+        
         {case value="datetime"}
         <div class="layui-form-item">
             <label class="">
