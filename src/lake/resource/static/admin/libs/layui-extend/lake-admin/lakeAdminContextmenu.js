@@ -51,9 +51,9 @@
                     var ul = '<ul>';
                         ul += '<li data-target="lake-admin-contextmenu-refresh-page" title="刷新当前选项卡"><i class="iconfont icon-shuaxin" aria-hidden="true"></i> 刷新</li>';
                         ul += '<li data-target="lake-admin-contextmenu-close-current-page" title="关闭当前选项卡"><i class="layui-icon layui-icon-close" aria-hidden="true"></i> 关闭当前</li>';
+                        ul += '<li data-target="lake-admin-contextmenu-close-other-page" title="关闭其他选项卡"><i class="layui-icon layui-icon-radio" aria-hidden="true"></i> 关闭其他</li>';
                         ul += '<li data-target="lake-admin-contextmenu-close-prev-page" title="关闭左侧选项卡"><i class="layui-icon layui-icon-left" aria-hidden="true"></i> 关闭左侧</li>';
                         ul += '<li data-target="lake-admin-contextmenu-close-next-page" title="关闭右侧选项卡"><i class="layui-icon layui-icon-right" aria-hidden="true"></i> 关闭右侧</li>';
-                        ul += '<li data-target="lake-admin-contextmenu-close-other-page" title="关闭其他选项卡"><i class="layui-icon layui-icon-radio" aria-hidden="true"></i> 关闭其他</li>';
                         ul += '<li data-target="lake-admin-contextmenu-close-all-page" title="关闭全部选项卡"><i class="iconfont icon-richangqingli" aria-hidden="true"></i> 全部关闭</li>';
                         ul += '</ul>';
                 }
