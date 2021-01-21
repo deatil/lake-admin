@@ -184,7 +184,7 @@
                 <select name="{$vo.fieldArr}[{$vo.name}]">
                     <option value=""></option>
                     {volist name="vo.options" id="v"}
-                        <option value="{$key}" {if $key==$vo[ 'value' ]}selected="" {/if}>{$v}</option>
+                        <option value="{$key}" {if $key==$vo['value']}selected="" {/if}>{$v}</option>
                     {/volist}
                 </select>
             </div>
