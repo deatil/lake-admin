@@ -13,12 +13,13 @@
         {
             "name": "deatil",
             "email": "deatil@github.com",
-            "homepage": "https://github.com/deatil"
+            "homepage": "https://github.com/deatil",
+            "role": "Developer"
         }
     ],
     "require": {
         "php": ">=7.1",
-        "topthink/framework": "6.0.5",
+        "topthink/framework": "6.0.6",
         "topthink/think-orm": "2.0.34",
         "topthink/think-view": "1.0.14",
         "topthink/think-multi-app": "1.0.14",
