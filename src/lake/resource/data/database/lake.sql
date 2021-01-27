@@ -130,6 +130,8 @@ CREATE TABLE `pre__lakeadmin_auth_rule_extend` (
   `add_time` int(10) DEFAULT '0' COMMENT '添加时间',
   `add_ip` varchar(50) DEFAULT '' COMMENT '添加IP',
   PRIMARY KEY (`id`),
+  KEY `module` (`module`),
+  KEY `type` (`type`),
   KEY `group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='规则扩展表';
 
