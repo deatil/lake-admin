@@ -56,7 +56,7 @@ class ResetPassword extends Command
         $appPath = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR;
         $files = array_merge([], glob($appPath . 'config' . DIRECTORY_SEPARATOR . '*' . $this->app->getConfigExt()));
         foreach ($files as $file) {
-            app()->config->load($file, pathinfo($file, PATHINFO_FILENAME));
+            $this->app->config->load($file, pathinfo($file, PATHINFO_FILENAME));
         }
         
         $password = md5($password);
