@@ -40,9 +40,9 @@ class ResetPassword extends Command
     {
         $output->newLine();
         
-        $adminid = $output->ask($input, '> Before, you need enter an adminid');
-        if (empty($adminid)) {
-            $output->error('> Adminid is empty!');
+        $admin = $output->ask($input, '> Before, you need enter an adminid or an adminname');
+        if (empty($admin)) {
+            $output->error('> Admin is empty!');
             return false;
         }
         
@@ -67,8 +67,12 @@ class ResetPassword extends Command
         $data['password'] = $passwordInfo['password'];
 
         $status = AdminModel::where([
-            'id' => $adminid,
-        ])->update($data);
+                'id' => $admin,
+            ])
+            ->whereOr([
+                'username' => $admin,
+            ])
+            ->update($data);
         
         if ($status === false) {
             $output->error('> Reset password is error!');

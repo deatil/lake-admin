@@ -22,9 +22,6 @@ class Repair extends Command
 {
     /**
      * 配置
-     *
-     * @create 2020-7-23
-     * @author deatil
      */
     protected function configure()
     {
@@ -35,9 +32,6 @@ class Repair extends Command
 
     /**
      * 执行
-     *
-     * @create 2020-7-23
-     * @author deatil
      */
     protected function execute(Input $input, Output $output)
     {
@@ -46,9 +40,6 @@ class Repair extends Command
 
     /**
      * 系统静态文件
-     *
-     * @create 2020-9-21
-     * @author deatil
      */
     protected function adminStatic(Input $input, Output $output)
     {

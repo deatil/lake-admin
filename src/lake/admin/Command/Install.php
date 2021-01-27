@@ -27,12 +27,8 @@ use Lake\Admin\Module\Module;
  */
 class Install extends Command
 {
-
     /**
      * 配置
-     *
-     * @create 2019-10-5
-     * @author deatil
      */
     protected function configure()
     {
@@ -47,9 +43,6 @@ class Install extends Command
 
     /**
      * 执行
-     *
-     * @create 2019-10-5
-     * @author deatil
      */
     protected function execute(Input $input, Output $output)
     {
@@ -74,9 +67,6 @@ class Install extends Command
 
     /**
      * 检测扩展
-     *
-     * @create 2020-8-11
-     * @author deatil
      */
     protected function lakeAdminCheckFunction(Input $input, Output $output)
     {
@@ -105,9 +95,6 @@ class Install extends Command
 
     /**
      * 执行
-     *
-     * @create 2019-10-5
-     * @author deatil
      */
     protected function lakeAdminInstall(Input $input, Output $output)
     {
@@ -126,7 +113,7 @@ class Install extends Command
         // $dbpre = $input->getOption('dbpre');
         
         // 手动添加
-        $dbpre = $this->output->ask($input, '> You can set a dbpre (enter skip)');
+        $dbpre = $this->output->ask($input, '> You can set a dbpre (enter empty will skip)');
         
         // 当前连接数据库配置
         $dbConfig = app()->db->connect()->getConfig();
@@ -195,7 +182,7 @@ class Install extends Command
                 ], trim($value));
                 $db2->execute($value);
             } catch (\Exception $e) {
-                $output->warning("Lake-admin tip: import sql is error!");
+                $output->warning("Lake-admin tip: " . $e->getMessage());
                 return false;
             }
         }
@@ -229,10 +216,8 @@ class Install extends Command
     
     /**
      * 函数及扩展检查
-     * @return array
      *
-     * @create 2020-8-11
-     * @author deatil
+     * @return array
      */
     private function checkFunc()
     {

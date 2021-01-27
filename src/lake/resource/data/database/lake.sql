@@ -105,7 +105,8 @@ CREATE TABLE `pre__lakeadmin_auth_rule` (
   `add_time` int(10) DEFAULT '0' COMMENT '添加时间',
   `add_ip` varchar(50) DEFAULT '' COMMENT '添加IP',
   PRIMARY KEY (`id`),
-  KEY `module` (`status`,`type`)
+  KEY `module` (`module`),
+  KEY `type` (`type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='规则表';
 
 DROP TABLE IF EXISTS `pre__lakeadmin_auth_rule_access`;
@@ -123,13 +124,12 @@ CREATE TABLE `pre__lakeadmin_auth_rule_extend` (
   `group_id` char(32) NOT NULL DEFAULT '0',
   `rule` text NOT NULL COMMENT '扩展规则',
   `method` varchar(10) NOT NULL DEFAULT '' COMMENT '请求类型',
-  `condition` varchar(300) DEFAULT '' COMMENT '规则附加条件',
+  `condition` varchar(250) DEFAULT '' COMMENT '规则附加条件',
   `rule_data` longtext COMMENT '规则数据，主要用来编辑数据保持',
   `fields` text COMMENT '扩展权限字段',
   `add_time` int(10) DEFAULT '0' COMMENT '添加时间',
   `add_ip` varchar(50) DEFAULT '' COMMENT '添加IP',
   PRIMARY KEY (`id`),
-  KEY `module` (`module`),
   KEY `group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='规则扩展表';
 

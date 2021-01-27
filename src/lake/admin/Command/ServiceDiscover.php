@@ -21,9 +21,6 @@ class ServiceDiscover extends Command
     
     /**
      * 配置
-     *
-     * @create 2020-7-18
-     * @author deatil
      */
     protected function configure()
     {
@@ -34,9 +31,6 @@ class ServiceDiscover extends Command
 
     /**
      * 执行
-     *
-     * @create 2020-7-18
-     * @author deatil
      */
     protected function execute(Input $input, Output $output)
     {
