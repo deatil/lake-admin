@@ -18,7 +18,7 @@ use Lake\Symlink;
  * @create 2020-7-23
  * @author deatil
  */
-class LakeAdminRepair extends Command
+class Repair extends Command
 {
     /**
      * 配置

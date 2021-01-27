@@ -25,7 +25,7 @@ use Lake\Admin\Module\Module;
  * @create 2019-10-5
  * @author deatil
  */
-class LakeAdminInstall extends Command
+class Install extends Command
 {
 
     /**

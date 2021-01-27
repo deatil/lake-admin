@@ -26,9 +26,6 @@ class Admin
     /**
      * 获取当前登录用户资料
      * @return array
-     *
-     * @create 2019-7-9
-     * @author deatil
      */
     public function getLoginUserInfo($name = '')
     {
@@ -82,6 +79,7 @@ class Admin
             'username' => $userInfo['username'],
             'last_login_time' => $userInfo['last_login_time'],
         ];
+        
         Session::set('lake_admin_user_auth', $user);
         Session::set('lake_admin_user_auth_sign', Arr::dataAuthSign($user));
     }
@@ -154,9 +152,6 @@ class Admin
     /**
      * 检验用户是否已经登陆
      * @return boolean 失败返回false，成功返回当前登陆用户基本信息
-     *
-     * @create 2019-7-9
-     * @author deatil
      */
     public function isLogin()
     {
@@ -180,9 +175,6 @@ class Admin
     /**
      * 检查当前用户是否超级管理员
      * @return boolean
-     *
-     * @create 2019-7-9
-     * @author deatil
      */
     public function isAdministrator($uid = null)
     {
@@ -215,9 +207,6 @@ class Admin
     /**
      * 注销登录状态
      * @return boolean
-     *
-     * @create 2019-7-9
-     * @author deatil
      */
     public function logout()
     {

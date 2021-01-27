@@ -39,6 +39,7 @@ lake-admin是一款基于ThinkPHP6+Layui的后台开发框架。
 *  模块插件目录：`addon` 文件夹 及 自定义包模块插件
 *  自定义包模块插件可以查看：`lake-admin-addon-lmenu` 插件 及 `lake-admin-addon-lroute` 插件
 *  如果项目迁移，可以执行 `php think lake-admin:repair` 修复系统静态文件失效问题，已安装模块请根据模块相关文档更新模块静态文件链接
+*  如果密码错误，可使用命令 `php think lake-admin:reset-password` 重设密码
 
 
 ### 界面截图

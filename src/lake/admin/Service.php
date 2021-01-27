@@ -12,6 +12,9 @@ use Lake\Admin\Middleware\LoadModule;
 use Lake\Admin\Service\ModuleInit as ModuleInitService;
 use Lake\Admin\Service\ConfigInit as ConfigInitService;
 
+// 引用文件夹
+use Lake\Admin\Command;
+
 /**
  * lake-admin 服务
  *
@@ -36,9 +39,10 @@ class Service extends BaseService
         
         // 注册系统默认指令
         $this->commands([
-            \Lake\Admin\Command\LakeAdminInstall::class,
-            \Lake\Admin\Command\LakeAdminRepair::class,
-            \Lake\Admin\Command\LakeAdminServiceDiscover::class,
+            Command\Install::class,
+            Command\Repair::class,
+            Command\ServiceDiscover::class,
+            Command\ResetPassword::class,
         ]);
     }
     

@@ -16,7 +16,7 @@ use think\console\Output;
  * @create 2020-7-18
  * @author deatil
  */
-class LakeAdminServiceDiscover extends Command
+class ServiceDiscover extends Command
 {
     
     /**
