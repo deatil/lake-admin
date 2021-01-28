@@ -90,7 +90,7 @@ CREATE TABLE `pre__lakeadmin_auth_rule` (
   `parentid` char(32) DEFAULT NULL COMMENT '上级分类ID',
   `title` varchar(50) NOT NULL DEFAULT '' COMMENT '规则中文描述',
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '规则唯一英文标识',
-  `parameter` text DEFAULT '' COMMENT '附加参数',
+  `parameter` text COMMENT '附加参数',
   `fields` mediumtext COMMENT '扩展权限字段',
   `condition` varchar(300) DEFAULT '' COMMENT '规则附加条件',
   `method` varchar(10) NOT NULL DEFAULT '' COMMENT '请求类型',
