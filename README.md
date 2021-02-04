@@ -64,6 +64,9 @@ lake-admin是一款基于ThinkPHP6+Layui的后台开发框架。
 | [路由美化](https://github.com/deatil/lake-admin-addon-lroute) | 支持thinkphp自带的多种路由美化设置，自定义你的系统url |
 | [菜单结构](https://github.com/deatil/lake-admin-addon-lmenu) | 提取后台菜单分级结构格式，为你的模块开发保驾护航 |
 | [数据库管理](https://github.com/deatil/lake-admin-addon-database) | 数据库备份、优化、修复及还原，你的系统维护帮手 |
+| [广告模块](https://github.com/deatil/lake-admin-ad) | cms模块必备 |
+| [自定义表单](https://github.com/deatil/lake-admin-form) | cms模块必备模块 |
+| [友情链接](https://github.com/deatil/lake-admin-friendlink) | cms模块必备模块 |
 
 注：模块目录默认为 `/addon` 目录
 
