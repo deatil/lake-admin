@@ -33,6 +33,7 @@ lake-admin是一款基于ThinkPHP6+Layui的后台开发框架。
 *  配置数据库的连接信息
 *  `composer require lake/lake-admin` 导入lake-admin后台管理系统
 *  执行 `php think lake-admin:install` 及 `php think lake-admin:service-discover` 初始化 `lake-admin` 系统
+    * 注意: 每次有 `composer update` 或者 `composer install` 后需要执行 `php think lake-admin:service-discover` 命令
 *  设置网站执行目录为：`public`
 *  后台admin登陆，超级管理员账号及密码：`admin/123456`
 *  部分自定义配置，需要将根目录 `.env.lake` 文件里内容复制到 `.env` 内
