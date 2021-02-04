@@ -1,0 +1,188 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">模块管理</div>
+    <div class="layui-card-body">
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li>
+                    <a href="{:url('all')}">全部</a>
+                </li>
+                <li class="layui-this">
+                    <a href="{:url('index')}">已安装</a>
+                </li>
+            </ul>
+            <div class="layui-tab-content">
+        
+                <table class="layui-hide" id="table" lay-filter="table"></table>
+            </div>
+        </div>    
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <a class="layui-btn layui-btn-sm" id="local-install">本地安装</a>
+    </div>
+</script>
+
+<script type="text/html" id="iconTpl">
+    <a href="javascript:void(0);" title="{{ d.name }}">
+        <img src="{{ d.icon }}" class="module-icon js-module-icon" style="height: 100%;" />
+    </a>
+</script>
+
+<script type="text/html" id="idTpl">
+    <a class="layui-iframe" href="{:url('view')}?module={{ d.module }}" title="模块详情">
+        {{ d.module }}
+    </a>
+</script>
+
+<script type="text/html" id="versionTpl">
+    <div>
+        {{#  if(d.upgrade){ }} 
+            {{ d.upgrade.old }} 
+            <span class="text-danger">({{ d.upgrade.new }} )</span>
+        {{#  } else { }} 
+            {{ d.version }} 
+        {{#  } }}
+    </div>
+</script>
+
+<script type="text/html" id="installtimeTpl">
+    <div>
+        {{# if(d.installtime){ }} 
+            {{ layui.util.toDateString(d.installtime * 1000) }}
+        {{#  } else { }} 
+            --
+        {{#  } }}
+    </div>
+</script>
+
+<script type="text/html" id="actionTpl">
+    {{#  if(d.installtime == "" || d.installtime == null || d.installtime == undefined){ }}
+        <a class="layui-btn layui-btn-xs" href="{:url('install')}?module={{ d.module }}">安装</a>
+    {{#  } else { }}
+        {{#  if (!(d.setting == "" || d.setting == null || d.setting == undefined)){ }}
+            <a class="layui-btn layui-btn-xs layui-iframe" href='{:url("config")}?module={{ d.module }}' title="模块设置">设置</a>
+        {{#  } }}
+        
+        {{# if(d.upgrade){ }} 
+            <a class="layui-btn layui-btn-xs" href="{:url('upgrade')}?module={{ d.module }}">更新</a>
+        {{#  } }}
+        
+        {{#  if(d.status == 0){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal js-module-action-btn" 
+                data-url='{:url("enable")}'
+                data-module='{{ d.module }}'
+                data-confirm='你确认要启用该模块吗？'
+                >启用</a>
+        {{#  } else { }}
+            <a class="layui-btn layui-btn-xs layui-btn-warm js-module-action-btn" 
+                data-url='{:url("disable")}'
+                data-module='{{ d.module }}'
+                data-confirm='你确认要禁用该模块吗？'
+                >禁用</a>
+        {{#  } }}
+        
+        <a class="layui-btn layui-btn-xs layui-btn-danger" href="{:url('uninstall')}?module={{ d.module }}">卸载</a>
+    {{#  } }}
+</script>
+
+
+<script>
+layui.use(['table', 'upload'], function() {
+    var table = layui.table,
+        $ = layui.$,
+        upload = layui.upload;
+        
+    table.render({
+        elem: '#table',
+        toolbar: '#toolbar',
+        url: '{:url("index")}',
+        page: 10,
+        cols: [
+            [
+                { field: 'icon', width: 90, style: 'height: 100%;max-width:100%;', align: 'center', title: '模块标识', templet: '#iconTpl' },
+                { field: 'module', width: 150, title: '模块ID', templet: '#idTpl' },
+                { field: 'name', width: 150, title: '名称' },
+                { field: 'version', width: 100, title: '版本', templet: '#versionTpl' },
+                { field: 'author', width: 100, title: '作者' },
+                { field: 'introduce', title: '简介' },
+                { field: 'installtime', width: 160, title: '安装时间', templet: '#installtimeTpl' },
+                { width: 200, title: '操作', templet: '#actionTpl' }
+            ]
+        ],
+        done: function() {
+            $("td[data-field=name]").each(function() {
+                $(this).find(".layui-table-cell").addClass("break-all");
+            });
+        },
+    });
+
+    /**
+     * 显示icon
+     *
+     * @create 2019-11-23
+     * @author deatil
+     */
+    $("body").on('click', ".js-module-icon", function() {
+        var icon = $(this).attr('src');
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim',
+            area: ['auto'],
+            title: false,
+            shadeClose: true,
+            end: function(index, layero) {
+                return false;
+            },
+            content: '<div style="display: flex;align-items: center;justify-content: center;text-align: justify;height: 100%;"><img src="' + icon + '" /></div>',
+        });
+    });
+    
+    $("body").on('click', ".js-module-action-btn", function() {
+        var url = $(this).attr("data-url");
+        var module = $(this).attr("data-module");
+        var confirm = $(this).attr("data-confirm");
+        
+        layer.confirm(confirm, function(index){
+            var loading = layer.load(1, {shade: [0.1, '#fff']});
+            $.post(url, {module: module},function(res){
+                layer.close(loading);
+                if (res.code === 1) {
+                    layer.msg(res.msg, {time:1000, icon:1}, function() {
+                        location.reload();
+                    });
+                }else{
+                    layer.msg('操作失败！', {time:1000, icon:2});
+                }
+            });
+            layer.close(index);
+        });
+    });
+    
+    // 执行实例
+    var uploadInst = upload.render({
+        elem: '#local-install',
+        url: '{:url("module/local")}',
+        accept: 'file',
+        exts: 'zip',
+        done: function(res) {
+            // 上传完毕回调
+            layer.alert(res.msg, {}, function() {
+                if (res.code != 0) {
+                    location.reload();
+                }
+            });
+        },
+        error: function() {
+            //请求异常回调
+        }
+    });
+});
+</script>
+{/block}

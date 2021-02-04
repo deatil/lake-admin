@@ -1,0 +1,123 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">权限菜单</div>
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <table class="layui-hide" id="treeTable" lay-filter="treeTable"></table>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <a class="layui-btn layui-btn-sm layui-iframe" title="新增菜单" href="{:url('add')}">新增菜单</a>
+        <a class="layui-btn layui-btn-sm layui-btn-normal" id="openAll">展开或折叠全部</a>
+        <a class="layui-btn layui-btn-sm" href="{:url('all')}">全部菜单</a>
+    </div>
+</script>
+
+<script type="text/html" id="iconTpl">
+    <span title="{{d.title}}：{{d.id}}"><i class='iconfont {{d.icon}}'></i></span>
+</script>
+<script type="text/html" id="nameTpl">
+    <span>{{d.name}}</span>
+</script>
+<script type="text/html" id="titleTpl">
+    <span data-lake-tip="" lay-title="{{ d.tip }}">{{ d.title }}</span>
+</script>
+<script type="text/html" id="authTpl">
+    <input type="checkbox" name="is_need_auth" data-href="{:url('setauth')}?id={{d.id}}" value="{{d.id}}" lay-skin="switch" lay-text="启用|关闭" lay-filter="switchStatus" {{ d.is_need_auth==1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="menuTpl">
+    <input type="checkbox" name="is_menu" data-href="{:url('setmenu')}?id={{d.id}}" value="{{d.id}}" lay-skin="switch" lay-text="显示|隐藏" lay-filter="switchStatus" {{ d.is_menu==1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="switchTpl">
+    <input type="checkbox" name="status" data-href="{:url('setstate')}?id={{d.id}}" value="{{d.id}}" lay-skin="switch" lay-text="启用|关闭" lay-filter="switchStatus" {{ d.status==1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="barTool">
+    <a href='{:url("edit")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="编辑菜单">编辑</a>
+    <a href='{:url("add")}?parentid={{ d.id }}' class="layui-btn layui-btn-xs layui-btn-normal layui-iframe" title="新增菜单">添加</a>
+    <a href='{:url("delete")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
+</script>
+
+<script>
+var treeGrid = null;
+layui.use(['table', 'treeGrid'], function() {
+    var $ = layui.$,
+        treeGrid = layui.treeGrid,
+        tableId = 'treeTable',
+        ptable = null;
+        
+    ptable = treeGrid.render({
+        id: tableId,
+        elem: '#' + tableId,
+        toolbar: '#toolbar',
+        idField: 'id',
+        url: "{:url('index')}",
+        cellMinWidth: 100,
+        treeId: 'id', //树形id字段名称
+        treeUpId: 'parentid', //树形父id字段名称
+        treeShowName: 'title', //以树形式显示的字段
+        cellMinWidth: '150',
+        height: '', // full-140
+        isFilter: false,
+        iconOpen: false, //是否显示图标【默认显示】
+        isOpenDefault: false, //节点默认是展开还是折叠【默认展开】
+        onDblClickRow: false, //去除双击事件
+        cols: [
+            [
+                { field: 'listorder', align: 'center', width: 60, title: '排序', edit: 'text' },
+                /*
+                { field: 'id', align: 'center', width: 60, title: 'ID' },
+                */
+                { width: 80, title: '图标',align: 'center', event: 'view', templet:'#iconTpl' },
+                { field: 'title', title: '菜单名称', templet: '#titleTpl' },
+                { width: 200, title: '模块/控制器/方法', templet:"#nameTpl"},
+                { field: 'method', align: 'center', width: 90, title: '请求方式' },
+                /*
+                { field: 'is_need_auth', align: 'center', hide: 'true', width: 100, title: '权限验证', templet: '#authTpl', unresize: true },
+                */
+                { field: 'is_menu', align: 'center', width: 90, title: '菜单', templet: '#menuTpl', unresize: true },
+                { field: 'status', align: 'center', width: 90, title: '状态', templet: '#switchTpl', unresize: true },
+                { align: 'center', width: 180, title: '操作', toolbar: '#barTool' }
+            ]
+        ],
+        page: false
+    })
+
+    //监听单元格编辑
+    treeGrid.on('edit(treeTable)', function(obj) {
+        var value = obj.value,
+            data = obj.data;
+        $.post('{:url("listorder")}', { 'id': data.id, 'value': value }, function(data) {
+            if (data.code == 1) {
+                layer.msg(data.msg);
+            } else {
+                layer.msg(data.msg);
+            }
+
+        })
+    });
+
+    $('#openAll').click(function(e) {
+        var treedata = treeGrid.getDataTreeList(tableId);
+        treeGrid.treeOpenAll(tableId, !treedata[0][treeGrid.config.cols.isOpen]);
+    })
+
+    treeGrid.on('tool(treeTable)', function(obj) {
+        var data = obj.data;
+        if (obj.event === 'view') {
+            layer.alert(data.id, {
+                title: '菜单ID',
+                closeBtn: 0
+            });
+        }
+    });
+
+});
+</script>
+{/block}

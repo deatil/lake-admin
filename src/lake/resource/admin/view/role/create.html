@@ -1,0 +1,45 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">添加角色</div>
+    <div class="layui-card-body">
+        <form class="layui-form" action="{:url('write')}" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">父级</label>
+                <div class="layui-input-block w300">
+                    <select name="parentid">
+                        {volist name="group_data" id="vo"}
+                            <option value="{$vo.id}">{:htmlspecialchars_decode($vo['spacer'])} {$vo.title}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色名称</label>
+                <div class="layui-input-block w300">
+                    <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="角色名称" class="layui-input" value="{$auth_group.title}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">描述</label>
+                <div class="layui-input-block w300">
+                    <textarea name="description" placeholder="权限的相关描述" class="layui-textarea">{$auth_group.description}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block w300">
+                    <input type="radio" name="status" value="1" title="正常" {eq name="auth_group.status" value="1" }checked{/eq}>
+                    <input type="radio" name="status" value="0" title="禁用" {eq name="auth_group.status" value="0" }checked{/eq}>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="formSubmit" lay-close="self">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}

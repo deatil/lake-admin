@@ -1,0 +1,136 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">编辑访问权限</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="{:url('access')}" method="post">
+            <input type="hidden" name="rules" value="" />
+            <input type="hidden" name="id" value="{$group_id}" />
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" value="{$auth_group.title}" disabled>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限</label>
+                <div class="layui-input-block">
+                    <div class="lake-admin-auth-manager-access left">
+                        <div style="margin-left: 5px;margin-top:5px; padding: 0;">
+                            <a href="javascript:;" title="全部展开、折叠 ">
+                                <span class="button ico_open"></span>
+                                <span id="expandAll" data-open="true">全部展开、折叠 </span>
+                            </a> 
+                        </div>
+                        <div id="roleTree"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn ajax-post" lay-submit="" lay-close="self" lay-filter="*" target-form="form-horizontal">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="layui"}{/block}
+
+{block name="script"}
+<script>
+layui.config({
+    base: "admin/libs/layui-extend/"
+}).use(['jquery', 'notice', 'tree', 'treeTool'], function() {
+    var $ = layui.$,
+        notice = layui.notice,
+        tree = layui.tree,
+        treeTool = layui.treeTool;
+    
+    // 节点数据
+    var data = {:json_encode($json)};
+    
+    // 已有权限
+    var rules = {:json_encode($rules)};
+    
+    // 选中
+    var checkedIds = treeTool.formatCheckedIds(rules, data);
+    
+    tree.render({
+        elem: '#roleTree',
+        data: data,
+        showCheckbox: true,  //是否显示复选框,
+        id: 'roleTreeId',
+        isJump: false,
+        click: function(obj){
+        }
+    });
+    
+    tree.setChecked('roleTreeId', checkedIds); //勾选指定节点
+    
+    $("#expandAll").click(function() {
+        if ($(this).data("open")) {
+            $('.layui-tree-setHide').find('.layui-tree-iconClick').trigger('click');
+            $(this).data("open", false);
+        } else {
+            $('.layui-tree-spread').find('.layui-tree-iconClick').trigger('click');
+            $(this).data("open", true);
+        }
+    });
+    
+    //通用表单post提交
+    $('.ajax-post').on('click', function(e) {
+        var target, query, _form;
+        var target_form = $(this).attr('target-form');
+        var that = this;
+        var nead_confirm = false;
+
+        _form = $('.' + target_form);
+        var id = _form.find('input[name="id"]').val();
+        
+        var checkedData = tree.getChecked('roleTreeId'); //获取选中节点的数据
+        var rules = treeTool.getCheckedIds(checkedData);
+
+        if ($(this).attr('url') !== undefined) {
+            target = $(this).attr('url');
+        } else {
+            target = _form.attr("action");
+        }
+        var query = {
+            'id': id,
+            'rules': rules,
+        };
+
+        $.post(target, query).success(function(data) {
+            if (data.code == 1) {
+                if (data.url) {
+                    notice.success(data.msg)
+                } else {
+                    notice.error(data.msg);
+                }
+                setTimeout(function() {
+                    if (data.url) {
+                        location.href = data.url;
+                    } else {
+                        location.reload();
+                    }
+                }, 1500);
+            } else {
+                notice.error(data.msg);
+                setTimeout(function() {
+                    if (data.url) {
+                        location.href = data.url;
+                    }
+                }, 1500);
+            }
+        });
+        return false;
+    });
+});
+</script>
+{/block}

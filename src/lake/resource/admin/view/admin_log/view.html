@@ -1,0 +1,75 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">日志详情</div>
+    <div class="layui-card-body">
+        <div class="table-responsive">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="200">
+                    <col>
+                </colgroup>
+          
+                <thead>
+                    <tr>
+                        <td>名称</td>
+                        <td>内容</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>日志ID</td>
+                        <td>{$data.id}</td>
+                    </tr>
+                    <tr>
+                        <td>操作者ID</td>
+                        <td>{$data.admin_id}</td>
+                    </tr>
+                    <tr>
+                        <td>操作者账号</td>
+                        <td>{$data.admin_username}</td>
+                    </tr>
+                    <tr>
+                        <td>请求类型</td>
+                        <td>{$data.method}</td>
+                    </tr>
+                    <tr>
+                        <td>请求链接</td>
+                        <td>{$data.url}</td>
+                    </tr>
+                    <tr>
+                        <td>请求内容</td>
+                        <td class="break-all">{$data.info}</td>
+                    </tr>
+                    <tr>
+                        <td>请求头信息</td>
+                        <td>{$data.useragent}</td>
+                    </tr>
+                    <tr>
+                        <td>请求IP</td>
+                        <td>{$data.ip}</td>
+                    </tr>
+                    <tr>
+                        <td>请求时间</td>
+                        <td>{:date('Y-m-d H:i:s', $data['create_time'])}</td>
+                    </tr>
+                    <tr>
+                        <td>状态</td>
+                        <td>
+                            {if $data['status'] == 1}
+                                <span class='layui-badge-dot layui-bg-green'></span>
+                                <span class='text-green'>启用</span>
+                            {else/}
+                                <span class='layui-badge-dot layui-bg-orange'></span>
+                                <span class='text-orange'>禁用</span>
+                            {/if}
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}

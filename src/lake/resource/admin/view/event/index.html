@@ -1,0 +1,135 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">事件</div>
+    <div class="layui-card-body">
+        <blockquote class="layui-elem-quote">
+            <form class="layui-form lake-admin-search-form" method="get" lay-filter="lake-admin-search-from">
+                <div class="layui-inline">
+                    <select name="field" class="lake-admin-search-field">
+                        <option value="">全部类型</option>
+                        <option value="module">模块</option>
+                        <option value="name">监听点</option>
+                    </select>
+                </div>
+                <div class="layui-inline">
+                    <input type="text" name="keyword" class="layui-input lake-admin-search-val" placeholder="请输入关键字">
+                </div>
+                <div class="layui-inline">
+                    <a class="layui-btn lake-admin-search-btn" data-type="search">搜索</a>
+                </div>
+                <div class="layui-inline">
+                    <a class="layui-btn" href="{:url('index')}">查看全部</a>
+                </div>
+            </form>
+        </blockquote>
+        
+        <div class="layui-form">
+            <table class="layui-hide" id="table" lay-filter="table"></table>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <a class="layui-btn layui-btn-sm layui-iframe" href="{:url('add')}" title="添加监听类">添加监听类</a>
+        <a class="layui-btn layui-btn-sm layui-btn-normal" href="{:url('module')}" title="模块列表">模块列表</a>
+        <a class="layui-btn layui-btn-sm layui-btn-normal" href="{:url('name')}" title="监听点列表">监听点列表</a>
+    </div>
+</script>
+
+<script type="text/html" id="module">
+    <a class="text-info" href="{:url('index')}?search_field=module&keyword={{ d.module }}">{{ d.module }}</a>
+</script>
+
+<script type="text/html" id="name">
+    <a class="text-info" href="{:url('index')}?search_field=name&keyword={{ d.name }}">{{ d.name }}</a>
+</script>
+
+<script type="text/html" id="status">
+    {{#  if(d.status == 1){ }}
+        <span class='layui-badge-dot layui-bg-green'></span>
+        <span class='text-green'>启用</span>
+    {{#  } else { }}
+        <span class='layui-badge-dot layui-bg-orange'></span>
+        <span class='text-orange'>禁用</span>
+    {{#  } }}
+</script>
+
+<script type="text/html" id="barTool">
+    <a href='{:url("edit")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="编辑监听类">编辑</a>
+    <a href='{:url("del")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
+</script>
+
+<script type="text/javascript">
+layui.use('table', function() {
+    var $ = layui.$,
+        table = layui.table,
+        form = layui.form;
+        
+    form.val('lake-admin-search-from', {
+        "field": "{$search_field}",
+        "keyword": "{$keyword}",
+    });
+        
+    table.render({
+        elem: '#table',
+        toolbar: '#toolbar',
+        url: '{:url("index")}',
+        cols: [
+            [
+                { field: 'listorder', align: 'center', width: 70, title: '排序', edit: 'text' },
+                { field: 'module', width: 120, title: '所属模块', templet:'#module' },
+                { field: 'name', width: 130, title: '监听点', templet:'#name' },
+                { field: 'class', width: 230, title: '监听类' },
+                { field: 'description', title: '描述' },
+                { field: 'status', width: 100, align:"center", title: '状态', templet:'#status' },
+                { width: 160, title: '操作', toolbar: '#barTool' },
+            ]
+        ],
+        page: {},
+        where: {
+            search_field: $(".lake-admin-search-field").val(),
+            keyword: $(".lake-admin-search-val").val(),
+        }
+    });
+    
+    $(".lake-admin-search-btn").on("click", function() {
+        table.reload("table", {
+            page: {
+                curr: 1
+            },
+            where: {
+                search_field: $(".lake-admin-search-field").val(),
+                keyword: $(".lake-admin-search-val").val(),
+            }
+        })
+    });
+    
+    // 监听单元格编辑
+    table.on('edit(table)', function(obj) {
+        var field = obj.field,
+            value = obj.value,
+            data = obj.data;
+
+        if (field == 'listorder') {
+            $.post('{:url("listorder")}', { 
+                'id': data.id, 
+                'value': value 
+            }, function(data) {
+                if (data.code == 1) {
+                    layer.msg(data.msg);
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        }
+    });
+    
+    
+});
+</script>
+{/block}

@@ -1,0 +1,121 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">配置管理</div>
+    <div class="layui-card-body">
+        <div class="layui-tab layui-tab-card">
+            <div class="layui-tab-content">
+                <blockquote class="layui-elem-quote">
+                    <form class="layui-form lake-admin-search-form" method="get" lay-filter="lake-admin-search-from">
+                        <div class="layui-inline">
+                                <select name="field" class="lake-admin-search-field">
+                                    <option value="">全部类型</option>
+                                    <option value="id">ID</option>
+                                    <option value="module">模块</option>
+                                    <option value="title">中文描述</option>
+                                    <option value="name">英文标识</option>
+                                </select>
+                        </div>
+                        <div class="layui-inline">
+                            <input type="text" name="keyword" class="layui-input lake-admin-search-val" placeholder="请输入关键字">
+                        </div>
+                        <div class="layui-inline">
+                            <a class="layui-btn lake-admin-search-btn" data-type="search">搜索</a>
+                        </div>
+                        <div class="layui-inline">
+                            <a class="layui-btn" href="{:url('all')}">查看全部</a>
+                        </div>
+                    </form>
+                </blockquote>
+            
+                <table class="layui-hide" id="dataTable" lay-filter="dataTable"></table>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <a class="layui-btn layui-btn-sm layui-iframe" href="{:url('add')}" title="新增菜单">新增菜单</a>
+        <a class="layui-btn layui-btn-sm layui-btn-normal" href="{:url('index')}">权限菜单</a>
+    </div>
+</script>
+<script type="text/html" id="barTool">
+    <a href='{:url("edit")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="编辑后台菜单">编辑</a>
+    <a href='{:url("add")}?parentid={{ d.id }}' class="layui-btn layui-btn-xs layui-btn-normal layui-iframe" title="新增后台菜单">添加</a>
+    <a href='{:url("delete")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
+</script>
+<script type="text/html" id="titleTpl">
+    <span data-lake-tip="" lay-title="{{ d.tip }}">{{ d.title }}</span>
+</script>
+<script type="text/html" id="authTpl">
+    <input type="checkbox" name="is_need_auth" data-href="{:url('setauth')}?id={{d.id}}" value="{{d.id}}" lay-skin="switch" lay-text="启用|关闭" lay-filter="switchStatus" {{ d.is_need_auth==1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="menuTpl">
+    <input type="checkbox" name="is_menu" data-href="{:url('setmenu')}?id={{d.id}}" value="{{d.id}}" lay-skin="switch" lay-text="显示|隐藏" lay-filter="switchStatus" {{ d.is_menu==1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="switchTpl">
+    <input type="checkbox" name="status" data-href="{:url('setstate')}?id={{d.id}}" value="{{d.id}}" lay-skin="switch" lay-text="启用|关闭" lay-filter="switchStatus" {{ d.status==1 ? 'checked' : '' }}>
+</script>
+
+<script>
+layui.use('table', function() {
+    var table = layui.table,
+        $ = layui.$,
+        form = layui.form;
+        
+    table.render({
+        elem: '#dataTable',
+        toolbar: '#toolbar',
+        url: '{:url("all")}',
+        cols: [
+            [
+                { field: 'listorder', align: 'center', width: 60, title: '排序', edit: 'text' },
+                { field: 'id', align: 'center', width: 60, title: 'ID' },
+                { field: 'module', width: 100, hide: 'true', title: '模块' },
+                { width: 80,title: '图标',align: 'center',templet:"<div><i class='iconfont {{d.icon}}'></i></div>" },
+                { field: 'title', minWidth: 120, title: '菜单名称', templet: '#titleTpl' },
+                { width: 200, title: '模块/控制器/方法',templet:"<div>{{d.name}}</div>"},
+                { field: 'method', align: 'center', width: 90, title: '请求方式' },
+                { field: 'is_need_auth', align: 'center', hide: 'true', width: 100, title: '权限验证', templet: '#authTpl', unresize: true },
+                { field: 'is_menu', align: 'center', width: 95, title: '菜单', templet: '#menuTpl', unresize: true },
+                { field: 'status', align: 'center', width: 95, title: '状态', templet: '#switchTpl', unresize: true },
+                { align: 'center', width: 180, title: '操作', toolbar: '#barTool' }
+            ]
+        ],
+        page: {},
+        limit: 20,
+    });
+    
+    // 搜索
+    $(".lake-admin-search-btn").on("click", function() {
+        table.reload("dataTable", {
+            page: {
+                curr: 1
+            },
+            where: {
+                search_field: $(".lake-admin-search-field").val(),
+                keyword: $(".lake-admin-search-val").val(),
+            }
+        })
+    });
+    
+    // 监听单元格编辑
+    table.on('edit(dataTable)', function(obj) {
+        var value = obj.value,
+            data = obj.data;
+        $.post('{:url("config/listorder")}', {'id': data.id,'value':value }, function(data) {
+            if (data.code == 1) {
+                layer.msg(data.msg);
+            }else{
+                layer.msg(data.msg);
+            }
+
+        })
+    });
+});
+</script>
+{/block}

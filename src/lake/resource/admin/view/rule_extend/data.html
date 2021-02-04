@@ -1,0 +1,38 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">规则数据</div>
+    <div class="layui-card-body">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-lg6 layui-col-md12">
+                <table class="layui-table magt0">
+                    <colgroup>
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>
+                                名称
+                            </th>
+                            <th>
+                                数据
+                            </th>
+                        </tr>
+                    </thead>                    
+                    <tbody>
+                        <tr>
+                            <td>规则数据</td>
+                            <td class="rule_data">
+                                {$data.rule_data}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+{/block}

@@ -1,0 +1,56 @@
+@charset "utf-8";
+
+::selection{color:#fff !important;background-color:#009688 !important}
+::-moz-selection{color:#fff !important;background-color:#009688 !important}
+
+/* login */
+body {
+    display: block;
+    height: 100%;
+    background-color: #2D2D2D !important;
+}
+
+.lake-admin-login {
+    display: block;
+}
+.lake-admin-login .login-main {padding: 0 20px; width: 400px;height: 335px; position: absolute; left: 50%; top: 50%; margin: -200px 0 0 -200px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -o-box-sizing: border-box; box-sizing: border-box; background: #fff; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; box-shadow: 0 0 50px #000;}
+.lake-admin-login .login-main .layui-elip {margin-top: 10%;height: 35px; line-height: 35px; font-size: 30px; font-weight: 100; text-align: center; }
+.lake-admin-login .login-main .layui-elip span.version {font-size: 12px; }
+.lake-admin-login .login-main form .layui-input-inline,
+.lake-admin-login .login-main form .layui-input-inline button{width: 100%; }
+.lake-admin-login .login-main form .verify-box input {display: inline-block; width: 60%; }
+.lake-admin-login .login-main .layui-elip, 
+.lake-admin-login .login-main form .layui-input-inline {margin-bottom: 15px; }
+.lake-admin-login .login-main form .verify-box img {display: inline-block; margin-left: 2%; width: 36%; height: 38px; }
+.lake-admin-login .login-main .lake-admin-copyright {text-align: center;position: absolute;bottom: -50px;left:0;right:0;font-size: 16px;color: #757575;}
+.lake-admin-login .login-main .lake-admin-copyright a {color: #757575;}
+.lake-admin-login .login-main .lake-admin-copyright a:hover {color: #fff;}
+
+.lake-admin-login .login-main .layui-form-item label {position: absolute; color: #757575; left: 10px; top: 9px; line-height: 20px; background: #fff; padding: 0 5px; font-size: 14px; cursor: text; }
+.lake-admin-login .login-main .layui-form-item label{transition: all 0.3s ease-in-out; -webkit-transition: all 0.3s ease-in-out; }
+.lake-admin-login .login-main .layui-form-item .layui-input-focus label{ top:-10px; font-size:12px; color:#ff6700;}
+.lake-admin-login .login-main .layui-form-item .layui-input-focus input{ border-color:#ff6700 !important;}
+.lake-admin-login .login-main .layui-form-item .layui-input-active label{ top:-10px; font-size:12px;}
+
+.lake-admin-login .login-main .layui-input-focus .layui-input::-webkit-input-placeholder{color:#757575;}
+.lake-admin-login .login-main .layui-input-focus .layui-input::-moz-placeholder{color:#757575;}
+.lake-admin-login .login-main .layui-input-focus .layui-input:-ms-input-placeholder{color:#757575;}
+.lake-admin-login .login-main .layui-input-focus .layui-input::placeholder{color:#757575;}
+.lake-admin-login .login-main .layui-input-focus .layui-input::-webkit-input-placeholder{transition: color 0.2s linear 0.2s;-webkit-transition: color 0.2s linear 0.2s;}
+.lake-admin-login .login-main .layui-input-focus .layui-input::-moz-placeholder{transition: color 0.2s linear 0.2s;}
+.lake-admin-login .login-main .layui-input-focus .layui-input:-ms-input-placeholder{transition: color 0.2s linear 0.2s;}
+.lake-admin-login .login-main .layui-input-focus .layui-input::placeholder{transition: color 0.2s linear 0.2s;-webkit-transition: color 0.2s linear 0.2s;}
+
+@media screen and (max-width: 450px) {
+    .lake-admin-login .login-main {
+        width: 300px;
+        padding: 0 10px;
+        margin: -150px 0 0 -150px;
+    }
+    .lake-admin-login .login-main .layui-elip {
+        font-size: 20px;
+    }
+    .lake-admin-login .login-main .layui-form-item .layui-input-inline {
+        margin: 0 0 10px 0px !important;
+    }
+}

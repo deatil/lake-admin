@@ -1,0 +1,256 @@
+@charset "utf-8";
+
+.lock-screen {
+    position: fixed;
+    z-index: 99999999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #0C0C0C;
+}
+
+.lock-screen .lock-bg {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 8;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+}
+
+.lock-screen .lock-bg img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+.lock-screen .lock-bg img.active {
+    display: block;
+}
+
+.lock-screen .lock-content {
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    position: relative;
+    z-index: 9;
+}
+
+.lock-screen .time {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    color: #f4f4f4;
+    font-weight: 500;
+}
+
+.lock-screen .time .hhmmss,
+.lock-screen .time .yyyymmdd,
+.lock-screen .quit .layui-icon,
+.lock-screen .lock-content p[lock='lock'] {
+    color: #4690FF;
+    /*color: transparent;
+    background: linear-gradient(to bottom right, #1E9FFF, #6086ff);
+    -webkit-background-clip: text;*/
+}
+
+.lock-screen .time .hhmmss {
+    font-size: 64px;
+    letter-spacing: 5px;
+}
+
+.lock-screen .time .yyyymmdd {
+    font-size: 32px;
+    letter-spacing: 5px;
+}
+
+.lock-screen .quit {
+    position: absolute;
+    z-index: 19;
+    right: 10%;
+    bottom: 10%;
+    transition: all .5s;
+}
+
+.lock-screen .quit .layui-icon {
+    font-size: 64px;
+    cursor: pointer;
+    height: 64px;
+    line-height: 64px;
+    /*color: transparent;
+    background: linear-gradient(to bottom right, red, yellow);
+    -webkit-background-clip: text;*/
+    font-weight: bolder;
+}
+
+.lock-screen .quit:hover {
+    transform: scale(1.3);
+    -webkit-transform: scale(1.3);
+}
+
+.lock-screen .unlock {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 9;
+    color: #f4f4f4;
+    background: transparent;
+    box-sizing: border-box;
+}
+
+.lock-screen .unlock tr,
+.lock-screen .unlock td {
+    text-align: center;
+    align-content: center;
+}
+
+.lock-screen .unlock .lock-text {
+    font-size: 42px;
+    font-weight: bolder;
+    color: transparent;
+    background: linear-gradient(to top right, green, greenyellow);
+    -webkit-background-clip: text;
+    text-shadow: 0 0 15px rgba(173, 255, 47, .8);
+    letter-spacing: 5px;
+    font-family: '微软雅黑', '新宋体', '宋体', arial, tahoma, sans-serif;
+}
+
+.lock-screen .lock-form {
+    position: relative;
+    bottom: 64px;
+}
+.unlock{
+    /*background: black!important;*/
+}
+.unlock .lock-head {
+    width: 96px;
+    height: 96px;
+    padding: 2px;
+    background: #FFFFFF;
+    margin: 24px auto;
+    text-align: center;
+    border-radius: 100%;
+    border: 1px solid #FFFFFF;
+    box-shadow: 0 0 10px #FFFFFF;
+    overflow: hidden;
+    animation-name: lock-head;
+    -webkit-animation-name: lock-head;
+
+    animation-delay: 1s;
+    -webkit-animation-delay: 1s;
+
+    animation-duration: 2s;
+    -webkit-animation-duration: 2s;
+
+    animation-timing-function: ease-in-out; /**播放的速度曲线 动画从头到尾的速度是相同的*/
+    -webkit-animation-timing-function: ease-in-out;
+
+    animation-iteration-count: infinite; /**无限循环播放*/
+    -webkit-animation-iteration-count: infinite;
+
+    animation-direction: alternate; /**规定动画在下一周期逆向地播放*/
+    -webkit-animation-direction: alternate;
+}
+
+.unlock .lock-head img {
+    display: inline-block;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.lock-screen .lock-form .layui-form-item {
+    width: 80%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+/**雪花*/
+.lock-screen .snowflake {
+    position: absolute;
+    z-index: 8;
+    height: 100%;
+    width: 100%;
+}
+
+.lock-screen .lock-content p[lock='lock'] {
+    display: inline-block;
+    animation-name: lock-cursor;
+    -webkit-animation-name: lock-cursor;
+
+    animation-duration: 2s;
+    -webkit-animation-duration: 2s;
+
+    animation-iteration-count: infinite; /**无限循环播放*/
+    -webkit-animation-iteration-count: infinite;
+
+}
+
+.lock-gradual {
+    animation-name: lock-gradual;
+    -webkit-animation-name: lock-gradual;
+
+    animation-duration: 4s;
+    -webkit-animation-duration: 4s;
+
+    animation-iteration-count: infinite; /**无限循环播放*/
+    -webkit-animation-iteration-count: infinite;
+
+    animation-timing-function: linear; /**播放的速度曲线 动画从头到尾的速度是相同的*/
+    -webkit-animation-timing-function: linear;
+
+    animation-direction: alternate; /**规定动画在下一周期逆向地播放*/
+    -webkit-animation-direction: alternate;
+}
+
+@keyframes lock-head {
+    0% {
+        box-shadow: 0 0 10px #FFFFFF;
+    }
+    100% {
+        box-shadow: 0 0 30px #FFFFFF;
+    }
+
+}
+
+@keyframes lock-gradual {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes lock-cursor {
+    0% {
+        color: #4690FF;
+        /*color: transparent;
+        background: linear-gradient(to bottom right, #1E9FFF, #6086ff);
+        -webkit-background-clip: text;*/
+    }
+    25% {
+        color: transparent;
+        background: transparent;
+    }
+    50% {
+        color: #4690FF;
+        /*color: transparent;
+        background: linear-gradient(to bottom right, #1E9FFF, #6086ff);
+        -webkit-background-clip: text;*/
+    }
+    75% {
+        color: transparent;
+        background: transparent;
+    }
+    100% {
+        color: #4690FF;
+        /*color: transparent;
+        background: linear-gradient(to bottom right, #1E9FFF, #6086ff);
+        -webkit-background-clip: text;*/
+    }
+}

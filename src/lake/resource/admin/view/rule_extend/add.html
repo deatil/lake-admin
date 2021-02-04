@@ -1,0 +1,106 @@
+{extend name="layout"/}
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">添加扩展权限</div>
+    <div class="layui-card-body">
+        <form class="layui-form" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属模块</label>
+                <div class="layui-input-block">
+                    <div class="layui-inline w300">
+                        <input type="text" name="module" value="" lay-verify="required" autocomplete="off" placeholder="所属模块" class="layui-input" id="module_select">
+                    </div>
+                    <div class="layui-inline">
+                        <select lay-filter="module_select">
+                            <option data-module=""></option>
+                            <option data-module="admin">lake-admin</option>
+                            {volist name="modules" id="module"}
+                                <option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">扩展权限所属模块</div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">扩展标识</label>
+                <div class="layui-input-block w300">
+                    <input type="text" name="type" value="" lay-verify="required" autocomplete="off" placeholder="扩展标识" class="layui-input">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限组</label>
+                <div class="layui-input-block w300">
+                    <select name="group_id" lay-verify="required">
+                        {volist name="roles" id="vo"}
+                            <option value="{$vo['id']}">{$vo['title']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">扩展规则</label>
+                <div class="layui-input-block w300">
+                    <input type="text" name="rule" value="" lay-verify="required" autocomplete="off" placeholder="扩展规则" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">附加条件</label>
+                <div class="layui-input-block w300">
+                    <textarea name="condition" placeholder="规则附加条件" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">请求方式</label>
+                <div class="layui-input-block w300">
+                    <select name="method" lay-verify="required">
+                        <option value="">选择请求方式</option>
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="PATCH">PATCH</option>
+                        <option value="DELETE">DELETE</option>
+                        <option value="HEAD">HEAD</option>
+                        <option value="PATCH">PATCH</option>
+                        <option value="OPTIONS">OPTIONS</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">规则数据</label>
+                <div class="layui-input-block w300">
+                    <textarea name="rule_data" placeholder="规则数据" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="formSubmit" lay-close="self">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+layui.use(['layer', 'form'], function() {
+    var layer = layui.layer,
+        form = layui.form,
+        $ = layui.$;
+        
+    form.on('select(module_select)', function(data) {
+        $('#module_select').val($(data.elem).find("option:selected").attr("data-module"));
+    });
+});
+</script>
+{/block}

@@ -1,0 +1,119 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">附件详情</div>
+    <div class="layui-card-body">
+        <div class="table-responsive">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="200">
+                    <col>
+                </colgroup>
+          
+                <thead>
+                    <tr>
+                        <td>名称</td>
+                        <td>内容</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {if in_array($data['ext'], ['png', 'jpg', 'jpeg', 'gif', 'bmp'])}
+                    <tr>
+                        <td>预览</td>
+                        <td>
+                            <a href="{$data.path}" title="点击查看原图" target="_blank">
+                                <img src="{$data.path}" />
+                            </a>
+                        </td>
+                    </tr>
+                    {/if}
+                    <tr>
+                        <td>文件ID</td>
+                        <td class="break-all">{$data.id}</td>
+                    </tr>
+                    <tr>
+                        <td>文件名</td>
+                        <td class="break-all">{$data.name}</td>
+                    </tr>
+                    <tr>
+                        <td>所属模块名</td>
+                        <td class="break-all">{$data.module}</td>
+                    </tr>
+                    <tr>
+                        <td>附件关联类型</td>
+                        <td>{$data.type}</td>
+                    </tr>
+                    <tr>
+                        <td>附件关联类型ID</td>
+                        <td>{$data.type_id}</td>
+                    </tr>
+                    <tr>
+                        <td>文件路径</td>
+                        <td class="break-all">{$data.path}</td>
+                    </tr>
+                    {if in_array($data['ext'], ['png', 'jpg', 'jpeg', 'gif', 'bmp'])}
+                    <tr>
+                        <td>缩略图路径</td>
+                        <td>{$data.thumb}</td>
+                    </tr>
+                    {/if}
+                    <tr>
+                        <td>文件链接</td>
+                        <td>{$data.url}</td>
+                    </tr>
+                    <tr>
+                        <td>文件mime类型</td>
+                        <td>{$data.mime}</td>
+                    </tr>
+                    <tr>
+                        <td>文件类型</td>
+                        <td>{$data.ext}</td>
+                    </tr>
+                    <tr>
+                        <td>文件大小</td>
+                        <td>{$data.size}</td>
+                    </tr>
+                    <tr>
+                        <td>文件md5</td>
+                        <td class="break-all">{$data.md5}</td>
+                    </tr>
+                    <tr>
+                        <td>sha1散列值</td>
+                        <td class="break-all">{$data.sha1}</td>
+                    </tr>
+                    <tr>
+                        <td>上传驱动</td>
+                        <td>{$data.driver}</td>
+                    </tr>
+                    <tr>
+                        <td>状态</td>
+                        <td>
+                            {if $data['status'] == 1}
+                                <span class='layui-badge-dot layui-bg-green'></span>
+                                <span class='text-green'>启用</span>
+                            {else/}
+                                <span class='layui-badge-dot layui-bg-orange'></span>
+                                <span class='text-orange'>禁用</span>
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>最后更新时间</td>
+                        <td>
+                            {:date('Y-m-d H:i:s', $data['update_time'])}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>添加时间</td>
+                        <td>
+                            {:date('Y-m-d H:i:s', $data['create_time'])}
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}

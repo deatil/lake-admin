@@ -1,0 +1,567 @@
+{volist name="fieldList" id="vo"}
+
+    {switch name="vo.type"}
+
+        {case value="hidden"}
+            {if $vo.value}
+                <input type="hidden" class="form-control" name="{$vo.fieldArr}[{$vo.name}]"  value="{$vo.value}">
+            {/if}
+        {/case}
+
+        {case value="password"}
+        <div class="layui-form-item">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <input type="password" name="{$vo.fieldArr}[{$vo.name}]" placeholder="请输入{$vo.title}" autocomplete="off" class="layui-input" value="{$vo.value}">
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="text"}
+        <div class="layui-form-item">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <input type="text" name="{$vo.fieldArr}[{$vo.name}]" placeholder="请输入{$vo.title}" autocomplete="off" class="layui-input" value="{$vo.value}">
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="number"}
+        <div class="layui-form-item">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <input type="number" name="{$vo.fieldArr}[{$vo.name}]" placeholder="请输入{$vo.title}" autocomplete="off" class="layui-input" value="{$vo.value}">
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="switch"}
+        <div class="layui-form-item">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <input type="checkbox" name="{$vo.fieldArr}[{$vo.name}]" lay-skin="switch" lay-text="ON|OFF" value="{$vo['value']}" {if 1==$vo[ 'value' ]}checked='' {/if}> 
+            </div> 
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="array"}
+        <div class="layui-form-item layui-form-text">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <div id="{$vo.name}_con"></div>
+                <script id="{$vo.name}_main" type="text/html">
+                    <dl class="fieldlist layui-fieldlist">
+                        <dd class="fieldlist-head">
+                            <span>字段</span>
+                            <span>内容</span>
+                        </dd>
+                        <dd class="fieldlist-btns">
+                            <a href="javascript:;" class="layui-btn layui-btn-sm layui-btn-success btn-append">
+                                <i class="iconfont icon-add"></i> 添加
+                            </a>
+                        </dd>
+                    </dl>
+                </script>
+                <script id="{$vo.name}_tpl" type="text/html">
+                    <dd class="fieldlist-item">
+                        <ins><input type="text" class="layui-input" data-name="{{d.name}}[{{d.index}}][key]" value="{{d.row.key?d.row.key:''}}" placeholder="填写字段"/></ins>
+                        <ins><input type="text" class="layui-input" data-name="{{d.name}}[{{d.index}}][value]" value="{{d.row.value?d.row.value:''}}" placeholder="填写内容"/></ins>
+                        
+                        <span class="layui-btn layui-btn-sm layui-btn-danger btn-remove"><i class="iconfont icon-close1"></i></span>
+                        <span class="layui-btn layui-btn-sm layui-btn-primary btn-dragsort"><i class="iconfont icon-yidong"></i></span>
+                    </dd>
+                </script>
+                <textarea name="{$vo.fieldArr}[{$vo.name}]" 
+                    data-el="#{$vo.name}_con" 
+                    data-main="#{$vo.name}_main" 
+                    data-template="#{$vo.name}_tpl" 
+                    class="layui-form-fieldlist layui-hide">{$vo.value}</textarea>
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="checkbox"}
+        <div class="layui-form-item" pane="">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                {volist name="vo.options" id="v"}
+                    <input type="checkbox" name="{$vo.fieldArr}[{$vo.name}][]" lay-skin="primary" title="{$v}" value="{$key}" {if in_array($key,$vo[ 'value' ])}checked{/if}>
+                {/volist}
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="radio"}
+        <div class="layui-form-item">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                {volist name="vo.options" id="v"}
+                    <input type="radio" name="{$vo.fieldArr}[{$vo.name}]" value="{$key}" title="{$v}" {if $key==$vo [ 'value' ]}checked='' {/if}> 
+                {/volist} 
+            </div> 
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="select"}
+        <div class="layui-form-item">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <select name="{$vo.fieldArr}[{$vo.name}]">
+                    <option value=""></option>
+                    {volist name="vo.options" id="v"}
+                        <option value="{$key}" {if $key==$vo['value']}selected="" {/if}>{$v}</option>
+                    {/volist}
+                </select>
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="color"}
+        <div class="layui-form-item">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <div class="layui-input-inline" style="width: 120px;">
+                    <input type="text" name="{$vo.fieldArr}[{$vo.name}]" value="{$vo.value}" placeholder="请选择颜色" class="layui-input test-form-input-{$vo.name}">
+                </div>
+                <div class="layui-inline" style="left: -11px;">
+                    <div class="layui-color-box-{$vo.name}"></div>
+                </div>
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        <script type="text/javascript">
+        layui.use('colorpicker', function(){
+            var colorpicker = layui.colorpicker;
+            colorpicker.render({
+                elem: '.layui-color-box-{$vo.name}',
+                color:'{$vo.value}',
+                done: function(color){
+                    $('.test-form-input-{$vo.name}').val(color);
+                }
+            });
+        });
+        </script>
+        {/case}
+        
+        {case value="date"}
+        <div class="layui-form-item">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <input type="text" class="layui-input date-item date-item-{$vo.name}" name="{$vo.fieldArr}[{$vo.name}]" placeholder="请输入{$vo.title}" value="{$vo.value}">
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        <script type="text/javascript">
+        layui.use(['laydate'], function() {
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: ".date-item-{$vo.name}",
+                trigger: 'click'
+            });
+        });
+        </script>
+        {/case}
+        
+        {case value="datetime"}
+        <div class="layui-form-item">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <input type="text" class="layui-input datetime-item datetime-item-{$vo.name}" name="{$vo.fieldArr}[{$vo.name}]" placeholder="请输入{$vo.title}" value="{$vo.value}">
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        <script type="text/javascript">
+        layui.use(['laydate'], function() {
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: ".datetime-item-{$vo.name}",
+                trigger: 'click',
+                type: 'datetime'
+            });
+        });
+        </script>
+        {/case}
+        
+        {case value="textarea"}
+        <div class="layui-form-item layui-form-text">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <textarea placeholder="请输入{$vo.title}" class="layui-textarea" name="{$vo.fieldArr}[{$vo.name}]">{$vo.value}</textarea>
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="image"}
+        <div class="layui-form-item layui-form-text">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <div class="js-upload-image">
+                    <div id="file_list_{$vo.name}" class="uploader-list">
+                        {notempty name="$vo.value"}
+                        <div class="file-item thumbnail">
+                            <img data-original="{$vo.value|lake_get_file_path|default='admin/admin/img/none.png'}" src="{$vo.value|lake_get_file_path|default='admin/admin/img/none.png'}" width="100" style="max-height: 100px;">
+                            <i class="iconfont icon-delete_fill remove-picture" data-id="{$vo.value}"></i>
+                        </div>
+                        {/notempty}
+                    </div>
+                    <input type="hidden" name="{$vo.fieldArr}[{$vo.name}]" data-multiple="false" data-watermark='' data-thumb='' data-size="{:config('app.upload_image_size')}" data-ext="{:config('app.upload_image_ext')}" id="{$vo.name}" value="{$vo.value|default=''}">
+                    <div class="layui-clear"></div>
+                    <div id="picker_{$vo.name}"><i class="layui-icon layui-icon-upload"></i> 上传单张图片</div>
+                </div>
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="images"}
+        <div class="layui-form-item layui-form-text">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <div class="js-upload-images">
+                    <div id="file_list_{$vo.name}" class="uploader-list">
+                        {notempty name="$vo.value"}
+                        {volist name="$vo.value|explode=',',###" id="v"}
+                        <div class="file-item thumbnail">
+                            <img data-original="{$v|lake_get_file_path}" src="{$v|lake_get_file_path|default='admin/admin/img/none.png'}" width="100" style="max-height: 100px;">
+                            <i class="iconfont icon-delete_fill remove-picture" data-id="{$v}"></i>
+                            <i class="iconfont icon-yidong move-picture"></i>
+                        </div>
+                        {/volist}
+                        {/notempty}
+                    </div>
+                    <input type="hidden" name="{$vo.fieldArr}[{$vo.name}]" data-multiple="true" data-watermark='' data-thumb='' data-size="{:config('app.upload_image_size')}" data-ext="{:config('app.upload_image_ext')}" id="{$vo.name}" value="{$vo.value|default=''}">
+                    <div class="layui-clear"></div>
+                    <div id="picker_{$vo.name}"><i class="layui-icon layui-icon-upload"></i> 上传多张图片</div>
+                </div>
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="tags"}
+        <div class="layui-form-item">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <input type="text" name="{$vo.fieldArr}[{$vo.name}]" placeholder="请输入{$vo.title}" autocomplete="off" class="layui-input tags-item-{$vo.name}" value="{$vo.value}">
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        <script type="text/javascript">
+        layui.config({
+            base: 'admin/libs/layui-extend/'
+        }).extend({
+            tagsinput: 'tagsinput/tagsinput',
+        }).use(["jquery", "tagsinput"], function() {
+            var $ = layui.jquery;
+            
+            // 标签输入
+            var elem = ".tags-item-{$vo.name}";
+            var tags = $(elem);
+            tags.tagsInput({
+                width: 'auto',
+                defaultText: '输入后空格确认',
+                minInputWidth: 110,
+                height: 'auto',
+                placeholderColor: '#999',
+                onChange: function (row) {
+                    if (typeof callback === 'function') {
+
+                    } else {
+                        $(elem + "_addTag").focus();
+                    }
+                }
+            });
+        });
+        </script>
+        {/case}
+        
+        {case value="file"}
+        <div class="layui-form-item layui-form-text">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <div class="js-upload-file">
+                    <div id="file_list_{$vo.name}" class="uploader-list">
+                        <table class="layui-table">
+                          <colgroup>
+                            <col width="150">
+                            <col width="150">
+                            <col width="150">
+                            <col>
+                          </colgroup>
+                          <thead>
+                            <tr>
+                              <th>文件名称</th>
+                              <th>提示</th>
+                              <th>进度</th>
+                              <th>操作</th>
+                            </tr>
+                          </thead>
+                          <tbody class="file-box">
+                            {notempty name="$vo.value"}
+                            <tr class="file-item">
+                              <td>{$vo.value|lake_get_file_name}</td>
+                              <td>/</td>
+                              <td>/</td>
+                              <td><a href="{$vo.value|lake_get_file_path}" class="layui-btn download-file layui-btn layui-btn-xs">下载</a> <a href="javascript:void(0);" class="layui-btn remove-file layui-btn layui-btn-xs layui-btn-danger">删除</a></td>
+                            </tr>
+                            {/notempty}
+                          </tbody>
+                        </table>
+                    </div>
+                    <input type="hidden" name="{$vo.fieldArr}[{$vo.name}]" data-multiple="false" data-size="{:config('app.upload_file_size')}" data-ext="{:config('app.upload_file_ext')}" id="{$vo.name}" value="{$vo.value|default=''}">
+                    <div id="picker_{$vo.name}"><i class="layui-icon layui-icon-upload"></i> 上传单个文件</div>
+                </div>
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="files"}
+        <div class="layui-form-item layui-form-text">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <div class="js-upload-file">
+                    <div id="file_list_{$vo.name}" class="uploader-list">
+                        <table class="layui-table">
+                          <colgroup>
+                            <col width="150">
+                            <col width="150">
+                            <col width="150">
+                            <col>
+                          </colgroup>
+                          <thead>
+                            <tr>
+                              <th>文件名称</th>
+                              <th>提示</th>
+                              <th>进度</th>
+                              <th>操作</th>
+                            </tr>
+                          </thead>
+                          <tbody class="file-box">
+                            {notempty name="$vo.value"}
+                            {volist name="$vo.value|explode=',',###" id="v"}
+                            <tr class="file-item">
+                              <td>{$v|lake_get_file_name}</td>
+                              <td>/</td>
+                              <td>/</td>
+                              <td><a href="{$v|lake_get_file_path}" class="layui-btn download-file layui-btn layui-btn-xs">下载</a> <a href="javascript:void(0);" class="layui-btn remove-file layui-btn layui-btn-xs layui-btn-danger" data-id="{$v}">删除</a></td>
+                            </tr>
+                            {/volist}
+                            {/notempty}
+                          </tbody>
+                        </table>
+                    </div>
+                    <input type="hidden" name="{$vo.fieldArr}[{$vo.name}]" data-multiple="true" data-size="{:config('app.upload_file_size')}" data-ext="{:config('app.upload_file_ext')}" id="{$vo.name}" value="{$vo.value|default=''}">
+                    <div id="picker_{$vo.name}"><i class="layui-icon layui-icon-upload"></i> 上传多个文件</div>
+                </div>
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+        {case value="Ueditor"}
+        <div class="layui-form-item layui-form-text">
+            <label class="">
+                {$vo.title} 
+                {if condition="isset($vo.ifrequire) AND $vo.ifrequire"}
+                    &nbsp;<font color="red">*</font>
+                {/if}
+            </label>
+            <div class="layui-form-field-label">
+                <script type="text/plain" class="js-ueditor" id="{$vo.name}" name="{$vo.fieldArr}[{$vo.name}]">{$vo.value|raw}</script>
+            </div>
+            <div style="margin-top: 5px;">
+                <a class="layui-btn layui-btn-sm" id="{$vo.name}grabimg">图片本地化</a>
+            </div>
+            {if $vo.remark}
+                <div class="layui-form-mid layui-word-aux">
+                    {$vo.remark|raw}
+                </div>
+            {/if}
+        </div>
+        {/case}
+        
+    {/switch}
+
+    {:lake_runhook('lake_admin_input_item_end', $vo)}
+
+{/volist}
+<script type="text/javascript" src="admin/libs/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="admin/libs/ueditor/ueditor.all.js"></script>
+
+<script type="text/javascript" src="admin/libs/webuploader/webuploader.min.js"></script>
+<link rel="stylesheet" href="admin/libs/webuploader/webuploader.css">
+
+<script type="text/javascript" src="admin/admin/js/form.js"></script>
+
+<script type="text/javascript" src="admin/libs/Sortable.js"></script>
+<script type="text/javascript" src="admin/libs/viewer/viewer.min.js"></script>
+<link rel="stylesheet" href="admin/libs/viewer/viewer.min.css">
+
+<script type="text/javascript">
+$('.uploader-list').each(function () {
+    $(this).viewer();
+});
+</script>

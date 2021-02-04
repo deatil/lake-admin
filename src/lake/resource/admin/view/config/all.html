@@ -1,0 +1,118 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">配置管理</div>
+    <div class="layui-card-body">
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">
+                    <a href="{:url('all')}">全部</a>
+                </li>
+                {volist name="$groupArray" id="vo"}
+                    <li>
+                        <a href="{:url('index',['group'=>$key])}">{$vo}</a>
+                    </li>
+                {/volist}
+            </ul>
+            <div class="layui-tab-content">
+                <blockquote class="layui-elem-quote">
+                    <form class="layui-form lake-admin-search-form" method="get" lay-filter="lake-admin-search-from">
+                        <div class="layui-inline">
+                            <select name="field" class="lake-admin-search-field">
+                                <option value="">全部类型</option>
+                                <option value="group">分组</option>
+                                <option value="name">名称</option>
+                                <option value="title">标题</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <input type="text" name="keyword" class="layui-input lake-admin-search-val" placeholder="请输入关键字">
+                        </div>
+                        <div class="layui-inline">
+                            <a class="layui-btn lake-admin-search-btn" data-type="search">搜索</a>
+                        </div>
+                        <div class="layui-inline">
+                            <a class="layui-btn" href="{:url('all')}">查看全部</a>
+                        </div>
+                    </form>
+                </blockquote>
+            
+                <table class="layui-hide" id="dataTable" lay-filter="dataTable"></table>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+    <a class="layui-btn layui-btn-sm layui-iframe" href="{:url('add')}" title="新增配置项">新增配置项</a>
+</div>
+</script>
+<script type="text/html" id="barTool">
+    <a href='{:url("edit")}?id={{ d.id }}' class="layui-btn layui-btn-xs layui-iframe" title="编辑配置项">编辑</a>
+    <a href='{:url("del")}?id={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
+</script>
+<script type="text/html" id="fieldTypeTpl">
+    {{ d.fieldType.title }}
+</script>
+<script type="text/html" id="switchTpl">
+    <input type="checkbox" name="status" data-href="{:url('setstate')}?id={{d.id}}" value="{{d.id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="switchStatus" {{ d.status==1 ? 'checked' : '' }}>
+</script>
+
+<script>
+layui.use('table', function() {
+    var table = layui.table,
+        $ = layui.$,
+        form = layui.form;
+        
+    table.render({
+        elem: '#dataTable',
+        toolbar: '#toolbar',
+        url: '{:url("all")}',
+        cols: [
+            [
+                { field: 'listorder', width: 70, title: '排序', edit: 'text' },
+                { field: 'group', width: 100, title: '分组' },
+                { field: 'name', title: '名称' },
+                { field: 'title', title: '标题' },
+                { field: 'ftitle', width: 110, title: '类型', templet: '#fieldTypeTpl' },
+                { field: 'update_time', width: 200, title: '更新时间', templet: function(d){ return layui.formatDateTime(d.update_time) }},
+                { field: 'status', title: '状态', width: 100, templet: '#switchTpl', unresize: true },
+                { fixed: 'right', width: 120, title: '操作', toolbar: '#barTool' }
+            ]
+        ],
+        page: {},
+        limit: 20,
+    });
+    
+    // 搜索
+    $(".lake-admin-search-btn").on("click", function() {
+        table.reload("dataTable", {
+            page: {
+                curr: 1
+            },
+            where: {
+                search_field: $(".lake-admin-search-field").val(),
+                keyword: $(".lake-admin-search-val").val(),
+            }
+        })
+    });
+    
+    // 监听单元格编辑
+    table.on('edit(dataTable)', function(obj) {
+        var value = obj.value,data = obj.data;
+        $.post('{:url("config/listorder")}', {'id': data.id,'value':value }, function(data) {
+            if (data.code == 1) {
+                layer.msg(data.msg);
+            }else{
+                layer.msg(data.msg);
+            }
+
+        })
+    });
+});
+</script>
+{/block}

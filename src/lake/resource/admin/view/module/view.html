@@ -1,0 +1,99 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">模块详情</div>
+    <div class="layui-card-body">
+        <div class="table-responsive">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="200">
+                    <col>
+                </colgroup>
+          
+                <thead>
+                    <tr>
+                        <td>名称</td>
+                        <td>内容</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>模块ID</td>
+                        <td>{$data.module}</td>
+                    </tr>
+                    <tr>
+                        <td>模块名称</td>
+                        <td>{$data.name}</td>
+                    </tr>
+                    <tr>
+                        <td>模块简介</td>
+                        <td>{$data.introduce}</td>
+                    </tr>
+                    <tr>
+                        <td>模块作者</td>
+                        <td>{$data.author}</td>
+                    </tr>
+                    <tr>
+                        <td>作者地址</td>
+                        <td>{$data.authorsite}</td>
+                    </tr>
+                    <tr>
+                        <td>作者邮箱</td>
+                        <td>{$data.authoremail}</td>
+                    </tr>
+                    <tr>
+                        <td>版本</td>
+                        <td>{$data.version}</td>
+                    </tr>
+                    <tr>
+                        <td>依赖模块</td>
+                        <td>
+                            {if !empty($data['need_module'])}
+                            <table class="layui-table">
+                                <colgroup>
+                                    <col width="200">
+                                    <col>
+                                </colgroup>
+                          
+                                <thead>
+                                    <tr>
+                                        <td>模块</td>
+                                        <td>版本</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {foreach $data['need_module'] as $key => $vo}
+                                    <tr>
+                                        <td>{$vo[0]}</td>
+                                        <td>{$vo[2]}{$vo[1]}</td>
+                                    </tr>
+                                    {/foreach}
+                                </tbody>
+                            </table>
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>排序</td>
+                        <td>{$data.listorder}</td>
+                    </tr>
+                    <tr>
+                        <td>安装时间</td>
+                        <td>{:date('Y-m-d H:i:s', $data['installtime'])}</td>
+                    </tr>
+                    <tr>
+                        <td>更新时间</td>
+                        <td>{:date('Y-m-d H:i:s', $data['updatetime'])}</td>
+                    </tr>
+                    <tr>
+                        <td>状态</td>
+                        <td>{$data.status == 1 ? '<span class="layui-btn layui-btn-xs">启用</span>' : '<span class="layui-btn layui-btn-grey layui-btn-xs">禁用</span>'}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}

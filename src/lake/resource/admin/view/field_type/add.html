@@ -1,0 +1,142 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">添加字段类型</div>
+    <div class="layui-card-body">
+        <form class="layui-form" method="post" lay-filter="form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">字段类型</label>
+                <div class="layui-input-block w300">
+                    <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="字段类型" class="layui-input">
+                </div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">3-20位字符，可由字母和数字，下划线"_"及破折号"-"组成。</div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">中文类型名</label>
+                <div class="layui-input-block w300">
+                    <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="中文类型名" class="layui-input">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">默认定义</label>
+                <div class="layui-input-block">
+                    <div class="layui-inline w300">
+                        <input type="text" name="default_define" lay-verify="required" autocomplete="off" placeholder="默认定义" class="layui-input" id="define" value="">
+                    </div>
+                    <div class="layui-inline">
+                        <select lay-filter="default_define">
+                            <option data-define="" data-type="">快速选择</option>
+                            <option data-define="varchar(255) NOT NULL DEFAULT ''" data-type="varchar">255个字符串以内</option>
+                            <option data-define="int(10) NOT NULL DEFAULT '0'" data-type="int">10位以内纯数字</option>
+                            <option data-define="tinyint(2) NOT NULL DEFAULT '0'" data-type="tinyint">2位以内纯数字</option>
+                            <option data-define="text NOT NULL" data-type="text">常用文本文档</option>
+                            <option data-define="decimal(10,2) unsigned NOT NULL" data-type="decimal">价格</option>
+                            <option data-define="mediumtext NOT NULL" data-type="mediumtext">巨型文本文档</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block w300">
+                    <select name="type" lay-verify="required" lay-filter="type">
+                        <option></option>
+                        {volist name="types" id="vo"}
+                            <option value="{$vo}">{$vo}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">设置选项</label>
+                <div class="layui-input-block w300">
+                    <input type="radio" name="ifoption" value="1" title="是" checked="">
+                    <input type="radio" name="ifoption" value="0" title="否" >
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">自由字符</label>
+                <div class="layui-input-block w300">
+                    <input type="radio" name="ifstring" value="1" title="是" checked="">
+                    <input type="radio" name="ifstring" value="0" title="否" >
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">验证规则</label>
+                <div class="layui-input-block w300">
+                    <select name="vrule" lay-filter="vrule">
+                        <option></option>
+                        {volist name="vrules" id="vo"}
+                            <option value="{$vo}">{$vo}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">数据校验</label>
+                <div class="layui-input-block">
+                    <div class="layui-inline w300">
+                        <input type="text" name="pattern" autocomplete="off" placeholder="正则校验数据合法性" class="layui-input" value="" id="pattern">
+                    </div>
+                    <div class="layui-inline">
+                        <select lay-filter="pattern">
+                            <option data-define="">常用正则</option>
+                            <option data-define="/^[0-9.-]+$/">数字</option>
+                            <option data-define="/^[0-9-]+$/">整数</option>
+                            <option data-define="/^[a-z]+$/i">字母</option>
+                            <option data-define="/^[0-9a-z]+$/i">数字+字母</option>
+                            <option data-define="/^[\x{4e00}-\x{9fa5}]+$/u">中文</option>
+                            <option data-define="/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/">E-mail</option>
+                            <option data-define="/^[0-9]{5,20}$/">QQ</option>
+                            <option data-define="/^http:\/\//">超级链接</option>
+                            <option data-define="/^(1)[0-9]{10}$/">手机号码</option>
+                            <option data-define="/^[0-9-]{6,13}$/">电话号码</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">
+                        正则校验数据合法性，留空不校验
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="formSubmit" lay-close="self">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+layui.use(['layer', 'form'], function() {
+    var layer = layui.layer,
+        form = layui.form;
+    form.on('select(default_define)', function(data) {
+        $('#define').val($(data.elem).find("option:selected").attr("data-define"));
+    
+        var type = $(data.elem).find("option:selected").attr("data-type");
+        form.val('form', {
+            'type': type,
+        });
+    });
+    form.on('select(pattern)', function(data) {
+        $('#pattern').val($(data.elem).find("option:selected").attr("data-define"));
+    });
+});
+</script>
+{/block}

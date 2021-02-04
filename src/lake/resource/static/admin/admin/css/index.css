@@ -1,0 +1,423 @@
+@charset "utf-8";
+
+::selection{color:#fff !important;background-color:#009688 !important}
+::-moz-selection{color:#fff !important;background-color:#009688 !important}
+
+.lake-admin iframe {position: absolute; height: 100%; width: 100%; border: none; }
+
+.lake-admin .mag0 { margin:0 !important; }
+.lake-admin .pad0 { padding:0 !important; }
+
+.lake-admin .lake-admin-tab-item[data-origstyle] {
+    border-bottom: 1px solid #009688;
+    background: #fff;
+}
+
+.lake-admin .admin-menu-toggle {float: left; width: 20px; height: 20px; margin-top: 15px; font-size: 17px; line-height: 20px; text-align: center; padding: 5px 5px; color: #fff; background-color: #1AA094; }
+.lake-admin .admin-menu-toggle:hover { color:#fff; }
+
+.lake-admin .layui-tab-content {top: 41px; position: absolute; bottom: 0; width: 100%; padding: 0; }
+.lake-admin .lake-admin-iframe-box{position: relative; height: 100%; overflow: auto; }
+
+.lake-admin .layui-layout-admin .lake-admin-logo {color: #fff; float: left; line-height: 60px; font-size: 18px; padding: 0 25px; text-align: center; width: 150px; }
+.lake-admin .layui-layout-admin .lake-admin-logo .lake-admin-logo-name {color: #fff;}
+.lake-admin .layui-layout-admin .lake-admin-logo .lake-admin-logo-name-mini {color: #fff;display: none;}
+
+.lake-admin .layui-layout-admin .layui-header .layui-layout-right .layui-nav-item.layui-this:after {
+    display: none;
+}
+
+.lake-admin .layui-tab-title .layui-this {background-color: #009688; color: #fff; }
+.lake-admin .layui-tab-title .layui-this:after {border: none; }
+.lake-admin .lake-admin-top-level-menus { }
+.lake-admin .lake-admin-top-level-menus .layui-nav-item.layui-this {background-color: rgba(0,0,0,0.5); }
+.lake-admin .lake-admin-top-level-menus.layui-nav .layui-nav-item{height: 60px;}
+
+.lake-admin .lake-admin-top-tabs-box {
+    padding-right: 138px;
+    height: 40px;
+    border-bottom: 1px solid #e2e2e2;
+}
+.lake-admin .lake-admin-top-tabs-box .tab-right {
+    background: #fff;
+    right: 0px;
+    top: 0;
+    height: 40px;
+    width: 175px;
+    position: absolute;
+    text-align: left;
+}
+.lake-admin .lake-admin-top-tabs-box .lake-admin-top-tab {
+    top: 0; 
+    position: absolute; 
+    border-bottom: none; 
+    left:80px; 
+}
+.lake-admin .lake-admin-top-tabs-box .lake-admin-top-tab li {
+    border-right: 1px solid #e6e6e6;
+}
+.lake-admin .lake-admin-top-tabs-box .tab-right .lake-admin-close-box {
+    position: absolute;
+    right: 0;
+    background-color: #fff !important;
+    color: #000;
+    border-left: 1px solid #e2e2e2;
+    border-bottom: 1px solid #e2e2e2;
+}
+.lake-admin .lake-admin-top-tabs-box .tab-right .lake-admin-close-box .layui-nav-item {
+    height: 40px;
+    line-height: 40px;
+}
+.lake-admin .lake-admin-top-tabs-box .tab-go-refresh{z-index: 99;background: #fff;position: absolute; top: 0; width: 40px; height:40px; text-align: center; cursor: pointer; transition: all .3s; -webkit-transition: all .3s; box-sizing: border-box; border-right: 1px solid #e6e6e6;}
+.lake-admin .lake-admin-top-tabs-box .tab-go-refresh i{ color: #666; font-size: 20px; line-height: 40px; cursor: pointer}
+.lake-admin .lake-admin-top-tabs-box .tab-go-left {border-color: #e6e6e6; left:40px; top: 0; height: 40px; border-right: 1px solid #e6e6e6; border-bottom: 1px solid #e6e6e6; width: 39px; position: absolute; text-align: center; background: #fff; z-index: 999; }
+.lake-admin .lake-admin-top-tabs-box .tab-go-left i { color: #666; font-size: 20px; line-height: 40px; cursor: pointer; }
+.lake-admin .lake-admin-top-tabs-box .tab-go-right {background: #fff; border-color: #e6e6e6; right: 60; top: 0; height: 40px; border-bottom: 1px solid #e6e6e6; width: 40px; position: absolute; text-align: center; border-left: 1px solid #e6e6e6; z-index: 999; border-right: 1px solid #e6e6e6; }
+.lake-admin .lake-admin-top-tabs-box .tab-go-right i {cursor: pointer; color: #666; font-size: 20px; line-height: 40px; }
+
+/* 页面操作 */
+.lake-admin .lake-admin-close-box .layui-nav-child {
+    top: 42px; 
+    left: -12px; 
+}
+.lake-admin .lake-admin-close-box .layui-nav-item>a, 
+.lake-admin .lake-admin-close-box .layui-nav-item>a:hover {
+    color: #000; 
+}
+.lake-admin .lake-admin-close-box a span.layui-nav-more {
+    border-color: #333 transparent transparent; 
+}
+.lake-admin .lake-admin-close-box a span.layui-nav-more.layui-nav-mored{ 
+    border-color:transparent transparent #333;
+}
+.lake-admin .lake-admin-close-box a i.caozuo {
+    font-size: 16px; 
+    position: absolute; 
+    top: 1px; 
+    left: 0; 
+}
+
+/* tab右键 */
+.lake-admin .lake-admin-contextmenu {
+    position: absolute;
+    line-height: 36px;
+    padding: 5px 0;
+    border: 1px solid #d2d2d2;
+    background-color: white;
+    z-index: 19940201;
+    border-radius: 2px;
+    white-space: nowrap;
+    top:30px;
+}
+.lake-admin .lake-admin-contextmenu ul li{
+    padding: 0 15px;
+}
+.lake-admin .lake-admin-contextmenu ul li:hover{
+    background-color: #eee;
+    cursor: pointer;
+}
+
+.lake-admin .layui-nav-itemed .layui-nav-child a {
+    padding-left: 40px;
+}
+.lake-admin .layui-nav-itemed .layui-nav-child .layui-nav-child a {
+    padding-left: 60px;
+}
+.lake-admin .layui-nav-tree .layui-nav-item > a {
+    position: relative;
+}
+.lake-admin .layui-nav-tree .layui-nav-item.layui-nav-item-active > a:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background-color: #009688;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+}
+.lake-admin .layui-nav-tree.layui-nav-item-bar-hide .layui-nav-item > a:after {
+    display: none !important;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+}
+
+/* 左侧菜单放大 */
+.lake-admin .layui-layer-tips.popup-tips .layui-layer-TipsG{
+    display: none;
+}
+.lake-admin .layui-layer-tips.popup-tips.layui-layer-tips .layui-layer-content{
+    padding: 0;
+}
+.lake-admin .layui-layer-tips.popup-tips .layui-nav-tree{
+    width: 150px;
+    border-radius: 10px;
+}
+.lake-admin .lake-admin-menu-left-zoom .layui-nav-more {
+    font-family: layui-icon !important;
+    font-size: 12px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    width: auto;
+    height: auto;
+    line-height: normal;
+    border: none;
+    display: inline-block;
+    margin-top: -6px !important;
+}
+.lake-admin .lake-admin-menu-left-zoom.layui-nav .layui-nav-mored,
+.lake-admin .lake-admin-menu-left-zoom.layui-nav-itemed>a .layui-nav-more{
+    margin-top: -9px!important;
+}
+.lake-admin .lake-admin-menu-left-zoom .layui-nav-more:before {
+    content: "\e61a";
+}
+.lake-admin .lake-admin-menu-left-zoom .layui-nav-itemed > a > .layui-nav-more {
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    width: 12px;
+    text-align: center;
+    border-style:none;
+}
+.lake-admin .lake-admin-menu-left-zoom .layui-nav-itemed > a > .layui-nav-more:before {
+    content: '\e61a';
+    background-color: transparent;
+    display: inline-block;
+    vertical-align: middle;
+}
+.lake-admin .lake-admin-menu-left-zoom .layui-nav-itemed .layui-nav-child a {
+    padding-left: 25px !important;
+}
+
+@media screen and (min-width: 768px) {
+    .lake-admin .layui-layout-admin .lake-admin-logo {
+        width: 150px;
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin .lake-admin-logo .lake-admin-logo-name {
+        display: block !important;
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin .lake-admin-logo .lake-admin-logo-name-mini {
+        display: none !important;
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    
+    .lake-admin .lake-admin-top-level {
+        position: relative;
+        float: left;
+    }
+    .lake-admin .lake-admin-top-level-scroll {
+        margin: 0 20px;
+        width: 530px;
+        height: 60px;
+        overflow: hidden;
+    }
+    .lake-admin .lake-admin-top-level-menus {
+        padding: 0 !important;
+    }
+    
+    .lake-admin .layui-layout-admin.layui-layout-admin-collapse .lake-admin-logo {
+        width: 60px;
+        padding: 0;
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin.layui-layout-admin-collapse .lake-admin-logo .lake-admin-logo-name {
+        display: none !important;
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin.layui-layout-admin-collapse .lake-admin-logo .lake-admin-logo-name-mini {
+        display: block !important;
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    
+    .lake-admin .layui-layout-admin .layui-side {
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin.layui-layout-admin-collapse .layui-side {
+        width: 60px !important;
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin .layui-side .navBar {
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin.layui-layout-admin-collapse .layui-side .navBar {
+        width: 80px !important; 
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin .layui-side .layui-nav {
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin.layui-layout-admin-collapse .layui-side .layui-nav {
+        width: 60px !important;
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin .layui-side .layui-nav .layui-nav-item:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        transition: all .3s;
+        -webkit-transition: all .3s;
+        height: 1px;
+        background: rgba(0, 0, 0, 0) !important;
+    }
+    .lake-admin .layui-layout-admin .layui-side .layui-nav-title {
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin .layui-side .layui-nav-title cite {
+        font-weight: 600;
+    }
+    .lake-admin .layui-layout-admin.layui-layout-admin-collapse .layui-side .layui-nav-title {
+        display: none !important;
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin .layui-side .layui-nav-child a {
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin.layui-layout-admin-collapse .layui-side .layui-nav-child a {
+        padding-left: 20px !important;
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin .layui-body,
+    .lake-admin .layui-layout-admin .layui-footer {
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+    .lake-admin .layui-layout-admin.layui-layout-admin-collapse .layui-body,
+    .lake-admin .layui-layout-admin.layui-layout-admin-collapse .layui-footer {
+        left: 60px !important; 
+        transition: all .3s;
+        -webkit-transition: all .3s; 
+    }
+}
+@media screen and (max-width: 768px) {
+    .lake-admin .layui-body,
+    .lake-admin .layui-layout-admin .layui-footer{ 
+        left:-2px; 
+    }
+    
+    .lake-admin .lake-admin-logo {width: 60px !important; }
+    .lake-admin .lake-admin-logo-name {display: none !important; }
+    .lake-admin .lake-admin-logo-name-mini {display: block !important; }
+    
+    .lake-admin .lake-admin-hide-menu {display: none !important; }
+    .lake-admin .lake-admin-winner-hide {display: none !important; }
+    .lake-admin .lake-admin-tab-action {display: none !important; }
+    .lake-admin .lake-admin-top-tabs-box .tab-right {
+        width: 106px !important;
+    }
+    .lake-admin .lake-admin-close-box {
+        padding: 0 5px;
+    }
+    .lake-admin .lake-admin-close-box .layui-nav-child {
+        top: 42px;
+        left: -65px;
+    }
+    
+    .lake-admin .layui-layout-admin .layui-side{
+        left: -300px; 
+        transition: all .3s; 
+        -webkit-transition: all .3s;
+    }
+    .lake-admin .lake-admin-site-tree-mobile{
+        display: block!important; 
+        position: fixed; 
+        z-index: 100000; 
+        bottom: 20px; 
+        left: 10px; 
+        width: 40px; 
+        height: 40px; 
+        line-height: 40px; 
+        border-radius: 2px; 
+        text-align: center; 
+        background-color: rgba(0,0,0,.7); 
+        color: #fff;
+    }
+    
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level {
+        position: fixed;
+        left: 0;
+        top: 60px;
+        bottom: 0;
+        z-index: 999;
+        width: 130px;
+        overflow-x: hidden;
+        transition: all .3s;
+        -webkit-transition: all .3s;        
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-scroll {
+        position: relative;
+        width: 150px;
+        height: 100%;
+        overflow-x: hidden;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus {
+        display: block !important; 
+        float: left;
+        z-index:1100;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 130px;
+        padding: 0 !important;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item {
+        background-color: #23262e; 
+        width: 130px;
+    }
+    
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-item.layui-this:after {
+        bottom: 0;
+        width: 5px;
+        height: inherit;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-top-level-menus .layui-nav-bar {
+        display: none;
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-site-tree-mobile{
+        display: none !important;
+    }
+    .lake-admin.lake-admin-site-mobile .layui-side{ 
+        left: 132px; 
+        z-index: 1100; 
+    }
+    .lake-admin.lake-admin-site-mobile .lake-admin-site-mobile-shade{
+        content: ''; 
+        position: fixed; 
+        top: 0; 
+        bottom: 0; 
+        left: 0; 
+        right: 0; 
+        background-color: rgba(0,0,0,.9); 
+        z-index: 999;
+    }
+
+}
+@media screen and (max-width:1080px){
+    .lake-admin .lake-admin-top-level-menus{display: none !important; }
+}

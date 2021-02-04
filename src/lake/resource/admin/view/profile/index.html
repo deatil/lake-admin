@@ -1,0 +1,40 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">账号信息</div>
+    <div class="layui-card-body">
+        <form class="layui-form" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">E-mail</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="email" value="{$data.email}" autocomplete="off" placeholder="E-mail" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">填写完整邮箱，如 xxx@163.com</div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">真实姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="nickname" value="{$data.nickname}" autocomplete="off" placeholder="真实姓名" class="layui-input">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-inline">
+                    <div class="js-upload-image">
+                        {php}echo HtmlForm::images('avatar','',$data['avatar']){/php}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="formSubmit" lay-close="self">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}

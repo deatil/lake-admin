@@ -1,0 +1,103 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">编辑监听类</div>
+    <div class="layui-card-body">
+        <form class="layui-form" method="post">
+            <input type="hidden" name="id" value="{$data.id}" />
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属模块</label>
+                <div class="layui-input-block">
+                    <div class="layui-inline w300">
+                        <input type="text" name="module" value="{$data.module}" lay-verify="required" autocomplete="off" placeholder="所属模块" class="layui-input" id="module_select">
+                    </div>
+                    <div class="layui-inline">
+                        <select lay-filter="module_select" class="module-select-list">
+                            <option data-module=""></option>
+                            <option data-module="admin">lake-admin</option>
+                            {volist name="modules" id="module"}
+                                <option data-module="{$module['module']}">{$module['name']}{if !empty($module['installtime'])}[已安装]{/if}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">监听类所属模块</div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">监听点</label>
+                <div class="layui-input-block w300">
+                    <input type="text" name="name" value="{$data.name}" lay-verify="required" autocomplete="off" placeholder="监听点" class="layui-input">
+                </div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">
+                        监听点一般为事件触发的位置点，比如：HttpRun 即为监听点
+                    </div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">监听类</label>
+                <div class="layui-input-block w300">
+                    <input type="text" name="class" value="{$data.class}" lay-verify="required" autocomplete="off" placeholder="监听类" class="layui-input">
+                </div>
+                <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux">
+                        监听类一般为事件的位置点所触发的相关类。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">描述</label>
+                <div class="layui-input-block w300">
+                    <textarea name="description" placeholder="监听类的相关描述" class="layui-textarea">{$data.description}</textarea>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序</label>
+                <div class="layui-input-block w300">
+                    <input type="text" name="listorder" value="{$data.listorder}" autocomplete="off" placeholder="排序" class="layui-input">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block w300">
+                    <input type="radio" name="status" value="1" title="启用" {eq name="data.status" value="1" }checked{/eq}>
+                    <input type="radio" name="status" value="0" title="禁用" {eq name="data.status" value="0" }checked{/eq}>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="formSubmit" lay-close="self">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+layui.use(['layer', 'form'], function() {
+    var layer = layui.layer,
+        form = layui.form,
+        $ = layui.$;
+        
+    var module = $('#module_select').val();
+    $(".module-select-list option[data-module='"+module+"']").attr("selected", true);
+    form.render('select');
+    
+    form.on('select(module_select)', function(data) {
+        $('#module_select').val($(data.elem).find("option:selected").attr("data-module"));
+    });
+});
+</script>
+{/block}

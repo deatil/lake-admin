@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{:config('lake.name')}</title>
+    <meta name="author" content="lake">
+    <base href="__STATIC__/" />
+    <link rel="stylesheet" href="admin/libs/layui/css/layui.css">
+    <link rel="stylesheet" href="admin/libs/iconfont/iconfont.css">
+    <link rel="stylesheet" href="admin/admin/css/index.css">
+</head>
+
+<body class="layui-layout-body lake-admin lake-admin-skin">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="lake-admin-logo">
+                <a href="{:url('index/index')}" title="{:config('lake.name')}" class="lake-admin-logo-name">
+                    <span>{:config('lake.name')}</span>
+                </a>
+                <a href="{:url('index/index')}" title="{:config('lake.name')}" class="lake-admin-logo-name-mini">
+                    <span>{:config('lake.name_mini')}</span>
+                </a>
+            </div>
+            <div class="lake-admin-left">
+                <a href="javascript:;" class="admin-menu-toggle icon iconfont icon-other lake-admin-winner-hide" title="隐藏侧边"></a>
+                <div class="lake-admin-top-level">
+                    <div class="lake-admin-top-level-scroll">
+                        <ul class="layui-nav lake-admin-menus-winner lake-admin-top-level-menus" id="top_nav_menus">
+                            <!--AJAX数据-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <ul class="layui-nav layui-layout-right lake-admin-right">
+                {:lake_runhook('lake_admin_top_left_nav_start')}
+                
+                <li class="layui-nav-item lake-admin-top-tip" lay-title="站点主页">
+                    <a href="/" target="_blank">
+                        <i class="iconfont icon-homepage"></i>
+                    </a>
+                </li>
+                
+                {:lake_runhook('lake_admin_top_left_nav_homepage_after')}
+                
+                <li class="layui-nav-item layui-hide-xs lake-admin-top-tip" lay-title="锁屏">
+                    <a class="lake-admin-lock js-lake-admin-lock" 
+                        href="javascript:"
+                        data-lock-url="{:url('passport/lockscreen')}"
+                        data-unlock-url="{:url('passport/unlockscreen')}"
+                        data-logout-url="{:url('passport/logout')}"
+                        >
+                        <i class="iconfont icon-lock"></i><cite></cite>
+                    </a>
+                </li>
+                
+                {:lake_runhook('lake_admin_top_left_nav_lockscreen_after')}
+                
+                <li class="layui-nav-item">
+                    <a href="javascript:;" class="admin-side-full lake-admin-winner-hide lake-admin-top-tip" lay-title="全屏显示">
+                        <i class="icon iconfont icon-fullscreen"></i>
+                    </a>
+                </li>
+                
+                {:lake_runhook('lake_admin_top_left_nav_skin_after')}
+                
+                <li class="layui-nav-item">
+                    <a href="javascript:;" title="清理缓存">
+                        <i class="iconfont icon-richangqingli"></i>
+                        <span class="lake-admin-winner-hide">缓存</span>
+                    </a>
+                    <dl class="layui-nav-child lake-admin-clearcache js-lake-admin-clearcache" data-url="{:url('index/clear')}">
+                        <dd>
+                            <a href="javascript:;" data-type="all">
+                                一键清理缓存<span class="layui-badge-dot"></span>
+                            </a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" data-type="data">
+                                清理数据缓存
+                            </a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" data-type="template">
+                                清理模板缓存
+                            </a>
+                        </dd>
+                    </dl>
+                </li>
+                
+                {:lake_runhook('lake_admin_top_left_nav_clearcache_after')}
+                
+                <li class="layui-nav-item lake-admin-skin">
+                    <a class="name" href="javascript:;">
+                        <i class="iconfont icon-clothes"></i>
+                        <span class="lake-admin-winner-hide">主题</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd data-skin="theme-black"><a href="javascript:;">黑色</a></dd>
+                        <dd data-skin="theme-blue"><a href="javascript:;">蓝色</a></dd>
+                        <dd data-skin="theme-purple"><a href="javascript:;">紫色</a></dd>
+                        <dd data-skin="theme-green"><a href="javascript:;">黑绿</a></dd>
+                        <dd data-skin="theme-red"><a href="javascript:;">红色</a></dd>
+                        <dd data-skin="theme-red-white"><a href="javascript:;">红白</a></dd>
+                        <dd data-skin="theme-pink"><a href="javascript:;">粉红</a></dd>
+                    </dl>
+                </li>
+                
+                {:lake_runhook('lake_admin_top_left_nav_skin_after')}
+                
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="{:lake_get_file_path($user_info['avatar'])}" alt="{$user_info.nickname}" class="layui-nav-img lake-admin-user-avatar" width="35" height="35">
+                        <span class="lake-admin-user-nickname lake-admin-winner-hide">{$user_info.nickname}</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd class="js-menu-nav">
+                            <a href="{:url('profile/index')}" 
+                                lay-id="0213cb7994fca486bd1da1cf4c380450"
+                                lay-icon="iconfont icon-people" 
+                                lay-title="账号信息"
+                                >
+                                <i class="iconfont icon-people"></i>&nbsp;账号信息
+                            </a>
+                        </dd>
+                        <dd class="js-menu-nav">
+                            <a href="{:url('profile/password')}" 
+                                lay-id="f17009e4b79e7afde46161d511dd74d9"
+                                lay-icon="iconfont icon-guanliyuan" 
+                                lay-title="更改密码"
+                                >
+                                <i class="iconfont icon-guanliyuan"></i>&nbsp;更改密码
+                            </a>
+                        </dd>
+                        <hr />
+                        <dd>
+                            <a class="lake-admin-logout js-lake-admin-logout" href="{:url('passport/logout')}">
+                                <i class="iconfont icon-tuichu"></i>&nbsp;安全退出
+                            </a>
+                        </dd>
+                    </dl>
+                </li>
+                
+                {:lake_runhook('lake_admin_top_left_nav_profile_after')}
+                
+            </ul>
+        </div>
+        <div class="layui-side layui-bg-black">
+            <div class="navBar layui-side-scroll" id="navBar">
+                <ul class="layui-nav layui-nav-tree" id="side_menus_bar">
+                    <!--AJAX数据-->
+                </ul>
+            </div>
+        </div>
+        <div class="lake-admin-site-tree-mobile layui-hide">
+            <i class="layui-icon">&#xe602;</i>
+        </div>
+        <div class="lake-admin-site-mobile-shade"></div>
+        <div class="layui-body layui-layout-admin-frame" id="body_frame">
+            <div class="layui-tab mag0 lake-admin-top-tabs-box" id="top_tabs_box" lay-filter="Tab">
+                <div class="tab-go-refresh lake-admin-refresh-page" id="layui_iframe_refresh" title="刷新本页">
+                    <i class="iconfont icon-shuaxin"></i>
+                </div>
+                <div class="tab-go-left" id="page-prev" title="上一页">
+                    <i class="layui-icon layui-icon-left"></i>
+                </div>
+                <ul class="layui-tab-title lake-admin-top-tab" id="body_history">
+                    <li class="layui-this" lay-id="default">
+                        <i class="iconfont icon-homepage"></i>&nbsp;控制台
+                    </li>
+                </ul>
+                <div class="tab-right">
+                    <div class="tab-go-right" id="page-next" title="下一页">
+                        <i class="layui-icon layui-icon-right"></i>
+                    </div>
+                    <ul class="layui-nav lake-admin-close-box">
+                        <li class="layui-nav-item">
+                            <a href="javascript:;" title="页面操作">
+                                <i class="layui-icon layui-icon-radio"></i>
+                                <span class="lake-admin-tab-action">
+                                    &nbsp;页面操作
+                                </span>
+                            </a>
+                            <dl class="layui-nav-child">
+                                <dd>
+                                    <a href="javascript:;" class="lake-admin-refresh-page" title="刷新当前选项卡">
+                                        <i class="iconfont icon-shuaxin"></i> 刷新本页
+                                    </a>
+                                </dd>
+                                <dd>
+                                    <a href="javascript:;" class="lake-admin-close-current-page" title="关闭当前选项卡">
+                                        <i class="layui-icon layui-icon-close"></i> 关闭当前
+                                    </a>
+                                </dd>
+                                <dd>
+                                    <a href="javascript:;" class="lake-admin-close-other-page" title="关闭其他选项卡">
+                                        <i class="layui-icon layui-icon-radio"></i> 关闭其他
+                                    </a>
+                                </dd>
+                                <dd>
+                                    <a href="javascript:;" class="lake-admin-close-all-page" title="关闭全部选项卡">
+                                        <i class="iconfont icon-richangqingli"></i> 关闭全部
+                                    </a>
+                                </dd>
+                                
+                                <hr>
+                                
+                                <dd>
+                                    <a href="javascript:;" class="lake-admin-refresh-page-back" title="本页后退">
+                                        <i class="layui-icon layui-icon-prev"></i> 本页后退
+                                    </a>
+                                </dd>
+                                <dd>
+                                    <a href="javascript:;" class="lake-admin-refresh-page-forward" title="本页前进">
+                                        <i class="layui-icon layui-icon-next"></i> 本页前进
+                                    </a>
+                                </dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="layui-tab-content lake-clild-frame">
+                <div class="lake-admin-iframe-box">
+                    <iframe id="iframe_default" src="{$main_url}" style="height: 100%; width: 100%;display:none;" lay-id="default" frameborder="0" scrolling="auto"></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="layui-footer">
+            Copyright © {:config('lake.name')} v{:config('lake.version')}
+        </div>
+    </div>
+    <script src="admin/libs/layui/layui.js"></script>
+    <script type="text/javascript">
+    var lake_menus = <?php echo json_encode($menus); ?>;
+    
+    ;(function(){
+        if (self != top) {
+            top.location.replace(location.href);
+        }
+    })();
+    
+    layui.config({
+        version: "{:config('lake.release')}",
+        base: 'admin/libs/layui-extend/'
+    }).extend({
+        lakeAdmin: 'lake-admin/lakeAdmin',
+        lakeAdminMenu: 'lake-admin/lakeAdminMenu',
+        lakeAdminSkin: 'lake-admin/lakeAdminSkin',
+        lakeAdminTool: 'lake-admin/lakeAdminTool',
+        lakeAdminFullscreen: 'lake-admin/lakeAdminFullscreen',
+        lakeAdminContextmenu: 'lake-admin/lakeAdminContextmenu',
+        lakeAdminMenuLeftZoom: 'lake-admin/lakeAdminMenuLeftZoom',
+        lakeAdminLockScreen: 'lock-screen/lock-screen',
+    }).use(['lakeAdmin']);
+    </script>
+    
+    {:lake_runhook('lake_admin_index_script_after')}
+</body>
+
+</html>

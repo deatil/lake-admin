@@ -1,0 +1,87 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">事件 - 监听点列表</div>
+    <div class="layui-card-body">
+        <blockquote class="layui-elem-quote">
+            <form class="layui-form lake-admin-search-form" method="get" lay-filter="lake-admin-search-from">
+                <div class="layui-inline">
+                    <select name="field" class="lake-admin-search-field">
+                        <option value="name">名称</option>
+                    </select>
+                </div>
+                <div class="layui-inline">
+                    <input type="text" name="keyword" class="layui-input lake-admin-search-val" placeholder="请输入关键字">
+                </div>
+                <div class="layui-inline">
+                    <a class="layui-btn lake-admin-search-btn" data-type="search">搜索</a>
+                </div>
+                <div class="layui-inline">
+                    <a class="layui-btn" href="{:url('name')}">查看全部</a>
+                </div>
+            </form>
+        </blockquote>
+        
+        <div class="layui-form">
+            <table class="layui-hide" id="table" lay-filter="table"></table>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <a class="layui-btn layui-btn-sm" href="{:url('index')}" title="事件列表">事件列表</a>
+    </div>
+</script>
+
+<script type="text/html" id="name">
+    {{ d.name }}
+</script>
+
+<script type="text/html" id="barTool">
+    <a href='{:url("index")}?search_field=name&keyword={{ d.name }}' class="layui-btn layui-btn-xs layui-iframe" title="模块列表">模块</a>
+</script>
+
+<script type="text/javascript">
+layui.use('table', function() {
+    var $ = layui.$,
+        table = layui.table,
+        form = layui.form;
+        
+    form.val('lake-admin-search-from', {
+        "field": "{$search_field|default='name'}",
+        "keyword": "{$keyword}",
+    });
+        
+    table.render({
+        elem: '#table',
+        toolbar: '#toolbar',
+        url: '{:url("name")}',
+        cols: [
+            [
+                { field: 'name', title: '名称', templet:'#name' },
+                { field: 'num', width: 120, title: '模块数量', align: 'center' },
+                { width: 120, title: '操作', toolbar: '#barTool' },
+            ]
+        ],
+        page: {},
+    });
+    
+    $(".lake-admin-search-btn").on("click", function() {
+        table.reload("table", {
+            page: {
+                curr: 1
+            },
+            where: {
+                search_field: $(".lake-admin-search-field").val(),
+                keyword: $(".lake-admin-search-val").val(),
+            }
+        })
+    });
+    
+});
+</script>
+{/block}

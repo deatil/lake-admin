@@ -1,0 +1,104 @@
+{extend name="layout"/}
+
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header layui-bg-cyan">附件管理</div>
+    <div class="layui-card-body">
+        <blockquote class="layui-elem-quote">
+            <form class="layui-form lake-admin-search-form" method="get">
+                <div class="layui-inline">
+                    <input type="text" class="layui-input" id="laydate" placeholder="搜索时间范围">
+                </div>
+                <div class="layui-inline">
+                    <input type="text" name="keyword" class="layui-input searchVal" placeholder="请输入附件名称">
+                </div>
+                <div class="layui-inline">
+                    <a class="layui-btn search_btn" data-type="reload">搜索</a>
+                </div>
+                <div class="layui-inline">
+                    <a class="layui-btn" href="{:url('index')}">查看全部</a>
+                </div>
+            </form>
+        </blockquote>
+        
+        <table class="layui-hide" id="dataTable" lay-filter="dataTable"></table>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/html" id="toolbarTop">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm confirm layui-batch-all" data-href='{:url("delete")}'>批量删除</button>
+    </div>
+</script>
+
+<script type="text/html" id="barTool">
+    <a href='{:url("delete")}?ids={{ d.id }}' class="layui-btn layui-btn-danger layui-btn-xs layui-tr-del">删除</a>
+</script>
+
+<script type="text/html" id="pathTpl">
+    <div><a class="layui-btn layui-btn layui-btn-xs layui-iframe" href="{:url('attachments/view')}?id={{ d.id }}" title="附件详情">{{d.name}}</a></div>
+</script>
+
+<script type="text/html" id="createTimeTpl">
+    {{ layui.util.toDateString(d.create_time * 1000, 'yyyy-MM-dd HH:mm:ss') }}
+</script>
+
+<script type="text/html" id="statusTpl">
+    <div>
+        {{#  if(d.status) { }} 
+            <span class='layui-badge-dot layui-bg-green'></span>
+            <span class='text-green'>启用</span>
+        {{#  } else { }}
+            <span class='layui-badge-dot layui-bg-orange'></span>
+            <span class='text-orange'>禁用</span>
+        {{#  } }} 
+    </div>
+</script>
+
+<script>
+layui.use(['table', 'laydate'], function() {
+    var table = layui.table,
+        $ = layui.$,
+        laydate = layui.laydate;
+    laydate.render({
+        elem: '#laydate',
+        range: true,
+    });
+    table.render({
+        elem: '#dataTable',
+        toolbar: '#toolbarTop',
+        url: '{:url("attachments/index")}',
+        cols: [
+            [
+                { type: 'checkbox', fixed: 'left' },
+                { field: 'name', title: '名称', templet:'#pathTpl'},
+                { field: 'size',width: 100, title: '大小', sort: true },
+                { field: 'ext',width: 80, title: '类型', sort: true},
+                { field: 'mime',width: 120, title: 'Mime类型'},
+                { field: 'driver',width: 100, title: '存储引擎', sort: true},
+                { field: 'create_time', width: 180, title: '上传时间', sort: true, templet: '#createTimeTpl' },
+                { field: 'status', width: 80, title: '状态',align: "center", templet: '#statusTpl' },
+                { fixed: 'right', width: 70, title: '操作', toolbar: '#barTool' }
+            ]
+        ],
+        page: {}
+    });
+
+    $(".search_btn").on("click", function() {
+        table.reload("dataTable", {
+            page: {
+                curr: 1 //重新从第 1 页开始
+            },
+            where: {
+                search_field: 'name',
+                keyword: $(".searchVal").val(),
+                filter_time: 'create_time',
+                filter_time_range: $("#laydate").val()
+            }
+        })
+    });
+});
+</script>
+{/block}
