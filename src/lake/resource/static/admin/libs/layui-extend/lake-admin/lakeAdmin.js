@@ -130,11 +130,13 @@ layui.define([
             });
 
             // 模型左侧点击
+            /*
             $(document).on('click', '.lake-admin-module > li > a', function() {
                 $(this).parent()
                     .siblings('li')
                     .removeClass('layui-nav-itemed');
             });
+            */
 
             // 左边菜单点击
             $(document).on('click', '#side_menus_bar a, .js-menu-nav a', function(e) {
