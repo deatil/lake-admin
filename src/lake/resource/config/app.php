@@ -5,6 +5,10 @@
 // +----------------------------------------------------------------------
 
 return [
+    
+    // 默认跳转页面对应的模板文件
+    'dispatch_success_tmpl' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'tpl' . DIRECTORY_SEPARATOR . 'dispatch_jump.tpl',
+    'dispatch_error_tmpl' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'tpl' . DIRECTORY_SEPARATOR . 'dispatch_jump.tpl',
 
     // 根目录
     'root_path' => root_path(),
