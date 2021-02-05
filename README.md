@@ -4,7 +4,7 @@ lake-admin是一款基于ThinkPHP6+Layui的后台开发框架。
 ### 项目介绍
 
 *  `lake-admin` 基于 `ThinkPHP` 框架，后台页面基于 `Layui` 搭建
-*  更新 `ThinkPHP` 版本到 `v6.0.5`
+*  更新 `ThinkPHP` 版本到 `v6.0.7`
 *  更新 `Layui` 版本到 `v2.5.7`
 *  模块插件文档请查看 `docs/lake-admin-addon.md` 文件
 
