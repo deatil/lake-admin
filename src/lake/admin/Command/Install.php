@@ -10,6 +10,7 @@ use think\console\input\Argument;
 use think\console\input\Option;
 use think\console\Output;
 use think\console\Table;
+use think\facade\Console;
 
 use Lake\File;
 use Lake\Sql;
@@ -18,7 +19,7 @@ use Lake\Symlink;
 use Lake\Admin\Module\Module;
 
 /**
- * lake-admin 安装
+ * 系统安装
  *
  * php think lake-admin:install
  *
@@ -34,10 +35,6 @@ class Install extends Command
     {
         $this
             ->setName('lake-admin:install')
-            // 配置一个参数
-            // ->addArgument('dbpre', Argument::REQUIRED, 'db pre setting')            
-            // 配置一个选项
-            // ->addOption('dbpre', null, Option::VALUE_REQUIRED, 'db pre setting')            
             ->setDescription('You will install lake-admin.');
     }
 
@@ -50,27 +47,29 @@ class Install extends Command
         $output->highlight('Lake-admin version v' . app()->config->get('lake.version') . "\n");
         
         $isCheckFunc = $output->ask($input, '> Before install, you need check system\'fuctions (Y/n)?', 'y');
-        if ($isCheckFunc === 'y') {
-            $this->lakeAdminCheckFunction($input, $output);
-        } else {
-            $output->error('> You not check and not install!');
+        if ($isCheckFunc != 'y') {
+            $output->error('> You don\'t check and don\'t install! ');
             return false;
         }
         
+        $this->checkFunction($input, $output);
+        
         $isStart = $this->output->ask($input, '> You will install lake-admin (Y/n)?', 'y');
-        if ($isStart === 'y') {
-            $this->lakeAdminInstall($input, $output);
-        } else {
-            $output->error('> You not install!');
+        if ($isStart != 'y') {
+            $output->error('> You don\'t install! ');
+            return false;
         }
+        
+        $this->runInstall($input, $output);
     }
 
     /**
      * 检测扩展
      */
-    protected function lakeAdminCheckFunction(Input $input, Output $output)
+    protected function checkFunction(Input $input, Output $output)
     {
-        $output->info("> System's functions is checking...\n");
+        $output->info("> System's functions is checking...");
+        $output->newLine();
         
         $table = new Table();
         
@@ -96,24 +95,16 @@ class Install extends Command
     /**
      * 执行
      */
-    protected function lakeAdminInstall(Input $input, Output $output)
+    protected function runInstall(Input $input, Output $output)
     {
-        $output->info("> Lake-admin is installing...\n");
+        $output->info("> Lake-admin is installing...");
+        $output->newLine();
         
         $installLockFile = root_path() . 'install.lock';
         if (file_exists($installLockFile)) {
-            $output->warning("Lake-admin tip: lake-admin is installed! Please unlink root 'install.lock' file.");
+            $output->warning("Lake-admin is installed! Please unlink root 'install.lock' file.");
             return false;
         }
-        
-        // 使用 getArgument() 取出参数值
-        // $dbpre = $input->getArgument('dbpre');
-        
-        // 使用 getOption() 取出选项值
-        // $dbpre = $input->getOption('dbpre');
-        
-        // 手动添加
-        $dbpre = $this->output->ask($input, '> You can set a dbpre (enter empty will skip)');
         
         // 当前连接数据库配置
         $dbConfig = app()->db->connect()->getConfig();
@@ -123,11 +114,11 @@ class Install extends Command
         $databaseCharset = $dbConfig['charset'];
         
         if (empty($database)) {
-            $output->warning("Lake-admin tip: place set database config!");
+            $output->warning("Place set database config!");
             return false;
         }
         if (empty($databaseCharset)) {
-            $output->warning("Lake-admin tip: place set database charset config!");
+            $output->warning("Place set database charset config!");
             return false;
         }
         
@@ -150,21 +141,18 @@ class Install extends Command
             . 'database' . DIRECTORY_SEPARATOR
             . 'lake.sql';
         if (!file_exists($sqlFile)) {
-            $output->warning("Lake-admin tip: sql is not exist!");
+            $output->warning("Sql file don't exists!");
             return false;
         }
         
         $sqlStatement = Sql::getSqlFromFile($sqlFile);
         if (empty($sqlStatement)) {
-            $output->warning("Lake-admin tip: sql is empty!");
+            $output->warning("Sql is empty!");
             return false;
         }
         
         // 执行sql
         $dbConfig2 = $dbConfig;
-        if (!empty($dbpre)) {
-            $dbConfig2['prefix'] = $dbpre;
-        }
         app()->config->set([
             'connections' => [
                 'lake-admin-db2' => $dbConfig2,
@@ -182,7 +170,7 @@ class Install extends Command
                 ], trim($value));
                 $db2->execute($value);
             } catch (\Exception $e) {
-                $output->warning("Lake-admin tip: " . $e->getMessage());
+                $output->warning($e->getMessage());
                 return false;
             }
         }
@@ -195,10 +183,15 @@ class Install extends Command
         $staticPath = root_path() . 'public' . DIRECTORY_SEPARATOR 
             . 'static' . DIRECTORY_SEPARATOR
             . 'admin' . DIRECTORY_SEPARATOR;
-        // 移除旧的链接
-        Symlink::remove($staticPath);
-        // 创建新的链接
-        Symlink::make($adminStaticPath, $staticPath);
+        try {
+            // 移除旧的链接
+            Symlink::remove($staticPath);
+            // 创建新的链接
+            Symlink::make($adminStaticPath, $staticPath);
+        } catch(\Exception $e) {
+            $output->warning($e->getMessage());
+            return false;
+        }
 
         // 复制文件
         $fromPath = env('lake_admin_app_path') . DIRECTORY_SEPARATOR 
@@ -210,7 +203,10 @@ class Install extends Command
         
         // 添加安装锁定文件
         file_put_contents($installLockFile, '');
-       
+        
+        // 执行其他命令
+        Console::call('lake-admin:service-discover');
+        
         $output->info("Install lake-admin successfully!");
     }
     

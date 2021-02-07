@@ -30,6 +30,10 @@ class ResetPassword extends Command
     {
         $this
             ->setName('lake-admin:reset-password')
+            // 配置一个参数
+            // ->addArgument('password', Argument::REQUIRED, 'password')
+            // 配置一个选项
+            // ->addOption('password', null, Option::VALUE_REQUIRED, 'password')
             ->setDescription('You will reset an admin password.');
     }
 
@@ -38,6 +42,12 @@ class ResetPassword extends Command
      */
     protected function execute(Input $input, Output $output)
     {
+        // 使用 getArgument() 取出参数值 -key value
+        // $password = $input->getArgument('password');
+        
+        // 使用 getOption() 取出选项值 --key value
+        // $password = $input->getOption('password');
+        
         $output->newLine();
         
         $admin = $output->ask($input, '> Before, you need enter an adminid or an adminname');
