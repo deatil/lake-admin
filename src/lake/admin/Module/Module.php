@@ -2,12 +2,11 @@
 
 namespace Lake\Admin\Module;
 
-use Composer\Autoload\ClassLoader;
-
 use think\facade\Event;
 use think\facade\Cache;
 use think\facade\Config;
 
+use Lake\Admin\Support\Loader;
 use Lake\Admin\Model\Module as ModuleModel;
 use Lake\Admin\Model\AuthRule as AuthRuleModel;
 use Lake\Admin\Service\Module as ModuleService;
@@ -375,7 +374,7 @@ class Module implements ModuleContract
         
         $appNamespace = config('app.module_namespace');
         
-        $loader = new ClassLoader();
+        $loader = new Loader();
         $loader->addPsr4($appNamespace . '\\' . $name . '\\', $namespaceModulePath . DIRECTORY_SEPARATOR);
         $loader->register();
         

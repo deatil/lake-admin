@@ -6,6 +6,7 @@ use think\Service as BaseService;
 use think\console\Input;
 
 use Lake\Admin\Auth\Permission;
+use Lake\Admin\Support\Loader;
 use Lake\Admin\Model\Event as EventModel;
 use Lake\Admin\Middleware\LakeAdminAppMap;
 use Lake\Admin\Middleware\LoadModule;
@@ -170,6 +171,9 @@ class Service extends BaseService
      */
     protected function setSystemBind()
     {
+        // 绑定导入器
+        $this->app->bind('loader', Loader::class);
+        
         // 绑定权限检测
         $this->app->bind('auth', function() {
             $Permission = new Permission;

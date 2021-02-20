@@ -2,11 +2,10 @@
 
 namespace Lake\Admin\Service;
 
-use Composer\Autoload\ClassLoader;
-
 use think\App;
 use think\Console;
 
+use Lake\Admin\Support\Loader;
 use Lake\Admin\Model\Module as ModuleModel;
 use Lake\Admin\Facade\Module as ModuleFacade;
 use Lake\Admin\Service\ModuleLoad as ModuleLoadService;
@@ -75,10 +74,8 @@ class ModuleInit
                     $appNamespace . '\\admin\\' => $namespaceModulePath . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR,
                 ];
                 
-                $loader = new ClassLoader();
-                foreach ($moduleNamespaces as $namespace => $path) {
-                    $loader->addPsr4($namespace, $path);
-                }
+                $loader = new Loader();
+                $loader->addPsr4($moduleNamespaces);
                 $loader->register();
                 unset($loader);
                 
