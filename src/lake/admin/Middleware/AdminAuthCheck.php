@@ -99,7 +99,6 @@ class AdminAuthCheck
             'get:admin/passport/captcha',
             'get:admin/passport/login',
             'post:admin/passport/login',
-            'get:admin/passport/logout',
         ];
         
         $rule = strtolower(
