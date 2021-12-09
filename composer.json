@@ -24,6 +24,7 @@
         "topthink/think-view": "1.0.14",
         "topthink/think-multi-app": "1.0.14",
         "topthink/think-captcha": "3.0.3",
+        "phpseclib/phpseclib": "^2.0",
         "lake/lake": "1.0.*"
     },
     "require-dev": {

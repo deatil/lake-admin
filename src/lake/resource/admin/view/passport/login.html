@@ -44,6 +44,7 @@
         </div>
     </div>
     <script type="text/javascript" src="admin/libs/md5.js"></script>
+    <script type="text/javascript" src="admin/libs/jsencrypt.js"></script>
     <script type="text/javascript" src="admin/libs/layui/layui.js"></script>
     <script type="text/javascript">
     ;(function(){
@@ -64,9 +65,16 @@
             var password = $(data.form).find('.lake-admin-login-password').val();            
             var verify = $(data.form).find('.lake-admin-login-verify').val();            
 
+            var passkey = '{$publicKey}';
+            
+            // 密码加密
+            var encrypt = new JSEncrypt();
+            encrypt.setPublicKey(passkey);
+            var encryptedPwd = encrypt.encrypt(hex_md5(password));
+
             $.post(action, {
                 'username': username,
-                'password': hex_md5(password),
+                'password': encryptedPwd,
                 'verify': verify,
             }, success, "json");
             return false;

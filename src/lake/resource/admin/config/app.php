@@ -14,4 +14,7 @@ return [
     
     // 管理员盐
     'admin_salt' => env('lake_admin.admin_salt', 'd,d7ja0db1a974;38cE84976abbac2cd'),
+    
+    // RSA 缓存 key
+    'admin_prikey_cache_key' => env('lake_admin.prikey_cache_key', "lake_admin_prikey"),
 ];

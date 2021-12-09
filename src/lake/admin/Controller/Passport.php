@@ -2,6 +2,10 @@
 
 namespace Lake\Admin\Controller;
 
+use think\facade\Session;
+
+use phpseclib\Crypt\RSA;
+
 use Lake\Admin\Service\Screen as ScreenService;
 use Lake\Admin\Facade\Admin as AdminFacade;
 
@@ -47,24 +51,75 @@ class Passport extends Base
             // 验证数据
             $rule = [
                 'username|'.__('用户名') => 'require|alphaDash|length:3,20',
-                'password|'.__('密码') => 'require|length:32',
+                'password|'.__('密码') => 'require',
             ];
             $message = [
                 'username.require' => __('用户名不能为空'),
+                'username.alphaDash' => __('用户名格式错误'),
+                'username.length' => __('用户名长度在3到20个字符之间'),
                 'password.require' => __('密码不能为空'),
-                'password.length' => __('密码错误'),
             ];
             $result = $this->validate($data, $rule, $message);
             if (true !== $result) {
                 return $this->error($result);
             }
             
-            if (!AdminFacade::login($data['username'], $data['password'])) {
+            // 密码
+            $password = base64_decode($data['password']);
+            if (empty($password)) {
+                return $this->error("用户名或者密码错误");
+            }
+
+            try {
+                // 私钥
+                $prikeyCacheKey = config('app.admin_prikey_cache_key');
+                $prikey = Session::get($prikeyCacheKey);
+                
+                // 导入私钥
+                $rsa = new RSA();
+                $rsa->loadKey($prikey);
+                $rsa->setEncryptionMode(RSA::ENCRYPTION_PKCS1);
+                
+                // RSA 解出密码
+                $password = $rsa->decrypt($password);
+            } catch(\Exception $e) {
+                return $this->error(__("用户名或者密码错误，登陆失败！"));
+            }
+            
+            if (!AdminFacade::login($data['username'], $password)) {
                 $this->error(__("用户名或者密码错误，登陆失败！"), url('index/login'));
             }
             
+            // 清除信息
+            Session::delete($prikeyCacheKey);
+            
             $this->success(__('登陆成功'), url('Index/index'));
         } else {
+            $rsa = new RSA();
+            $rsa->setEncryptionMode(RSA::ENCRYPTION_PKCS1);
+            $rsakeys = $rsa->createKey(1024);
+            
+            // 私钥
+            $privateKey = $rsakeys["privatekey"];
+            
+            // 公钥
+            $publicKey = $rsakeys["publickey"];
+            
+            // 缓存私钥
+            $prikeyCacheKey = config('app.admin_prikey_cache_key');
+            Session::set($prikeyCacheKey, $privateKey);
+            
+            // 过滤公钥多余字符
+            $publicKey = str_replace([
+                "-----BEGIN PUBLIC KEY-----", 
+                "-----END PUBLIC KEY-----", 
+                "\r\n",
+                "\r",
+                "\n",
+            ], "", $publicKey);
+            
+            $this->assign("publicKey", $publicKey);
+
             return $this->fetch();
         }
     }
