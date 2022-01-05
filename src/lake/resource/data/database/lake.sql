@@ -40,7 +40,7 @@ CREATE TABLE `pre__lakeadmin_attachment` (
   `module` varchar(250) NOT NULL DEFAULT '' COMMENT '模块名，由哪个模块上传的',
   `type` varchar(50) DEFAULT '' COMMENT '附件关联类型',
   `type_id` char(32) DEFAULT '0' COMMENT '关联类型ID',
-  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '文件名',
+  `name` mediumtext CHARACTER SET utf8mb4 NOT NULL COMMENT '文件名',
   `path` varchar(255) NOT NULL DEFAULT '' COMMENT '文件路径',
   `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '缩略图路径',
   `url` varchar(255) NOT NULL DEFAULT '' COMMENT '文件链接',

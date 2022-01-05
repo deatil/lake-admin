@@ -58,6 +58,15 @@ code {
     border-radius: 4px;
 }
 
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
 .h50{width:50px!important;}
 .h80{height:80px!important;}
 .h100{height:100px!important;}
